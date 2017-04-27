@@ -1,0 +1,5 @@
+DicomReader
+===========
+
+.. doxygenclass:: DicomReader
+   :members:

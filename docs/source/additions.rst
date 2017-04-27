@@ -1,0 +1,4 @@
+Additions
+=========
+
+.. doxygenfile:: additions.h
