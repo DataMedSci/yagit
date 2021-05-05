@@ -17,7 +17,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 echo "Installing wxWidgets"
-sudo apt-get -y install libwxgtk3.0-dev
+sudo apt-get -y install libwxgtk3.0-gtk3-dev
 
 if [ -d "imebra" ]; then
   echo 'Imebra is already installed, skip building Imebra'
@@ -25,8 +25,11 @@ else
   echo "Building imebra"
   mkdir imebra
   cd imebra
-  wget https://bitbucket.org/binarno/imebra/downloads/imebra_4_0_7_1.zip
+  wget https://github.com/binarno/imebra_mirror/archive/refs/heads/4.0.8.zip
   unzip *.zip
+  cd imebra_mirror-4.0.8/
+  cp -a . ..
+  cd ..
   mkdir artifacts
   cd artifacts
   cmake ../library -DIMEBRA_SHARED_STATIC=STATIC
@@ -58,5 +61,7 @@ echo "Building GUI module"
 cd gi_gui
 make
 cd ..
-echo "To run change directory to gi_gui and run ./yAGIT"
 echo "Finish building"
+echo "Trying to run GUI"
+cd gi_gui
+./yAGIT
