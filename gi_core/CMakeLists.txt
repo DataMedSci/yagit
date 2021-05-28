@@ -14,26 +14,21 @@
 # along with 'yet Another Gamma Index Tool'; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-cmake_minimum_required(VERSION 2.8.4)
+cmake_minimum_required(VERSION 3.8)
 project(gi_core)
 
-include_directories(".")
+find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}" gi_core_sources)
 
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    message(STATUS "GCC detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    message(STATUS "CLANG detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    message(STATUS "MSVC detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /O2")
-endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${gi_core_sources})
 
-file(GLOB SOURCES *.cpp)
+add_library(gi_core STATIC ${gi_core_sources})
+target_include_directories(gi_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_library(gi_core ${SOURCES})
-set_target_properties(gi_core PROPERTIES
-                      ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_SOURCE_DIR}
-                      ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_SOURCE_DIR}
-                      ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+set_target_properties(gi_core
+    PROPERTIES
+    CXX_STANDARD 11
+    CXX_STANDARD_REQUIRED YES
+    CXX_EXTENSIONS NO
+)
+
+set_default_output_directories(gi_core)

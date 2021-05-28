@@ -14,41 +14,25 @@
 # along with 'yet Another Gamma Index Tool'; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-cmake_minimum_required(VERSION 2.8.4)
+cmake_minimum_required(VERSION 3.8)
 project(yAGIT)
 
-set(IMEBRA_SHARED_STATIC STATIC)
-
-add_subdirectory(../gi_core ${CMAKE_CURRENT_BINARY_DIR}/gi_core)
-add_subdirectory(../gi_additions ${CMAKE_CURRENT_BINARY_DIR}/gi_additions)
-add_subdirectory(../gi_wrapper_cpp ${CMAKE_CURRENT_BINARY_DIR}/gi_wrapper_cpp)
-add_subdirectory(../imebra/library ${CMAKE_CURRENT_BINARY_DIR}/imebra)
-
-include_directories(".")
-include_directories("../gi_core")
-include_directories("../gi_additions")
-include_directories("../gi_wrapper_cpp")
-include_directories("../imebra")
-
-find_package(wxWidgets 3.0 REQUIRED core base adv)
+find_package(wxWidgets COMPONENTS core base REQUIRED)
 include(${wxWidgets_USE_FILE})
 
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    message(STATUS "GCC detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=c++11")
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    message(STATUS "CLANG detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=c++11")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    message(STATUS "MSVC detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /O2")
-endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}" yAGIT_sources)
 
-file(GLOB SOURCES *.cpp)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${yAGIT_sources})
 
-add_executable(yAGIT WIN32 ${SOURCES})
-target_link_libraries(yAGIT gi_core gi_additions gi_wrapper imebra ${wxWidgets_LIBRARIES})
-set_target_properties(yAGIT PROPERTIES
-                      RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_SOURCE_DIR}
-                      RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_SOURCE_DIR}
-                      RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+add_executable(yAGIT ${yAGIT_sources})
+target_link_libraries(yAGIT PRIVATE gi_core gi_additions gi_wrapper ${wxWidgets_LIBRARIES})
+target_include_directories(yAGIT PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${wxWidgets_INCLUDE_DIRS})
+
+set_target_properties(yAGIT
+    PROPERTIES
+    CXX_STANDARD 11
+    CXX_STANDARD_REQUIRED YES
+    CXX_EXTENSIONS NO
+)
+
+set_default_output_directories(yAGIT)
