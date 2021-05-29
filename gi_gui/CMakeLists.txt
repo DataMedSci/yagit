@@ -17,7 +17,11 @@
 cmake_minimum_required(VERSION 3.8)
 project(yAGIT)
 
-find_package(wxWidgets COMPONENTS core base REQUIRED)
+if (CMAKE_GENERATOR MATCHES "Visual Studio")
+    find_package(wxWidgets COMPONENTS core base REQUIRED)
+else()
+    find_package(wxWidgets COMPONENTS core base adv REQUIRED)
+endif()
 include(${wxWidgets_USE_FILE})
 
 find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}" yAGIT_sources)
