@@ -17,18 +17,22 @@
 cmake_minimum_required(VERSION 3.8)
 project(yAGIT)
 
-if (CMAKE_GENERATOR MATCHES "Visual Studio")
-    find_package(wxWidgets COMPONENTS core base REQUIRED)
-else()
-    find_package(wxWidgets COMPONENTS core base adv REQUIRED)
-endif()
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(common)
+
+find_package(wxWidgets COMPONENTS core base adv REQUIRED)
 include(${wxWidgets_USE_FILE})
 
 find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}" yAGIT_sources)
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${yAGIT_sources})
 
-add_executable(yAGIT ${yAGIT_sources})
+if(MSVC)
+	add_executable(yAGIT WIN32 ${yAGIT_sources})
+else()
+	add_executable(yAGIT ${yAGIT_sources})
+endif()
+
 target_link_libraries(yAGIT PRIVATE gi_core gi_additions gi_wrapper ${wxWidgets_LIBRARIES})
 target_include_directories(yAGIT PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${wxWidgets_INCLUDE_DIRS})
 

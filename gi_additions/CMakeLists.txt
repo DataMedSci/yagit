@@ -17,6 +17,9 @@
 cmake_minimum_required(VERSION 3.8)
 project(gi_additions)
 
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(common)
+
 find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}" gi_additions_sources)
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${gi_additions_sources})

@@ -17,18 +17,22 @@
 cmake_minimum_required(VERSION 3.8)
 project(gi_wrapper)
 
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(common)
+include(CPM)
+
 set(IMEBRA_SHARED_STATIC STATIC)
 
 CPMFindPackage(
-	NAME imebra
-	GITHUB_REPOSITORY binarno/imebra_mirror
-	GIT_TAG 4.0.8
-	VERSION 4.0.8
-	DOWNLOAD_ONLY YES
+    NAME imebra
+    GITHUB_REPOSITORY binarno/imebra_mirror
+    GIT_TAG 4.0.8
+    VERSION 4.0.8
+    DOWNLOAD_ONLY YES
 )
 
 if (imebra_ADDED)
-	add_subdirectory(${imebra_SOURCE_DIR}/library ${imebra_BINARY_DIR})
+    add_subdirectory(${imebra_SOURCE_DIR}/library ${imebra_BINARY_DIR})
 endif()
 
 find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}" gi_wrapper_sources)
