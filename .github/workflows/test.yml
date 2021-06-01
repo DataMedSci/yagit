@@ -35,7 +35,7 @@ jobs:
       id: runvcpkg
       with:
         vcpkgArguments: '${{ matrix.vcpkgPackages }}'
-        vcpkgTriplet: 'x64-windows-rel'
+        vcpkgTriplet: 'x64-windows'
         vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
         vcpkgGitCommitId: '5568f110b509a9fd90711978a7cb76bae75bb092'
 
@@ -46,7 +46,7 @@ jobs:
 
     - name: Configure CMake - Windows
       if: ${{ runner.os == 'Windows' }}
-      run: cmake -B . -DVCPKG_ROOT=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }} -DVCPKG_TARGET_TRIPLET=x64-windows-rel  -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -B . -DVCPKG_ROOT=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }} -DVCPKG_TARGET_TRIPLET=x64-windows  -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
       # Build your program with the given configuration
