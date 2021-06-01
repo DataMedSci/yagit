@@ -12,12 +12,6 @@ env:
 
 jobs:
 
-  prereq:
-    runs-on: 'ubuntu-latest'
-    steps:
-    - name: Install deps
-      run: sudo apt -y install libwxgtk3.0-gtk3-dev
-
   build:
     if: "github.repository == 'DataMedSci/gi-yagit' && !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
 
@@ -26,14 +20,22 @@ jobs:
     # cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ${{ matrix.operating-system }}
-    needs: [prereq]
-
     strategy:
       matrix:
         operating-system: [ubuntu-latest, windows-latest]
         
     steps:
     - uses: actions/checkout@v2
+
+    - name: Install requirements
+         if ["$RUNNER_OS" == "Linux"]; then
+              sudo apt install -y libwxgtk3.0-gtk3-dev
+         elif ["$RUNNER_OS" == "Windows"]; then
+              echo "TODO"
+         else
+              echo "$RUNNER_OS not supported"
+              exit 1
+         fi
 
     - name: Configure CMake
       run: cmake -B . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
