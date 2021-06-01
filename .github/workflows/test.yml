@@ -31,7 +31,7 @@ jobs:
       run: |
          echo $RUNNER_OS
          if ["$RUNNER_OS" == "Linux"]; then
-            sudo apt install htop
+            sudo apt install libwxgtk3.0-gtk3-dev
          fi
 
     - name: Configure CMake
