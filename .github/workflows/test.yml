@@ -28,7 +28,7 @@ jobs:
 
     - name: Install Windows requirements
       if: ${{ runner.os == 'Windows' }}
-      run: vcpkg install wxwidgets:x64-windows-rel
+      run: vcpkg install wxwidgets
 
 # TODO replace with https://github.com/lukka/run-cmake
     - name: Configure CMake - Linux
