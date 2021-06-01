@@ -30,7 +30,13 @@ jobs:
       if: ${{ runner.os == 'Windows' }}
       run: vcpkg install wxwidgets:x64-windows-rel
 
-    - name: Configure CMake
+# TODO replace with https://github.com/lukka/run-cmake
+    - name: Configure CMake - Linux
+      if: ${{ runner.os == 'Linux' }}
+      run: cmake -B . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Configure CMake - Windows
+      if: ${{ runner.os == 'Windows' }}
       run: cmake -B . -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake  -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
