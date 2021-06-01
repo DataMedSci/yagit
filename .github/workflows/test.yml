@@ -28,6 +28,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Install requirements
+      run: |
          if ["$RUNNER_OS" == "Linux"]; then
               sudo apt install -y libwxgtk3.0-gtk3-dev
          elif ["$RUNNER_OS" == "Windows"]; then
