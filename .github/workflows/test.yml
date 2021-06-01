@@ -31,12 +31,7 @@ jobs:
       run: |
          echo $RUNNER_OS
          if ["$RUNNER_OS" == "Linux"]; then
-              sudo apt install -y libwxgtk3.0-gtk3-dev
-         elif ["$RUNNER_OS" == "Windows"]; then
-              echo "TODO"
-         else
-              echo "$RUNNER_OS not supported"
-              exit 1
+            sudo apt install htop
          fi
 
     - name: Configure CMake
