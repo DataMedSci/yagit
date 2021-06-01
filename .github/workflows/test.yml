@@ -16,7 +16,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     steps:
     - name: Install deps
-      run: apt -y install libwxgtk3.0-gtk3-dev
+      run: sudo apt -y install libwxgtk3.0-gtk3-dev
 
   build:
     if: "github.repository == 'DataMedSci/gi-yagit' && !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
