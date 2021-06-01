@@ -29,6 +29,7 @@ jobs:
 
     - name: Install requirements
       run: |
+         echo $RUNNER_OS
          if ["$RUNNER_OS" == "Linux"]; then
               sudo apt install -y libwxgtk3.0-gtk3-dev
          elif ["$RUNNER_OS" == "Windows"]; then
