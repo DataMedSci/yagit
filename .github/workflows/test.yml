@@ -35,7 +35,7 @@ jobs:
       id: runvcpkg
       with:
         vcpkgArguments: '${{ matrix.vcpkgPackages }}'
-        vcpkgTriplet: '${{ matrix.architecture }}-windows'
+        vcpkgTriplet: 'x64-windows'
         vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
         vcpkgGitCommitId: '5568f110b509a9fd90711978a7cb76bae75bb092'
 
