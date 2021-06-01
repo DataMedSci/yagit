@@ -37,6 +37,7 @@ jobs:
         vcpkgArguments: '${{ matrix.vcpkgPackages }}'
         vcpkgTriplet: '${{ matrix.architecture }}-windows'
         vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
+        vcpkgGitCommitId: '5568f110b509a9fd90711978a7cb76bae75bb092'
 
 # TODO replace with https://github.com/lukka/run-cmake
     - name: Configure CMake - Linux
