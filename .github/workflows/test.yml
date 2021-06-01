@@ -28,10 +28,10 @@ jobs:
 
     - name: Install Windows requirements
       if: ${{ runner.os == 'Windows' }}
-      run: vcpkg install wxwidgets
+      run: vcpkg install wxwidgets:x64-windows-rel
 
     - name: Configure CMake
-      run: cmake -B . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -B . -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake  -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
       # Build your program with the given configuration
