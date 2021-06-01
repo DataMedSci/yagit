@@ -27,9 +27,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install requirements
+    - name: Install Linux requirements
       if: ${{ runner.os == 'Linux' }}
       run: sudo apt install libwxgtk3.0-gtk3-dev
+
+    - name: Install Windows requirements
+      if: ${{ runner.os == 'Windows' }}
+      run: vcpkg install wxwidgets
 
     - name: Configure CMake
       run: cmake -B . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
