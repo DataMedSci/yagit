@@ -18,6 +18,9 @@ jobs:
     strategy:
       matrix:
         operating-system: [ubuntu-latest, windows-latest]
+        include:
+          - operating-system: windows-latest
+            vcpkgPackages: wxwidgets
         
     steps:
     - uses: actions/checkout@v2
@@ -28,7 +31,12 @@ jobs:
 
     - name: Install Windows requirements
       if: ${{ runner.os == 'Windows' }}
-      run: vcpkg install wxwidgets
+      uses: lukka/run-vcpkg@v4
+      id: runvcpkg
+      with:
+        vcpkgArguments: '${{ matrix.vcpkgPackages }}'
+        vcpkgTriplet: '${{ matrix.architecture }}-windows'
+        vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
 
 # TODO replace with https://github.com/lukka/run-cmake
     - name: Configure CMake - Linux
@@ -37,7 +45,7 @@ jobs:
 
     - name: Configure CMake - Windows
       if: ${{ runner.os == 'Windows' }}
-      run: cmake -B . -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake  -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -B . -DVCPKG_ROOT=${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }} -DVCPKG_TARGET_TRIPLET=${{ matrix.architecture }}-windows  -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
       # Build your program with the given configuration
