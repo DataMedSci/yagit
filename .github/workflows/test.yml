@@ -11,6 +11,13 @@ env:
   BUILD_TYPE: Release
 
 jobs:
+
+  prereq:
+    runs-on: 'ubuntu-latest'
+    steps:
+    - name: Install deps
+      run: apt -y install libwxgtk3.0-gtk3-dev
+
   build:
     if: "github.repository == 'DataMedSci/gi-yagit' && !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
 
@@ -19,6 +26,8 @@ jobs:
     # cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ${{ matrix.operating-system }}
+    needs: [prereq]
+
     strategy:
       matrix:
         operating-system: [ubuntu-latest, windows-latest]
