@@ -53,7 +53,7 @@ jobs:
           cmakeBuildType: ${{env.BUILD_TYPE}}
           cmakeGenerator: 'VS16Win64'
           buildDirectory: '_build'
-          buildWithCMake: true
+          buildWithCMake: false
           useVcpkgToolchainFile: true
 
 #     - name: Build
