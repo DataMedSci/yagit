@@ -52,6 +52,7 @@ jobs:
           cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
           cmakeBuildType: ${{env.BUILD_TYPE}}
           cmakeGenerator: 'VS16Win64'
+          buildDirectory: '_build'
           buildWithCMake: true
           useVcpkgToolchainFile: true
 
