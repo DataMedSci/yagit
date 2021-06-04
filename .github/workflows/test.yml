@@ -50,10 +50,8 @@ jobs:
       with:
           vcpkgTriplet: 'x64-windows'
           cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
-          cmakeListsOrSettingsJson: 'CMakeListsTxtBasic'
           cmakeBuildType: ${{env.BUILD_TYPE}}
-          cmakeGenerator: 'VS15Win64'
-          buildDirectory: '_build'
+          cmakeGenerator: 'VS16Win64'
           buildWithCMake: true
           useVcpkgToolchainFile: true
 
