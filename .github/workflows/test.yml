@@ -50,15 +50,16 @@ jobs:
       with:
           vcpkgTriplet: 'x64-windows'
           cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+          cmakeListsOrSettingsJson: 'CMakeListsTxtBasic'
           cmakeBuildType: ${{env.BUILD_TYPE}}
-          cmakeGenerator: 'VS16Win64'
+          cmakeGenerator: 'VS15Win64'
           buildDirectory: '_build'
-          buildWithCMake: false
+          buildWithCMake: true
           useVcpkgToolchainFile: true
 
-    - name: Build
-      # Build your program with the given configuration
-      run: cmake --build _build --config ${{env.BUILD_TYPE}}
+#     - name: Build
+#       # Build your program with the given configuration
+#       run: cmake --build _build --config ${{env.BUILD_TYPE}}
 
 #     Uncomment section below to enable tests
 #     - name: Test
