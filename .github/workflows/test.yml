@@ -17,9 +17,9 @@ jobs:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
-        operating-system: [ubuntu-latest, windows-2016]
+        operating-system: [ubuntu-latest, windows-latest]
         include:
-          - operating-system: windows-2016
+          - operating-system: windows-latest
             vcpkgPackages: wxwidgets
         
     steps:
@@ -51,7 +51,7 @@ jobs:
           vcpkgTriplet: 'x64-windows'
           cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
           cmakeBuildType: ${{env.BUILD_TYPE}}
-          cmakeGenerator: 'VS15Win64'
+          cmakeGenerator: 'VS16Win64'
           buildDirectory: '_build'
           buildWithCMake: false
           useVcpkgToolchainFile: true
