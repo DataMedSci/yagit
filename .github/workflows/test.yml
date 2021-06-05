@@ -42,7 +42,16 @@ jobs:
 # TODO replace with https://github.com/lukka/run-cmake
     - name: Configure CMake - Linux
       if: ${{ runner.os == 'Linux' }}
-      run: cmake -B _build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      uses: lukka/run-cmake@v3
+      with:
+          vcpkgTriplet: 'x64-windows'  # not needed on Linux
+          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+          cmakeBuildType: ${{env.BUILD_TYPE}}
+          cmakeGenerator: 'Ninja'
+          buildDirectory: '_build'
+          buildWithCMake: false
+          useVcpkgToolchainFile: true      
+#      run: cmake -B _build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Configure CMake - Windows
       if: ${{ runner.os == 'Windows' }}
