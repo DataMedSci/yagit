@@ -17,10 +17,12 @@ jobs:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
-        operating-system: [ubuntu-latest, windows-latest]
         include:
           - operating-system: windows-latest
             vcpkgPackages: wxwidgets
+            cmakeGenerator: 'VS16Win64'
+          - operating-system: ubuntu-latest            
+            cmakeGenerator: 'Ninja'
         
     steps:
     - uses: actions/checkout@v2
@@ -39,28 +41,13 @@ jobs:
         vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
         vcpkgGitCommitId: '5568f110b509a9fd90711978a7cb76bae75bb092'
 
-# TODO replace with https://github.com/lukka/run-cmake
-    - name: Configure CMake - Linux
-      if: ${{ runner.os == 'Linux' }}
-      uses: lukka/run-cmake@v3
-      with:
-          vcpkgTriplet: 'x64-windows'  # not needed on Linux
-          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
-          cmakeBuildType: ${{env.BUILD_TYPE}}
-          cmakeGenerator: 'Ninja'
-          buildDirectory: '_build'
-          buildWithCMake: false
-          useVcpkgToolchainFile: true      
-#      run: cmake -B _build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-
     - name: Configure CMake - Windows
-      if: ${{ runner.os == 'Windows' }}
       uses: lukka/run-cmake@v3
       with:
           vcpkgTriplet: 'x64-windows'
           cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
           cmakeBuildType: ${{env.BUILD_TYPE}}
-          cmakeGenerator: 'VS16Win64'
+          cmakeGenerator: '${{ matrix.cmakeGenerator }}'
           buildDirectory: '_build'
           buildWithCMake: false
           useVcpkgToolchainFile: true
