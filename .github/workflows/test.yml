@@ -1,0 +1,65 @@
+name: CMake
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+
+  build:
+    if: "github.repository == 'DataMedSci/gi-yagit' && !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        include:
+          - operating-system: windows-latest
+            vcpkgPackages: wxwidgets
+            vcpkgTriplet: 'x64-windows'
+            useVcpkgToolchainFile: true
+            cmakeGenerator: 'VS16Win64'
+          - operating-system: ubuntu-latest            
+            cmakeGenerator: 'Ninja'
+            useVcpkgToolchainFile: false
+        
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Linux requirements
+      if: ${{ runner.os == 'Linux' }}
+      run: sudo apt install libwxgtk3.0-gtk3-dev
+
+# Step below not only installs and does VCPKG setup but also installs dependency packages and store them in cache
+# cache is crucial, as installation (compilation from sources) of many dependencies is time consuming
+# i.e. wxwidgets needs >10min for installation and <1min for retrieval from cache
+    - name: Install Windows requirements
+      if: ${{ runner.os == 'Windows' }}
+      uses: lukka/run-vcpkg@v7.3
+      with:
+        vcpkgArguments: '${{ matrix.vcpkgPackages }}'
+        vcpkgTriplet: 'x64-windows'
+        vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
+        vcpkgGitCommitId: '5568f110b509a9fd90711978a7cb76bae75bb092'
+
+    - name: Configure and build with CMake
+      uses: lukka/run-cmake@v3.4
+      with:
+          vcpkgTriplet: '${{ matrix.vcpkgTriplet }}'  # VCPKG target specification (so called "triplet"), here used only on Windows
+          cmakeBuildType: ${{env.BUILD_TYPE}}  # Release or Debug
+          cmakeGenerator: '${{ matrix.cmakeGenerator }}'  # specify generator (i.e. Ninja or Visual Studio)
+          buildDirectory: '_build'  # subdirectory to store make build and store results
+          buildWithCMake: true  # use CMake to trigger build process
+          useVcpkgToolchainFile: '${{ matrix.useVcpkgToolchainFile }}'  # use vcpkg to install dependencies (i.e. wxwidgets) on Windows
+
+#     Uncomment section below to enable tests
+#     - name: Test
+#       working-directory: ${{github.workspace}}/gi_core/build
+#       # Execute tests defined by the CMake configuration.  
+#       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+#       run: ctest -C ${{env.BUILD_TYPE}}
+      

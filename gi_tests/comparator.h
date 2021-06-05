@@ -20,6 +20,7 @@
 #define GI_TEST_COMPARATOR_H
 
 #include <iostream>
+#include <string>
 using namespace std;
 
 class Comparator {

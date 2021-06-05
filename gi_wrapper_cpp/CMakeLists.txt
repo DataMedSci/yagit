@@ -25,7 +25,7 @@ set(IMEBRA_SHARED_STATIC STATIC)
 
 CPMFindPackage(
     NAME imebra
-    GITHUB_REPOSITORY binarno/imebra_mirror
+    GITHUB_REPOSITORY grzanka/imebra_mirror
     GIT_TAG 4.0.8
     VERSION 4.0.8
     DOWNLOAD_ONLY YES
