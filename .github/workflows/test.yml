@@ -19,7 +19,7 @@ jobs:
       matrix:
         include:
           - operating-system: windows-latest
-            vcpkgPackages: wxwidgets
+            vcpkgPackages: wxwidgets Qt5
             vcpkgTriplet: 'x64-windows'
             useVcpkgToolchainFile: true
             cmakeGenerator: 'VS16Win64'
@@ -32,7 +32,7 @@ jobs:
 
     - name: Install Linux requirements
       if: ${{ runner.os == 'Linux' }}
-      run: sudo apt install libwxgtk3.0-gtk3-dev
+      run: sudo apt install libwxgtk3.0-gtk3-dev qt5-default
 
 # Step below not only installs and does VCPKG setup but also installs dependency packages and store them in cache
 # cache is crucial, as installation (compilation from sources) of many dependencies is time consuming
