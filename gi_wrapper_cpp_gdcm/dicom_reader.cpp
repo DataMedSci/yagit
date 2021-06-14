@@ -25,6 +25,7 @@
 #include "gdcmDict.h"
 #include "gdcmAttribute.h"
 #include "gdcmStringFilter.h"
+#include "gdcmImageReader.h"
 //#include "wrapper_logger.h"
 
 using namespace gdcm;
@@ -33,6 +34,119 @@ using namespace std;
 DicomReader::DicomReader()
 {
 }
+
+double* DicomReader::acquireImage(char* filename, int& dims,
+    double& xStart, double& xSpacing, int& xNumber,
+    double& yStart, double& ySpacing, int& yNumber,
+    double& zStart, double& zSpacing, int& zNumber)
+{
+    ImageReader reader;
+    reader.SetFileName(filename);
+
+    Image im = reader.GetImage();
+    xNumber = im.GetDimension(0);
+    yNumber = im.GetDimension(1);
+    zNumber = im.GetDimension(2);
+
+    dims = 3;
+    if (zNumber == 1)
+    {
+        dims--;
+        if (yNumber == 1)
+            dims--;
+    }
+
+    DataSet dataSet = reader.GetFile().GetDataSet();
+
+    xStart = acquireStart(dataSet, 0);
+    yStart = acquireStart(dataSet, 1);
+    zStart = acquireStart(dataSet, 2);
+
+    xSpacing = acquireSpacing(dataSet, 0);
+    ySpacing = acquireSpacing(dataSet, 1);
+    if (dims == 3)
+        zSpacing = acquireSpacing(dataSet, 2);
+
+    if ((dims > 0 && xSpacing <= 0) || (dims > 1 && ySpacing <= 0) || (dims > 2 && zSpacing <= 0))
+    {
+        cerr << "Error. Non-positive spacing." << endl;
+        exit(-1);
+    }
+    if ((dims > 0 && xNumber <= 0) || (dims > 1 && yNumber <= 0) || (dims > 2 && zNumber <= 0))
+    {
+        cerr << "Error. Non-positive resolution." << endl;
+        exit(-1);
+    }
+
+    double rescaleSlope = im.GetSlope();
+    double rescaleIntercept = im.GetIntercept();
+
+    double* array = new double[xNumber * yNumber * zNumber];
+    char* buffer = new char[im.GetBufferLength()];
+    int pixelSize = (int) im.GetPixelFormat().GetPixelSize();
+    for (int k = 0; k < zNumber; k++)
+    {
+        for (int j = 0; j < yNumber; j++)
+        {
+            for (int i = 0; i < xNumber; i++)
+            {
+                if (pixelSize == 1) {
+                    _int8 currentValue;
+                    memcpy(&currentValue, &buffer[i * pixelSize], pixelSize);
+                    array[(k * yNumber + j) * xNumber + i] = rescaleSlope * currentValue + rescaleIntercept;
+                }
+                else if (pixelSize == 2) {
+                    _int16 currentValue;
+                    memcpy(&currentValue, &buffer[i * pixelSize], pixelSize);
+                    array[(k * yNumber + j) * xNumber + i] = rescaleSlope * currentValue + rescaleIntercept;
+                }
+                else if (pixelSize == 4) {
+                    _int32 currentValue;
+                    memcpy(&currentValue, &buffer[i * pixelSize], pixelSize);
+                    array[(k * yNumber + j) * xNumber + i] = rescaleSlope * currentValue + rescaleIntercept;
+                }
+                else if (pixelSize == 8) {
+                    _int64 currentValue;
+                    memcpy(&currentValue, &buffer[i * pixelSize], pixelSize);
+                    array[(k * yNumber + j) * xNumber + i] = rescaleSlope * currentValue + rescaleIntercept;
+                }
+                else {
+                    cerr << "Error. Wrong pixel size " << pixelSize << "." << endl;
+                    exit(-1);
+                }
+            }
+        }
+    }
+
+
+    // logWrapperMessage("Acquired " + to_string(dims) + "-dimensional image.");
+
+    string parameterLog = "Image parameters: ";
+    if (dims >= 1)
+    {
+        parameterLog += to_string(xStart) + ", " +
+            to_string(xSpacing) + ", " +
+            to_string(xNumber);
+    }
+    if (dims >= 2)
+    {
+        parameterLog += " | " +
+            to_string(yStart) + ", " +
+            to_string(ySpacing) + ", " +
+            to_string(yNumber);
+    }
+    if (dims >= 3)
+    {
+        parameterLog += " | " +
+            to_string(zStart) + ", " +
+            to_string(zSpacing) + ", " +
+            to_string(zNumber);
+    }
+    // logWrapperMessage(parameterLog);
+
+    return array;
+}
+
 
 double DicomReader::acquireStart(DataSet& dataSet, int dim)
 {

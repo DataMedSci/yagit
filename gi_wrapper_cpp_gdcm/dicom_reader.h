@@ -32,11 +32,10 @@ public:
 
     /// \brief Retrieves the image matrix and its parameters from DICOM file.
     ///
-    /// \note Every parameter, except for the first one - dataSet, will be filled by the function
+    /// \note Every parameter, except for the first one , will be filled by the function
     ///       with the image spatial parameters. Their initial values are not important and will be lost.
     ///
-    /// \param dataSet  Pointer to the object in which Imebra library stores parsed DICOM file.
-    ///                 The pointer returned by loadDicom() function.
+    /// \param filename Name of the file containing DICOM image.
     /// \param dims     Number of dimensions of acquired image.
     /// \param xStart   x coordinate of the center of the most left voxel in the image.
     /// \param xSpacing Distance between centers of adjacent voxels along x axis in the image.
@@ -51,7 +50,7 @@ public:
     /// \return Pointer to the image matrix. Its size can be calculated using parameters: dims, xNumber, yNumber and zNumber.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    double* acquireImage(gdcm::DataSet& dataSet, int& dims,
+    double* acquireImage(char* filename, int& dims,
         double& xStart, double& xSpacing, int& xNumber,
         double& yStart, double& ySpacing, int& yNumber,
         double& zStart, double& zSpacing, int& zNumber);
