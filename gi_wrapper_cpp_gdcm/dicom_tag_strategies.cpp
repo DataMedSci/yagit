@@ -94,7 +94,7 @@ void applyDicomTagsRewriteStrategy(DataSet& source, DataSet& destination, int re
     // Map strategy passed by parameter from integer value to pointer to function represent strategy
     tagsRewriteStrategy rewriteStrategy = resolveTagsRewriteStrategy(rewriteTagsStrategyId);
 
-    destination = source; // TODO check if it works
+    destination = source; // TODO fix
     destination.Remove(Tag(0x7FE0, 0x0008));
     destination.Remove(Tag(0x7FE0, 0x0009));
     destination.Remove(Tag(0x7FE0, 0x0010));
