@@ -23,6 +23,7 @@
 
 namespace gdcm {
 	class DataSet;
+    class File;
 }
 
 class DicomReader
@@ -35,7 +36,8 @@ public:
     /// \note Every parameter, except for the first one , will be filled by the function
     ///       with the image spatial parameters. Their initial values are not important and will be lost.
     ///
-    /// \param filename Name of the file containing DICOM image.
+    /// \param file     Reference to the object in which GDCM library stores parsed DICOM file.
+    ///                 The reference returned by loadDicom() function.
     /// \param dims     Number of dimensions of acquired image.
     /// \param xStart   x coordinate of the center of the most left voxel in the image.
     /// \param xSpacing Distance between centers of adjacent voxels along x axis in the image.
@@ -50,7 +52,7 @@ public:
     /// \return Pointer to the image matrix. Its size can be calculated using parameters: dims, xNumber, yNumber and zNumber.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    double* acquireImage(char* filename, int& dims,
+    double* acquireImage(gdcm::File& file, int& dims,
         double& xStart, double& xSpacing, int& xNumber,
         double& yStart, double& ySpacing, int& yNumber,
         double& zStart, double& zSpacing, int& zNumber);

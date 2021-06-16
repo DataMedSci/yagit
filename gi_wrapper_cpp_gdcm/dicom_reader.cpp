@@ -35,13 +35,13 @@ DicomReader::DicomReader()
 {
 }
 
-double* DicomReader::acquireImage(char* filename, int& dims,
+double* DicomReader::acquireImage(File& file, int& dims,
     double& xStart, double& xSpacing, int& xNumber,
     double& yStart, double& ySpacing, int& yNumber,
     double& zStart, double& zSpacing, int& zNumber)
 {
     ImageReader reader;
-    reader.SetFileName(filename);
+    reader.SetFile(file);
 
     Image im = reader.GetImage();
     xNumber = im.GetDimension(0);
