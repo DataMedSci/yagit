@@ -17,13 +17,13 @@
  * along with 'yet Another Gamma Index Tool'; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *********************************************************************************************************************/
- 
+
 #ifndef DICOM_READER_H
 #define DICOM_READER_H
 
-
-namespace imebra {
- class DataSet;
+namespace gdcm {
+	class DataSet;
+    class File;
 }
 
 class DicomReader
@@ -33,11 +33,11 @@ public:
 
     /// \brief Retrieves the image matrix and its parameters from DICOM file.
     ///
-    /// \note Every parameter, except for the first one - dataSet, will be filled by the function
+    /// \note Every parameter, except for the first one , will be filled by the function
     ///       with the image spatial parameters. Their initial values are not important and will be lost.
     ///
-    /// \param dataSet  Pointer to the object in which Imebra library stores parsed DICOM file.
-    ///                 The pointer returned by loadDicom() function.
+    /// \param file     Reference to the object in which GDCM library stores parsed DICOM file.
+    ///                 The reference returned by loadDicom() function.
     /// \param dims     Number of dimensions of acquired image.
     /// \param xStart   x coordinate of the center of the most left voxel in the image.
     /// \param xSpacing Distance between centers of adjacent voxels along x axis in the image.
@@ -52,15 +52,15 @@ public:
     /// \return Pointer to the image matrix. Its size can be calculated using parameters: dims, xNumber, yNumber and zNumber.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    double* acquireImage(imebra::DataSet* dataSet, int& dims,
-                         double& xStart, double& xSpacing, int& xNumber,
-                         double& yStart, double& ySpacing, int& yNumber,
-                         double& zStart, double& zSpacing, int& zNumber);
+    double* acquireImage(gdcm::File& file, int& dims,
+        double& xStart, double& xSpacing, int& xNumber,
+        double& yStart, double& ySpacing, int& yNumber,
+        double& zStart, double& zSpacing, int& zNumber);
 
 private:
-    double acquireStart(imebra::DataSet* dataSet, int dim);
+    double acquireStart(gdcm::DataSet& dataSet, int dim);
 
-    double acquireSpacing(imebra::DataSet* dataSet, int dim);
+    double acquireSpacing(gdcm::DataSet& dataSet, int dim);
 };
 
 #endif

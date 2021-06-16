@@ -19,17 +19,17 @@
 #include <imebra/imebra.h>
 
 using namespace std;
-using namespace imebra;
+using namespace gdcm;
 
 class Comparison
 {
 public:
-  Comparison(int dims_, imebra::DataSet* refDataSet_, double* gamma_,
+  Comparison(int dims_, gdcm::File& refFile_, double* gamma_,
     int refXNumber_, int refYNumber_, int refZNumber_, int rescale_, string info_, int size_, double limit_) :
-    dims(dims_), refDataSet(refDataSet_), gamma(gamma_), refXNumber(refXNumber_),
+    dims(dims_), refFile(refFile_), gamma(gamma_), refXNumber(refXNumber_),
     refYNumber(refYNumber_), refZNumber(refZNumber_), rescale(rescale_), info(info_), size(size_), limit(limit_){}
   int dims;
-  imebra::DataSet* refDataSet;
+  gdcm::File& refFile;
   double* gamma;
   int refXNumber;
   int refYNumber;
