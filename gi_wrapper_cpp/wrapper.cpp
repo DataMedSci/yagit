@@ -39,6 +39,7 @@ using namespace std;
 
 File& loadDicom(string filepath)
 {
+    logWrapperMessage("Loading DICOM file: " + filepath);
     Reader reader;
     reader.SetFileName(filepath.c_str());
     return reader.GetFile();

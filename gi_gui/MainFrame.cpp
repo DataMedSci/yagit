@@ -426,19 +426,19 @@ void MainFrame::OnCalculate(wxCommandEvent& event)
   double refXStart, refYStart, refZStart, tarXStart, tarYStart, tarZStart,
           refXSpacing, refYSpacing, refZSpacing, tarXSpacing, tarYSpacing, tarZSpacing;
   logCoreMessage("Loading reference image ...");
-  unique_ptr<imebra::DataSet> refDataSet(loadDicom(refPath.ToStdString()));
+  gdcm::File& refFile = loadDicom(refPath.ToStdString());
   logCoreMessage("Reference image has been loaded");
   logCoreMessage("Loading target image ...");
-  unique_ptr<imebra::DataSet> tarDataSet(loadDicom(tarPath.ToStdString()));
+  gdcm::File& tarFile = loadDicom(tarPath.ToStdString());
   logCoreMessage("Target image has been loaded");
   logCoreMessage("Processing reference image ...");
-  double* reference = acquireImage(refDataSet.get(), refNDims,
+  double* reference = acquireImage(refFile, refNDims,
                                    refXStart, refXSpacing, refXNumber,
                                    refYStart, refYSpacing, refYNumber,
                                    refZStart, refZSpacing, refZNumber);
   logCoreMessage("Reference image has been processed");
   logCoreMessage("Processing target image ...");
-  double* target = acquireImage(tarDataSet.get(), tarNDims,
+  double* target = acquireImage(tarFile, tarNDims,
                                 tarXStart, tarXSpacing, tarXNumber,
                                 tarYStart, tarYSpacing, tarYNumber,
                                 tarZStart, tarZSpacing, tarZNumber);
@@ -490,7 +490,10 @@ void MainFrame::OnCalculate(wxCommandEvent& event)
   setGPR(std::to_string(gammaPassingRate(refSize, gamma)));
   logCoreMessage("Statistics has been set");
 
-  lastComparison = new Comparison(parsedParameters->dims, CodecFactory::load(refPath.ToStdString()), gamma,
+  Reader reader;
+  reader.SetFileName(refPath.ToStdString().c_str());
+
+  lastComparison = new Comparison(parsedParameters->dims, reader.GetFile(), gamma,
     refXNumber, refYNumber, refZNumber, parsedParameters->rescale, info, refSize, parsedParameters->limit);
 
   saveGIButton->Enable();

@@ -16,7 +16,14 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *********************************************************************************************************************/
 
-#include <imebra/imebra.h>
+#include "gdcmReader.h"
+#include "gdcmGlobal.h"
+#include "gdcmDicts.h"
+#include "gdcmDict.h"
+#include "gdcmAttribute.h"
+#include "gdcmStringFilter.h"
+#include "gdcmImageReader.h"
+#include "gdcmImageWriter.h"
 
 using namespace std;
 using namespace gdcm;
