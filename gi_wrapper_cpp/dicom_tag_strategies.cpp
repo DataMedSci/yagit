@@ -94,16 +94,28 @@ void applyDicomTagsRewriteStrategy(DataSet& source, DataSet& destination, int re
     // Map strategy passed by parameter from integer value to pointer to function represent strategy
     tagsRewriteStrategy rewriteStrategy = resolveTagsRewriteStrategy(rewriteTagsStrategyId);
 
-    destination = source; // TODO fix
-    destination.Remove(Tag(0x7FE0, 0x0008));
-    destination.Remove(Tag(0x7FE0, 0x0009));
-    destination.Remove(Tag(0x7FE0, 0x0010));
-
     for (DataSet::ConstIterator des = destination.Begin(), desEnd = destination.End(); des != desEnd; ++des)
     {   
-        if (!rewriteStrategy(des->GetTag().GetGroup(), des->GetTag().GetElement(), userTags))
+        if (rewriteStrategy(des->GetTag().GetGroup(), des->GetTag().GetElement(), userTags))
         {
-            destination.Remove(des->GetTag());
+            // 0x7fe0 = Pixel_Data tagId - we create new data so we shouldn't rewrite this tag from input dicom
+            if (des->GetTag().GetGroup() == 0x7FE0) {
+                continue;
+            }
+
+            destination.Replace(*des);
+            DataElement destinationDataElement = destination.GetDataElement(des->GetTag());
+
+            if (VR().GetVRString(des->GetVR()) == "SQ") {
+                // In DICOM standard item positions start from 1
+                for (int i = 1; i <= des->GetValueAsSQ()->GetNumberOfItems(); i++)
+                {
+                    applyDicomTagsRewriteStrategy(des->GetValueAsSQ()->GetItem(i).GetNestedDataSet(),
+                        destinationDataElement.GetValueAsSQ()->GetItem(i).GetNestedDataSet(),
+                        rewriteTagsStrategyId, userTags);
+                    destination.Replace(destinationDataElement);
+                }
+            }
         }
 
         // TODO nested data sets

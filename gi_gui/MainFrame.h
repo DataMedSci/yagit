@@ -28,7 +28,15 @@
 
 #include "ParametersParser.h"
 
-#include <imebra/imebra.h>
+#include "gdcmReader.h"
+#include "gdcmGlobal.h"
+#include "gdcmDicts.h"
+#include "gdcmDict.h"
+#include "gdcmAttribute.h"
+#include "gdcmStringFilter.h"
+#include "gdcmImageReader.h"
+#include "gdcmSequenceOfItems.h"
+#include "gdcmDataElement.h"
 #include "dispatcher.h"
 #include "wrapper.h"
 #include "additions.h"
