@@ -51,8 +51,6 @@
 #include "core_logger.h"
 #include "wrapper_logger.h"
 
-
-using namespace imebra;
 // using namespace std;
 
 class MainFrame: public wxFrame

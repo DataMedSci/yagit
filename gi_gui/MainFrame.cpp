@@ -382,7 +382,7 @@ void MainFrame::OnSave(wxCommandEvent& event)
   set <pair<int, int>> emptyTagSet = {};
 
   logCoreMessage("Saving Gamma Index result ...");
-  saveImage(lastComparison->dims, lastComparison->refDataSet, saveFileDialog.GetPath().ToStdString(), lastComparison->gamma, lastComparison->refXNumber, lastComparison->refYNumber, lastComparison->refZNumber, lastComparison->rescale, lastComparison->limit * 1.1, strategy, emptyTagSet);
+  //saveImage(lastComparison->dims, lastComparison->refDataSet, saveFileDialog.GetPath().ToStdString(), lastComparison->gamma, lastComparison->refXNumber, lastComparison->refYNumber, lastComparison->refZNumber, lastComparison->rescale, lastComparison->limit * 1.1, strategy, emptyTagSet);
   logCoreMessage("Gamma Index result has been saved");
 
 }
