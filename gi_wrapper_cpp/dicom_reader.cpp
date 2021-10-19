@@ -91,22 +91,22 @@ double* DicomReader::acquireImage(File& file, int& dims,
             for (int i = 0; i < xNumber; i++)
             {
                 if (pixelSize == 1) {
-                    _int8 currentValue;
+                    int8_t currentValue;
                     memcpy(&currentValue, &buffer[((k * yNumber + j) * xNumber + i) * pixelSize], pixelSize);
                     array[(k * yNumber + j) * xNumber + i] = rescaleSlope * currentValue + rescaleIntercept;
                 }
                 else if (pixelSize == 2) {
-                    _int16 currentValue;
+                    int16_t currentValue;
                     memcpy(&currentValue, &buffer[((k * yNumber + j) * xNumber + i) * pixelSize], pixelSize);
                     array[(k * yNumber + j) * xNumber + i] = rescaleSlope * currentValue + rescaleIntercept;
                 }
                 else if (pixelSize == 4) {
-                    _int32 currentValue;
+                    int32_t currentValue;
                     memcpy(&currentValue, &buffer[((k * yNumber + j) * xNumber + i) * pixelSize], pixelSize);
                     array[(k * yNumber + j) * xNumber + i] = rescaleSlope * currentValue + rescaleIntercept;
                 }
                 else if (pixelSize == 8) {
-                    _int64 currentValue;
+                    int64_t currentValue;
                     memcpy(&currentValue, &buffer[((k * yNumber + j) * xNumber + i) * pixelSize], pixelSize);
                     array[(k * yNumber + j) * xNumber + i] = rescaleSlope * currentValue + rescaleIntercept;
                 }
