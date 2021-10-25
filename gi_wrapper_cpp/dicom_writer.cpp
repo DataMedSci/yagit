@@ -135,19 +135,19 @@ void DicomWriter2D::insertFrames(File& newFile, PixelFormat pf, PhotometricInter
                     toFill = (int)(fillValue * rescale);
 
                 if (pixelSize == 1) {
-                    _int8 currentValue = (_int8)toFill;
+                    int8_t  currentValue = (int8_t)toFill;
                     memcpy(&buffer[(j * xNumber + i) * pixelSize], &currentValue, pixelSize);
                 }
                 else if (pixelSize == 2) {
-                    _int16 currentValue = (_int16)toFill;
+                    int16_t  currentValue = (int16_t)toFill;
                     memcpy(&buffer[(j * xNumber + i) * pixelSize], &currentValue, pixelSize);
                 }
                 else if (pixelSize == 4) {
-                    _int32 currentValue = (_int32)toFill;
+                    int32_t currentValue = (int32_t)toFill;
                     memcpy(&buffer[(j * xNumber + i) * pixelSize], &currentValue, pixelSize);
                 }
                 else if (pixelSize == 8) {
-                    _int64 currentValue = (_int64)toFill;
+                    int64_t currentValue = (int64_t)toFill;
                     memcpy(&buffer[(j * xNumber + i) * pixelSize], &currentValue, pixelSize);
                 }
                 else {
@@ -206,19 +206,19 @@ void DicomWriter3D::insertFrames(File& newFile, PixelFormat pf, PhotometricInter
                         toFill = (int)(fillValue * rescale);
 
                     if (pixelSize == 1) {
-                        _int8 currentValue = (_int8)toFill;
+                        int8_t currentValue = (int8_t)toFill;
                         memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
                     }
                     else if (pixelSize == 2) {
-                        _int16 currentValue = (_int16)toFill;
+                        int16_t currentValue = (int16_t)toFill;
                         memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
                     }
                     else if (pixelSize == 4) {
-                        _int32 currentValue = (_int32)toFill;
+                        int32_t currentValue = (int32_t)toFill;
                         memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
                     }
                     else if (pixelSize == 8) {
-                        _int64 currentValue = (_int64)toFill;
+                        int64_t currentValue = (int64_t)toFill;
                         memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
                     }
                     else {
@@ -284,19 +284,19 @@ void DicomWriter3DSliceXY::insertFrames(File& newFile, PixelFormat pf, Photometr
                         toFill = (int)(fillValue * rescale);
 
                     if (pixelSize == 1) {
-                        _int8 currentValue = (_int8)toFill;
+                        int8_t currentValue = (int8_t)toFill;
                         memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
                     }
                     else if (pixelSize == 2) {
-                        _int16 currentValue = (_int16)toFill;
+                        int16_t currentValue = (int16_t)toFill;
                         memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
                     }
                     else if (pixelSize == 4) {
-                        _int32 currentValue = (_int32)toFill;
+                        int32_t currentValue = (int32_t)toFill;
                         memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
                     }
                     else if (pixelSize == 8) {
-                        _int64 currentValue = (_int64)toFill;
+                        int64_t currentValue = (int64_t)toFill;
                         memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
                     }
                     else {
@@ -363,19 +363,19 @@ void DicomWriter3DSliceXZ::insertFrames(File& newFile, PixelFormat pf, Photometr
                         toFill = (int)(fillValue * rescale);
 
                     if (pixelSize == 1) {
-                        _int8 currentValue = (_int8)toFill;
+                        int8_t currentValue = (int8_t)toFill;
                         memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
                     }
                     else if (pixelSize == 2) {
-                        _int16 currentValue = (_int16)toFill;
+                        int16_t currentValue = (int16_t)toFill;
                         memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
                     }
                     else if (pixelSize == 4) {
-                        _int32 currentValue = (_int32)toFill;
+                        int32_t currentValue = (int32_t)toFill;
                         memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
                     }
                     else if (pixelSize == 8) {
-                        _int64 currentValue = (_int64)toFill;
+                        int64_t currentValue = (int64_t)toFill;
                         memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
                     }
                     else {
@@ -441,19 +441,19 @@ void DicomWriter3DSliceYZ::insertFrames(File& newFile, PixelFormat pf, Photometr
                         toFill = (int)(fillValue * rescale);
 
                     if (pixelSize == 1) {
-                        _int8 currentValue = (_int8)toFill;
+                        int8_t currentValue = (int8_t)toFill;
                         memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
                     }
                     else if (pixelSize == 2) {
-                        _int16 currentValue = (_int16)toFill;
+                        int16_t currentValue = (int16_t)toFill;
                         memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
                     }
                     else if (pixelSize == 4) {
-                        _int32 currentValue = (_int32)toFill;
+                        int32_t currentValue = (int32_t)toFill;
                         memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
                     }
                     else if (pixelSize == 8) {
-                        _int64 currentValue = (_int64)toFill;
+                        int64_t currentValue = (int64_t)toFill;
                         memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
                     }
                     else {
