@@ -27,7 +27,7 @@ find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}" gi_wrapper_sources)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${gi_wrapper_sources})
 
 add_library(gi_wrapper STATIC ${gi_wrapper_sources})
-target_link_libraries(gi_wrapper PRIVATE gdcmIOD gdcmDICT gdcmDSED gdcmMEXD)
+target_link_libraries(gi_wrapper PRIVATE gdcmCommon gdcmIOD gdcmDICT gdcmMSFF gdcmDSED gdcmMEXD)
 target_include_directories(gi_wrapper PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 set_target_properties(gi_wrapper
