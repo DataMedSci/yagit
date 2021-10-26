@@ -30,7 +30,7 @@ const string FILENAME = "log.txt";
 string createWrapperTimestamp()
 {
 	time_t rawtime;
-	struct tm * timeinfo;
+	struct tm* timeinfo;
 	char buffer[80];
 
 	time(&rawtime);

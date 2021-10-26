@@ -20,6 +20,8 @@ project(yAGIT)
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(common)
 
+find_package(GDCM CONFIG REQUIRED)
+
 find_package(wxWidgets COMPONENTS core base adv REQUIRED)
 include(${wxWidgets_USE_FILE})
 
@@ -33,7 +35,7 @@ else()
 	add_executable(yAGIT ${yAGIT_sources})
 endif()
 
-target_link_libraries(yAGIT PRIVATE gi_core gi_additions gi_wrapper ${wxWidgets_LIBRARIES})
+target_link_libraries(yAGIT PRIVATE gi_core gi_additions gi_wrapper ${wxWidgets_LIBRARIES} gdcmIOD gdcmDICT gdcmDSED gdcmMEXD)
 target_include_directories(yAGIT PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${wxWidgets_INCLUDE_DIRS})
 
 set_target_properties(yAGIT

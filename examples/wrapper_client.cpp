@@ -17,7 +17,14 @@
  *********************************************************************************************************************/
 
 #include <iostream>
-#include <imebra/imebra.h>
+#include "gdcmReader.h"
+#include "gdcmGlobal.h"
+#include "gdcmDicts.h"
+#include "gdcmDict.h"
+#include "gdcmAttribute.h"
+#include "gdcmStringFilter.h"
+#include "gdcmImageReader.h"
+#include "gdcmImageWriter.h"
 #include "additions.h"
 #include "dispatcher.h"
 #include "wrapper.h"
@@ -26,7 +33,7 @@
 #include <set>
 
 using namespace std;
-using namespace imebra;
+using namespace gdcm;
 
 int main() {
     /************** Parameters **************/
@@ -74,16 +81,16 @@ int main() {
     double refXStart, refYStart, refZStart, tarXStart, tarYStart, tarZStart,
            refXSpacing, refYSpacing, refZSpacing, tarXSpacing, tarYSpacing, tarZSpacing;
 
-    // Load reference and target images from DICOM file. These pointers need to be passed to the other functions.
-    unique_ptr<imebra::DataSet> refDataSet(loadDicom(refFile));
-    unique_ptr<imebra::DataSet> tarDataSet(loadDicom(tarFile));
+    // Load reference and target images from DICOM file. These references need to be passed to the other functions.
+    gdcm::File& refDataSet = loadDicom(refFile);
+    gdcm::File& tarDataSet = loadDicom(tarFile);
 
     // Acquire images from the dataSets.
-    double* reference = acquireImage(refDataSet.get(), refNDims,
+    double* reference = acquireImage(refDataSet, refNDims,
                                      refXStart, refXSpacing, refXNumber,
                                      refYStart, refYSpacing, refYNumber,
                                      refZStart, refZSpacing, refZNumber);
-    double* target = acquireImage(tarDataSet.get(), tarNDims,
+    double* target = acquireImage(tarDataSet, tarNDims,
                                   tarXStart, tarXSpacing, tarXNumber,
                                   tarYStart, tarYSpacing, tarYNumber,
                                   tarZStart, tarZSpacing, tarZNumber);
@@ -105,7 +112,7 @@ int main() {
                                    percentage, dta, local, referenceValue, limit);
 
     // Save result into a DICOM file.
-    saveImage(dims, refDataSet.get(), outFile, gamma, refXNumber, refYNumber, refZNumber, precision, fillValue, tagStrategy, tagSet);
+    saveImage(dims, refDataSet, outFile, gamma, refXNumber, refYNumber, refZNumber, precision, fillValue, tagStrategy, tagSet);
 
     //Prepare statistics file.
     int gammaSize = calculateGammaArraySize(dims, refXNumber, refYNumber, refZNumber);

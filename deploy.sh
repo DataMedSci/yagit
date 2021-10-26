@@ -50,12 +50,12 @@ cd ..
 echo "Building wrapper module"
 cd gi_wrapper_cpp
 make
-cd ..
-cd examples
-echo "Building gi_core_2d_client"
-make build_core_2d_client
-echo "Building gi_wrapper_client"
-make build_wrapper_client
+#cd ..
+#cd examples
+#echo "Building gi_core_2d_client"
+#make build_core_2d_client
+#echo "Building gi_wrapper_client"
+#make build_wrapper_client
 cd ..
 echo "Building GUI module"
 cd gi_gui

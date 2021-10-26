@@ -24,7 +24,7 @@
 #include <set>
 
 
-namespace imebra {
+namespace gdcm {
     class DataSet;
 }
 
@@ -43,9 +43,9 @@ typedef bool (*tagsRewriteStrategy)(int, int, std::set<std::pair<int, int>>);
 ///           {0x0010, 0x0010},    // DICOM PatientName Tag
 ///       };
 ///
-/// \param source                Pointer to the object in which Imebra library stores parsed DICOM file from which the tags are rewritten.
+/// \param source                Object in which GDCM library stores parsed DICOM file from which the tags are rewritten.
 ///                              The pointer returned by loadDicom() function.
-/// \param destination           Pointer to the object in which Imebra library stores parsed DICOM file to which the tags are rewritten.
+/// \param destination           Object in which GDCM library stores parsed DICOM file to which the tags are rewritten.
 ///                              The pointer returned by loadDicom() function.
 /// \param rewriteTagsStrategyId Specifies the strategy of transferring tags from reference DICOM to output DICOM file:
 ///                               - 5 - rewrite all tags, except these specified in tags parameter
@@ -58,7 +58,7 @@ typedef bool (*tagsRewriteStrategy)(int, int, std::set<std::pair<int, int>>);
 /// \return Pointer to the image matrix. Its size can be calculated using parameters: dims, xNumber, yNumber and zNumber.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-void applyDicomTagsRewriteStrategy(imebra::DataSet* source, imebra::DataSet* destination,
-                                   int rewriteTagsStrategyId, std::set<std::pair<int, int>> userTags);
+void applyDicomTagsRewriteStrategy(gdcm::DataSet& source, gdcm::DataSet& destination,
+    int rewriteTagsStrategyId, std::set<std::pair<int, int>> userTags);
 
 #endif

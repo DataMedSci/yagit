@@ -22,12 +22,18 @@
 #include <cmath>
 #include <set>
 #include <utility>
-#include <imebra/imebra.h>
-#include "dicom_tag_stategies.h"
+#include "gdcmReader.h"
+#include "gdcmGlobal.h"
+#include "gdcmDicts.h"
+#include "gdcmDict.h"
+#include "gdcmAttribute.h"
+#include "gdcmStringFilter.h"
+#include "gdcmImageReader.h"
+#include "gdcmImageWriter.h"
+#include "dicom_tag_strategies.h"
 
-using namespace imebra;
+using namespace gdcm;
 using namespace std;
-
 
 DicomWriter::DicomWriter()
 {
@@ -37,42 +43,59 @@ DicomWriter::~DicomWriter()
 {
 }
 
-void DicomWriter::saveImage(string filepath, DataSet* oldDataSet, double* gamma,
-                            int xNumber, int yNumber, int zNumber, int precision, double fillValue,
-                            int rewriteTagsStrategyId, set<pair<int, int> > tags, int slice)
+void DicomWriter::saveImage(string filepath, File& oldFile, double* gamma,
+    int xNumber, int yNumber, int zNumber, int precision, double fillValue,
+    int rewriteTagsStrategyId, set<pair<int, int> > tags, int slice)
 {
+    ImageReader oldImageReader;
+    oldImageReader.SetFile(oldFile);
 
-    unique_ptr <imebra::Image> oldImage(oldDataSet->getImage(0));
-    bitDepth_t depth = oldImage->getDepth();
-    string colorSpace = oldImage->getColorSpace();
-    uint32_t highBit = oldDataSet->getUnsignedLong(TagId(tagId_t::BitsAllocated_0028_0100), 0) - 1;
+    Image oldImage = oldImageReader.GetImage();
+    DataSet& oldDataSet = oldFile.GetDataSet();
+    PixelFormat pixelFormat = oldImage.GetPixelFormat();
+    PhotometricInterpretation photometricInterpretation = oldImage.GetPhotometricInterpretation();
     int rescale = pow(10, precision);
 
-    // Set dicom tags connected with pixel data.
-    DataSet newDataSet("1.2.840.10008.1.2.1");
+    Writer newWriter;
+    newWriter.SetFileName(filepath.c_str());
+    File& newFile = newWriter.GetFile();
+    DataSet& newDataSet = newFile.GetDataSet();
+    newFile.GetHeader().SetDataSetTransferSyntax(TransferSyntax().ExplicitVRLittleEndian);
 
-    insertFrames(newDataSet, depth, colorSpace, highBit, gamma, xNumber, yNumber, zNumber, rescale, fillValue, slice);
+    insertFrames(newFile, pixelFormat, photometricInterpretation, gamma, xNumber, yNumber, zNumber, rescale, fillValue, slice);
 
     // Copy seleceted dicom tags.
-    applyDicomTagsRewriteStrategy(oldDataSet, &newDataSet, rewriteTagsStrategyId, tags);
+    applyDicomTagsRewriteStrategy(oldDataSet, newDataSet, rewriteTagsStrategyId, tags);
 
     // Set tags allowing to rescale value stored in DICOM pixel array into expected units.
-    setDicomRescaleTags(&newDataSet, rescale);
+    setDicomRescaleTags(newDataSet, rescale);
 
-    // Insert an image into the dataset.
-    CodecFactory::save(newDataSet, filepath, codecType_t::dicom);
+    if (!newWriter.Write())
+    {
+        cerr << "Could not write: " << filepath << endl;
+        exit(-1);
+    }
 }
 
-void DicomWriter::setDicomRescaleTags(DataSet* newDataSet, int rescale)
+void DicomWriter::setDicomRescaleTags(DataSet& newDataSet, int rescale)
 {
-    if (newDataSet->bufferExists(TagId(tagId_t::RescaleSlope_0028_1053), 0))
-        newDataSet->setDouble(TagId(tagId_t::RescaleSlope_0028_1053), 1.0 / rescale);
+    if (newDataSet.FindDataElement(Tag(0x0028, 0x1053)))
+    {
+        DataElement newDE = DataElement(Tag(0x0028, 0x1053), (VL)(1.0 / rescale), newDataSet.GetDataElement(Tag(0x0028, 0x1053)).GetVR());
+        newDataSet.Replace(newDE);
+    }
 
-    if (newDataSet->bufferExists(TagId(tagId_t::RescaleIntercept_0028_1052), 0))
-        newDataSet->setDouble(TagId(tagId_t::RescaleIntercept_0028_1052), 0.0);
+    if (newDataSet.FindDataElement(Tag(0x0028, 0x1052)))
+    {
+        DataElement newDE = DataElement(Tag(0x0028, 0x1052), (VL)(0.0), newDataSet.GetDataElement(Tag(0x0028, 0x1052)).GetVR());
+        newDataSet.Replace(newDE);
+    }
 
-    if (newDataSet->bufferExists(TagId(tagId_t::DoseGridScaling_3004_000E), 0))
-        newDataSet->setDouble(TagId(tagId_t::DoseGridScaling_3004_000E), 1.0 / rescale);
+    if (newDataSet.FindDataElement(Tag(0x3004, 0x000E)))
+    {
+        DataElement newDE = DataElement(Tag(0x3004, 0x000E), (VL)(1.0 / rescale), newDataSet.GetDataElement(Tag(0x3004, 0x000E)).GetVR());
+        newDataSet.Replace(newDE);
+    }
 }
 
 
@@ -85,24 +108,63 @@ DicomWriter2D::~DicomWriter2D()
 {
 }
 
-void DicomWriter2D::insertFrames(DataSet& newDataSet, bitDepth_t depth, string colorSpace, uint32_t highBit,
-                                 double* gamma, int xNumber, int yNumber, int, int rescale, double fillValue, int)
+void DicomWriter2D::insertFrames(File& newFile, PixelFormat pf, PhotometricInterpretation pi,
+    double* gamma, int xNumber, int yNumber, int, int rescale, double fillValue, int)
 {
-    imebra::Image image(xNumber, yNumber, depth, colorSpace, highBit);
+    DataSet& newDataSet = newFile.GetDataSet();
+
+    Image image = Image();
+    image.SetNumberOfDimensions(2);
+    image.SetDimension(0, xNumber);
+    image.SetDimension(1, yNumber);
+    image.SetPixelFormat(pf);
+    image.SetPhotometricInterpretation(pi);
+
+
     {
-        unique_ptr<WritingDataHandlerNumeric> dataHandler(image.getWritingDataHandler());
+        int pixelSize = (int)image.GetPixelFormat().GetPixelSize();
+        char* buffer = new char[xNumber * yNumber * pixelSize];
         for (int j = 0; j < yNumber; j++)
         {
             for (int i = 0; i < xNumber; i++)
             {
+                int toFill;
                 if (!std::isnan(gamma[j * xNumber + i]))
-                    dataHandler->setUnsignedLong(j * xNumber + i, (int) (gamma[j * xNumber + i] * rescale));
+                    toFill = (int)(gamma[j * xNumber + i] * rescale);
                 else
-                    dataHandler->setUnsignedLong(j * xNumber + i, (int) (fillValue * rescale));
+                    toFill = (int)(fillValue * rescale);
+
+                if (pixelSize == 1) {
+                    int8_t  currentValue = (int8_t)toFill;
+                    memcpy(&buffer[(j * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                }
+                else if (pixelSize == 2) {
+                    int16_t  currentValue = (int16_t)toFill;
+                    memcpy(&buffer[(j * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                }
+                else if (pixelSize == 4) {
+                    int32_t currentValue = (int32_t)toFill;
+                    memcpy(&buffer[(j * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                }
+                else if (pixelSize == 8) {
+                    int64_t currentValue = (int64_t)toFill;
+                    memcpy(&buffer[(j * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                }
+                else {
+                    cerr << "Error. Wrong pixel size " << pixelSize << "." << endl;
+                    exit(-1);
+                }
             }
         }
+        DataElement pixeldata(Tag(0x7fe0, 0x0010));
+        pixeldata.SetByteValue(buffer, xNumber * yNumber * pixelSize);
+        delete[] buffer;
+        image.SetDataElement(pixeldata);
     }
-    newDataSet.setImage(0, image, imageQuality_t::high);
+
+    ImageWriter writer;
+    writer.SetFile(newFile);
+    writer.SetImage(image);
 }
 
 
@@ -115,27 +177,66 @@ DicomWriter3D::~DicomWriter3D()
 {
 }
 
-void DicomWriter3D::insertFrames(DataSet& newDataSet, bitDepth_t depth, string colorSpace, uint32_t highBit,
-                                 double* gamma, int xNumber, int yNumber, int zNumber, int rescale, double fillValue, int)
+void DicomWriter3D::insertFrames(File& newFile, PixelFormat pf, PhotometricInterpretation pi,
+    double* gamma, int xNumber, int yNumber, int zNumber, int rescale, double fillValue, int)
 {
-    for (int k = 0; k < zNumber; k++)
+    DataSet& newDataSet = newFile.GetDataSet();
+
+    Image image = Image();
+    image.SetNumberOfDimensions(2);
+    image.SetDimension(0, xNumber);
+    image.SetDimension(1, yNumber);
+    image.SetPixelFormat(pf);
+    image.SetPhotometricInterpretation(pi);
+
+
     {
-        imebra::Image image(xNumber, yNumber, depth, colorSpace, highBit);
+        int pixelSize = (int)image.GetPixelFormat().GetPixelSize();
+        char* buffer = new char[xNumber * yNumber * zNumber * pixelSize];
+        for (int k = 0; k < zNumber; k++) 
         {
-            unique_ptr <WritingDataHandlerNumeric> dataHandler(image.getWritingDataHandler());
             for (int j = 0; j < yNumber; j++)
             {
                 for (int i = 0; i < xNumber; i++)
                 {
+                    int toFill;
                     if (!std::isnan(gamma[(k * yNumber + j) * xNumber + i]))
-                        dataHandler->setUnsignedLong(j * xNumber + i, (int) (gamma[(k * yNumber + j) * xNumber + i] * rescale));
+                        toFill = (int)(gamma[(k * yNumber + j) * xNumber + i] * rescale);
                     else
-                        dataHandler->setUnsignedLong(j * xNumber + i, (int) (fillValue * rescale));
+                        toFill = (int)(fillValue * rescale);
+
+                    if (pixelSize == 1) {
+                        int8_t currentValue = (int8_t)toFill;
+                        memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                    }
+                    else if (pixelSize == 2) {
+                        int16_t currentValue = (int16_t)toFill;
+                        memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                    }
+                    else if (pixelSize == 4) {
+                        int32_t currentValue = (int32_t)toFill;
+                        memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                    }
+                    else if (pixelSize == 8) {
+                        int64_t currentValue = (int64_t)toFill;
+                        memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                    }
+                    else {
+                        cerr << "Error. Wrong pixel size " << pixelSize << "." << endl;
+                        exit(-1);
+                    }
                 }
             }
         }
-        newDataSet.setImage(k, image, imageQuality_t::high);
+        DataElement pixeldata(Tag(0x7fe0, 0x0010));
+        pixeldata.SetByteValue(buffer, xNumber * yNumber * zNumber * pixelSize);
+        delete[] buffer;
+        image.SetDataElement(pixeldata);
     }
+
+    ImageWriter writer;
+    writer.SetFile(newFile);
+    writer.SetImage(image);
 }
 
 
@@ -148,9 +249,9 @@ DicomWriter3DSliceXY::~DicomWriter3DSliceXY()
 {
 }
 
-void DicomWriter3DSliceXY::insertFrames(DataSet& newDataSet, bitDepth_t depth, string colorSpace, uint32_t highBit,
-                                        double* gamma, int xNumber, int yNumber, int zNumber,
-                                        int rescale, double fillValue, int zSlice)
+void DicomWriter3DSliceXY::insertFrames(File& newFile, PixelFormat pf, PhotometricInterpretation pi,
+    double* gamma, int xNumber, int yNumber, int zNumber,
+    int rescale, double fillValue, int zSlice)
 {
     if (zSlice < 0 || zSlice >= zNumber)
     {
@@ -158,24 +259,63 @@ void DicomWriter3DSliceXY::insertFrames(DataSet& newDataSet, bitDepth_t depth, s
         exit(-1);
     }
 
-    for (int k = 0; k < zNumber; k++)
+    DataSet& newDataSet = newFile.GetDataSet();
+
+    Image image = Image();
+    image.SetNumberOfDimensions(2);
+    image.SetDimension(0, xNumber);
+    image.SetDimension(1, yNumber);
+    image.SetPixelFormat(pf);
+    image.SetPhotometricInterpretation(pi);
+
     {
-        imebra::Image image(xNumber, yNumber, depth, colorSpace, highBit);
+        int pixelSize = (int)image.GetPixelFormat().GetPixelSize();
+        char* buffer = new char[xNumber * yNumber * zNumber * pixelSize];
+        for (int k = 0; k < zNumber; k++)
         {
-            unique_ptr <WritingDataHandlerNumeric> dataHandler(image.getWritingDataHandler());
             for (int j = 0; j < yNumber; j++)
             {
                 for (int i = 0; i < xNumber; i++)
                 {
+                    int toFill;
                     if (k == zSlice && !std::isnan(gamma[j * xNumber + i]))
-                        dataHandler->setUnsignedLong(j * xNumber + i, (int) (gamma[j * xNumber + i] * rescale));
+                        toFill = (int)(gamma[j * xNumber + i] * rescale);
                     else
-                        dataHandler->setUnsignedLong(j * xNumber + i, (int) (fillValue * rescale));
+                        toFill = (int)(fillValue * rescale);
+
+                    if (pixelSize == 1) {
+                        int8_t currentValue = (int8_t)toFill;
+                        memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                    }
+                    else if (pixelSize == 2) {
+                        int16_t currentValue = (int16_t)toFill;
+                        memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                    }
+                    else if (pixelSize == 4) {
+                        int32_t currentValue = (int32_t)toFill;
+                        memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                    }
+                    else if (pixelSize == 8) {
+                        int64_t currentValue = (int64_t)toFill;
+                        memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                    }
+                    else {
+                        cerr << "Error. Wrong pixel size " << pixelSize << "." << endl;
+                        exit(-1);
+                    }
                 }
             }
         }
-        newDataSet.setImage(k, image, imageQuality_t::high);
+        DataElement pixeldata(Tag(0x7fe0, 0x0010));
+        pixeldata.SetByteValue(buffer, xNumber * yNumber * zNumber * pixelSize);
+        delete[] buffer;
+        // not sure if I understand the purpose of it well enough, might need a change
+        image.SetDataElement(pixeldata);
     }
+
+    ImageWriter writer;
+    writer.SetFile(newFile);
+    writer.SetImage(image);
 }
 
 
@@ -188,9 +328,9 @@ DicomWriter3DSliceXZ::~DicomWriter3DSliceXZ()
 {
 }
 
-void DicomWriter3DSliceXZ::insertFrames(DataSet& newDataSet, bitDepth_t depth, string colorSpace, uint32_t highBit,
-                                        double* gamma, int xNumber, int yNumber, int zNumber,
-                                        int rescale, double fillValue, int ySlice)
+void DicomWriter3DSliceXZ::insertFrames(File& newFile, PixelFormat pf, PhotometricInterpretation pi,
+    double* gamma, int xNumber, int yNumber, int zNumber,
+    int rescale, double fillValue, int ySlice)
 {
     if (ySlice < 0 || ySlice >= yNumber)
     {
@@ -198,24 +338,62 @@ void DicomWriter3DSliceXZ::insertFrames(DataSet& newDataSet, bitDepth_t depth, s
         exit(-1);
     }
 
-    for (int k = 0; k < zNumber; k++)
+    DataSet& newDataSet = newFile.GetDataSet();
+
+    Image image = Image();
+    image.SetNumberOfDimensions(2);
+    image.SetDimension(0, xNumber);
+    image.SetDimension(1, yNumber);
+    image.SetPixelFormat(pf);
+    image.SetPhotometricInterpretation(pi);
+
     {
-        imebra::Image image(xNumber, yNumber, depth, colorSpace, highBit);
+        int pixelSize = (int)image.GetPixelFormat().GetPixelSize();
+        char* buffer = new char[xNumber * yNumber * zNumber * pixelSize];
+        for (int k = 0; k < zNumber; k++)
         {
-            unique_ptr <WritingDataHandlerNumeric> dataHandler(image.getWritingDataHandler());
             for (int j = 0; j < yNumber; j++)
             {
                 for (int i = 0; i < xNumber; i++)
                 {
+                    int toFill;
                     if (j == ySlice && !std::isnan(gamma[k * xNumber + i]))
-                        dataHandler->setUnsignedLong(j * xNumber + i, (int) (gamma[k * xNumber + i] * rescale));
+                        toFill = (int)(gamma[k * xNumber + i] * rescale);
                     else
-                        dataHandler->setUnsignedLong(j * xNumber + i, (int) (fillValue * rescale));
+                        toFill = (int)(fillValue * rescale);
+
+                    if (pixelSize == 1) {
+                        int8_t currentValue = (int8_t)toFill;
+                        memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                    }
+                    else if (pixelSize == 2) {
+                        int16_t currentValue = (int16_t)toFill;
+                        memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                    }
+                    else if (pixelSize == 4) {
+                        int32_t currentValue = (int32_t)toFill;
+                        memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                    }
+                    else if (pixelSize == 8) {
+                        int64_t currentValue = (int64_t)toFill;
+                        memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                    }
+                    else {
+                        cerr << "Error. Wrong pixel size " << pixelSize << "." << endl;
+                        exit(-1);
+                    }
                 }
             }
         }
-        newDataSet.setImage(k, image, imageQuality_t::high);
+        DataElement pixeldata(Tag(0x7fe0, 0x0010));
+        pixeldata.SetByteValue(buffer, xNumber * yNumber * zNumber * pixelSize);
+        delete[] buffer;
+        image.SetDataElement(pixeldata);
     }
+
+    ImageWriter writer;
+    writer.SetFile(newFile);
+    writer.SetImage(image);
 }
 
 
@@ -228,9 +406,9 @@ DicomWriter3DSliceYZ::~DicomWriter3DSliceYZ()
 {
 }
 
-void DicomWriter3DSliceYZ::insertFrames(DataSet& newDataSet, bitDepth_t depth, string colorSpace, uint32_t highBit,
-                                        double* gamma, int xNumber, int yNumber, int zNumber,
-                                        int rescale, double fillValue, int xSlice)
+void DicomWriter3DSliceYZ::insertFrames(File& newFile, PixelFormat pf, PhotometricInterpretation pi,
+    double* gamma, int xNumber, int yNumber, int zNumber,
+    int rescale, double fillValue, int xSlice)
 {
     if (xSlice < 0 || xSlice >= xNumber)
     {
@@ -238,22 +416,60 @@ void DicomWriter3DSliceYZ::insertFrames(DataSet& newDataSet, bitDepth_t depth, s
         exit(-1);
     }
 
-    for (int k = 0; k < zNumber; k++)
+    DataSet& newDataSet = newFile.GetDataSet();
+
+    Image image = Image();
+    image.SetNumberOfDimensions(2);
+    image.SetDimension(0, xNumber);
+    image.SetDimension(1, yNumber);
+    image.SetPixelFormat(pf);
+    image.SetPhotometricInterpretation(pi);
+
     {
-        imebra::Image image(xNumber, yNumber, depth, colorSpace, highBit);
+        int pixelSize = (int)image.GetPixelFormat().GetPixelSize();
+        char* buffer = new char[xNumber * yNumber * zNumber * pixelSize];
+        for (int k = 0; k < zNumber; k++)
         {
-            unique_ptr <WritingDataHandlerNumeric> dataHandler(image.getWritingDataHandler());
             for (int j = 0; j < yNumber; j++)
             {
                 for (int i = 0; i < xNumber; i++)
                 {
-                    if (i == xSlice && !std::isnan(gamma[k * yNumber + j]))
-                        dataHandler->setUnsignedLong(j * xNumber + i, (int) (gamma[k * yNumber + j] * rescale));
+                    int toFill;
+                    if (i == xSlice && !std::isnan(gamma[k * yNumber + i]))
+                        toFill = (int)(gamma[k * yNumber + i] * rescale);
                     else
-                        dataHandler->setUnsignedLong(j * xNumber + i, (int) (fillValue * rescale));
+                        toFill = (int)(fillValue * rescale);
+
+                    if (pixelSize == 1) {
+                        int8_t currentValue = (int8_t)toFill;
+                        memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                    }
+                    else if (pixelSize == 2) {
+                        int16_t currentValue = (int16_t)toFill;
+                        memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                    }
+                    else if (pixelSize == 4) {
+                        int32_t currentValue = (int32_t)toFill;
+                        memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                    }
+                    else if (pixelSize == 8) {
+                        int64_t currentValue = (int64_t)toFill;
+                        memcpy(&buffer[((k * yNumber + j) * xNumber + i) * pixelSize], &currentValue, pixelSize);
+                    }
+                    else {
+                        cerr << "Error. Wrong pixel size " << pixelSize << "." << endl;
+                        exit(-1);
+                    }
                 }
             }
         }
-        newDataSet.setImage(k, image, imageQuality_t::high);
+        DataElement pixeldata(Tag(0x7fe0, 0x0010));
+        pixeldata.SetByteValue(buffer, xNumber * yNumber * zNumber * pixelSize);
+        delete[] buffer;
+        image.SetDataElement(pixeldata);
     }
+
+    ImageWriter writer;
+    writer.SetFile(newFile);
+    writer.SetImage(image);
 }
