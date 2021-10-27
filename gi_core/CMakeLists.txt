@@ -20,16 +20,19 @@ project(gi_core)
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(common)
 
-find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}" gi_core_sources)
+find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}/include" gi_core_includes)
+find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}/src" gi_core_sources)
+find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}/compat" gi_core_compatibility_sources)
 
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${gi_core_sources})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${gi_core_includes} ${gi_core_sources} ${gi_core_compatibility_sources})
 
-add_library(gi_core STATIC ${gi_core_sources})
-target_include_directories(gi_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(gi_core STATIC ${gi_core_includes} ${gi_core_sources} ${gi_core_compatibility_sources})
+target_include_directories(gi_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/compat)
+target_include_directories(gi_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 set_target_properties(gi_core
     PROPERTIES
-    CXX_STANDARD 11
+    CXX_STANDARD 17
     CXX_STANDARD_REQUIRED YES
     CXX_EXTENSIONS NO
 )
