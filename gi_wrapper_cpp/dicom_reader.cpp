@@ -15,59 +15,49 @@
  * along with 'yet Another Gamma Index Tool'; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *********************************************************************************************************************/
-
+ 
 #include "dicom_reader.h"
 
 #include <iostream>
-#include "gdcmReader.h"
-#include "gdcmGlobal.h"
-#include "gdcmDicts.h"
-#include "gdcmDict.h"
-#include "gdcmAttribute.h"
-#include "gdcmStringFilter.h"
-#include "gdcmImageReader.h"
+#include <imebra/imebra.h>
 #include "wrapper_logger.h"
-#include "dicom_tags.h"
 
-using namespace gdcm;
+using namespace imebra;
 using namespace std;
+
 
 DicomReader::DicomReader()
 {
 }
 
-std::vector<double> DicomReader::acquireImage(File& file, int& dims,
-    double& xStart, double& xSpacing, int& xNumber,
-    double& yStart, double& ySpacing, int& yNumber,
-    double& zStart, double& zSpacing, int& zNumber)
+std::unique_ptr<double[]> DicomReader::acquireImage(const imebra::DataSet& dataSet, int& dims,
+                                  double& xStart, double& xSpacing, int& xNumber,
+                                  double& yStart, double& ySpacing, int& yNumber,
+                                  double& zStart, double& zSpacing, int& zNumber)
 {
-    ImageReader reader;
-    reader.SetFile(file);
+    unique_ptr <imebra::Image> im(const_cast<DataSet&>(dataSet).getImage(0));
+    xNumber = im->getWidth();
+    yNumber = im->getHeight();
+    zNumber = 1;
+    //zNumber = const_cast<DataSet&>(dataSet).getUnsignedLong(TagId(tagId_t::NumberOfFrames_0028_0008), 0, 1);
 
-    Image im = reader.GetImage();
-    xNumber = im.GetDimension(0);
-    yNumber = im.GetDimension(1);
-    zNumber = im.GetDimension(2);
-
-    dims = 3;
-    if (zNumber == 1)
+    dims = 2;
+    /*if (zNumber == 1)
     {
         dims--;
         if (yNumber == 1)
             dims--;
-    }
+    }*/
 
-    DataSet dataSet = reader.GetFile().GetDataSet();
+    //xStart = acquireStart(dataSet, 0);
+    //yStart = acquireStart(dataSet, 1);
+    //zStart = acquireStart(dataSet, 2);
 
-    xStart = acquireStart(dataSet, 0);
-    yStart = acquireStart(dataSet, 1);
-    zStart = acquireStart(dataSet, 2);
-
-    xSpacing = acquireSpacing(dataSet, 0);
-    ySpacing = acquireSpacing(dataSet, 1);
-    if (dims == 3)
-        zSpacing = acquireSpacing(dataSet, 2);
-
+    //xSpacing = acquireSpacing(dataSet, 0);
+    //ySpacing = acquireSpacing(dataSet, 1);
+    //if (dims == 3)
+    //    zSpacing = acquireSpacing(dataSet, 2);
+    /*
     if ((dims > 0 && xSpacing <= 0) || (dims > 1 && ySpacing <= 0) || (dims > 2 && zSpacing <= 0))
     {
         cerr << "Error. Non-positive spacing." << endl;
@@ -77,53 +67,37 @@ std::vector<double> DicomReader::acquireImage(File& file, int& dims,
     {
         cerr << "Error. Non-positive resolution." << endl;
         exit(-1);
+    }*/
+
+
+    double rescaleSlope = 1.0;
+    double rescaleIntercept = 0.0;
+    if (const_cast<DataSet&>(dataSet).bufferExists(TagId(tagId_t::DoseGridScaling_3004_000E), 0))
+        rescaleSlope = const_cast<DataSet&>(dataSet).getDouble(TagId(tagId_t::DoseGridScaling_3004_000E), 0);
+    else
+    {
+        if (const_cast<DataSet&>(dataSet).bufferExists(TagId(tagId_t::RescaleSlope_0028_1053), 0))
+            rescaleSlope = const_cast<DataSet&>(dataSet).getDouble(TagId(tagId_t::RescaleSlope_0028_1053), 0);
+
+        if (const_cast<DataSet&>(dataSet).bufferExists(TagId(tagId_t::RescaleIntercept_0028_1052), 0))
+            rescaleIntercept = const_cast<DataSet&>(dataSet).getDouble(TagId(tagId_t::RescaleIntercept_0028_1052), 0);
     }
 
-    double rescaleSlope = im.GetSlope();
-    double rescaleIntercept = im.GetIntercept();
-
-    vector<double> array;
-    array.resize(xNumber * yNumber * zNumber);
-    vector<char> buffer;
-    buffer.resize(im.GetBufferLength());
-    im.GetBuffer(&buffer[0]);
-    int pixelSize = (int) im.GetPixelFormat().GetPixelSize();
+    std::unique_ptr<double[]> data_array = std::make_unique<double[]>(xNumber * yNumber * zNumber);
     for (int k = 0; k < zNumber; k++)
     {
+        unique_ptr <imebra::Image> image(const_cast<DataSet&>(dataSet).getImage(k));
+        unique_ptr <ReadingDataHandlerNumeric> dataHandler(image->getReadingDataHandler());
         for (int j = 0; j < yNumber; j++)
         {
             for (int i = 0; i < xNumber; i++)
             {
-                if (pixelSize == 1) {
-                    int8_t currentValue;
-                    memcpy(&currentValue, &buffer[((k * yNumber + j) * xNumber + i) * pixelSize], pixelSize);
-                    array[(k * yNumber + j) * xNumber + i] = rescaleSlope * currentValue + rescaleIntercept;
-                }
-                else if (pixelSize == 2) {
-                    int16_t currentValue;
-                    memcpy(&currentValue, &buffer[((k * yNumber + j) * xNumber + i) * pixelSize], pixelSize);
-                    array[(k * yNumber + j) * xNumber + i] = rescaleSlope * currentValue + rescaleIntercept;
-                }
-                else if (pixelSize == 4) {
-                    int32_t currentValue;
-                    memcpy(&currentValue, &buffer[((k * yNumber + j) * xNumber + i) * pixelSize], pixelSize);
-                    array[(k * yNumber + j) * xNumber + i] = rescaleSlope * currentValue + rescaleIntercept;
-                }
-                else if (pixelSize == 8) {
-                    int64_t currentValue;
-                    memcpy(&currentValue, &buffer[((k * yNumber + j) * xNumber + i) * pixelSize], pixelSize);
-                    array[(k * yNumber + j) * xNumber + i] = rescaleSlope * currentValue + rescaleIntercept;
-                }
-                else {
-                    cerr << "Error. Wrong pixel size " << pixelSize << "." << endl;
-                    exit(-1);
-                }
+                data_array[(k * yNumber + j) * xNumber + i] = rescaleSlope * dataHandler->getDouble(j * xNumber + i) + rescaleIntercept;
             }
         }
     }
 
-
-     logWrapperMessage("Acquired " + to_string(dims) + "-dimensional image.");
+    logWrapperMessage("Acquired " + to_string(dims) + "-dimensional image.");
 
     string parameterLog = "Image parameters: ";
     if (dims >= 1)
@@ -146,50 +120,35 @@ std::vector<double> DicomReader::acquireImage(File& file, int& dims,
             to_string(zSpacing) + ", " +
             to_string(zNumber);
     }
-     logWrapperMessage(parameterLog);
+    logWrapperMessage(parameterLog);
 
-    return array;
+    return data_array;
 }
 
-
-double DicomReader::acquireStart(DataSet& dataSet, int dim)
+double DicomReader::acquireStart(const imebra::DataSet& dataSet, int dim)
 {
-    Attribute<DCM_IMAGE_POSITION> imagePosition;
-    imagePosition.SetFromDataSet(dataSet);
-
-    return (double) imagePosition.GetValue(dim);
+    return const_cast<DataSet&>(dataSet).getDouble(TagId(tagId_t::ImagePositionPatient_0020_0032), dim);
 }
 
-double DicomReader::acquireSpacing(DataSet& dataSet, int dim)
+double DicomReader::acquireSpacing(const imebra::DataSet& dataSet, int dim)
 {
-    if (dim < 2) {
-        Attribute<DCM_PIXEL_SPACING> pixelSpacing;
-        pixelSpacing.SetFromDataSet(dataSet);
+    if (dim < 2)
         // We subtract dim from 1 because the order of pixel spacing values is inversed in DICOM standard.
         // More info - http://dicom.nema.org/medical/Dicom/2016b/output/chtml/part03/sect_10.7.html.
-        return (double) pixelSpacing.GetValue(1 - dim);
-    }
-    
+        return const_cast<DataSet&>(dataSet).getDouble(TagId(tagId_t::PixelSpacing_0028_0030), 1 - dim);
     else
     {
         double thirdDimSpacing = 0.0;
-        Attribute<DCM_MODALITY> modality;
-        modality.SetFromDataSet(dataSet);
-        if (modality.GetValue() == "RTDOSE" && 
-            dataSet.FindDataElement(gdcm::Tag(DCM_GRID_FRAME_OFFSET_VECTOR)))
+        if (const_cast<DataSet&>(dataSet).getString(TagId(tagId_t::Modality_0008_0060), 0) == "RTDOSE" &&
+            const_cast<DataSet&>(dataSet).bufferExists(TagId(tagId_t::GridFrameOffsetVector_3004_000C), 0))
         {
-            Attribute<DCM_GRID_FRAME_OFFSET_VECTOR> gridFrameOffsetVector;
-            gridFrameOffsetVector.SetFromDataSet(dataSet);
-
-            thirdDimSpacing = (double) gridFrameOffsetVector.GetValue(1) -
-                (double) gridFrameOffsetVector.GetValue(0);
+            thirdDimSpacing = const_cast<DataSet&>(dataSet).getDouble(TagId(tagId_t::GridFrameOffsetVector_3004_000C), 1) -
+                const_cast<DataSet&>(dataSet).getDouble(TagId(tagId_t::GridFrameOffsetVector_3004_000C), 0);
         }
 
-        if (thirdDimSpacing == 0 && dataSet.FindDataElement(gdcm::Tag(DCM_SPACING_BETWEEN_SLICES)))
+        if (thirdDimSpacing == 0 && const_cast<DataSet&>(dataSet).bufferExists(TagId(tagId_t::SpacingBetweenSlices_0018_0088), 0))
         {
-            Attribute<DCM_SPACING_BETWEEN_SLICES> spacingBetweenSlices;
-            spacingBetweenSlices.SetFromDataSet(dataSet);
-            thirdDimSpacing = (double) spacingBetweenSlices.GetValue();
+            thirdDimSpacing = const_cast<DataSet&>(dataSet).getDouble(TagId(tagId_t::SpacingBetweenSlices_0018_0088), 0);
         }
 
         if (thirdDimSpacing == 0)
@@ -201,4 +160,3 @@ double DicomReader::acquireSpacing(DataSet& dataSet, int dim)
         return thirdDimSpacing;
     }
 }
-

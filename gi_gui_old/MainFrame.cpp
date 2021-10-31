@@ -432,13 +432,13 @@ void MainFrame::OnCalculate(wxCommandEvent& event)
   unique_ptr<imebra::DataSet> tarDataSet(loadDicom(tarPath.ToStdString()));
   logCoreMessage("Target image has been loaded");
   logCoreMessage("Processing reference image ...");
-  double* reference = acquireImage(refDataSet.get(), refNDims,
+  auto reference = acquireImage(*refDataSet, refNDims,
                                    refXStart, refXSpacing, refXNumber,
                                    refYStart, refYSpacing, refYNumber,
                                    refZStart, refZSpacing, refZNumber);
   logCoreMessage("Reference image has been processed");
   logCoreMessage("Processing target image ...");
-  double* target = acquireImage(tarDataSet.get(), tarNDims,
+  auto target = acquireImage(*tarDataSet, tarNDims,
                                 tarXStart, tarXSpacing, tarXNumber,
                                 tarYStart, tarYSpacing, tarYNumber,
                                 tarZStart, tarZSpacing, tarZNumber);
@@ -454,8 +454,8 @@ void MainFrame::OnCalculate(wxCommandEvent& event)
   int tarSize = calculateGammaArraySize(parsedParameters->dims, tarXNumber, tarYNumber, tarZNumber, parsedParameters->plane);
 
   logCoreMessage("Applying linear mapping to both images ...");
-  applyLinearMappingToImage(refSize, reference, parsedParameters->refA, parsedParameters->refB);
-  applyLinearMappingToImage(tarSize, target, parsedParameters->tarA, parsedParameters->tarB);
+  applyLinearMappingToImage(refSize, reference.get(), parsedParameters->refA, parsedParameters->refB);
+  applyLinearMappingToImage(tarSize, target.get(), parsedParameters->tarA, parsedParameters->tarB);
   logCoreMessage("Linear mapping has been applied");
 
   string filterValue = filter->GetValue().ToStdString();
@@ -463,13 +463,13 @@ void MainFrame::OnCalculate(wxCommandEvent& event)
   if(filterValue != "")
   {
     logCoreMessage("Appling filter to both images ...");
-    applyNoiseFilteringToImage(refSize, reference, stod(filterValue));
-    applyNoiseFilteringToImage(tarSize, target, stod(filterValue));
+    applyNoiseFilteringToImage(refSize, reference.get(), stod(filterValue));
+    applyNoiseFilteringToImage(tarSize, target.get(), stod(filterValue));
     logCoreMessage("Filter has been applied");
   }
 
   logCoreMessage("Calculating Gamma Index ...");
-  double* gamma = calculateGamma(algorithm, parsedParameters->dims, reference, target,
+  double* gamma = calculateGamma(algorithm, parsedParameters->dims, reference.get(), target.get(),
                                  refXStart, refXSpacing, refXNumber,
                                  refYStart, refYSpacing, refYNumber,
                                  refZStart, refZSpacing, refZNumber,

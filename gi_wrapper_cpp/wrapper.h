@@ -23,24 +23,25 @@
 
 #include <set>
 #include <string>
-#include <vector>
+#include <memory>
 #include "wrapper_logger.h"
 
 
-namespace gdcm {
-	class File;
+namespace imebra {
+ class DataSet;
 }
 
-/// \brief Loads DICOM file into an GDCM object.
+/// \brief Loads DICOM file into an imebra object.
 ///
-/// \note The returned object should be later passed to other functions from this module.
+/// \note Returned pointer should be assigned to an unique_ptr.
+///       The returned object should be later passed to other functions from this module.
 ///
 /// \param filepath Path to DICOM file tha should be loaded.
 ///
-/// \return An GDCM object containing parsed DICOM file.
+/// \return An imebra object containing parsed DICOM file.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-gdcm::File& loadDicom(std::string filepath);
+std::unique_ptr<imebra::DataSet> loadDicom(std::string filepath);
 
 /// \brief Retrieves the image matrix as linearized array and its parameters from DICOM file.
 ///
@@ -49,8 +50,8 @@ gdcm::File& loadDicom(std::string filepath);
 ///
 ///       Returned array must be freed by the user.
 ///
-/// \param file        Reference to the object in which GDCM library stores parsed DICOM file.
-///                    The reference returned by loadDicom() function.
+/// \param dataSet     Pointer to the object in which Imebra library stores parsed DICOM file.
+///                    The pointer returned by loadDicom() function.
 /// \param dims        Number of dimensions of of acquired image.
 /// \param xStart      x coordinate of the center of the most left voxel in the image.
 /// \param xSpacing    Distance between centers of adjacent voxels along x axis in the image.
@@ -65,10 +66,10 @@ gdcm::File& loadDicom(std::string filepath);
 /// \return Pointer to the image array. It size can be calculated using parameters: dims, xNumber, yNumber and zNumber.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-std::vector<double> acquireImage(gdcm::File& file, int& dims,
-    double& xStart, double& xSpacing, int& xNumber,
-    double& yStart, double& ySpacing, int& yNumber,
-    double& zStart, double& zSpacing, int& zNumber);
+std::unique_ptr<double[]> acquireImage(const imebra::DataSet& dataSet, int& dims,
+                     double& xStart, double& xSpacing, int& xNumber,
+                     double& yStart, double& ySpacing, int& yNumber,
+                     double& zStart, double& zSpacing, int& zNumber);
 
 /// \brief Saves Gamma Index array and all necessary tags to a DICOM file.
 ///
@@ -83,7 +84,7 @@ std::vector<double> acquireImage(gdcm::File& file, int& dims,
 ///                                  (comparison of one slice of the reference image against the whole target image),
 ///                            - 5 - comparison 2Dfrom3D
 ///                                  (comparison of one slice of the reference image against another slice of the target image).
-/// \param oldFile             Reference to the object in which GDCM library stored parsed reference DICOM file.
+/// \param oldDataSet          Pointer to the object in which Imebra library stored parsed reference DICOM file.
 ///                            The pointer returned by loadDicom() function. Used while transferring tags to the output DICOM file.
 /// \param gamma               The calculated gamma array.
 /// \param filepath            Path where the output DICOM file will be saved.
@@ -112,9 +113,9 @@ std::vector<double> acquireImage(gdcm::File& file, int& dims,
 ///                            First slice has number 0.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-void saveImage(int dims, gdcm::File& oldFile, std::string filepath, double* gamma,
-    int refXNumber, int refYNumber, int refZNumber, int precision, double fillValue,
-    int rewriteTagsStrategy = 1, const std::set<std::pair<int, int>> tags = (std::set<std::pair<int, int> >()),
-    int plane = -1, int refSlice = -1);
+void saveImage(int dims, imebra::DataSet* oldDataSet, std::string filepath, double* gamma,
+               int refXNumber, int refYNumber, int refZNumber, int precision, double fillValue,
+               int rewriteTagsStrategy = 1, std::set<std::pair<int, int>> tags = (std::set<std::pair<int, int> >()),
+               int plane = -1, int refSlice = -1);
 
 #endif
