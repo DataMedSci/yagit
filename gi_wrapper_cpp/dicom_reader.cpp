@@ -26,7 +26,8 @@
 #include "gdcmAttribute.h"
 #include "gdcmStringFilter.h"
 #include "gdcmImageReader.h"
-//#include "wrapper_logger.h"
+#include "wrapper_logger.h"
+#include "dicom_tags.h"
 
 using namespace gdcm;
 using namespace std;
@@ -119,7 +120,7 @@ double* DicomReader::acquireImage(File& file, int& dims,
     }
 
 
-    // logWrapperMessage("Acquired " + to_string(dims) + "-dimensional image.");
+     logWrapperMessage("Acquired " + to_string(dims) + "-dimensional image.");
 
     string parameterLog = "Image parameters: ";
     if (dims >= 1)
@@ -142,7 +143,7 @@ double* DicomReader::acquireImage(File& file, int& dims,
             to_string(zSpacing) + ", " +
             to_string(zNumber);
     }
-    // logWrapperMessage(parameterLog);
+     logWrapperMessage(parameterLog);
 
     return array;
 }
@@ -150,7 +151,7 @@ double* DicomReader::acquireImage(File& file, int& dims,
 
 double DicomReader::acquireStart(DataSet& dataSet, int dim)
 {
-    Attribute<0x0020, 0x0032> imagePosition;
+    Attribute<DCM_IMAGE_POSITION> imagePosition;
     imagePosition.SetFromDataSet(dataSet);
 
     return (double) imagePosition.GetValue(dim);
@@ -159,7 +160,7 @@ double DicomReader::acquireStart(DataSet& dataSet, int dim)
 double DicomReader::acquireSpacing(DataSet& dataSet, int dim)
 {
     if (dim < 2) {
-        Attribute<0x0028, 0x0030> pixelSpacing;
+        Attribute<DCM_PIXEL_SPACING> pixelSpacing;
         pixelSpacing.SetFromDataSet(dataSet);
         // We subtract dim from 1 because the order of pixel spacing values is inversed in DICOM standard.
         // More info - http://dicom.nema.org/medical/Dicom/2016b/output/chtml/part03/sect_10.7.html.
@@ -169,21 +170,21 @@ double DicomReader::acquireSpacing(DataSet& dataSet, int dim)
     else
     {
         double thirdDimSpacing = 0.0;
-        Attribute<0x0008, 0x0060> modality;
+        Attribute<DCM_MODALITY> modality;
         modality.SetFromDataSet(dataSet);
         if (modality.GetValue() == "RTDOSE" && 
-            dataSet.FindDataElement(gdcm::Tag(0x3004, 0x000C)))
+            dataSet.FindDataElement(gdcm::Tag(DCM_GRID_FRAME_OFFSET_VECTOR)))
         {
-            Attribute<0x3004, 0x000C> gridFrameOffsetVector;
+            Attribute<DCM_GRID_FRAME_OFFSET_VECTOR> gridFrameOffsetVector;
             gridFrameOffsetVector.SetFromDataSet(dataSet);
 
             thirdDimSpacing = (double) gridFrameOffsetVector.GetValue(1) -
                 (double) gridFrameOffsetVector.GetValue(0);
         }
 
-        if (thirdDimSpacing == 0 && dataSet.FindDataElement(gdcm::Tag(0x0018, 0x0088)))
+        if (thirdDimSpacing == 0 && dataSet.FindDataElement(gdcm::Tag(DCM_SPACING_BETWEEN_SLICES)))
         {
-            Attribute<0x0018, 0x0088> spacingBetweenSlices;
+            Attribute<DCM_SPACING_BETWEEN_SLICES> spacingBetweenSlices;
             spacingBetweenSlices.SetFromDataSet(dataSet);
             thirdDimSpacing = (double) spacingBetweenSlices.GetValue();
         }

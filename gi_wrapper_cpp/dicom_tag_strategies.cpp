@@ -28,6 +28,7 @@
 #include "gdcmImageReader.h"
 #include "gdcmSequenceOfItems.h"
 #include "gdcmDataElement.h"
+#include "dicom_tags.h"
 
 
 using namespace gdcm;
@@ -98,8 +99,8 @@ void applyDicomTagsRewriteStrategy(DataSet& source, DataSet& destination, int re
     {   
         if (rewriteStrategy(des->GetTag().GetGroup(), des->GetTag().GetElement(), userTags))
         {
-            // 0x7fe0 = Pixel_Data tagId - we create new data so we shouldn't rewrite this tag from input dicom
-            if (des->GetTag().GetGroup() == 0x7FE0) {
+            // we create new data so we shouldn't rewrite this tag from input dicom
+            if (des->GetTag().GetGroup() == DCM_GROUP_PIXEL_DATA) {
                 continue;
             }
 
@@ -117,7 +118,5 @@ void applyDicomTagsRewriteStrategy(DataSet& source, DataSet& destination, int re
                 }
             }
         }
-
-        // TODO nested data sets
     }
 }
