@@ -28,7 +28,7 @@ namespace gdcm {
     class DataSet;
 }
 
-typedef bool (*tagsRewriteStrategy)(int, int, std::set<std::pair<int, int>>);
+typedef bool (*tagsRewriteStrategy)(int, int, const std::set<std::pair<int, int>>);
 
 
 
@@ -59,6 +59,6 @@ typedef bool (*tagsRewriteStrategy)(int, int, std::set<std::pair<int, int>>);
 ///
 ///////////////////////////////////////////////////////////////////////////////
 void applyDicomTagsRewriteStrategy(gdcm::DataSet& source, gdcm::DataSet& destination,
-    int rewriteTagsStrategyId, std::set<std::pair<int, int>> userTags);
+    int rewriteTagsStrategyId, const std::set<std::pair<int, int>> userTags);
 
 #endif

@@ -21,6 +21,8 @@
 #ifndef DICOM_READER_H
 #define DICOM_READER_H
 
+#include <vector>
+
 namespace gdcm {
 	class DataSet;
     class File;
@@ -52,7 +54,7 @@ public:
     /// \return Pointer to the image matrix. Its size can be calculated using parameters: dims, xNumber, yNumber and zNumber.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    double* acquireImage(gdcm::File& file, int& dims,
+    std::vector<double> acquireImage(gdcm::File& file, int& dims,
         double& xStart, double& xSpacing, int& xNumber,
         double& yStart, double& ySpacing, int& yNumber,
         double& zStart, double& zSpacing, int& zNumber);

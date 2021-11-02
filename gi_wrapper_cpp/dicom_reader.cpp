@@ -36,7 +36,7 @@ DicomReader::DicomReader()
 {
 }
 
-double* DicomReader::acquireImage(File& file, int& dims,
+std::vector<double> DicomReader::acquireImage(File& file, int& dims,
     double& xStart, double& xSpacing, int& xNumber,
     double& yStart, double& ySpacing, int& yNumber,
     double& zStart, double& zSpacing, int& zNumber)
@@ -82,8 +82,11 @@ double* DicomReader::acquireImage(File& file, int& dims,
     double rescaleSlope = im.GetSlope();
     double rescaleIntercept = im.GetIntercept();
 
-    double* array = new double[xNumber * yNumber * zNumber];
-    char* buffer = new char[im.GetBufferLength()];
+    vector<double> array;
+    array.resize(xNumber * yNumber * zNumber);
+    vector<char> buffer;
+    buffer.resize(im.GetBufferLength());
+    im.GetBuffer(&buffer[0]);
     int pixelSize = (int) im.GetPixelFormat().GetPixelSize();
     for (int k = 0; k < zNumber; k++)
     {
