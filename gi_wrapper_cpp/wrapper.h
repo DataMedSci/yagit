@@ -23,6 +23,7 @@
 
 #include <set>
 #include <string>
+#include <vector>
 #include "wrapper_logger.h"
 
 
@@ -64,7 +65,7 @@ gdcm::File& loadDicom(std::string filepath);
 /// \return Pointer to the image array. It size can be calculated using parameters: dims, xNumber, yNumber and zNumber.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-double* acquireImage(gdcm::File& file, int& dims,
+std::vector<double> acquireImage(gdcm::File& file, int& dims,
     double& xStart, double& xSpacing, int& xNumber,
     double& yStart, double& ySpacing, int& yNumber,
     double& zStart, double& zSpacing, int& zNumber);
@@ -113,7 +114,7 @@ double* acquireImage(gdcm::File& file, int& dims,
 ///////////////////////////////////////////////////////////////////////////////
 void saveImage(int dims, gdcm::File& oldFile, std::string filepath, double* gamma,
     int refXNumber, int refYNumber, int refZNumber, int precision, double fillValue,
-    int rewriteTagsStrategy = 1, std::set<std::pair<int, int>> tags = (std::set<std::pair<int, int> >()),
+    int rewriteTagsStrategy = 1, const std::set<std::pair<int, int>> tags = (std::set<std::pair<int, int> >()),
     int plane = -1, int refSlice = -1);
 
 #endif

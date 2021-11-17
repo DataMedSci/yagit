@@ -45,7 +45,7 @@ File& loadDicom(string filepath)
     return reader.GetFile();
 }
 
-double* acquireImage(File& file, int& dims,
+std::vector<double> acquireImage(File& file, int& dims,
     double& xStart, double& xSpacing, int& xNumber,
     double& yStart, double& ySpacing, int& yNumber,
     double& zStart, double& zSpacing, int& zNumber)
@@ -59,7 +59,7 @@ double* acquireImage(File& file, int& dims,
 }
 
 void saveImage(int dims, File& oldFile, string filepath, double* gamma, int refXNumber, int refYNumber, int refZNumber,
-    int precision, double fillValue, int rewriteTagsStrategy, set <pair<int, int>> tags, int plane, int refSlice)
+    int precision, double fillValue, int rewriteTagsStrategy, const set <pair<int, int>> tags, int plane, int refSlice)
 {
     logWrapperMessage("Creating results file at " + filepath);
 

@@ -19,9 +19,11 @@
 #include "wrapper_logger.h"
 
 #include <iostream>
-#include <ctime>
+#include <chrono>
+#include <iomanip>
 #include <fstream>
 #include <string>
+#include <ctime>
 
 using namespace std;
 
@@ -29,17 +31,12 @@ const string FILENAME = "log.txt";
 
 string createWrapperTimestamp()
 {
-	time_t rawtime;
-	struct tm* timeinfo;
-	char buffer[80];
+    using namespace std::chrono;
 
-	time(&rawtime);
-	timeinfo = localtime(&rawtime);
+    const std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
+    const std::time_t now_time = std::chrono::system_clock::to_time_t(now);
 
-	strftime(buffer, 80, "%d-%m-%Y %I:%M:%S", timeinfo);
-	string str(buffer);
-
-	return str;
+    return std::ctime(&now_time);
 }
 
 void enableWrapperLogging()
@@ -56,7 +53,7 @@ void initializeWrapperLogger(bool clearLogs)
 {
 	ofstream logger;
 
-	if (clearLogs == true)
+	if (clearLogs)
 	{
 		logger.open(FILENAME.c_str(), ios::out | ios::trunc);
 	}

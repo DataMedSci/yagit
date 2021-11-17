@@ -31,6 +31,7 @@
 #include "gdcmImageReader.h"
 #include "gdcmImageWriter.h"
 #include "dicom_tag_strategies.h"
+#include "dicom_tags.h"
 
 using namespace gdcm;
 using namespace std;
@@ -79,21 +80,21 @@ void DicomWriter::saveImage(string filepath, File& oldFile, double* gamma,
 
 void DicomWriter::setDicomRescaleTags(DataSet& newDataSet, int rescale)
 {
-    if (newDataSet.FindDataElement(Tag(0x0028, 0x1053)))
+    if (newDataSet.FindDataElement(Tag(DCM_RESCALE_SLOPE)))
     {
-        DataElement newDE = DataElement(Tag(0x0028, 0x1053), (VL)(1.0 / rescale), newDataSet.GetDataElement(Tag(0x0028, 0x1053)).GetVR());
+        DataElement newDE = DataElement(Tag(DCM_RESCALE_SLOPE), (VL)(1.0 / rescale), newDataSet.GetDataElement(Tag(DCM_RESCALE_SLOPE)).GetVR());
         newDataSet.Replace(newDE);
     }
 
-    if (newDataSet.FindDataElement(Tag(0x0028, 0x1052)))
+    if (newDataSet.FindDataElement(Tag(DCM_RESCALE_INTERCEPT)))
     {
-        DataElement newDE = DataElement(Tag(0x0028, 0x1052), (VL)(0.0), newDataSet.GetDataElement(Tag(0x0028, 0x1052)).GetVR());
+        DataElement newDE = DataElement(Tag(DCM_RESCALE_INTERCEPT), (VL)(0.0), newDataSet.GetDataElement(Tag(DCM_RESCALE_INTERCEPT)).GetVR());
         newDataSet.Replace(newDE);
     }
 
-    if (newDataSet.FindDataElement(Tag(0x3004, 0x000E)))
+    if (newDataSet.FindDataElement(Tag(DCM_DOSE_GRID_SCALING)))
     {
-        DataElement newDE = DataElement(Tag(0x3004, 0x000E), (VL)(1.0 / rescale), newDataSet.GetDataElement(Tag(0x3004, 0x000E)).GetVR());
+        DataElement newDE = DataElement(Tag(DCM_DOSE_GRID_SCALING), (VL)(1.0 / rescale), newDataSet.GetDataElement(Tag(DCM_DOSE_GRID_SCALING)).GetVR());
         newDataSet.Replace(newDE);
     }
 }
@@ -156,7 +157,7 @@ void DicomWriter2D::insertFrames(File& newFile, PixelFormat pf, PhotometricInter
                 }
             }
         }
-        DataElement pixeldata(Tag(0x7fe0, 0x0010));
+        DataElement pixeldata(Tag(PIXEL_DATA));
         pixeldata.SetByteValue(buffer, xNumber * yNumber * pixelSize);
         delete[] buffer;
         image.SetDataElement(pixeldata);
@@ -228,7 +229,7 @@ void DicomWriter3D::insertFrames(File& newFile, PixelFormat pf, PhotometricInter
                 }
             }
         }
-        DataElement pixeldata(Tag(0x7fe0, 0x0010));
+        DataElement pixeldata(Tag(PIXEL_DATA));
         pixeldata.SetByteValue(buffer, xNumber * yNumber * zNumber * pixelSize);
         delete[] buffer;
         image.SetDataElement(pixeldata);
@@ -306,7 +307,7 @@ void DicomWriter3DSliceXY::insertFrames(File& newFile, PixelFormat pf, Photometr
                 }
             }
         }
-        DataElement pixeldata(Tag(0x7fe0, 0x0010));
+        DataElement pixeldata(Tag(PIXEL_DATA));
         pixeldata.SetByteValue(buffer, xNumber * yNumber * zNumber * pixelSize);
         delete[] buffer;
         // not sure if I understand the purpose of it well enough, might need a change
@@ -385,7 +386,7 @@ void DicomWriter3DSliceXZ::insertFrames(File& newFile, PixelFormat pf, Photometr
                 }
             }
         }
-        DataElement pixeldata(Tag(0x7fe0, 0x0010));
+        DataElement pixeldata(Tag(PIXEL_DATA));
         pixeldata.SetByteValue(buffer, xNumber * yNumber * zNumber * pixelSize);
         delete[] buffer;
         image.SetDataElement(pixeldata);
@@ -463,7 +464,7 @@ void DicomWriter3DSliceYZ::insertFrames(File& newFile, PixelFormat pf, Photometr
                 }
             }
         }
-        DataElement pixeldata(Tag(0x7fe0, 0x0010));
+        DataElement pixeldata(Tag(PIXEL_DATA));
         pixeldata.SetByteValue(buffer, xNumber * yNumber * zNumber * pixelSize);
         delete[] buffer;
         image.SetDataElement(pixeldata);
