@@ -4,4 +4,4 @@ show_downloads: true
 theme: jekyll-theme-minimal
 github:
   zip_url: https://www.youtube.com/watch?v=dQw4w9WgXcQ
-#   another_url: another value
+  another_url: https://www.youtube.com/watch?v=yPYZpwSpKmA
