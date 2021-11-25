@@ -1,1 +1,6 @@
+title: yAGIT
+description: yet Another Gamma Index Tool
+show_downloads: true
 theme: jekyll-theme-minimal
+github:
+  zip_url: https://github.com/DataMedSci/gi-yagit/
