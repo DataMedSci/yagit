@@ -71,7 +71,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: tarball
-        path: ./yAGITQt-1.1.1-Linux.tar.gz
+        path: _build/yAGITQt-1.1.1-Linux.tar.gz
 
 
 #     Uncomment section below to enable tests
