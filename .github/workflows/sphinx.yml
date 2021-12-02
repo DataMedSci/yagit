@@ -35,7 +35,7 @@ jobs:
         run: |
           apt-get update
           apt-get install -y git rsync python3-sphinx python3-breathe python3-pip
-          pip install sphinx_book_theme
+          pip3 install sphinx_book_theme
           cd docs/
           make clean
           make html
