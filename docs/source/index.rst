@@ -34,4 +34,3 @@ yet Another Gamma Index Tool
    matrix_representation
    api
    components
-
