@@ -3,6 +3,8 @@ name: CMake
 on:
   push:
     branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -11,7 +13,7 @@ env:
 jobs:
 
   build:
-    if: "github.repository == 'DataMedSci/gi-yagit' && !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
+    if: "github.repository == 'kdbogusz/gi-yagit' && !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
