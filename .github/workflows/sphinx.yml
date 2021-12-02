@@ -34,11 +34,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           apt-get update
-          apt-get install -y git rsync python3-sphinx python3-breathe python3-pip
+          apt-get install -y git rsync python3-sphinx python3-breathe python3-pip graphviz
           pip3 install sphinx-book-theme==0.1.7
           pip3 install breathe==4.31.0
           cd docs/
           make clean
+          cd source/
+          doxygen
+          cd ../
           make html
           git config --global user.name "${GITHUB_ACTOR}"
           git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
