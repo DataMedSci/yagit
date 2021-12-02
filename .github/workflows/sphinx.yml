@@ -59,7 +59,7 @@ jobs:
           
           git add .
           
-          msg="Updating Docs for commit ${GITHUB_SHA} made on `date -d"@${SOURCE_DATE_EPOCH}" --iso-8601=seconds` from ${GITHUB_REF} by ${GITHUB_ACTOR}"
+          msg="Updating Docs for commit ${GITHUB_SHA}"
           git commit -am "${msg}"
           
           git push deploy gh-pages --force
