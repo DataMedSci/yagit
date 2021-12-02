@@ -39,6 +39,7 @@ jobs:
           pip3 install breathe==4.31.0
           cd docs/
           make clean
+          mkdir build
           cd source/
           doxygen
           cd ../
