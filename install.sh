@@ -1,12 +1,3 @@
-#!/bin/bash
-
-# This file is part of 'yet Another Gamma Index Tool'.
-#
-# 'yet Another Gamma Index Tool' is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
 # 'yet Another Gamma Index Tool' is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -38,30 +29,21 @@ else
   cd ..
 fi
 
-echo "Starting build"
-echo "Building core module"
+echo "Starting installing"
+echo "Installing core module"
 cd gi_core
-make
+make install
 cd ..
-echo "Building additions module"
+echo "Installing additions module"
 cd gi_additions
-make
+make install
 cd ..
-echo "Building wrapper module"
+echo "Installing wrapper module"
 cd gi_wrapper_cpp
-make
+make install
 cd ..
-cd examples
-echo "Building gi_core_2d_client"
-make build_core_2d_client
-echo "Building gi_wrapper_client"
-make build_wrapper_client
-cd ..
-echo "Building GUI module"
+echo "Installing GUI module"
 cd gi_gui_qt
-make
+make install
 cd ..
-echo "Finish building"
-echo "Trying to run GUI"
-cd gi_gui_qt
-./yAGITQt
+echo "Finish installing"

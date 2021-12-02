@@ -46,3 +46,6 @@ set_target_properties(yAGITQt
 )
 
 set_default_output_directories(yAGITQt)
+
+install(FILES ${yAGITQt_includes} ${yAGITQt_sources} ${yAGITQt_uis} DESTINATION build/gi_gui_qt/lib)
+install(TARGETS yAGITQt DESTINATION build/gi_gui_qt)
