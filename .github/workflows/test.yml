@@ -60,7 +60,9 @@ jobs:
 
     - name: Pack Linux binaries
       if: ${{ runner.os == 'Linux' }}
-      run: cpack
+      run: |
+        ls
+        cpack
 
     - name: Upload Linux binaries
       if: ${{ runner.os == 'Linux' }}
