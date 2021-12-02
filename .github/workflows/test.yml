@@ -59,6 +59,9 @@ jobs:
     - name: Pack Linux binaries
       if: ${{ runner.os == 'Linux' }}
       run: cpack
+
+    - name: Upload Linux binaries
+      if: ${{ runner.os == 'Linux' }}
       uses: actions/upload-artifact@v2
       with:
         name: tarball
