@@ -24,8 +24,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -x
-          sudo apt-get update
-          sudo apt-get install -y git
+          apt-get update
+          apt-get install -y git
           git clone "https://token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" .
         shell: bash
 
@@ -33,8 +33,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          sudo apt-get update
-          sudo apt-get install -y git rsync python3-sphinx
+          apt-get update
+          apt-get install -y git rsync python3-sphinx
           cd docs/
           make clean
           make html
