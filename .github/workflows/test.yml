@@ -58,20 +58,24 @@ jobs:
           buildWithCMake: true  # use CMake to trigger build process
           useVcpkgToolchainFile: '${{ matrix.useVcpkgToolchainFile }}'  # use vcpkg to install dependencies (i.e. wxwidgets) on Windows
 
-    - name: Pack Linux binaries
-      if: ${{ runner.os == 'Linux' }}
+    - name: Pack files
       run: |
-        ls
         cd _build/
-        ls
         cpack
 
-    - name: Upload Linux binaries
+    - name: Upload Linux files
       if: ${{ runner.os == 'Linux' }}
       uses: actions/upload-artifact@v2
       with:
         name: tarball
         path: _build/yAGITQt-1.1.1-Linux.tar.gz
+
+    - name: Upload Linux files
+      if: ${{ runner.os == 'Windows' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: msi
+        path: _build/yAGITQt-1.1.1-Linux.msi
 
 
 #     Uncomment section below to enable tests
