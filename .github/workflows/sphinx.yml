@@ -34,7 +34,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           apt-get update
-          apt-get install -y git rsync python3-sphinx
+          apt-get install -y git rsync python3-sphinx python3-breathe
           cd docs/
           make clean
           make html
