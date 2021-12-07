@@ -1,7 +1,7 @@
 #pragma once
 
 #include <common.hpp>
-#include <data/image_data.hpp>
+#include <data/image/image_data.hpp>
 
 namespace yagit::core::data
 {
