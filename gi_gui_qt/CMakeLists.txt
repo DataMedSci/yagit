@@ -35,7 +35,7 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${yAGITQt_includes} ${yAGITQ
 
 add_executable(yAGITQt ${yAGITQt_includes} ${yAGITQt_sources} ${yAGITQt_uis})
 
-target_link_libraries(yAGITQt PRIVATE gi_core gi_additions gi_wrapper Qt5::Core Qt5::Gui Qt5::Widgets)
+target_link_libraries(yAGITQt PRIVATE gi_core gi_additions gi_gdcm_wrapper Qt5::Core Qt5::Gui Qt5::Widgets)
 target_include_directories(yAGITQt PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 set_target_properties(yAGITQt
