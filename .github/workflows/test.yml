@@ -68,7 +68,7 @@ jobs:
     - name: Run unit tests
       run: |
            build/bin/release/gi_core_tests --log_level=message
-#           build/bin/release/gi_gdcm_wrapper_tests --log_level=message
+           build/bin/release/gi_gdcm_wrapper_tests --log_level=message
 #     Uncomment section below to enable tests
 #     - name: Test
 #       working-directory: ${{github.workspace}}/gi_core/build
