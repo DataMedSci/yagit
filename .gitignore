@@ -1,0 +1,12 @@
+# CMake build output directory #
+[Bb]uild
+
+# CMake target output directory #
+[Bb]in
+
+### CLion ###
+.idea
+cmake-*
+
+### VisualStudio ###
+.vs
