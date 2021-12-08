@@ -59,6 +59,7 @@ jobs:
           useVcpkgToolchainFile: '${{ matrix.useVcpkgToolchainFile }}'  # use vcpkg to install dependencies (i.e. wxwidgets) on Windows
 
     - name: Pack files
+      continue-on-error: true
       run: |
         cd _build/
         cpack -C Release
