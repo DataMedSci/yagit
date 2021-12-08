@@ -61,6 +61,7 @@ jobs:
     - name: Pack files
       run: |
         cd _build/
+        ls
         cpack
 
     - name: Upload Linux files
