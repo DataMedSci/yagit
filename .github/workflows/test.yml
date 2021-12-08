@@ -64,8 +64,9 @@ jobs:
         cpack -C Release
         
     - name: tmp
-      if: always()
-      run: 'if [[ "runner.os" == "Windows" ]]; then cat "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/NSISOutput.log"; fi'
+      if: failed()
+      run: |
+        cat "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/NSISOutput.log"
 
     - name: Upload Linux files
       if: ${{ runner.os == 'Linux' }}
