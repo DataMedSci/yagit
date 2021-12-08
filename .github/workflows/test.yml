@@ -66,8 +66,8 @@ jobs:
     - name: tmp
       if: always()
       run: |
-        if test -a "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/NSISOutput.log"; then
-          cat "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/NSISOutput.log"
+        if (test -a "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/NSISOutput.log")
+        then cat "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/NSISOutput.log"
         fi
 
     - name: Upload Linux files
