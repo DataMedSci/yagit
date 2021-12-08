@@ -64,7 +64,8 @@ jobs:
         cpack -C Release
         
     - name: tmp
-      if: failed()
+      continue-on-error: true
+      if: ${{ runner.os == 'Windows' }}
       run: |
         cat "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/NSISOutput.log"
 
