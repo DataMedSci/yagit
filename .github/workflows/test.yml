@@ -65,11 +65,7 @@ jobs:
         
     - name: tmp
       if: always()
-      run: |
-        if (test -a "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/NSISOutput.log")
-        {
-          cat "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/NSISOutput.log"
-        }
+      run: 'if [[ "runner.os" == "Windows" ]]; then cat "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/NSISOutput.log"; fi'
 
     - name: Upload Linux files
       if: ${{ runner.os == 'Linux' }}
