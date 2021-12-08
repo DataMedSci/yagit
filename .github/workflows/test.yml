@@ -57,19 +57,25 @@ jobs:
           buildDirectory: '_build'  # subdirectory to store make build and store results
           buildWithCMake: true  # use CMake to trigger build process
           useVcpkgToolchainFile: '${{ matrix.useVcpkgToolchainFile }}'  # use vcpkg to install dependencies (i.e. wxwidgets) on Windows
-
+          
+    - name: Create installer
+      if: ${{ runner.os == 'Windows' }}
+      uses: joncloud/makensis-action@v3.6
+      with:
+        arguments: "/V3"
+    
     - name: Pack files
-      continue-on-error: true
+      if: ${{ runner.os == 'Linux' }}
       run: |
         cd _build/
         cpack -C Release
         
-    - name: tmp
-      continue-on-error: true
-      if: ${{ runner.os == 'Windows' }}
-      run: |
-        cat "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/NSISOutput.log"
-        cat "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/project.nsi"
+#     - name: tmp
+#       continue-on-error: true
+#       if: ${{ runner.os == 'Windows' }}
+#       run: |
+#         cat "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/NSISOutput.log"
+#         cat "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/project.nsi"
 
     - name: Upload Linux files
       if: ${{ runner.os == 'Linux' }}
