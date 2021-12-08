@@ -62,6 +62,10 @@ jobs:
       run: |
         cd _build/
         cpack -C Release
+        
+    - name: tmp
+      if: always()
+      run: cat D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/NSISOutput.log
 
     - name: Upload Linux files
       if: ${{ runner.os == 'Linux' }}
@@ -70,7 +74,7 @@ jobs:
         name: tarball
         path: _build/yAGITQt-1.1.1-Linux.tar.gz
 
-    - name: Upload Linux files
+    - name: Upload Windows files
       if: ${{ runner.os == 'Windows' }}
       uses: actions/upload-artifact@v2
       with:
