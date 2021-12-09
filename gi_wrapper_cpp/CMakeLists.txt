@@ -32,7 +32,7 @@ CPMFindPackage(
 )
 
 if (imebra_ADDED)
-    add_subdirectory(${imebra_SOURCE_DIR}/library ${imebra_BINARY_DIR})
+    add_subdirectory(${imebra_SOURCE_DIR}/library ${imebra_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
 find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}" gi_wrapper_sources)
