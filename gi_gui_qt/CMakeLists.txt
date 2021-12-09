@@ -56,7 +56,7 @@ function(windeployqt target)
                 --no-opengl-sw
                 --no-compiler-runtime
                 --no-system-d3d-compiler
-                \"$<TARGET_FILE:${target}>\"
+                --dir ${CMAKE_BINARY_DIR}/qtDeploy \"$<TARGET_FILE:${target}>\"
         COMMENT "Deploying Qt libraries using windeployqt for compilation target '${target}' ..."
     )
 
