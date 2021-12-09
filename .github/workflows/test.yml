@@ -63,15 +63,15 @@ jobs:
 #       run: |
 #         ls "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/"
 
-    - name: Create installer
-      if: ${{ runner.os == 'Windows' }}
-      uses: joncloud/makensis-action@v3.6
-      with:
-        script-file: "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/project.nsi"
-        arguments: "/V3"
+#     - name: Create installer
+#       if: ${{ runner.os == 'Windows' }}
+#       uses: joncloud/makensis-action@v3.6
+#       with:
+#         script-file: "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/project.nsi"
+#         arguments: "/V3"
     
     - name: Pack files
-      if: ${{ runner.os == 'Linux' }}
+#       if: ${{ runner.os == 'Linux' }}
       run: |
         cd _build/
         cpack -C Release
