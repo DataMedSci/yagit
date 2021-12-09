@@ -71,7 +71,7 @@ jobs:
 #         arguments: "/V3"
     
     - name: Pack files
-#       if: ${{ runner.os == 'Linux' }}
+      if: ${{ runner.os == 'Linux' }}
       run: |
         cd _build/
         cpack -C Release
