@@ -13,7 +13,7 @@ install(TARGETS gi_core gi_additions gi_wrapper
     DESTINATION lib
     COMPONENT libraries)
 
-install(TARGETS gi_core
+install(TARGETS gi_gui_qt
     RUNTIME
     DESTINATION bin
     COMPONENT applications)
