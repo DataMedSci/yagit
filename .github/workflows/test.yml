@@ -76,12 +76,12 @@ jobs:
         cd _build/
         cpack -C Release
         
-#     - name: tmp
-#       continue-on-error: true
-#       if: ${{ runner.os == 'Windows' }}
-#       run: |
-#         cat "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/NSISOutput.log"
-#         cat "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/project.nsi"
+    - name: tmp
+      continue-on-error: true
+      if: ${{ runner.os == 'Windows' }}
+      run: |
+        cat "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/NSISOutput.log"
+        cat "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/project.nsi"
 
     - name: Upload Linux files
       if: ${{ runner.os == 'Linux' }}
