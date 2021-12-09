@@ -52,6 +52,10 @@
 #include "image.h"
 #include "core_logger.h"
 
+//#ifdef _WIN32
+//    #include "windows.h"
+//#endif
+
 using namespace std;
 
 

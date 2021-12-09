@@ -5,21 +5,6 @@
 
 namespace yagit::core::data
 {
-	namespace detail
-	{
-		template<size_t ByteCount, typename ElementType, typename = std::enable_if_t<detail::is_power_of_two_v<ByteCount>>>
-		constexpr bool is_aligned_to_bytes(const ElementType* ptr)
-		{
-			return (static_cast<std::uintptr_t>(_data) & ByteCount == 0);
-		}
-
-		template<size_t ElementCount, typename ElementType, typename = std::enable_if_t<detail::is_power_of_two_v<ElementCount>>>
-		constexpr bool is_aligned_to(const ElementType* ptr)
-		{
-			return is_aligned_to_bytes<sizeof(T)* ElementCount>(_data);
-		}
-	}
-
 	/// <summary>
 	/// Class encapsulating storage for image data points
 	/// </summary>
@@ -53,7 +38,7 @@ namespace yagit::core::data
 			const data_format<Dimensions>& data_format,
 			const size_t real_total_size
 		)
-			: _data(data.release())
+			: _data(data)
 			, _image_region(image_region)
 			, _data_format(data_format)
 			, _real_total_size(real_total_size)
@@ -62,7 +47,7 @@ namespace yagit::core::data
 	public:
 		/// <summary></summary>
 		/// <returns>Sizes of each dimension of stored data points</returns>
-		constexpr sizes<Dimensions> sizes() const noexcept { return _image_region.size; }
+		constexpr sizes<Dimensions> dimension_sizes() const noexcept { return _image_region.size; }
 		/// <summary></summary>
 		/// <returns>Image region of stored data points</returns>
 		constexpr data_region<Dimensions> region() const noexcept { return _image_region; }
@@ -78,16 +63,16 @@ namespace yagit::core::data
 
 		/// <summary></summary>
 		/// <returns>Total size of stored data points</returns>
-		constexpr size_t total_size() const noexcept { return total_size(sizes()); }
+		constexpr size_t total_size() const noexcept { return data::total_size(dimension_sizes()); }
 		/// <summary></summary>
 		/// <returns>Total allocated memory holding stored data points</returns>
-		constexpr size_t real_total_size() const noexcept { _real_total_size }
+		constexpr size_t real_total_size() const noexcept { return _real_total_size; }
 
 		/// <summary></summary>
 		/// <typeparam name="ElementMultiple">Count of elements to which alignment of the pointer to the stored data points should be checked</typeparam>
 		/// <returns>Checks if stored data points are aligned to sizeof(ElementType)*ElementMultiple</returns>
 		template<size_t ElementMultiple, typename = std::enable_if_t<detail::is_power_of_two_v<ElementMultiple>>>
-		constexpr bool is_aligned_to() const noexcept { detail::is_aligned_to<ElementMultiple>(data()); }
+		constexpr bool is_aligned_to() const noexcept { return core::is_aligned_to<ElementMultiple>(data()); }
 	public:
 		/// <summary></summary>
 		/// <returns>Const pointer to first stored data element</returns>
