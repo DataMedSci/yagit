@@ -27,6 +27,10 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/ui")
 
 find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
+get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
+get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
+find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
+
 find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}/include" yAGITQt_includes)
 find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}/src" yAGITQt_sources)
 find_ui_files("${CMAKE_CURRENT_SOURCE_DIR}/ui" yAGITQt_uis)
@@ -34,6 +38,20 @@ find_ui_files("${CMAKE_CURRENT_SOURCE_DIR}/ui" yAGITQt_uis)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${yAGITQt_includes} ${yAGITQt_sources})
 
 add_executable(yAGITQt ${yAGITQt_includes} ${yAGITQt_sources} ${yAGITQt_uis})
+
+add_custom_command(TARGET yAGITQt POST_BUILD
+    COMMAND "${_qt_bin_dir}/windeployqt.exe"         
+            --verbose 1
+            --release
+            --no-svg
+            --no-angle
+            --no-opengl
+            --no-opengl-sw
+            --no-compiler-runtime
+            --no-system-d3d-compiler
+            \"$<TARGET_FILE:yAGITQt>\"
+    COMMENT "Deploying Qt libraries using windeployqt for compilation target yAGITQt ..."
+)
 
 target_link_libraries(yAGITQt PRIVATE gi_core gi_additions gi_wrapper Qt5::Core Qt5::Gui Qt5::Widgets)
 target_include_directories(yAGITQt PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
