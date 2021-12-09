@@ -39,19 +39,28 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${yAGITQt_includes} ${yAGITQ
 
 add_executable(yAGITQt ${yAGITQt_includes} ${yAGITQt_sources} ${yAGITQt_uis})
 
-add_custom_command(TARGET yAGITQt POST_BUILD
-    COMMAND "${_qt_bin_dir}/windeployqt.exe"         
-            --verbose 1
-            --release
-            --no-svg
-            --no-angle
-            --no-opengl
-            --no-opengl-sw
-            --no-compiler-runtime
-            --no-system-d3d-compiler
-            \"$<TARGET_FILE:yAGITQt>\"
-    COMMENT "Deploying Qt libraries using windeployqt for compilation target yAGITQt ..."
-)
+
+function(windeployqt target)
+
+    # POST_BUILD step
+    # - after build, we have a bin/lib for analyzing qt dependencies
+    # - we run windeployqt on target and deploy Qt libs
+
+    add_custom_command(TARGET ${target} POST_BUILD
+        COMMAND "${_qt_bin_dir}/windeployqt.exe"         
+                --verbose 1
+                --release
+                --no-svg
+                --no-angle
+                --no-opengl
+                --no-opengl-sw
+                --no-compiler-runtime
+                --no-system-d3d-compiler
+                \"$<TARGET_FILE:${target}>\"
+        COMMENT "Deploying Qt libraries using windeployqt for compilation target '${target}' ..."
+    )
+
+endfunction()
 
 target_link_libraries(yAGITQt PRIVATE gi_core gi_additions gi_wrapper Qt5::Core Qt5::Gui Qt5::Widgets)
 target_include_directories(yAGITQt PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -67,3 +76,5 @@ set_default_output_directories(yAGITQt)
 
 # install(FILES ${yAGITQt_includes} ${yAGITQt_sources} ${yAGITQt_uis} DESTINATION build/gi_gui_qt/lib)
 install(TARGETS yAGITQt RUNTIME DESTINATION build/gi_gui_qt COMPONENT applications)
+
+windeployqt(yAGITQt)
