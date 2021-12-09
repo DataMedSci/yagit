@@ -9,6 +9,13 @@ Application and library for performing efficient comparisons of 2D, 3D DICOM ima
 * [boost](https://www.boost.org/) - unit testing
 * [Qt5](https://www.qt.io/) - GUI
 
+## Building
+
+Building project requires CMake.
+To generate project compiler with C++20 support is required.
+CMake environment requires Qt5, boost and GDCM libraries to be installed
+the project does not pull them automatically.
+
 ## C++ standard
 Project is written under C++20
 

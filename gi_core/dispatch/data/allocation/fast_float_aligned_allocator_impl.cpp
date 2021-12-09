@@ -1,3 +1,9 @@
+// This file is a dynamic-dispatch file used by libsimdpp
+// http://p12tic.github.io/libsimdpp/v2.2-dev/libsimdpp/w/arch/dispatch.html
+// The is so long because of the fact that each of the function differ only
+// sligthly in arguments (float/double 1/2/3 dimensions) and cannot be 
+// simplified into a template function due to dynamic-dispatch limitations
+
 #include <data/allocation/fast_float_aligned_allocator_impl.hpp>
 #include <data/allocation/aligned_allocator.hpp>
 

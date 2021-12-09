@@ -18,11 +18,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - operating-system: windows-latest
-            vcpkgPackages: Qt5 gdcm boost
-            vcpkgTriplet: 'x64-windows'
-            useVcpkgToolchainFile: true
-            cmakeGenerator: 'VS16Win64'
+          #- operating-system: windows-latest
+          #  vcpkgPackages: Qt5 gdcm boost
+          #  vcpkgTriplet: 'x64-windows'
+          #  useVcpkgToolchainFile: true
+          #  cmakeGenerator: 'VS16Win64'
           - operating-system: ubuntu-latest            
             cmakeGenerator: 'Ninja'
             useVcpkgToolchainFile: false
@@ -46,14 +46,14 @@ jobs:
 # Step below not only installs and does VCPKG setup but also installs dependency packages and store them in cache
 # cache is crucial, as installation (compilation from sources) of many dependencies is time consuming
 # i.e. wxwidgets needs >10min for installation and <1min for retrieval from cache
-    - name: Install Windows requirements
-      if: ${{ runner.os == 'Windows' }}
-      uses: lukka/run-vcpkg@v7.3
-      with:
-        vcpkgArguments: '${{ matrix.vcpkgPackages }}'
-        vcpkgTriplet: 'x64-windows'
-        vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
-        vcpkgGitCommitId: '5568f110b509a9fd90711978a7cb76bae75bb092'
+    #- name: Install Windows requirements
+    #  if: ${{ runner.os == 'Windows' }}
+    #  uses: lukka/run-vcpkg@v7.3
+    #  with:
+    #    vcpkgArguments: '${{ matrix.vcpkgPackages }}'
+    #    vcpkgTriplet: 'x64-windows'
+    #    vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
+    #    vcpkgGitCommitId: '5568f110b509a9fd90711978a7cb76bae75bb092'
 
     - name: Configure and build with CMake
       uses: lukka/run-cmake@v3.4

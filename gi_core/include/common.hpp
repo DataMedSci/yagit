@@ -42,6 +42,7 @@ namespace yagit::core
 	template<typename T>
 	using const_view = const T*;
 
+	// https://iq.opengenus.org/detect-if-a-number-is-power-of-2-using-bitwise-operators/
 	template<size_t N>
 	constexpr bool is_power_of_two_v = N && !(N & (N - 1));
 
