@@ -8,17 +8,17 @@ add_subdirectory(gi_wrapper_cpp)
 #add_subdirectory(gi_gui)
 add_subdirectory(gi_gui_qt)
 
-add_executable(example example.cpp)
+#add_executable(example example.cpp)
 
-install(TARGETS gi_core gi_additions gi_wrapper
+install(TARGETS gi_core gi_additions gi_wrapper gi_gui_qt
     ARCHIVE
     DESTINATION lib
     COMPONENT libraries)
 
-install(TARGETS example
-    RUNTIME
-    DESTINATION bin
-    COMPONENT applications)
+#install(TARGETS example
+#    RUNTIME
+#    DESTINATION bin
+#    COMPONENT applications)
 
 include(InstallRequiredSystemLibraries)
 
