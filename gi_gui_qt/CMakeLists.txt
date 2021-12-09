@@ -79,4 +79,9 @@ install(TARGETS yAGITQt RUNTIME DESTINATION build/gi_gui_qt COMPONENT applicatio
 
 if(WIN32)
     windeployqt(yAGITQt)
+    install(
+        DIRECTORY ${CMAKE_BINARY_DIR}/qtDeploy/
+        DESTINATION .
+        FILES_MATCHING PATTERN "*.*"
+    )
 endif()
