@@ -8,8 +8,15 @@ add_subdirectory(gi_wrapper_cpp)
 #add_subdirectory(gi_gui)
 add_subdirectory(gi_gui_qt)
 
-#install(TARGETS giyagit DESTINATION bin)
-#install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+install(TARGETS gi_core gi_additions gi_wrapper_cpp
+    ARCHIVE
+    DESTINATION lib
+    COMPONENT libraries)
+
+install(TARGETS gi_core
+    RUNTIME
+    DESTINATION bin
+    COMPONENT applications)
 
 include(InstallRequiredSystemLibraries)
 
