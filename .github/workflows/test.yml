@@ -58,10 +58,10 @@ jobs:
           buildWithCMake: true  # use CMake to trigger build process
           useVcpkgToolchainFile: '${{ matrix.useVcpkgToolchainFile }}'  # use vcpkg to install dependencies (i.e. wxwidgets) on Windows
           
-    - name: tmp
-      if: ${{ runner.os == 'Windows' }}
-      run: |
-        ls "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/"
+#     - name: tmp
+#       if: ${{ runner.os == 'Windows' }}
+#       run: |
+#         ls "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/"
 
     - name: Create installer
       if: ${{ runner.os == 'Windows' }}
