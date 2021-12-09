@@ -96,7 +96,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: msi
-        path: _build/yAGITQt-1.1.1-Linux.exe
+        path: _build/yAGITQt-1.1.1-win64.exe
 
 #     Uncomment section below to enable tests
 #     - name: Test
