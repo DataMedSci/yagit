@@ -41,7 +41,7 @@ jobs:
 # i.e. wxwidgets needs >10min for installation and <1min for retrieval from cache
     - name: Install Windows requirements
       if: ${{ runner.os == 'Windows' }}
-      uses: lukka/run-vcpkg@v10
+      uses: lukka/run-vcpkg@v7.4
       with:
         vcpkgArguments: '${{ matrix.vcpkgPackages }}'
         vcpkgTriplet: 'x64-windows'
