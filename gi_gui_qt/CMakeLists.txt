@@ -40,7 +40,6 @@ find_ui_files("${CMAKE_CURRENT_SOURCE_DIR}/ui" yAGITQt_uis)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${yAGITQt_includes} ${yAGITQt_sources})
 
 include_directories(${ZLIB_INCLUDE_DIRS})
-link_directories(${ZLIB_LIBRARY_DIRS})
 
 add_executable(yAGITQt ${yAGITQt_includes} ${yAGITQt_sources} ${yAGITQt_uis})
 
@@ -80,7 +79,7 @@ set_target_properties(yAGITQt
 set_default_output_directories(yAGITQt)
 
 # install(FILES ${yAGITQt_includes} ${yAGITQt_sources} ${yAGITQt_uis} DESTINATION build/gi_gui_qt/lib)
-install(TARGETS yAGITQt RUNTIME DESTINATION build/gi_gui_qt COMPONENT applications)
+install(TARGETS yAGITQt RUNTIME DESTINATION bin COMPONENT applications)
 
 if(WIN32)
     windeployqt(yAGITQt)
