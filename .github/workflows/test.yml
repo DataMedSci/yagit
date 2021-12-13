@@ -42,7 +42,7 @@ jobs:
     - name: Install Windows requirements
       continue-on-error: true
       if: ${{ runner.os == 'Windows' }}
-      uses: lukka/run-vcpkg@v7
+      uses: lukka/run-vcpkg@v10
       with:
         vcpkgArguments: '${{ matrix.vcpkgPackages }}'
         vcpkgTriplet: 'x64-windows'
