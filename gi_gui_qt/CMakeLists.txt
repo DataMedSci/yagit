@@ -26,6 +26,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/ui")
 
 find_package(ICU 66.1 COMPONENTS uc i18n REQUIRED)
+find_package(ZLIB REQUIRED)
 find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
 get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
