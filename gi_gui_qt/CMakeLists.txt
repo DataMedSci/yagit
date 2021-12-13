@@ -39,6 +39,9 @@ find_ui_files("${CMAKE_CURRENT_SOURCE_DIR}/ui" yAGITQt_uis)
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${yAGITQt_includes} ${yAGITQt_sources})
 
+include_directories(${ICU_INCLUDE_DIRS})
+link_directories(${ICU_LIBRARY_DIRS})
+
 add_executable(yAGITQt ${yAGITQt_includes} ${yAGITQt_sources} ${yAGITQt_uis})
 
 
