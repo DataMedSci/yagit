@@ -42,12 +42,12 @@ jobs:
     - name: Install Windows requirements
       continue-on-error: true
       if: ${{ runner.os == 'Windows' }}
-      uses: lukka/run-vcpkg@v10
+      uses: lukka/run-vcpkg@v7
       with:
         vcpkgArguments: '${{ matrix.vcpkgPackages }}'
         vcpkgTriplet: 'x64-windows'
         vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
-        vcpkgGitCommitId: '5568f110b509a9fd90711978a7cb76bae75bb092'
+        vcpkgGitCommitId: 'fdb170fda2daa456a843aa3614e5aca6fffa4d52'
         
     - name: tmp
       if: ${{ runner.os == 'Windows' }}
