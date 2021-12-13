@@ -19,7 +19,7 @@ jobs:
       matrix:
         include:
           - operating-system: windows-latest
-            vcpkgPackages: Qt5
+            vcpkgPackages: Qt5 Boost pcre2
             vcpkgTriplet: 'x64-windows'
             useVcpkgToolchainFile: true
             cmakeGenerator: 'VS16Win64'
