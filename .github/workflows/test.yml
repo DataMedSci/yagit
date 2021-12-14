@@ -40,7 +40,6 @@ jobs:
 # cache is crucial, as installation (compilation from sources) of many dependencies is time consuming
 # i.e. wxwidgets needs >10min for installation and <1min for retrieval from cache
     - name: Install Windows requirements
-      continue-on-error: true
       if: ${{ runner.os == 'Windows' }}
       uses: lukka/run-vcpkg@v7
       with:
@@ -49,11 +48,11 @@ jobs:
         vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
         vcpkgGitCommitId: 'fdb170fda2daa456a843aa3614e5aca6fffa4d52'
         
-    - name: tmp
-      if: ${{ runner.os == 'Windows' }}
-      run: |
-        cat "D:/a/gi-yagit/b/vcpkg/buildtrees/python3/build-x64-windows-rel-out.log"
-        cat "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/project.nsi"
+#     - name: tmp
+#       if: ${{ runner.os == 'Windows' }}
+#       run: |
+#         cat "D:/a/gi-yagit/b/vcpkg/buildtrees/python3/build-x64-windows-rel-out.log"
+#         cat "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/project.nsi"
         
         
 
