@@ -72,12 +72,12 @@ endfunction()
 include_directories(${ZLIB_INCLUDE_DIRS})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE gi_core gi_additions gi_wrapper Qt5::Core Qt5::Gui Qt5::Widgets ${ICU_LIBRARIES} ${ZLIB_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${ZLIB_LIBRARIES})
 ##if (WIN32)
 ## target_link_libraries(${PROJECT_NAME} ${PCRE2_LIBRARIES})
 ##    target_link_libraries(yAGITQt PRIVATE ${PCRE2_LIBRARIES})
 ##endif()
-target_include_directories(yAGITQt PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 set_target_properties(yAGITQt
     PROPERTIES
