@@ -95,7 +95,17 @@ if(WIN32)
     windeployqt(yAGITQt)
     install(
         DIRECTORY ${CMAKE_BINARY_DIR}/qtDeploy/
-        DESTINATION .
+        DESTINATION bin
+        FILES_MATCHING PATTERN "*.*"
+    )
+    install(
+        DIRECTORY ${ZLIB_LIBRARIES}
+        DESTINATION bin/zlib_lib
+        FILES_MATCHING PATTERN "*.*"
+    )
+    install(
+        DIRECTORY ${ZLIB_INCLUDE_DIRS}
+        DESTINATION bin/zlib_dir
         FILES_MATCHING PATTERN "*.*"
     )
 endif()
