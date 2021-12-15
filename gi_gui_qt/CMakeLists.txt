@@ -41,7 +41,7 @@ find_ui_files("${CMAKE_CURRENT_SOURCE_DIR}/ui" yAGITQt_uis)
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${yAGITQt_includes} ${yAGITQt_sources})
 
-include_directories(${ZLIB_INCLUDE_DIRS})
+# include_directories(${ZLIB_INCLUDE_DIRS})
 
 add_executable(yAGITQt ${yAGITQt_includes} ${yAGITQt_sources} ${yAGITQt_uis})
 
@@ -69,7 +69,7 @@ function(windeployqt target)
 endfunction()
 
 target_link_libraries(yAGITQt PRIVATE gi_core gi_additions gi_wrapper Qt5::Core Qt5::Gui Qt5::Widgets ${ZLIB_LIBRARIES} ${ICU_LIBRARIES})
-target_include_directories(yAGITQt PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include" ${ZLIB_INCLUDE_DIRS})
+target_include_directories(yAGITQt PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 set_target_properties(yAGITQt
     PROPERTIES
