@@ -14,7 +14,7 @@
 # along with 'yet Another Gamma Index Tool'; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-OPTION( BUILD_SHARED_LIBS ON)
+OPTION( BUILD_SHARED_LIBS OFF)
 
 cmake_minimum_required(VERSION 3.8)
 project(yAGITQt)
@@ -68,7 +68,7 @@ function(windeployqt target)
 
 endfunction()
 
-target_link_libraries(yAGITQt PRIVATE gi_core gi_additions gi_wrapper Qt5::Core Qt5::Gui Qt5::Widgets ${ZLIB_LIBRARIES} ${ICU_LIBRARIES})
+target_link_libraries(yAGITQt PRIVATE gi_core gi_additions gi_wrapper ZLIB::ZLIB Qt5::Core Qt5::Gui Qt5::Widgets ${ICU_LIBRARIES})
 target_include_directories(yAGITQt PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 set_target_properties(yAGITQt
