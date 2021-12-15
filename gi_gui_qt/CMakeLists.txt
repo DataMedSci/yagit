@@ -29,9 +29,9 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/ui")
 
 find_package(ICU 66.1 COMPONENTS uc i18n REQUIRED)
 find_package(ZLIB REQUIRED)
-if (WIN32)
-    find_package(PCRE2 REQUIRED)
-endif()
+##if (WIN32)
+##    find_package(PCRE2 REQUIRED)
+##endif()
 find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
 get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
@@ -71,11 +71,11 @@ function(windeployqt target)
 
 endfunction()
 
-target_link_libraries(yAGITQt PRIVATE gi_core gi_additions gi_wrapper Qt5::Core Qt5::Gui Qt5::Widgets ${ICU_LIBRARIES})
-if (WIN32)
+target_link_libraries(${PROJECT_NAME} PRIVATE gi_core gi_additions gi_wrapper Qt5::Core Qt5::Gui Qt5::Widgets ${ICU_LIBRARIES})
+##if (WIN32)
 ## target_link_libraries(${PROJECT_NAME} ${PCRE2_LIBRARIES})
-    target_link_libraries(yAGITQt PRIVATE ${PCRE2_LIBRARIES})
-endif()
+##    target_link_libraries(yAGITQt PRIVATE ${PCRE2_LIBRARIES})
+##endif()
 target_include_directories(yAGITQt PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 set_target_properties(yAGITQt
