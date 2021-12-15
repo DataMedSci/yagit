@@ -48,11 +48,11 @@ jobs:
         vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
         vcpkgGitCommitId: 'fdb170fda2daa456a843aa3614e5aca6fffa4d52'
         
-#     - name: tmp
-#       if: ${{ runner.os == 'Windows' }}
-#       run: |
-#         cat "D:/a/gi-yagit/b/vcpkg/buildtrees/python3/build-x64-windows-rel-out.log"
-#         cat "D:/a/gi-yagit/gi-yagit/_build/_CPack_Packages/win64/NSIS/project.nsi"
+    - name: tmp
+      if: ${{ runner.os == 'Windows' }}
+      run: |
+        ls "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/"
+        ls "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/lib"
         
         
 
