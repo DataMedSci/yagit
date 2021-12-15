@@ -53,6 +53,7 @@ jobs:
       run: |
         ls "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/"
         ls "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/lib"
+        ls "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/share"
         
         
 
