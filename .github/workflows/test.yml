@@ -92,7 +92,7 @@ jobs:
 #       if: ${{ runner.os == 'Linux' }}
       run: |
         cd _build/
-        pwd
+        echo %cd%
         cpack -C Release
 
     - name: Upload Linux files
