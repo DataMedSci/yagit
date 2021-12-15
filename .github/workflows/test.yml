@@ -52,6 +52,7 @@ jobs:
       if: ${{ runner.os == 'Windows' }}
       run: |
         ls "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/"
+        ls "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/bin"
         ls "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/lib"
         ls "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/share/zlib"
         ls "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/include"
