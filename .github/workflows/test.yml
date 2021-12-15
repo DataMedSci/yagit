@@ -69,6 +69,12 @@ jobs:
           buildWithCMake: true  # use CMake to trigger build process
           useVcpkgToolchainFile: '${{ matrix.useVcpkgToolchainFile }}'  # use vcpkg to install dependencies (i.e. wxwidgets) on Windows
           
+#     - name: Copy required dlls
+#       if: ${{ runner.os == 'Windows' }}
+#       run: |
+#         cp "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/bin/zlib.dll"
+#         ls "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/"
+#         ls "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/bin"
 #     - name: tmp
 #       if: ${{ runner.os == 'Windows' }}
 #       run: |
@@ -86,6 +92,7 @@ jobs:
 #       if: ${{ runner.os == 'Linux' }}
       run: |
         cd _build/
+        pwd
         cpack -C Release
 
     - name: Upload Linux files
