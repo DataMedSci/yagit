@@ -99,12 +99,12 @@ if(WIN32)
         FILES_MATCHING PATTERN "*.*"
     )
     install(
-        DIRECTORY ${ZLIB_LIBRARIES}
+        TARGETS ${ZLIB_LIBRARIES}
         DESTINATION bin/zlib_lib
         FILES_MATCHING PATTERN "*.*"
     )
     install(
-        DIRECTORY ${ZLIB_INCLUDE_DIRS}
+        TARGETS ${ZLIB_INCLUDE_DIRS}
         DESTINATION bin/zlib_dir
         FILES_MATCHING PATTERN "*.*"
     )
