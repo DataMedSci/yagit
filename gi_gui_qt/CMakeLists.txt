@@ -101,11 +101,11 @@ if(WIN32)
     install(
         TARGETS ${ZLIB_LIBRARIES}
         DESTINATION bin/zlib_lib
-        FILES_MATCHING PATTERN "*.*"
+        COMPONENT applications
     )
     install(
         TARGETS ${ZLIB_INCLUDE_DIRS}
         DESTINATION bin/zlib_dir
-        FILES_MATCHING PATTERN "*.*"
+        COMPONENT applications
     )
 endif()
