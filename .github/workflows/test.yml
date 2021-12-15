@@ -69,12 +69,13 @@ jobs:
           buildWithCMake: true  # use CMake to trigger build process
           useVcpkgToolchainFile: '${{ matrix.useVcpkgToolchainFile }}'  # use vcpkg to install dependencies (i.e. wxwidgets) on Windows
           
-#     - name: Copy required dlls
-#       if: ${{ runner.os == 'Windows' }}
-#       run: |
-#         cp "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/bin/zlib.dll"
-#         ls "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/"
-#         ls "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/bin"
+    - name: Copy required dlls
+      if: ${{ runner.os == 'Windows' }}
+      run: |
+        cp "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/bin/zlib1.dll" "D:/a/gi-yagit/gi-yagit/_build/"
+        cp "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/bin/zstd.dll" "D:/a/gi-yagit/gi-yagit/_build/"
+        cp "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/bin/pcre2-16.lib.dll" "D:/a/gi-yagit/gi-yagit/_build/"
+        
 #     - name: tmp
 #       if: ${{ runner.os == 'Windows' }}
 #       run: |
