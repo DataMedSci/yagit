@@ -92,8 +92,9 @@ set_default_output_directories(yAGITQt)
 install(TARGETS yAGITQt RUNTIME DESTINATION bin COMPONENT applications)
 
 if(MSVC)
-  string(REPLACE "ldebug" "l " ZLIB_LIBRARIES ${ZLIB_LIBRARIES})
+  message( STATUS "      ZLIB Libraries B4: ${ZLIB_LIBRARIES}")
   string(REPLACE "optimized" " " ZLIB_LIBRARIES ${ZLIB_LIBRARIES})
+  string(REPLACE "ldebug" "l " ZLIB_LIBRARIES ${ZLIB_LIBRARIES})
   string(REPLACE "zdll.lib" "zlib1.dll" ZLIB_LIBRARIES ${ZLIB_LIBRARIES}) # win32
   string(REPLACE "lib/zlib.lib" "bin/zlib1.dll" ZLIB_LIBRARIES ${ZLIB_LIBRARIES}) # win64
   message( STATUS "      ZLIB Libraries: ${ZLIB_LIBRARIES}")
