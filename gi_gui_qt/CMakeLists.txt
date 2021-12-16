@@ -92,10 +92,10 @@ set_default_output_directories(yAGITQt)
 install(TARGETS yAGITQt RUNTIME DESTINATION bin COMPONENT applications)
 
 if(MSVC)
-  string(REPLACE "debug;" " " ZLIB_LIBRARIES ${ZLIB_DLL_LIBRARIES})
-  string(REPLACE "optimized;" " " ZLIB_LIBRARIES ${ZLIB_DLL_LIBRARIES})
+  string(REPLACE "debug;" " " ZLIB_LIBRARIES ${ZLIB_LIBRARIES})
+  string(REPLACE "optimized;" " " ZLIB_LIBRARIES ${ZLIB_LIBRARIES})
   string(REPLACE "zdll.lib" "zlib1.dll" ZLIB_LIBRARIES ${ZLIB_LIBRARIES}) # win32
-  string(REPLACE "lib/zlib.lib" "bin/zlib1.dll" ZLIB_LIBRARIES ${ZLIB_DLL_LIBRARIES}) # win64
+  string(REPLACE "lib/zlib.lib" "bin/zlib1.dll" ZLIB_LIBRARIES ${ZLIB_LIBRARIES}) # win64
   message( STATUS "      ZLIB Libraries: ${ZLIB_LIBRARIES}")
   message( STATUS "      ZLIB Dirs: ${ZLIB_INCLUDE_DIRS}")
   set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${ZLIB_LIBRARIES})
