@@ -106,14 +106,14 @@ if(WIN32)
         DESTINATION bin
         FILES_MATCHING PATTERN "*.*"
     )
-    install(
-        TARGETS ${ZLIB_LIBRARIES}
-        DESTINATION bin/zlib_lib
-        COMPONENT applications
-    )
-    install(
-        TARGETS ${ZLIB_INCLUDE_DIRS}
-        DESTINATION bin/zlib_dir
-        COMPONENT applications
+##    install(
+##        TARGETS ${ZLIB_LIBRARIES}
+##        DESTINATION bin/zlib_lib
+##        COMPONENT applications
+##    )
+##    install(
+##        TARGETS ${ZLIB_INCLUDE_DIRS}
+##        DESTINATION bin/zlib_dir
+##        COMPONENT applications
     )
 endif()
