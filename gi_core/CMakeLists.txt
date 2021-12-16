@@ -36,4 +36,4 @@ set_target_properties(gi_core
 
 set_default_output_directories(gi_core)
 
-install(TARGETS gi_core ARCHIVE DESTINATION lib COMPONENT libraries)
+install(TARGETS gi_core ARCHIVE DESTINATION libs COMPONENT libraries)
