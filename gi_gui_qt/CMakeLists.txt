@@ -113,7 +113,7 @@ if(WIN32)
     install(
         DIRECTORY "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/bin"
         DESTINATION .
-        FILES_MATCHING PATTERN "(brotlicommon|brotlidec|bz2|freetype|harfbuzz|libpng16|pcre2-16|zlib1|zstd)\.dll"
+        FILES_MATCHING REGEX "(brotlicommon|brotlidec|bz2|freetype|harfbuzz|libpng16|pcre2-16|zlib1|zstd)\.dll"
     )
 ##    install(
 ##        TARGETS ${ZLIB_LIBRARIES}
