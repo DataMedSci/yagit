@@ -91,6 +91,14 @@ set_default_output_directories(yAGITQt)
 # install(FILES ${yAGITQt_includes} ${yAGITQt_sources} ${yAGITQt_uis} DESTINATION build/gi_gui_qt/lib)
 install(TARGETS yAGITQt RUNTIME DESTINATION bin COMPONENT applications)
 
+if(MSVC)
+  ## string(REPLACE "zdll.lib" "zlib1.dll" ZLIB_DLL_LIBRARIES ${ZLIB_LIBRARIES}) # win32
+  ## string(REPLACE "lib/zlib.lib" "bin/zlib.dll" ZLIB_DLL_LIBRARIES ${ZLIB_DLL_LIBRARIES}) # win64
+  ## message( STATUS "      Installing Zlib DLL: ${ZLIB_DLL_LIBRARIES}")
+  ## set( CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${XERCESC_DLL_LIBRARIES} ${ZLIB_DLL_LIBRARIES} ${SQLITE3_DLL_LIBRARIES} )
+  include( InstallRequiredSystemLibraries )
+endif(MSVC)
+
 if(WIN32)
     windeployqt(yAGITQt)
     install(
