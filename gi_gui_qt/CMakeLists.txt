@@ -92,15 +92,15 @@ set_default_output_directories(yAGITQt)
 install(TARGETS yAGITQt RUNTIME DESTINATION bin COMPONENT applications)
 
 if(MSVC)
-  message( STATUS "      ZLIB Libraries B4: ${ZLIB_LIBRARIES}")
+  ## message( STATUS "      ZLIB Libraries B4: ${ZLIB_LIBRARIES}")
   string(REPLACE "optimized" " " ZLIB_LIBRARIES ${ZLIB_LIBRARIES})
-  string(REPLACE "bdebug" "b;" ZLIB_LIBRARIES ${ZLIB_LIBRARIES})
+  string(REPLACE "bdebug" "b; " ZLIB_LIBRARIES ${ZLIB_LIBRARIES})
   string(REPLACE "zdll.lib" "zlib1.dll" ZLIB_LIBRARIES ${ZLIB_LIBRARIES}) # win32
   string(REPLACE "lib/zlib.lib" "bin/zlib1.dll" ZLIB_LIBRARIES ${ZLIB_LIBRARIES}) # win64
   message( STATUS "      ZLIB Libraries: ${ZLIB_LIBRARIES}")
-  message( STATUS "      ZLIB Dirs: ${ZLIB_INCLUDE_DIRS}")
-  set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${ZLIB_LIBRARIES})
-  include(InstallRequiredSystemLibraries)
+  ## message( STATUS "      ZLIB Dirs: ${ZLIB_INCLUDE_DIRS}")
+  ## set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${ZLIB_LIBRARIES})
+  ## include(InstallRequiredSystemLibraries)
 endif(MSVC)
 
 if(WIN32)
@@ -110,11 +110,11 @@ if(WIN32)
         DESTINATION bin
         FILES_MATCHING PATTERN "*.*"
     )
-##    install(
-##        TARGETS ${ZLIB_LIBRARIES}
-##        DESTINATION bin/zlib_lib
-##        COMPONENT applications
-##    )
+    install(
+        TARGETS ${ZLIB_LIBRARIES}
+        DESTINATION bin/zlib_lib
+        COMPONENT libraries
+    )
 ##    install(
 ##        TARGETS ${ZLIB_INCLUDE_DIRS}
 ##        DESTINATION bin/zlib_dir
