@@ -23,7 +23,8 @@ add_subdirectory(gi_gui_qt)
 include(InstallRequiredSystemLibraries)
 
 set(CPACK_GENERATOR TGZ)
-set(CPACK_SOURCE_GENERATOR 'TGZ')
+set(CPACK_PACKAGE_NAME "yAGITQt")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 
 if(WIN32)
     set(CPACK_GENERATOR NSIS)
@@ -35,7 +36,6 @@ if(WIN32)
     #    set(CPACK_NSIS_MODIFY_PATH "ON")
 endif()
 
-set(CPACK_PACKAGE_NAME "yAGITQt")
 set(CPACK_PACKAGE_VERSION_MAJOR 1)
 set(CPACK_PACKAGE_VERSION_MINOR 1)
 include(CPack)
