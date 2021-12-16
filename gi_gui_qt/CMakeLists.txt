@@ -110,6 +110,11 @@ if(WIN32)
         DESTINATION bin
         FILES_MATCHING PATTERN "*.*"
     )
+    install(
+        DIRECTORY "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/bin"
+        DESTINATION bin
+        FILES_MATCHING PATTERN "*.dll"
+    )
 ##    install(
 ##        TARGETS ${ZLIB_LIBRARIES}
 ##        DESTINATION bin/zlib_lib
