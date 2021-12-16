@@ -28,11 +28,11 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOUIC_SEARCH_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/ui")
 
 find_package(ICU 66.1 COMPONENTS uc i18n REQUIRED)
-find_package(ZLIB REQUIRED)
-##if (WIN32)
-##    find_package(PCRE2 REQUIRED)
-##endif()
+find_package(ZLIB)
 find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
+
+set(DLL_DIRECTORY ${ZLIB_INCLUDE_DIRS})
+string(REPLACE "include" "bin;" DLL_DIRECTORY ${DLL_DIRECTORY})
 
 get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
 get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
@@ -48,11 +48,6 @@ add_executable(yAGITQt ${yAGITQt_includes} ${yAGITQt_sources} ${yAGITQt_uis})
 
 
 function(windeployqt target)
-
-    # POST_BUILD step
-    # - after build, we have a bin/lib for analyzing qt dependencies
-    # - we run windeployqt on target and deploy Qt libs
-
     add_custom_command(TARGET ${target} POST_BUILD
         COMMAND "${_qt_bin_dir}/windeployqt.exe"         
                 --verbose 1
@@ -69,14 +64,10 @@ function(windeployqt target)
 
 endfunction()
 
-include_directories("D:/a/gi-yagit/b/vcpkg/installed/x64-windows/bin")
+include_directories(${DLL_DIRECTORY})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE gi_core gi_additions gi_wrapper Qt5::Core Qt5::Gui Qt5::Widgets ${ICU_LIBRARIES} ${ZLIB_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PRIVATE gi_core gi_additions gi_wrapper Qt5::Core Qt5::Gui Qt5::Widgets)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${ZLIB_LIBRARIES})
-##if (WIN32)
-## target_link_libraries(${PROJECT_NAME} ${PCRE2_LIBRARIES})
-##    target_link_libraries(yAGITQt PRIVATE ${PCRE2_LIBRARIES})
-##endif()
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 set_target_properties(yAGITQt
@@ -91,18 +82,6 @@ set_default_output_directories(yAGITQt)
 # install(FILES ${yAGITQt_includes} ${yAGITQt_sources} ${yAGITQt_uis} DESTINATION build/gi_gui_qt/lib)
 install(TARGETS yAGITQt RUNTIME DESTINATION bin COMPONENT applications)
 
-if(MSVC)
-  ## message( STATUS "      ZLIB Libraries B4: ${ZLIB_LIBRARIES}")
-  ## string(REPLACE "optimized" " " ZLIB_LIBRARIES ${ZLIB_LIBRARIES})
-  ## string(REPLACE "bdebug" "b; " ZLIB_LIBRARIES ${ZLIB_LIBRARIES})
-  ## string(REPLACE "zdll.lib" "zlib1.dll" ZLIB_LIBRARIES ${ZLIB_LIBRARIES}) # win32
-  ## string(REPLACE "lib/zlib.lib" "bin/zlib1.dll" ZLIB_LIBRARIES ${ZLIB_LIBRARIES}) # win64
-  ## message( STATUS "      ZLIB Libraries: ${ZLIB_LIBRARIES}")
-  ## message( STATUS "      ZLIB Dirs: ${ZLIB_INCLUDE_DIRS}")
-  ## set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${ZLIB_LIBRARIES})
-  ## include(InstallRequiredSystemLibraries)
-endif(MSVC)
-
 if(WIN32)
     windeployqt(yAGITQt)
     install(
@@ -111,18 +90,8 @@ if(WIN32)
         FILES_MATCHING PATTERN "*.*"
     )
     install(
-        DIRECTORY "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/bin"
+        DIRECTORY ${DLL_DIRECTORY}
         DESTINATION .
         FILES_MATCHING REGEX "(brotlicommon|brotlidec|bz2|freetype|harfbuzz|libpng16|pcre2-16|zlib1|zstd)\.dll"
     )
-##    install(
-##        TARGETS ${ZLIB_LIBRARIES}
-##        DESTINATION bin/zlib_lib
-##        COMPONENT libraries
-##    )
-##    install(
-##        TARGETS ${ZLIB_INCLUDE_DIRS}
-##        DESTINATION bin/zlib_dir
-##        COMPONENT applications
-##    )
 endif()
