@@ -69,7 +69,7 @@ function(windeployqt target)
 
 endfunction()
 
-include_directories(${ZLIB_INCLUDE_DIRS})
+include_directories("D:/a/gi-yagit/b/vcpkg/installed/x64-windows/bin")
 
 target_link_libraries(${PROJECT_NAME} PRIVATE gi_core gi_additions gi_wrapper Qt5::Core Qt5::Gui Qt5::Widgets ${ICU_LIBRARIES} ${ZLIB_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${ZLIB_LIBRARIES})
@@ -93,11 +93,11 @@ install(TARGETS yAGITQt RUNTIME DESTINATION bin COMPONENT applications)
 
 if(MSVC)
   ## message( STATUS "      ZLIB Libraries B4: ${ZLIB_LIBRARIES}")
-  string(REPLACE "optimized" " " ZLIB_LIBRARIES ${ZLIB_LIBRARIES})
-  string(REPLACE "bdebug" "b; " ZLIB_LIBRARIES ${ZLIB_LIBRARIES})
-  string(REPLACE "zdll.lib" "zlib1.dll" ZLIB_LIBRARIES ${ZLIB_LIBRARIES}) # win32
-  string(REPLACE "lib/zlib.lib" "bin/zlib1.dll" ZLIB_LIBRARIES ${ZLIB_LIBRARIES}) # win64
-  message( STATUS "      ZLIB Libraries: ${ZLIB_LIBRARIES}")
+  ## string(REPLACE "optimized" " " ZLIB_LIBRARIES ${ZLIB_LIBRARIES})
+  ## string(REPLACE "bdebug" "b; " ZLIB_LIBRARIES ${ZLIB_LIBRARIES})
+  ## string(REPLACE "zdll.lib" "zlib1.dll" ZLIB_LIBRARIES ${ZLIB_LIBRARIES}) # win32
+  ## string(REPLACE "lib/zlib.lib" "bin/zlib1.dll" ZLIB_LIBRARIES ${ZLIB_LIBRARIES}) # win64
+  ## message( STATUS "      ZLIB Libraries: ${ZLIB_LIBRARIES}")
   ## message( STATUS "      ZLIB Dirs: ${ZLIB_INCLUDE_DIRS}")
   ## set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS ${ZLIB_LIBRARIES})
   ## include(InstallRequiredSystemLibraries)
@@ -110,11 +110,11 @@ if(WIN32)
         DESTINATION bin
         FILES_MATCHING PATTERN "*.*"
     )
-    install(
-        TARGETS ${ZLIB_LIBRARIES}
-        DESTINATION bin/zlib_lib
-        COMPONENT libraries
-    )
+##    install(
+##        TARGETS ${ZLIB_LIBRARIES}
+##        DESTINATION bin/zlib_lib
+##        COMPONENT libraries
+##    )
 ##    install(
 ##        TARGETS ${ZLIB_INCLUDE_DIRS}
 ##        DESTINATION bin/zlib_dir
