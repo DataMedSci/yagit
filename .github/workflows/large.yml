@@ -12,7 +12,7 @@ env:
 
 jobs:
 
-  build_sphinx_job:
+  large_files_job:
     runs-on: ubuntu-latest
     container: debian:buster-slim
 
