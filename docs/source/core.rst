@@ -1,7 +1,7 @@
-.. _link-dispatcher:
-
 Core
 ====
 
-.. doxygenfile:: dispatcher.h
+// TODO
+
+.. doxygenfile:: gamma_index.h
 
