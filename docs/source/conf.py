@@ -41,7 +41,7 @@ release = ''
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
-    'sphinx.ext.pngmath',
+    'sphinx.ext.mathjax',
     'sphinx.ext.githubpages',
     'breathe',
 ]
