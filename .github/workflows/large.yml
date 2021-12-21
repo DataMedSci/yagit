@@ -1,0 +1,28 @@
+name: large-files
+
+on:
+  push:
+    branches: [ master ]
+
+env:
+  BUILD_TYPE: Release
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_ACTOR: kdbogusz
+  GITHUB_REPOSITORY: kdbogusz/gi-yagit
+
+jobs:
+
+  build_sphinx_job:
+    runs-on: ubuntu-latest
+    container: debian:buster-slim
+
+    steps:
+
+      - name: Get prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dcmtk unzip
+          git clone "https://token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" .
+          unzip _H00032.RTDOSE.Spezial_01HIT_BPL_.9.8.2010.02.22.17.47.16.474.83096350.zip
+          dcmdump _H00032.RTDOSE.Spezial_01HIT_BPL_.9.8.2010.02.22.17.47.16.474.83096350.IMA
+        shell: bash
