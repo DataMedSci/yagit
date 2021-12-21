@@ -67,7 +67,7 @@ jobs:
         
     - name: Pack files
       run: |
-        sudo cd build/
+        cd build/
         sudo cpack -C Release
 
     - name: Upload Linux files
