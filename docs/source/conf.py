@@ -26,7 +26,7 @@ author = 'gamma-index-team'
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = '0.2.0'
+release = ''
 
 
 # -- General configuration ---------------------------------------------------
@@ -43,7 +43,6 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.imgmath',
     'sphinx.ext.githubpages',
-    'sphinx.ext.mathbase',
     'breathe',
 ]
 
