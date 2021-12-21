@@ -19,28 +19,15 @@ project(gi_wrapper)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(common)
-include(CPM)
 
-set(IMEBRA_SHARED_STATIC STATIC)
-
-CPMFindPackage(
-    NAME imebra
-    GITHUB_REPOSITORY grzanka/imebra_mirror
-    GIT_TAG 4.0.8
-    VERSION 4.0.8
-    DOWNLOAD_ONLY YES
-)
-
-if (imebra_ADDED)
-    add_subdirectory(${imebra_SOURCE_DIR}/library ${imebra_BINARY_DIR} EXCLUDE_FROM_ALL)
-endif()
+find_package(GDCM CONFIG REQUIRED)
 
 find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}" gi_wrapper_sources)
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${gi_wrapper_sources})
 
 add_library(gi_wrapper STATIC ${gi_wrapper_sources})
-target_link_libraries(gi_wrapper PUBLIC imebra)
+target_link_libraries(gi_wrapper PRIVATE gdcmCommon gdcmIOD gdcmDICT gdcmMSFF gdcmDSED gdcmMEXD)
 target_include_directories(gi_wrapper PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 set_target_properties(gi_wrapper
@@ -50,6 +37,5 @@ set_target_properties(gi_wrapper
     CXX_EXTENSIONS NO
 )
 
-set_default_output_directories(gi_wrapper)
-
 install(TARGETS gi_wrapper ARCHIVE DESTINATION libs COMPONENT libraries)
+set_default_output_directories(gi_wrapper)
