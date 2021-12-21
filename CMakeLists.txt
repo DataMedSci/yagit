@@ -9,6 +9,8 @@ add_subdirectory(gi_gui_qt)
 
 include(InstallRequiredSystemLibraries)
 
+set(CPACK_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION OFF)
+
 set(CPACK_GENERATOR TGZ)
 set(CPACK_PACKAGE_NAME "yAGITQt")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md")

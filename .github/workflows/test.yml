@@ -65,10 +65,17 @@ jobs:
           buildWithCMake: true  # use CMake to trigger build process
           useVcpkgToolchainFile: '${{ matrix.useVcpkgToolchainFile }}'  # use vcpkg to install dependencies (i.e. wxwidgets) on Windows
         
-    - name: Pack files
+    - name: Pack files on Linux
+      if: ${{ runner.os == 'Linux' }}
       run: |
         cd build/
         sudo cpack -C Release
+        
+    - name: Pack files on Windows
+      if: ${{ runner.os == 'Windows' }}
+      run: |
+        cd build/
+        cpack -C Release
 
     - name: Upload Linux files
       if: ${{ runner.os == 'Linux' }}
