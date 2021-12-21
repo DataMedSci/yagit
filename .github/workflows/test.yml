@@ -67,9 +67,8 @@ jobs:
         
     - name: Pack files
       run: |
-        cd build/
-        ls
-        cpack -C Release
+        sudo cd build/
+        sudo cpack -C Release
 
     - name: Upload Linux files
       if: ${{ runner.os == 'Linux' }}
