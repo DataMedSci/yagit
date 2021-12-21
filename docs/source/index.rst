@@ -16,7 +16,6 @@ yet Another Gamma Index Tool
 
    gamma_index
    classic_version
-   spiral_version
 
 .. toctree::
    :maxdepth: 1

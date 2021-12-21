@@ -6,20 +6,15 @@ The purpose of the *yet Another Gamma Index Tool* project was to create an open-
 Modules
 .......
 
-*yAGIT* application consists of 5 modules:
- 1. **Core module** - performs a comparison of two images passed as linearised arrays of real numbers - the dose values at given points. This module is completely independent and can be used separately. In order to accelerate the calculations, it has been deprived of all the responsibilities that are not necessary for comparison. Module contains implementation of three version of Gamma Index algorithm:
+*yAGIT* application consists of 3 modules:
+ 1. **Core module** - performs a comparison of two images passed as linearised arrays of real numbers - the dose values at given points. This module is completely independent and can be used separately. In order to accelerate the calculations, it has been deprived of all the responsibilities that are not necessary for comparison. Module contains implementation of // TODO versions of Gamma Index algorithm:
 
-     a. classic version without rectangle bounding of search space - it is very slow, and was only attached as some kind of reference to the spiral versions
-     b. spiral version without rectangle bounding of search space - improved version of the algorithm, performs the comparisons in reasonable time
-     c. spiral version with rectangle bounding of search space - a bit faster than the version without rectangle
+     a. classic version using CPU - it is very slow, and was only attached as some kind of reference to the spiral versions
+    // TODO
 
  2. **Wrapper module** - reads images from DICOM files and stores them into linearised tables so that the core module can make use of them. It is also responsible for saving the resulting Gamma Index matrix into an output DICOM file. It uses an external library *Imebra*
 
- 3. **Additions module** - contains functions necessary to calculate statistics, create histograms, and also perform a preprocessing of input images (e.g. noise filtering)
-
- 4. **Tests module** - separate framework, allowing to compare spiral version of algorithm with the classic version or with externally calculated Gamma Index matrices, using manually created or generated test cases
-
- 5. **GUI module** - it is a Graphical User Interface created using *wxWidgets* library that allows to select images for comparison, set a wide range of parameters (which can be saved and stored in the form of profiles), perform comparisons and write the output to a DICOM file. It has dependencies to all of the other modules.
+ 3. **GUI module** - it is a Graphical User Interface created using *wxWidgets* library that allows to select images for comparison, set a wide range of parameters (which can be saved and stored in the form of profiles), perform comparisons and write the output to a DICOM file. It has dependencies to all of the other modules.
 
 Advantages of our solution
 ..........................
@@ -36,7 +31,8 @@ Advantages of our solution
  - simple and user friendly GUI
  - support for DICOM images
  - support for images represented as linearised floating point C++ arrays
- - supplied test framework
+ - support for GPU acceleration
+ - supplied test framework // TODO - is it still true?
 
 Limitations
 ...........
