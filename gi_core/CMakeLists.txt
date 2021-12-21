@@ -84,4 +84,5 @@ set_default_output_directories(gi_core)
 add_subdirectory(tests)
 add_subdirectory(performance_analysis)
 
+set(CPACK_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION OFF)
 install(TARGETS gi_core ARCHIVE DESTINATION libs COMPONENT libraries)
