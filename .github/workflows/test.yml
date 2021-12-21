@@ -64,17 +64,10 @@ jobs:
           buildDirectory: 'build'  # subdirectory to store make build and store results
           buildWithCMake: true  # use CMake to trigger build process
           useVcpkgToolchainFile: '${{ matrix.useVcpkgToolchainFile }}'  # use vcpkg to install dependencies (i.e. wxwidgets) on Windows
-          
-    - name: Copy required dlls
-      if: ${{ runner.os == 'Windows' }}
-      run: |
-        cp "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/bin/zlib1.dll" "D:/a/gi-yagit/gi-yagit/_build/"
-        cp "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/bin/zstd.dll" "D:/a/gi-yagit/gi-yagit/_build/"
-        cp "D:/a/gi-yagit/b/vcpkg/installed/x64-windows/bin/pcre2-16.dll" "D:/a/gi-yagit/gi-yagit/_build/"
-    
+        
     - name: Pack files
       run: |
-        cd _build/
+        cd build/
         ls
         cpack -C Release
 
@@ -83,14 +76,14 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: tarball
-        path: _build/yAGITQt-1.1.1-Linux.tar.gz
+        path: build/yAGITQt-1.1.1-Linux.tar.gz
 
     - name: Upload Windows files
       if: ${{ runner.os == 'Windows' }}
       uses: actions/upload-artifact@v2
       with:
         name: msi
-        path: _build/yAGITQt-1.1.1-win64.exe
+        path: build/yAGITQt-1.1.1-win64.exe
 
     - name: Run unit tests
       run: |
