@@ -19,49 +19,36 @@ jobs:
 
     steps:
 
-      - name: Get prerequisites and clone repository
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get prerequisites
         run: |
           apt-get update
-          apt-get install -y git
-          git clone "https://token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" .
+          apt-get install -y git python3-pip doxygen
         shell: bash
 
-      - name: Run build script for Sphinx pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Run doxygen and prepare for Sphinx
         run: |
-          apt-get update
-          apt-get install -y git rsync python3-sphinx python3-breathe python3-pip graphviz
-          pip3 install sphinx-book-theme==0.1.7
-          pip3 install breathe==4.31.0
+          rm -f .gitignore
           cd docs/
-          make clean
           mkdir build
           cd source/
           doxygen
           cd ../
-          make html
-          git config --global user.name "${GITHUB_ACTOR}"
-          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-          docroot=`mktemp -d`
-          rsync -av "build/html/" "${docroot}/"
-          
-          pushd "${docroot}"
-          
-          git init
-          git remote add deploy "https://token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git checkout -b gh-pages
-          
-          touch .nojekyll
-          
-          git add .
-          
-          msg="Updating Docs for commit ${GITHUB_SHA}"
-          git commit -am "${msg}"
-          
-          git push deploy gh-pages --force
-          popd
-          exit 0
         shell: bash
+
+      - name: Build and Commit
+        uses: sphinx-notes/pages@2.0
+        with:
+          documentation_path: docs/source
+          requirements_path: docs/requirements.txt
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          force: true

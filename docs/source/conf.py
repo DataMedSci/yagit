@@ -26,7 +26,7 @@ author = 'gamma-index-team'
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = '0.2.0'
+release = ''
 
 
 # -- General configuration ---------------------------------------------------
@@ -41,9 +41,8 @@ release = '0.2.0'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
-    'sphinx.ext.imgmath',
+    'sphinx.ext.mathjax',
     'sphinx.ext.githubpages',
-    'sphinx.ext.mathbase',
     'breathe',
 ]
 
@@ -94,6 +93,7 @@ html_theme = 'sphinx_book_theme'
 # documentation.
 #
 html_theme_options = {
+    "use_download_button": False,
     "repository_url": "https://github.com/DataMedSci/gi-yagit",
     "use_repository_button": True,
 }
@@ -122,7 +122,7 @@ htmlhelp_basename = 'gamma-indexdoc'
 
 # -- Options for LaTeX output ------------------------------------------------
 
-latex_elements = {
+# latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     #
     # 'papersize': 'letterpaper',
@@ -138,15 +138,15 @@ latex_elements = {
     # Latex figure (float) alignment
     #
     # 'figure_align': 'htbp',
-}
+# }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
-latex_documents = [
-    (master_doc, 'gamma-index.tex', 'gamma-index Documentation',
-     'gamma-index-team', 'manual'),
-]
+# latex_documents = [
+#     (master_doc, 'gamma-index.tex', 'gamma-index Documentation',
+#      'gamma-index-team', 'manual'),
+# ]
 
 
 # -- Options for manual page output ------------------------------------------
@@ -164,17 +164,17 @@ man_pages = [
 # Grouping the document tree into Texinfo files. List of tuples
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
-texinfo_documents = [
-    (master_doc, 'gamma-index', 'gamma-index Documentation',
-     author, 'gamma-index', 'One line description of project.',
-     'Miscellaneous'),
-]
+# texinfo_documents = [
+#     (master_doc, 'gamma-index', 'gamma-index Documentation',
+#      author, 'gamma-index', 'One line description of project.',
+#      'Miscellaneous'),
+# ]
 
 
 # -- Options for Epub output -------------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = project
+# epub_title = project
 
 # The unique identifier of the text. This can be a ISBN number
 # or the project homepage.
@@ -186,7 +186,7 @@ epub_title = project
 # epub_uid = ''
 
 # A list of files that should not be packed into the epub file.
-epub_exclude_files = ['search.html']
+# epub_exclude_files = ['search.html']
 
 
 # -- Extension configuration -------------------------------------------------
