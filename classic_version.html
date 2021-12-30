@@ -1,0 +1,647 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Classic version &#8212; gamma-index  documentation</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet">
+  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    
+  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation Guide" href="instalation.html" />
+    <link rel="prev" title="Gamma Index" href="gamma_index.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">gamma-index  documentation</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  OVERVIEW
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="introduction.html">
+   Introduction
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="license.html">
+   GNU General Public License
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  ALGORITHM
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="gamma_index.html">
+   Gamma Index
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Classic version
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  USER GUIDE
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="instalation.html">
+   Installation Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="gi_gui.html">
+   GUI guide
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  DEVELOPER GUIDE
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="gi_core_2d_example_client.html">
+   Gamma Index Core 2D example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="gi_wrapper_example_client.html">
+   Gamma Index Wrapper example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="matrix_representation.html">
+   Matrix representation
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="api.html">
+   API
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="core.html">
+     Core
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="additions.html">
+     Additions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="wrapper.html">
+     Wrapper
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="components.html">
+   Components
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="image.html">
+     Image
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="solver.html">
+     Solvers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="dicom_reader.html">
+     DicomReader
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="dicom_writer.html">
+     DicomWriter
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="dicom_tag_rewrite_strategies.html">
+     DicomTagRewriteStrategies
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/DataMedSci/gi-yagit"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#algorithm">
+   Algorithm
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#example">
+   Example
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="classic-version">
+<h1>Classic version<a class="headerlink" href="#classic-version" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="algorithm">
+<h2>Algorithm<a class="headerlink" href="#algorithm" title="Permalink to this headline">¶</a></h2>
+<p>Calculating Gamma Index function for every point <em>r</em><sub>r</sub> in the reference image matrix requires finding a minimum of the <span class="math notranslate nohighlight">\(\Gamma\)</span> function specified in the domain (<em>r</em><sub>r</sub>, <em>r</em><sub>e</sub>), where <em>r</em><sub>e</sub> is a voxel in the target image. In the classic version of the algorithm <em>r</em><sub>e</sub> can be any point within the target image, but often, in order to speed up the computation, some sort of limitation is introduced - the <em>r</em><sub>e</sub> set is reduced to an arbitrarily specified rectangle with the center in the currently considered <em>r</em><sub>r</sub> point.
+The formula for <span class="math notranslate nohighlight">\(\Gamma\)</span> (<em>r</em><sub>r</sub>, <em>r</em><sub>e</sub>) function is as follows:</p>
+<div class="math notranslate nohighlight">
+\[\Gamma (r_r, r_e) = \sqrt {{\frac{|r_e - r_r|}{DTA}^2 + \frac{(D_e(r_e) - D_r(r_r))}{(DD*refVal)}^2}}\]</div>
+<p>The first component under the root is calculated based on the distance between considered voxels (|<em>r</em><sub>e</sub> - <em>r</em><sub>r</sub>|). This distance is then normalized by a parameter called DTA (as this component comes from the metric called <em>Distance To Agreement</em>).</p>
+<p>The second component is calculated based on the difference of values in the given points <span class="math notranslate nohighlight">\((D_r(r_r), D_e(r_e)\)</span> - values of the reference and target images in voxels <em>r</em><sub>r</sub> and <em>r</em><sub>e</sub>, respectively). The normalization value is calculated as a product of two factors: the first one is an arbitrary parameter DD (the name after <em>Dose Difference</em> metric), the second is <em>refVal</em> and it varies depending on the algorithm version:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>in <em>global</em> version (most commonly used) the <em>refVal</em> is constant and  set to the maximal value in the reference image.</p></li>
+<li><p>in <em>local</em> version the <em>refVal</em> is set to the value of currently considered <em>r</em><sub>r</sub> voxel.</p></li>
+</ul>
+</div></blockquote>
+<p>As a result of the whole process, an image containing Gamma Index values is produced. This image has the same spatial parameters (location in space, the voxel size and the resolution) as the reference image.</p>
+<p>Unfortunately, the classic version requires visiting every <em>r</em><sub>e</sub> point for each <em>r</em><sub>r</sub> voxel, which results in dramatically high complexity (<span class="math notranslate nohighlight">\(O(N^{2k})\)</span>, where <em>N</em> is the length of the image’s side in voxels, and <em>k</em> is the number of image’s dimensions). This makes the calculation very time consuming, thus the classic version cannot be used on the daily basis and some changes in the algorithm had to be made in order to make this metric useful. That is why we created the spiral version of the algorithm.</p>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>This section presents an example of the classic version of Gamma Index algorithm showing step by step the comparison of two 2D data sets of size 2x2 with a bit different location in space.</p>
+<img alt="_images/classic_example_1.png" src="_images/classic_example_1.png" />
+<p>Matrices <em>M1</em>, <em>M2</em> are attached below. We will perform comparison in which <em>M1</em> will be the reference matrix, and <em>M2</em> will be the target matrix. The matrix <em>M1</em> is composed of pixels 1,2,3,4. The matrix <em>M2</em> is composed of pixels I,II,III,IV.</p>
+<img alt="_images/classic_example_2.png" src="_images/classic_example_2.png" />
+<p>The resulting Gamma Index matrix has the same size, spacing and position in space as the reference matrix. The initial value is defined by user in the limit parameter.</p>
+<img alt="_images/classic_example_3.png" src="_images/classic_example_3.png" />
+<dl class="simple">
+<dt>The comparison parameters:</dt><dd><ul class="simple">
+<li><p>DD - 3%</p></li>
+<li><p>DTA - 3 mm</p></li>
+<li><p>limit - 20.0</p></li>
+<li><p>version - global</p></li>
+<li><p>refVal - the maximal value of the reference image (which in our case is 1.0)</p></li>
+</ul>
+</dd>
+</dl>
+<p>The initial Gamma Index matrix has then the following form.</p>
+<img alt="_images/classic_example_4.png" src="_images/classic_example_4.png" />
+<p>The reference array is composed of 4 pixels, so the process of calculating the matrix can be divided into 4 main stages - in each there will be calculated Gamma Index value for a subsequent reference point.
+The formula for the value of the Gamma Index is as follows:</p>
+<img alt="_images/classic_example_4_1.png" src="_images/classic_example_4_1.png" />
+<p>First stage.</p>
+<table class="table">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 11%" />
+<col style="width: 44%" />
+<col style="width: 14%" />
+<col style="width: 19%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><div class="line-block">
+<div class="line">Reference</div>
+<div class="line">point</div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">Target</div>
+<div class="line">point</div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">Distance</div>
+<div class="line"><br /></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">Dose value</div>
+<div class="line">difference</div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">GI for given</div>
+<div class="line">pair of points</div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>I</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sqrt{1^2 + 1^2} = \sqrt{2}\)</span></p></td>
+<td><p>0.03</p></td>
+<td><p>1.0554</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>II</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sqrt{1^2 + 2^2} = \sqrt{5}\)</span></p></td>
+<td><p>0.06</p></td>
+<td><p>2.1344</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>III</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sqrt{2^2 + 1^2} = \sqrt{5}\)</span></p></td>
+<td><p>0.02</p></td>
+<td><p>1.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>IV</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sqrt{2^2 + 2^2} = \sqrt{8}\)</span></p></td>
+<td><p>0.0</p></td>
+<td><p><strong>0.9428</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Gamma Index matrix after the first stage.</p>
+<img alt="_images/classic_example_5.png" src="_images/classic_example_5.png" />
+<p>Second stage:</p>
+<table class="table">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 11%" />
+<col style="width: 44%" />
+<col style="width: 14%" />
+<col style="width: 19%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><div class="line-block">
+<div class="line">Reference</div>
+<div class="line">point</div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">Target</div>
+<div class="line">point</div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">Distance</div>
+<div class="line"><br /></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">Dose value</div>
+<div class="line">difference</div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">GI for given</div>
+<div class="line">pair of points</div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>I</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sqrt{0^2 + 1^2} = \sqrt{1}\)</span></p></td>
+<td><p>0.0</p></td>
+<td><p><strong>0.3333</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>II</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sqrt{1^2 + 1^2} = \sqrt{2}\)</span></p></td>
+<td><p>0.03</p></td>
+<td><p>1.1055</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>III</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sqrt{0^2 + 2^2} = 2\)</span></p></td>
+<td><p>0.05</p></td>
+<td><p>1.7951</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>IV</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sqrt{1^2 + 2^2} = \sqrt{5}\)</span></p></td>
+<td><p>0.03</p></td>
+<td><p>1.2472</p></td>
+</tr>
+</tbody>
+</table>
+<p>Gamma Index matrix after the second stage.</p>
+<img alt="_images/classic_example_6.png" src="_images/classic_example_6.png" />
+<p>Third stage.</p>
+<table class="table">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 11%" />
+<col style="width: 44%" />
+<col style="width: 14%" />
+<col style="width: 19%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><div class="line-block">
+<div class="line">Reference</div>
+<div class="line">point</div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">Target</div>
+<div class="line">point</div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">Distance</div>
+<div class="line"><br /></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">Dose value</div>
+<div class="line">difference</div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">GI for given</div>
+<div class="line">pair of points</div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>I</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sqrt{1^2 + 0^2} = 1\)</span></p></td>
+<td><p>0.07</p></td>
+<td><p>2.3570</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>II</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sqrt{1^2 + 1^2} = \sqrt{2}\)</span></p></td>
+<td><p>0.02</p></td>
+<td><p><strong>0.8165</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>III</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sqrt{2^2 + 0^2} = 2\)</span></p></td>
+<td><p>0.1</p></td>
+<td><p>3.993</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>IV</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sqrt{2^2 + 1^2} = \sqrt{5}\)</span></p></td>
+<td><p>0.04</p></td>
+<td><p>2.2360</p></td>
+</tr>
+</tbody>
+</table>
+<p>Gamma Index matrix after the third stage.</p>
+<img alt="_images/classic_example_7.png" src="_images/classic_example_7.png" />
+<p>Fourth stage.</p>
+<table class="table">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 11%" />
+<col style="width: 44%" />
+<col style="width: 14%" />
+<col style="width: 19%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><div class="line-block">
+<div class="line">Reference</div>
+<div class="line">point</div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">Target</div>
+<div class="line">point</div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">Distance</div>
+<div class="line"><br /></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">Dose value</div>
+<div class="line">difference</div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">GI for given</div>
+<div class="line">pair of points</div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>I</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sqrt{0^2 + 0^2} = 0\)</span></p></td>
+<td><p>0.05</p></td>
+<td><p>1.6667</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>II</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sqrt{1^2 + 0^2} = \sqrt{1}\)</span></p></td>
+<td><p>0.08</p></td>
+<td><p>2.6874</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>III</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sqrt{0^2 + 1^2} = \sqrt{1}\)</span></p></td>
+<td><p>0.0</p></td>
+<td><p><strong>0.3333</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>IV</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sqrt{1^2 + 1^2} = \sqrt{2}\)</span></p></td>
+<td><p>0.02</p></td>
+<td><p>0.8165</p></td>
+</tr>
+</tbody>
+</table>
+<p>Gamma Index matrix after the final stage.</p>
+<img alt="_images/classic_example_8.png" src="_images/classic_example_8.png" />
+</div>
+</div>
+
+
+              </div>
+              
+        
+            <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="gamma_index.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Gamma Index</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="instalation.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Installation Guide</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By gamma-index-team<br/>
+        
+            &copy; Copyright 2021, gamma-index-team.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>
