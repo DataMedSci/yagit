@@ -63,7 +63,7 @@ namespace yagit::core::data
 		template<size_t Dimension, typename = std::enable_if_t<(Dimension > 1)>>
 		unique_ptr<iimage_region<ElementType, Dimensions - 1>> slice(size_t index, error_code& ec)
 		{
-			return slice(Dimension, index, ec);
+			return create_slice(Dimension, index, ec);
 		}
 		template<size_t Dimension, typename = std::enable_if_t<(Dimension > 1)>>
 		unique_ptr<iimage_region<ElementType, Dimensions - 1>> slice(size_t index)
@@ -124,7 +124,7 @@ namespace yagit::core::data
 		/// <param name="index">: index along dimension-axi at which the slice should be taken</param>
 		/// <param name="ec">Error code</param>
 		/// <returns>Slice of iimage_region unless implementation error occured then nullptr</returns>
-		virtual unique_ptr<iimage_region<ElementType, Dimensions - 1>> slice(size_t dimension, size_t index, error_code& ec) const = 0;
+		virtual iimage_region<ElementType, Dimensions - 1>* create_slice(size_t dimension, size_t index, error_code& ec) const = 0;
 
 		/// <summary>
 		/// <para>Obtains an iimage_region corresponding to provided subregion.</para>
@@ -165,4 +165,7 @@ namespace yagit::core::data
 			}
 		}
 	};
+
+	template<typename ElementType>
+	class iimage_region<ElementType, 0> {};
 }

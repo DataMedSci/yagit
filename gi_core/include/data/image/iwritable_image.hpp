@@ -14,10 +14,13 @@ namespace yagit::core::data
 	/// <typeparam name="Dimensions">Dimensionality of image data point storage</typeparam>
 	template<typename ElementType, size_t Dimensions>
 	class iwritable_image
-		: public iwritable_image_region<ElementType, Dimensions>
-		, public iimage<ElementType, Dimensions>
+		: public virtual iwritable_image_region<ElementType, Dimensions>
+		, public virtual iimage<ElementType, Dimensions>
 	{
 	public:
 		virtual ~iwritable_image() override = default;
 	};
+
+	template<typename ElementType>
+	class iwritable_image<ElementType, 0> : public virtual iimage<ElementType, 0>, public virtual iwritable_image_region<ElementType, 0> {};
 }

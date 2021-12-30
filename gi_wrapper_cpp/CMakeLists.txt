@@ -37,7 +37,7 @@ target_include_directories(gi_gdcm_wrapper PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/s
 
 set_target_properties(gi_gdcm_wrapper
     PROPERTIES
-    CXX_STANDARD 17
+    CXX_STANDARD 20
     CXX_STANDARD_REQUIRED YES
     CXX_EXTENSIONS NO
 )

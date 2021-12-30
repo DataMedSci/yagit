@@ -15,9 +15,12 @@ namespace yagit::core::data
 	template<typename ElementType, size_t Dimensions>
 	class irtdose_image
 		: public virtual irtdose_image_region<ElementType, Dimensions>
-		, public iimage<ElementType, Dimensions>
+		, public virtual iimage<ElementType, Dimensions>
 	{
 	public:
 		virtual ~irtdose_image() override = default;
 	};
+
+	template<typename ElementType>
+	class irtdose_image<ElementType, 0> : public virtual iimage<ElementType, 0>, public virtual irtdose_image_region<ElementType, 0> {};
 }

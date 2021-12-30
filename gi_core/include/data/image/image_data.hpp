@@ -53,7 +53,7 @@ namespace yagit::core::data
 		constexpr data_region<Dimensions> region() const noexcept { return _image_region; }
 		/// <summary></summary>
 		/// <returns>Format of stored data points</returns>
-		constexpr data_format<Dimensions> format() const noexcept { _data_format; }
+		constexpr data_format<Dimensions> format() const noexcept { return _data_format; }
 	public:
 		/// <summary></summary>
 		/// <typeparam name="Dimension">Dimension from which the size is retrieved</typeparam>

@@ -21,4 +21,7 @@ namespace yagit::core::data
 	public:
 		virtual sizes<Dimensions> size() const = 0;
 	};
+
+	template<typename ElementType>
+	class iimage<ElementType, 0> : public virtual iimage_region<ElementType, 0> {};
 }

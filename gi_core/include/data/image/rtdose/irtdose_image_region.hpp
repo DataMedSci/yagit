@@ -87,6 +87,27 @@ namespace yagit::core::data
 			error_code ec;
 			return load_coordinates(format, allocator, ec);
 		}
+
+		/// <summary>
+		/// <para>Returns image slice along <paramref name="Dimension"/> axi at <paramref name="index"/></para>
+		/// <para>Can return null in two cases</para>
+		/// <para> - index is outside the size of region() at specified axi</para>
+		/// <para> - implementation doesn't allow slicing</para>
+		/// </summary>
+		/// <param name="index">Index along specified dimenion at which slice should be taken</param>
+		/// <param name="ec">Error code</param>
+		/// <returns>Lower dimensional slice of iimage_region</returns>
+		template<size_t Dimension, typename = std::enable_if_t<(Dimension > 1)>>
+		unique_ptr<iwritable_image_region<ElementType, Dimensions - 1>> slice(size_t index, error_code& ec)
+		{
+			return create_slice(Dimension, index, ec);
+		}
+		template<size_t Dimension, typename = std::enable_if_t<(Dimension > 1)>>
+		unique_ptr<iwritable_image_region<ElementType, Dimensions - 1>> slice(size_t index)
+		{
+			error_code ec;
+			return slice<Dimension>(index, ec);
+		}
 	protected:
 		/// <summary></summary>
 		/// <returns>Preferred implementation format to load the data point coordinates</returns>
@@ -107,6 +128,15 @@ namespace yagit::core::data
 		virtual error_code load_coordinates(ElementType* data_storage, size_t dimension, const data_format<Dimensions>& format, size_t& required_size) const = 0;
 
 		/// <summary>
+		/// <para>Implementable method responsive for slicing iimage_region</para>
+		/// </summary>
+		/// <param name="dimension">: dimension along which slice should taken</param>
+		/// <param name="index">: index along dimension-axi at which the slice should be taken</param>
+		/// <param name="ec">Error code</param>
+		/// <returns>Slice of iimage_region unless implementation error occured then nullptr</returns>
+		virtual irtdose_image_region<ElementType, Dimensions - 1>* create_slice(size_t dimension, size_t index, error_code& ec) const = 0;
+
+		/// <summary>
 		/// <para>Obtains an iimage_region corresponding to provided subregion.</para>
 		/// <para>Provided subregion should be interpreted locally i.e subregion is a subregion of region()
 		/// not whole image subregion</para>
@@ -121,4 +151,7 @@ namespace yagit::core::data
 		/// <returns>transfers ownership of iimage_region containing subregion defined by region</returns>
 		virtual irtdose_image_region<ElementType, Dimensions>* create_subregion(const data_region<Dimensions>& region, error_code& ec) const = 0;
 	};
+	
+	template<typename ElementType>
+	class irtdose_image_region<ElementType, 0> : public virtual iimage_region<ElementType, 0> {};
 }
