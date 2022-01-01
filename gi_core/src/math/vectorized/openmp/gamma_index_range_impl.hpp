@@ -9,6 +9,9 @@
 #include <math/vectorized/gamma_index_single.hpp>
 #include <math/basic/gamma_index_single.hpp>
 
+#include <iostream>
+#include <atomic>
+
 namespace yagit::core::math::vectorized::openmp::detail
 {
 #if defined(YAGIT_OPENMP)
@@ -35,6 +38,8 @@ namespace yagit::core::math::vectorized::openmp::detail
 		const ParamsType& params,
 		index_sequence<I...>)
 	{
+		std::atomic<size_t> idx = 0;
+
 		// vectorized
 		{
 			auto vparams = params_vec_t<ParamsType, VectorSize>(params);
@@ -48,6 +53,10 @@ namespace yagit::core::math::vectorized::openmp::detail
 				auto gi_output = gamma_index_output + i;
 				auto ref_doses = reference_doses + i;
 				array<const_view<Type>, Dimensions> ref_coords = { (reference_coordinates[I] + i)... };
+
+				auto ridx = idx++;
+				if (ridx % 1024 == 0)
+					std::cout << "Progress: " << (static_cast<double>(ridx) / length_outputv) << std::endl;
 
 				if (std::isnan(*gi_output) || *gi_output < static_cast<Type>(1))
 					continue;

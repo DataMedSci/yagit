@@ -1030,7 +1030,7 @@ BOOST_AUTO_TEST_CASE(performance_check_float)
 	default_random_engine e1(r());
 	uniform_real_distribution<float> uniform_dist(0.0, 10.0f);
 
-	constexpr size_t S = 1000000;
+	constexpr size_t S = 1000;
 	constexpr float epsilon = 1e-4;
 
 	vector<float> output_par_unseq(S, 0.0f);
@@ -1081,7 +1081,7 @@ BOOST_AUTO_TEST_CASE(performance_check_double)
 	default_random_engine e1(r());
 	uniform_real_distribution<double> uniform_dist(0.0, 10.0f);
 
-	constexpr size_t S = 10000000;
+	constexpr size_t S = 1000;
 	constexpr double epsilon = 1e-9;
 
 	vector<double> output_par_unseq(S, 0.0);

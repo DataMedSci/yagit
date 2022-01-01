@@ -34,4 +34,11 @@ set_target_properties(gi_core_tests
 
 set_default_output_directories(gi_core_tests)
 
+get_target_property(debug_dir gi_core_tests RUNTIME_OUTPUT_DIRECTORY_DEBUG)
+get_target_property(release_dir gi_core_tests RUNTIME_OUTPUT_DIRECTORY_RELEASE)
+get_target_property(relwithdebinfo_dir gi_core_tests RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO)
+get_target_property(minsizerel_dir gi_core_tests RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL)
+
+set_property(TARGET gi_core_tests PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+
 add_test(NAME gi_core_tests COMMAND gi_core_tests)

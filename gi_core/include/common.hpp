@@ -158,7 +158,7 @@ namespace yagit::core
 		template<size_t Dimensions>
 		constexpr size_t total_size(const sizes<Dimensions>& size)
 		{
-			return std::accumulate(std::begin(size.sizes), std::end(size.sizes), static_cast<size_t>(0), std::multiplies<size_t>());
+			return std::accumulate(std::begin(size.sizes), std::end(size.sizes), static_cast<size_t>(1), std::multiplies<size_t>());
 		}
 
 		/// <summary>
