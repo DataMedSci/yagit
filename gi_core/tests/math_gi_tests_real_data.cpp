@@ -223,16 +223,16 @@ template<typename ElementType>
 Image3D make_image(const prepared_dataset<ElementType>& dataset)
 {
 	vector<vector<vector<double>>> data(
-		dataset.info.image_size.sizes[0],
+		dataset.info.image_size.sizes[2],
 		vector<vector<double>>(
 			dataset.info.image_size.sizes[1],
-			vector<double>(dataset.info.image_size.sizes[2], double())
+			vector<double>(dataset.info.image_size.sizes[0], double())
 			));
 
 	for (size_t x = 0; x < dataset.info.image_size.sizes[0]; x++)
 		for (size_t y = 0; y < dataset.info.image_size.sizes[1]; y++)
 			for (size_t z = 0; z < dataset.info.image_size.sizes[2]; z++)
-				data[x][y][z] = dataset.image_datapoints[(x * dataset.info.image_size.sizes[1] + y) * dataset.info.image_size.sizes[2] + z];
+				data[z][y][x] = dataset.image_datapoints[(x * dataset.info.image_size.sizes[1] + y) * dataset.info.image_size.sizes[2] + z];
 
 	
 	return Image3D(
@@ -251,11 +251,10 @@ unique_ptr<ElementType[]> convert_to_data(const Image3D& img)
 	for (size_t x = 0; x < shape[0]; x++)
 		for (size_t y = 0; y < shape[1]; y++)
 			for (size_t z = 0; z < shape[2]; z++)
-				data[(x * shape[1] + y) * shape[2] + z] = img.data()[x][y][z];
+				data[(x * shape[1] + y) * shape[2] + z] = img.data()[z][y][x];
 
 	return data;
 }
-
 
 template<template<typename> typename GIParams, typename ElementType>
 optional<dataset_results<ElementType, GIParams>> run_gi_spiral_rectangle(
@@ -310,6 +309,26 @@ ElementType find_normalization_dose(const prepared_dataset<ElementType>& referen
 	return *el_it;
 }
 
+template<template<typename> typename GIParams, typename ElementType>
+bool save_results(const filesystem::path& path, const dataset_results<ElementType, GIParams>& data)
+{
+	ofstream output(path, ofstream::binary);
+	if (!output.is_open())
+		return false;
+
+	uint64_t isfloat32 = is_same_v<ElementType, float>;
+	output.write(reinterpret_cast<const char*>(&isfloat32), sizeof(isfloat32));
+
+	output.write(reinterpret_cast<const char*>(&data.ref_info), sizeof(data.ref_info));
+	output.write(reinterpret_cast<const char*>(&data.tar_info), sizeof(data.tar_info));
+	output.write(reinterpret_cast<const char*>(&data.params), sizeof(data.params));
+	int64_t nanoseconds = data.time_taken.count();
+	output.write(reinterpret_cast<const char*>(&nanoseconds), sizeof(nanoseconds));
+	output.write(reinterpret_cast<const char*>(data.gi_output.get()), total_size(data.ref_info.image_size));
+
+	return true;
+}
+
 BOOST_AUTO_TEST_CASE(real_data_old_spiral_with_rectangle)
 {
 	using ref_tar_t = pair<string_view, string_view>;
@@ -320,6 +339,9 @@ BOOST_AUTO_TEST_CASE(real_data_old_spiral_with_rectangle)
 		ref_tar_t{"data/raw/m3.raw", "data/raw/m4.raw"},
 		//ref_tar_t{"data/raw/Ref_highRes.raw", "data/raw/Eval_highRes.raw"}
 	};
+
+	auto prefix_local = "spiral_results_local_"s;
+	auto prefix_global = "spiral_results_global_"s;
 
 	BOOST_TEST_MESSAGE("Spiral solver");
 
@@ -352,8 +374,13 @@ BOOST_AUTO_TEST_CASE(real_data_old_spiral_with_rectangle)
 			if (results_local)
 				BOOST_TEST_MESSAGE("Time taken local: " << results_local->time_taken.count() / 1e9 << "s");
 			auto results_global = run_gi_spiral_rectangle<global_gamma_index_params>(get<0>(prepared_reference), get<0>(prepared_target), get<0>(distance_to_agreement), get<0>(normalization_dose));
-			if (results_local)
+			if (results_global)
 				BOOST_TEST_MESSAGE("Time taken global: " << results_global->time_taken.count() / 1e9 << "s");
+
+			if(!results_local || !save_results(filesystem::path(prefix_local + string(ref_tar.first)), *results_local))
+				BOOST_TEST_MESSAGE("Failed to save!");
+			if (!results_global || !save_results(filesystem::path(prefix_global + string(ref_tar.first)), *results_global))
+				BOOST_TEST_MESSAGE("Failed to save!");
 		}
 		else
 		{
@@ -361,8 +388,13 @@ BOOST_AUTO_TEST_CASE(real_data_old_spiral_with_rectangle)
 			if (results_local)
 				BOOST_TEST_MESSAGE("Time taken local: " << results_local->time_taken.count() / 1e9 << "s");
 			auto results_global = run_gi_spiral_rectangle<global_gamma_index_params>(get<1>(prepared_reference), get<1>(prepared_target), get<1>(distance_to_agreement), get<1>(normalization_dose));
-			if (results_local)
+			if (results_global)
 				BOOST_TEST_MESSAGE("Time taken global: " << results_global->time_taken.count() / 1e9 << "s");
+
+			if (!results_local || !save_results(filesystem::path(prefix_local + string(ref_tar.first)), *results_local))
+				BOOST_TEST_MESSAGE("Failed to save!");
+			if (!results_global || !save_results(filesystem::path(prefix_global + string(ref_tar.first)), *results_global))
+				BOOST_TEST_MESSAGE("Failed to save!");
 		}
 	}
 }
@@ -378,6 +410,9 @@ BOOST_AUTO_TEST_CASE(real_data_new_method)
 		//ref_tar_t{"data/raw/Ref_highRes.raw", "data/raw/Eval_highRes.raw"}
 	};
 	
+	auto prefix_local = "new_method_results_local_"s;
+	auto prefix_global = "new_method_results_global_"s;
+
 	BOOST_TEST_MESSAGE("Vectorized MT");
 
 	for (auto& ref_tar : image_pairs)
@@ -409,8 +444,13 @@ BOOST_AUTO_TEST_CASE(real_data_new_method)
 			if (results_local)
 				BOOST_TEST_MESSAGE("Time taken local: " << results_local->time_taken.count() / 1e9 << "s");
 			auto results_global = run_gi<global_gamma_index_params>(get<0>(prepared_reference), get<0>(prepared_target), get<0>(distance_to_agreement), get<0>(normalization_dose));
-			if (results_local)
+			if (results_global)
 				BOOST_TEST_MESSAGE("Time taken global: " << results_global->time_taken.count() / 1e9 << "s");
+
+			if (!results_local || !save_results(filesystem::path(prefix_local + string(ref_tar.first)), *results_local))
+				BOOST_TEST_MESSAGE("Failed to save!");
+			if (!results_global || !save_results(filesystem::path(prefix_global + string(ref_tar.first)), *results_global))
+				BOOST_TEST_MESSAGE("Failed to save!");
 		}
 		else
 		{
@@ -418,8 +458,13 @@ BOOST_AUTO_TEST_CASE(real_data_new_method)
 			if(results_local)
 				BOOST_TEST_MESSAGE("Time taken local: " << results_local->time_taken.count()/1e9 << "s");
 			auto results_global = run_gi<global_gamma_index_params>(get<1>(prepared_reference), get<1>(prepared_target), get<1>(distance_to_agreement), get<1>(normalization_dose));
-			if (results_local)
+			if (results_global)
 				BOOST_TEST_MESSAGE("Time taken global: " << results_global->time_taken.count() / 1e9 << "s");
+
+			if (!results_local || !save_results(filesystem::path(prefix_local + string(ref_tar.first)), *results_local))
+				BOOST_TEST_MESSAGE("Failed to save!");
+			if (!results_global || !save_results(filesystem::path(prefix_global + string(ref_tar.first)), *results_global))
+				BOOST_TEST_MESSAGE("Failed to save!");
 		}
 	}
 }
