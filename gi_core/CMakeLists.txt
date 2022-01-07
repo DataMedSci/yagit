@@ -45,18 +45,21 @@ find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}/compat" gi_core_compatibility_
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${libsimdpp_SOURCE_DIR}/cmake")
 include(SimdppMultiarch)
 simdpp_get_compilable_archs(compilable_archs)
-simdpp_multiarch(generated_arch_files_d_ffaa "dispatch/data/allocation/fast_float_aligned_allocator_impl.cpp" ${compilable_archs})
-simdpp_multiarch(generated_arch_files_v "dispatch/math/vectorized/gamma_index_range_impl.cpp" ${compilable_archs})
-simdpp_multiarch(generated_arch_files_v_omp "dispatch/math/vectorized/openmp/gamma_index_range_impl.cpp" ${compilable_archs})
+
+find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}/dispatch" gi_core_dispatchable_files)
+
+set(generated_arch_files)
+foreach(dispatchable_file ${gi_core_dispatchable_files})
+    simdpp_multiarch(generated_arch_files_f ${dispatchable_file} ${compilable_archs})
+    set(generated_arch_files ${generated_arch_files} ${generated_arch_files_f})
+endforeach()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${gi_core_headers} ${gi_core_sources} ${gi_core_compatibility_sources})
 
 add_library(gi_core STATIC
         ${gi_core_headers}
         ${gi_core_sources}
-        ${generated_arch_files_d_ffaa}
-        ${generated_arch_files_v}
-        ${generated_arch_files_v_omp}
+        ${generated_arch_files}
         ${gi_core_compatibility_sources})
 #target_link_libraries(gi_core PUBLIC VexCL::OpenCL) not linking as for the moment GPU support is not developed
 target_include_directories(gi_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/compat ${libsimdpp_SOURCE_DIR})

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <common.hpp>
-#include <data/image/rtdose/irtdose_image_region.hpp>
+#include <data/image/dose/idose_image_region.hpp>
 #include <data/image/iimage.hpp>
 
 namespace yagit::core::data
@@ -13,14 +13,14 @@ namespace yagit::core::data
 	/// <typeparam name="ElementType">Data point element type</typeparam>
 	/// <typeparam name="Dimensions">Dimensionality of image data point storage</typeparam>
 	template<typename ElementType, size_t Dimensions>
-	class irtdose_image
-		: public virtual irtdose_image_region<ElementType, Dimensions>
+	class idose_image
+		: public virtual idose_image_region<ElementType, Dimensions>
 		, public virtual iimage<ElementType, Dimensions>
 	{
 	public:
-		virtual ~irtdose_image() override = default;
+		virtual ~idose_image() override = default;
 	};
 
 	template<typename ElementType>
-	class irtdose_image<ElementType, 0> : public virtual iimage<ElementType, 0>, public virtual irtdose_image_region<ElementType, 0> {};
+	class idose_image<ElementType, 0> : public virtual iimage<ElementType, 0>, public virtual idose_image_region<ElementType, 0> {};
 }

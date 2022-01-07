@@ -1,7 +1,7 @@
 #pragma once
 
 #include <data/image/iwritable_image.hpp>
-#include <data/image/rtdose/irtdose_image.hpp>
+#include <data/image/rtdose/idose_image.hpp>
 #include <filesystem>
 
 namespace yagit::gdcm::data
@@ -25,12 +25,12 @@ namespace yagit::gdcm::data
     };
 
     template<typename ElementType, size_t Dimensions>
-    class irtdose_dataset_input_file_mapping
+    class idose_dataset_input_file_mapping
     {
     public:
-        virtual ~irtdose_dataset_input_file_mapping() = default;
+        virtual ~idose_dataset_input_file_mapping() = default;
     public:
-        virtual const ycd::irtdose_image<ElementType, Dimensions>& get_image() = 0;
+        virtual const ycd::idose_image<ElementType, Dimensions>& get_image() = 0;
     };
 
     template<size_t Dimensions>
@@ -39,11 +39,11 @@ namespace yagit::gdcm::data
     using float64_output_dataset = unique_ptr<idataset_output_file_mapping<double, Dimensions>>;
 
     using float32_input_rtdose_dataset = optional<variant<
-            unique_ptr<irtdose_dataset_input_file_mapping<float, 1>>,
-            unique_ptr<irtdose_dataset_input_file_mapping<float, 2>>,
-            unique_ptr<irtdose_dataset_input_file_mapping<float, 3>>>>;
+            unique_ptr<idose_dataset_input_file_mapping<float, 1>>,
+            unique_ptr<idose_dataset_input_file_mapping<float, 2>>,
+            unique_ptr<idose_dataset_input_file_mapping<float, 3>>>>;
     using float64_input_rtdose_dataset = optional<variant<
-            unique_ptr<irtdose_dataset_input_file_mapping<double, 1>>,
-            unique_ptr<irtdose_dataset_input_file_mapping<double, 2>>,
-            unique_ptr<irtdose_dataset_input_file_mapping<double, 3>>>>;
+            unique_ptr<idose_dataset_input_file_mapping<double, 1>>,
+            unique_ptr<idose_dataset_input_file_mapping<double, 2>>,
+            unique_ptr<idose_dataset_input_file_mapping<double, 3>>>>;
 }

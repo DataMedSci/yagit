@@ -12,6 +12,7 @@ using namespace yagit::core::math;
 using namespace yagit::core::data;
 using namespace std;
 using namespace std::chrono;
+using namespace yagit::core::math::execution;
 
 BOOST_AUTO_TEST_CASE(policies_relative_correctness_float)
 {
@@ -58,73 +59,57 @@ BOOST_AUTO_TEST_CASE(policies_relative_correctness_float)
 		// sequenced
 		{
 			auto start = high_resolution_clock::now();
-			sequenced_gamma_index_implementer<float, 1>::initialize_pass(output_seq.data(), output_seq.data() + S);
-			sequenced_gamma_index_implementer<float, 1>::minimize_pass(
-				output_seq.data(), output_seq.data() + S,
+			gamma_index(algorithm_version::classic{}, sequenced_policy{}, output_seq.data(), output_seq.data() + S,
 				ref_doses.data(),
 				array<const float*, 1>{ref_x.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 1>{tar_x.data()},
-				params
-			);
-			sequenced_gamma_index_implementer<float, 1>::finalize_pass(output_seq.data(), output_seq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("sequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			unsequenced_gamma_index_implementer<float, 1>::initialize_pass(output_unseq.data(), output_unseq.data() + S);
-			unsequenced_gamma_index_implementer<float, 1>::minimize_pass(
-				output_unseq.data(), output_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, unsequenced_policy{}, output_unseq.data(), output_unseq.data() + S,
 				ref_doses.data(),
 				array<const float*, 1>{ref_x.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 1>{tar_x.data()},
-				params
-			);
-			unsequenced_gamma_index_implementer<float, 1>::finalize_pass(output_unseq.data(), output_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel
 		{
 			auto start = high_resolution_clock::now();
-			parallel_gamma_index_implementer<float, 1>::initialize_pass(output_par.data(), output_par.data() + S);
-			parallel_gamma_index_implementer<float, 1>::minimize_pass(
-				output_par.data(), output_par.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_policy{}, output_par.data(), output_par.data() + S,
 				ref_doses.data(),
 				array<const float*, 1>{ref_x.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 1>{tar_x.data()},
-				params
-			);
-			parallel_gamma_index_implementer<float, 1>::finalize_pass(output_par.data(), output_par.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			parallel_unsequenced_gamma_index_implementer<float, 1>::initialize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
-			parallel_unsequenced_gamma_index_implementer<float, 1>::minimize_pass(
-				output_par_unseq.data(), output_par_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{}, output_par_unseq.data(), output_par_unseq.data() + S,
 				ref_doses.data(),
 				array<const float*, 1>{ref_x.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 1>{tar_x.data()},
-				params
-			);
-			parallel_unsequenced_gamma_index_implementer<float, 1>::finalize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// compare
 		{
-			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
-			auto par_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
-			auto par_unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
+			auto comp = [](auto a, auto b) {return (a <= 1.0f && b <= 1.0f) || (std::abs(a - b) < epsilon) || b < a; };
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto par_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
+			auto par_unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 			BOOST_CHECK(par_equal_to_seq);
@@ -134,73 +119,57 @@ BOOST_AUTO_TEST_CASE(policies_relative_correctness_float)
 		// sequenced
 		{
 			auto start = high_resolution_clock::now();
-			sequenced_gamma_index_implementer<float, 2>::initialize_pass(output_seq.data(), output_seq.data() + S);
-			sequenced_gamma_index_implementer<float, 2>::minimize_pass(
-				output_seq.data(), output_seq.data() + S,
+			gamma_index(algorithm_version::classic{}, sequenced_policy{}, output_seq.data(), output_seq.data() + S,
 				ref_doses.data(),
 				array<const float*, 2>{ref_x.data(), ref_y.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 2>{tar_x.data(), tar_y.data()},
-				params
-			);
-			sequenced_gamma_index_implementer<float, 2>::finalize_pass(output_seq.data(), output_seq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("sequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			unsequenced_gamma_index_implementer<float, 2>::initialize_pass(output_unseq.data(), output_unseq.data() + S);
-			unsequenced_gamma_index_implementer<float, 2>::minimize_pass(
-				output_unseq.data(), output_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, unsequenced_policy{}, output_unseq.data(), output_unseq.data() + S,
 				ref_doses.data(),
 				array<const float*, 2>{ref_x.data(), ref_y.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 2>{tar_x.data(), tar_y.data()},
-				params
-			);
-			unsequenced_gamma_index_implementer<float, 2>::finalize_pass(output_unseq.data(), output_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel
 		{
 			auto start = high_resolution_clock::now();
-			parallel_gamma_index_implementer<float, 2>::initialize_pass(output_par.data(), output_par.data() + S);
-			parallel_gamma_index_implementer<float, 2>::minimize_pass(
-				output_par.data(), output_par.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_policy{}, output_par.data(), output_par.data() + S,
 				ref_doses.data(),
 				array<const float*, 2>{ref_x.data(), ref_y.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 2>{tar_x.data(), tar_y.data()},
-				params
-			);
-			parallel_gamma_index_implementer<float, 2>::finalize_pass(output_par.data(), output_par.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			parallel_unsequenced_gamma_index_implementer<float, 2>::initialize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
-			parallel_unsequenced_gamma_index_implementer<float, 2>::minimize_pass(
-				output_par_unseq.data(), output_par_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{}, output_par_unseq.data(), output_par_unseq.data() + S,
 				ref_doses.data(),
 				array<const float*, 2>{ref_x.data(), ref_y.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 2>{tar_x.data(), tar_y.data()},
-				params
-			);
-			parallel_unsequenced_gamma_index_implementer<float, 2>::finalize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// compare
 		{
-			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
-			auto par_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
-			auto par_unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
+			auto comp = [](auto a, auto b) {return (a <= 1.0f && b <= 1.0f) || (std::abs(a - b) < epsilon) || b < a; };
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto par_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
+			auto par_unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 			BOOST_CHECK(par_equal_to_seq);
@@ -210,73 +179,57 @@ BOOST_AUTO_TEST_CASE(policies_relative_correctness_float)
 		// sequenced
 		{
 			auto start = high_resolution_clock::now();
-			sequenced_gamma_index_implementer<float, 3>::initialize_pass(output_seq.data(), output_seq.data() + S);
-			sequenced_gamma_index_implementer<float, 3>::minimize_pass(
-				output_seq.data(), output_seq.data() + S,
+			gamma_index(algorithm_version::classic{}, sequenced_policy{}, output_seq.data(), output_seq.data() + S,
 				ref_doses.data(),
 				array<const float*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-				params
-			);
-			sequenced_gamma_index_implementer<float, 3>::finalize_pass(output_seq.data(), output_seq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("sequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			unsequenced_gamma_index_implementer<float, 3>::initialize_pass(output_unseq.data(), output_unseq.data() + S);
-			unsequenced_gamma_index_implementer<float, 3>::minimize_pass(
-				output_unseq.data(), output_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, unsequenced_policy{}, output_unseq.data(), output_unseq.data() + S,
 				ref_doses.data(),
 				array<const float*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-				params
-			);
-			unsequenced_gamma_index_implementer<float, 3>::finalize_pass(output_unseq.data(), output_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel
 		{
 			auto start = high_resolution_clock::now();
-			parallel_gamma_index_implementer<float, 3>::initialize_pass(output_par.data(), output_par.data() + S);
-			parallel_gamma_index_implementer<float, 3>::minimize_pass(
-				output_par.data(), output_par.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_policy{}, output_par.data(), output_par.data() + S,
 				ref_doses.data(),
 				array<const float*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-				params
-			);
-			parallel_gamma_index_implementer<float, 3>::finalize_pass(output_par.data(), output_par.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			parallel_unsequenced_gamma_index_implementer<float, 3>::initialize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
-			parallel_unsequenced_gamma_index_implementer<float, 3>::minimize_pass(
-				output_par_unseq.data(), output_par_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{}, output_par_unseq.data(), output_par_unseq.data() + S,
 				ref_doses.data(),
 				array<const float*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-				params
-			);
-			parallel_unsequenced_gamma_index_implementer<float, 3>::finalize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// compare
 		{
-			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
-			auto par_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
-			auto par_unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
+			auto comp = [](auto a, auto b) {return (a <= 1.0f && b <= 1.0f) || (std::abs(a - b) < epsilon) || b < a; };
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto par_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
+			auto par_unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 			BOOST_CHECK(par_equal_to_seq);
@@ -291,73 +244,57 @@ BOOST_AUTO_TEST_CASE(policies_relative_correctness_float)
 		// sequenced
 		{
 			auto start = high_resolution_clock::now();
-			sequenced_gamma_index_implementer<float, 1>::initialize_pass(output_seq.data(), output_seq.data() + S);
-			sequenced_gamma_index_implementer<float, 1>::minimize_pass(
-				output_seq.data(), output_seq.data() + S,
+			gamma_index(algorithm_version::classic{}, sequenced_policy{}, output_seq.data(), output_seq.data() + S,
 				ref_doses.data(),
 				array<const float*, 1>{ref_x.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 1>{tar_x.data()},
-				params
-			);
-			sequenced_gamma_index_implementer<float, 1>::finalize_pass(output_seq.data(), output_seq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("sequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			unsequenced_gamma_index_implementer<float, 1>::initialize_pass(output_unseq.data(), output_unseq.data() + S);
-			unsequenced_gamma_index_implementer<float, 1>::minimize_pass(
-				output_unseq.data(), output_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, unsequenced_policy{}, output_unseq.data(), output_unseq.data() + S,
 				ref_doses.data(),
 				array<const float*, 1>{ref_x.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 1>{tar_x.data()},
-				params
-			);
-			unsequenced_gamma_index_implementer<float, 1>::finalize_pass(output_unseq.data(), output_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel
 		{
 			auto start = high_resolution_clock::now();
-			parallel_gamma_index_implementer<float, 1>::initialize_pass(output_par.data(), output_par.data() + S);
-			parallel_gamma_index_implementer<float, 1>::minimize_pass(
-				output_par.data(), output_par.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_policy{}, output_par.data(), output_par.data() + S,
 				ref_doses.data(),
 				array<const float*, 1>{ref_x.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 1>{tar_x.data()},
-				params
-			);
-			parallel_gamma_index_implementer<float, 1>::finalize_pass(output_par.data(), output_par.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			parallel_unsequenced_gamma_index_implementer<float, 1>::initialize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
-			parallel_unsequenced_gamma_index_implementer<float, 1>::minimize_pass(
-				output_par_unseq.data(), output_par_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{}, output_par_unseq.data(), output_par_unseq.data() + S,
 				ref_doses.data(),
 				array<const float*, 1>{ref_x.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 1>{tar_x.data()},
-				params
-			);
-			parallel_unsequenced_gamma_index_implementer<float, 1>::finalize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// compare
 		{
-			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
-			auto par_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
-			auto par_unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
+			auto comp = [](auto a, auto b) {return (a <= 1.0 && b <= 1.0) || (std::abs(a - b) < epsilon) || b < a; };
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto par_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
+			auto par_unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 			BOOST_CHECK(par_equal_to_seq);
@@ -367,73 +304,57 @@ BOOST_AUTO_TEST_CASE(policies_relative_correctness_float)
 		// sequenced
 		{
 			auto start = high_resolution_clock::now();
-			sequenced_gamma_index_implementer<float, 2>::initialize_pass(output_seq.data(), output_seq.data() + S);
-			sequenced_gamma_index_implementer<float, 2>::minimize_pass(
-				output_seq.data(), output_seq.data() + S,
+			gamma_index(algorithm_version::classic{}, sequenced_policy{}, output_seq.data(), output_seq.data() + S,
 				ref_doses.data(),
 				array<const float*, 2>{ref_x.data(), ref_y.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 2>{tar_x.data(), tar_y.data()},
-				params
-			);
-			sequenced_gamma_index_implementer<float, 2>::finalize_pass(output_seq.data(), output_seq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("sequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			unsequenced_gamma_index_implementer<float, 2>::initialize_pass(output_unseq.data(), output_unseq.data() + S);
-			unsequenced_gamma_index_implementer<float, 2>::minimize_pass(
-				output_unseq.data(), output_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, unsequenced_policy{}, output_unseq.data(), output_unseq.data() + S,
 				ref_doses.data(),
 				array<const float*, 2>{ref_x.data(), ref_y.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 2>{tar_x.data(), tar_y.data()},
-				params
-			);
-			unsequenced_gamma_index_implementer<float, 2>::finalize_pass(output_unseq.data(), output_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel
 		{
 			auto start = high_resolution_clock::now();
-			parallel_gamma_index_implementer<float, 2>::initialize_pass(output_par.data(), output_par.data() + S);
-			parallel_gamma_index_implementer<float, 2>::minimize_pass(
-				output_par.data(), output_par.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_policy{}, output_par.data(), output_par.data() + S,
 				ref_doses.data(),
 				array<const float*, 2>{ref_x.data(), ref_y.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 2>{tar_x.data(), tar_y.data()},
-				params
-			);
-			parallel_gamma_index_implementer<float, 2>::finalize_pass(output_par.data(), output_par.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			parallel_unsequenced_gamma_index_implementer<float, 2>::initialize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
-			parallel_unsequenced_gamma_index_implementer<float, 2>::minimize_pass(
-				output_par_unseq.data(), output_par_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{}, output_par_unseq.data(), output_par_unseq.data() + S,
 				ref_doses.data(),
 				array<const float*, 2>{ref_x.data(), ref_y.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 2>{tar_x.data(), tar_y.data()},
-				params
-			);
-			parallel_unsequenced_gamma_index_implementer<float, 2>::finalize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// compare
 		{
-			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
-			auto par_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
-			auto par_unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
+			auto comp = [](auto a, auto b) {return (a <= 1.0 && b <= 1.0) || (std::abs(a - b) < epsilon) || b < a; };
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto par_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
+			auto par_unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 			BOOST_CHECK(par_equal_to_seq);
@@ -443,73 +364,57 @@ BOOST_AUTO_TEST_CASE(policies_relative_correctness_float)
 		// sequenced
 		{
 			auto start = high_resolution_clock::now();
-			sequenced_gamma_index_implementer<float, 3>::initialize_pass(output_seq.data(), output_seq.data() + S);
-			sequenced_gamma_index_implementer<float, 3>::minimize_pass(
-				output_seq.data(), output_seq.data() + S,
+			gamma_index(algorithm_version::classic{}, sequenced_policy{}, output_seq.data(), output_seq.data() + S,
 				ref_doses.data(),
 				array<const float*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-				params
-			);
-			sequenced_gamma_index_implementer<float, 3>::finalize_pass(output_seq.data(), output_seq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("sequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			unsequenced_gamma_index_implementer<float, 3>::initialize_pass(output_unseq.data(), output_unseq.data() + S);
-			unsequenced_gamma_index_implementer<float, 3>::minimize_pass(
-				output_unseq.data(), output_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, unsequenced_policy{}, output_unseq.data(), output_unseq.data() + S,
 				ref_doses.data(),
 				array<const float*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-				params
-			);
-			unsequenced_gamma_index_implementer<float, 3>::finalize_pass(output_unseq.data(), output_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel
 		{
 			auto start = high_resolution_clock::now();
-			parallel_gamma_index_implementer<float, 3>::initialize_pass(output_par.data(), output_par.data() + S);
-			parallel_gamma_index_implementer<float, 3>::minimize_pass(
-				output_par.data(), output_par.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_policy{}, output_par.data(), output_par.data() + S,
 				ref_doses.data(),
 				array<const float*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-				params
-			);
-			parallel_gamma_index_implementer<float, 3>::finalize_pass(output_par.data(), output_par.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			parallel_unsequenced_gamma_index_implementer<float, 3>::initialize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
-			parallel_unsequenced_gamma_index_implementer<float, 3>::minimize_pass(
-				output_par_unseq.data(), output_par_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{}, output_par_unseq.data(), output_par_unseq.data() + S,
 				ref_doses.data(),
 				array<const float*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const float*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-				params
-			);
-			parallel_unsequenced_gamma_index_implementer<float, 3>::finalize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// compare
 		{
-			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
-			auto par_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
-			auto par_unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
+			auto comp = [](auto a, auto b) {return (a <= 1.0 && b <= 1.0) || (std::abs(a - b) < epsilon) || b < a; };
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto par_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
+			auto par_unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 			BOOST_CHECK(par_equal_to_seq);
@@ -563,73 +468,57 @@ BOOST_AUTO_TEST_CASE(policies_relative_correctness_double)
 		// sequenced
 		{
 			auto start = high_resolution_clock::now();
-			sequenced_gamma_index_implementer<double, 1>::initialize_pass(output_seq.data(), output_seq.data() + S);
-			sequenced_gamma_index_implementer<double, 1>::minimize_pass(
-				output_seq.data(), output_seq.data() + S,
+			gamma_index(algorithm_version::classic{}, sequenced_policy{}, output_seq.data(), output_seq.data() + S,
 				ref_doses.data(),
 				array<const double*, 1>{ref_x.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 1>{tar_x.data()},
-				params
-			);
-			sequenced_gamma_index_implementer<double, 1>::finalize_pass(output_seq.data(), output_seq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("sequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			unsequenced_gamma_index_implementer<double, 1>::initialize_pass(output_unseq.data(), output_unseq.data() + S);
-			unsequenced_gamma_index_implementer<double, 1>::minimize_pass(
-				output_unseq.data(), output_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, unsequenced_policy{}, output_unseq.data(), output_unseq.data() + S,
 				ref_doses.data(),
 				array<const double*, 1>{ref_x.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 1>{tar_x.data()},
-				params
-			);
-			unsequenced_gamma_index_implementer<double, 1>::finalize_pass(output_unseq.data(), output_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel
 		{
 			auto start = high_resolution_clock::now();
-			parallel_gamma_index_implementer<double, 1>::initialize_pass(output_par.data(), output_par.data() + S);
-			parallel_gamma_index_implementer<double, 1>::minimize_pass(
-				output_par.data(), output_par.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_policy{}, output_par.data(), output_par.data() + S,
 				ref_doses.data(),
 				array<const double*, 1>{ref_x.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 1>{tar_x.data()},
-				params
-			);
-			parallel_gamma_index_implementer<double, 1>::finalize_pass(output_par.data(), output_par.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			parallel_unsequenced_gamma_index_implementer<double, 1>::initialize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
-			parallel_unsequenced_gamma_index_implementer<double, 1>::minimize_pass(
-				output_par_unseq.data(), output_par_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{}, output_par_unseq.data(), output_par_unseq.data() + S,
 				ref_doses.data(),
 				array<const double*, 1>{ref_x.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 1>{tar_x.data()},
-				params
-			);
-			parallel_unsequenced_gamma_index_implementer<double, 1>::finalize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// compare
 		{
-			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
-			auto par_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
-			auto par_unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
+			auto comp = [](auto a, auto b) {return (a <= 1.0 && b <= 1.0) || (std::abs(a - b) < epsilon) || b < a; };
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto par_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
+			auto par_unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 			BOOST_CHECK(par_equal_to_seq);
@@ -639,73 +528,57 @@ BOOST_AUTO_TEST_CASE(policies_relative_correctness_double)
 		// sequenced
 		{
 			auto start = high_resolution_clock::now();
-			sequenced_gamma_index_implementer<double, 2>::initialize_pass(output_seq.data(), output_seq.data() + S);
-			sequenced_gamma_index_implementer<double, 2>::minimize_pass(
-				output_seq.data(), output_seq.data() + S,
+			gamma_index(algorithm_version::classic{}, sequenced_policy{}, output_seq.data(), output_seq.data() + S,
 				ref_doses.data(),
 				array<const double*, 2>{ref_x.data(), ref_y.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 2>{tar_x.data(), tar_y.data()},
-				params
-			);
-			sequenced_gamma_index_implementer<double, 2>::finalize_pass(output_seq.data(), output_seq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("sequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			unsequenced_gamma_index_implementer<double, 2>::initialize_pass(output_unseq.data(), output_unseq.data() + S);
-			unsequenced_gamma_index_implementer<double, 2>::minimize_pass(
-				output_unseq.data(), output_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, unsequenced_policy{}, output_unseq.data(), output_unseq.data() + S,
 				ref_doses.data(),
 				array<const double*, 2>{ref_x.data(), ref_y.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 2>{tar_x.data(), tar_y.data()},
-				params
-			);
-			unsequenced_gamma_index_implementer<double, 2>::finalize_pass(output_unseq.data(), output_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel
 		{
 			auto start = high_resolution_clock::now();
-			parallel_gamma_index_implementer<double, 2>::initialize_pass(output_par.data(), output_par.data() + S);
-			parallel_gamma_index_implementer<double, 2>::minimize_pass(
-				output_par.data(), output_par.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_policy{}, output_par.data(), output_par.data() + S,
 				ref_doses.data(),
 				array<const double*, 2>{ref_x.data(), ref_y.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 2>{tar_x.data(), tar_y.data()},
-				params
-			);
-			parallel_gamma_index_implementer<double, 2>::finalize_pass(output_par.data(), output_par.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			parallel_unsequenced_gamma_index_implementer<double, 2>::initialize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
-			parallel_unsequenced_gamma_index_implementer<double, 2>::minimize_pass(
-				output_par_unseq.data(), output_par_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{}, output_par_unseq.data(), output_par_unseq.data() + S,
 				ref_doses.data(),
 				array<const double*, 2>{ref_x.data(), ref_y.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 2>{tar_x.data(), tar_y.data()},
-				params
-			);
-			parallel_unsequenced_gamma_index_implementer<double, 2>::finalize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// compare
 		{
-			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
-			auto par_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
-			auto par_unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
+			auto comp = [](auto a, auto b) {return (a <= 1.0 && b <= 1.0) || (std::abs(a - b) < epsilon) || b < a; };
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto par_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
+			auto par_unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 			BOOST_CHECK(par_equal_to_seq);
@@ -715,73 +588,57 @@ BOOST_AUTO_TEST_CASE(policies_relative_correctness_double)
 		// sequenced
 		{
 			auto start = high_resolution_clock::now();
-			sequenced_gamma_index_implementer<double, 3>::initialize_pass(output_seq.data(), output_seq.data() + S);
-			sequenced_gamma_index_implementer<double, 3>::minimize_pass(
-				output_seq.data(), output_seq.data() + S,
+			gamma_index(algorithm_version::classic{}, sequenced_policy{}, output_seq.data(), output_seq.data() + S,
 				ref_doses.data(),
 				array<const double*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-				params
-			);
-			sequenced_gamma_index_implementer<double, 3>::finalize_pass(output_seq.data(), output_seq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("sequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			unsequenced_gamma_index_implementer<double, 3>::initialize_pass(output_unseq.data(), output_unseq.data() + S);
-			unsequenced_gamma_index_implementer<double, 3>::minimize_pass(
-				output_unseq.data(), output_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, unsequenced_policy{}, output_unseq.data(), output_unseq.data() + S,
 				ref_doses.data(),
 				array<const double*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-				params
-			);
-			unsequenced_gamma_index_implementer<double, 3>::finalize_pass(output_unseq.data(), output_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel
 		{
 			auto start = high_resolution_clock::now();
-			parallel_gamma_index_implementer<double, 3>::initialize_pass(output_par.data(), output_par.data() + S);
-			parallel_gamma_index_implementer<double, 3>::minimize_pass(
-				output_par.data(), output_par.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_policy{}, output_par.data(), output_par.data() + S,
 				ref_doses.data(),
 				array<const double*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-				params
-			);
-			parallel_gamma_index_implementer<double, 3>::finalize_pass(output_par.data(), output_par.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			parallel_unsequenced_gamma_index_implementer<double, 3>::initialize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
-			parallel_unsequenced_gamma_index_implementer<double, 3>::minimize_pass(
-				output_par_unseq.data(), output_par_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{}, output_par_unseq.data(), output_par_unseq.data() + S,
 				ref_doses.data(),
 				array<const double*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-				params
-			);
-			parallel_unsequenced_gamma_index_implementer<double, 3>::finalize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// compare
 		{
-			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
-			auto par_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
-			auto par_unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
+			auto comp = [](auto a, auto b) {return (a <= 1.0 && b <= 1.0) || (std::abs(a - b) < epsilon) || b < a; };
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto par_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
+			auto par_unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 			BOOST_CHECK(par_equal_to_seq);
@@ -796,73 +653,57 @@ BOOST_AUTO_TEST_CASE(policies_relative_correctness_double)
 		// sequenced
 		{
 			auto start = high_resolution_clock::now();
-			sequenced_gamma_index_implementer<double, 1>::initialize_pass(output_seq.data(), output_seq.data() + S);
-			sequenced_gamma_index_implementer<double, 1>::minimize_pass(
-				output_seq.data(), output_seq.data() + S,
+			gamma_index(algorithm_version::classic{}, sequenced_policy{}, output_seq.data(), output_seq.data() + S,
 				ref_doses.data(),
 				array<const double*, 1>{ref_x.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 1>{tar_x.data()},
-				params
-			);
-			sequenced_gamma_index_implementer<double, 1>::finalize_pass(output_seq.data(), output_seq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("sequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			unsequenced_gamma_index_implementer<double, 1>::initialize_pass(output_unseq.data(), output_unseq.data() + S);
-			unsequenced_gamma_index_implementer<double, 1>::minimize_pass(
-				output_unseq.data(), output_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, unsequenced_policy{}, output_unseq.data(), output_unseq.data() + S,
 				ref_doses.data(),
 				array<const double*, 1>{ref_x.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 1>{tar_x.data()},
-				params
-			);
-			unsequenced_gamma_index_implementer<double, 1>::finalize_pass(output_unseq.data(), output_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel
 		{
 			auto start = high_resolution_clock::now();
-			parallel_gamma_index_implementer<double, 1>::initialize_pass(output_par.data(), output_par.data() + S);
-			parallel_gamma_index_implementer<double, 1>::minimize_pass(
-				output_par.data(), output_par.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_policy{}, output_par.data(), output_par.data() + S,
 				ref_doses.data(),
 				array<const double*, 1>{ref_x.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 1>{tar_x.data()},
-				params
-			);
-			parallel_gamma_index_implementer<double, 1>::finalize_pass(output_par.data(), output_par.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			parallel_unsequenced_gamma_index_implementer<double, 1>::initialize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
-			parallel_unsequenced_gamma_index_implementer<double, 1>::minimize_pass(
-				output_par_unseq.data(), output_par_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{}, output_par_unseq.data(), output_par_unseq.data() + S,
 				ref_doses.data(),
 				array<const double*, 1>{ref_x.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 1>{tar_x.data()},
-				params
-			);
-			parallel_unsequenced_gamma_index_implementer<double, 1>::finalize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// compare
 		{
-			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
-			auto par_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
-			auto par_unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
+			auto comp = [](auto a, auto b) {return (a <= 1.0 && b <= 1.0) || (std::abs(a - b) < epsilon) || b < a; };
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto par_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
+			auto par_unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 			BOOST_CHECK(par_equal_to_seq);
@@ -872,73 +713,57 @@ BOOST_AUTO_TEST_CASE(policies_relative_correctness_double)
 		// sequenced
 		{
 			auto start = high_resolution_clock::now();
-			sequenced_gamma_index_implementer<double, 2>::initialize_pass(output_seq.data(), output_seq.data() + S);
-			sequenced_gamma_index_implementer<double, 2>::minimize_pass(
-				output_seq.data(), output_seq.data() + S,
+			gamma_index(algorithm_version::classic{}, sequenced_policy{}, output_seq.data(), output_seq.data() + S,
 				ref_doses.data(),
 				array<const double*, 2>{ref_x.data(), ref_y.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 2>{tar_x.data(), tar_y.data()},
-				params
-			);
-			sequenced_gamma_index_implementer<double, 2>::finalize_pass(output_seq.data(), output_seq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("sequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			unsequenced_gamma_index_implementer<double, 2>::initialize_pass(output_unseq.data(), output_unseq.data() + S);
-			unsequenced_gamma_index_implementer<double, 2>::minimize_pass(
-				output_unseq.data(), output_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, unsequenced_policy{}, output_unseq.data(), output_unseq.data() + S,
 				ref_doses.data(),
 				array<const double*, 2>{ref_x.data(), ref_y.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 2>{tar_x.data(), tar_y.data()},
-				params
-			);
-			unsequenced_gamma_index_implementer<double, 2>::finalize_pass(output_unseq.data(), output_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel
 		{
 			auto start = high_resolution_clock::now();
-			parallel_gamma_index_implementer<double, 2>::initialize_pass(output_par.data(), output_par.data() + S);
-			parallel_gamma_index_implementer<double, 2>::minimize_pass(
-				output_par.data(), output_par.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_policy{}, output_par.data(), output_par.data() + S,
 				ref_doses.data(),
 				array<const double*, 2>{ref_x.data(), ref_y.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 2>{tar_x.data(), tar_y.data()},
-				params
-			);
-			parallel_gamma_index_implementer<double, 2>::finalize_pass(output_par.data(), output_par.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			parallel_unsequenced_gamma_index_implementer<double, 2>::initialize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
-			parallel_unsequenced_gamma_index_implementer<double, 2>::minimize_pass(
-				output_par_unseq.data(), output_par_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{}, output_par_unseq.data(), output_par_unseq.data() + S,
 				ref_doses.data(),
 				array<const double*, 2>{ref_x.data(), ref_y.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 2>{tar_x.data(), tar_y.data()},
-				params
-			);
-			parallel_unsequenced_gamma_index_implementer<double, 2>::finalize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// compare
 		{
-			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
-			auto par_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
-			auto par_unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
+			auto comp = [](auto a, auto b) {return (a <= 1.0 && b <= 1.0) || (std::abs(a - b) < epsilon) || b < a; };
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto par_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
+			auto par_unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 			BOOST_CHECK(par_equal_to_seq);
@@ -948,73 +773,57 @@ BOOST_AUTO_TEST_CASE(policies_relative_correctness_double)
 		// sequenced
 		{
 			auto start = high_resolution_clock::now();
-			sequenced_gamma_index_implementer<double, 3>::initialize_pass(output_seq.data(), output_seq.data() + S);
-			sequenced_gamma_index_implementer<double, 3>::minimize_pass(
-				output_seq.data(), output_seq.data() + S,
+			gamma_index(algorithm_version::classic{}, sequenced_policy{}, output_seq.data(), output_seq.data() + S,
 				ref_doses.data(),
 				array<const double*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-				params
-			);
-			sequenced_gamma_index_implementer<double, 3>::finalize_pass(output_seq.data(), output_seq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("sequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			unsequenced_gamma_index_implementer<double, 3>::initialize_pass(output_unseq.data(), output_unseq.data() + S);
-			unsequenced_gamma_index_implementer<double, 3>::minimize_pass(
-				output_unseq.data(), output_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, unsequenced_policy{}, output_unseq.data(), output_unseq.data() + S,
 				ref_doses.data(),
 				array<const double*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-				params
-			);
-			unsequenced_gamma_index_implementer<double, 3>::finalize_pass(output_unseq.data(), output_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel
 		{
 			auto start = high_resolution_clock::now();
-			parallel_gamma_index_implementer<double, 3>::initialize_pass(output_par.data(), output_par.data() + S);
-			parallel_gamma_index_implementer<double, 3>::minimize_pass(
-				output_par.data(), output_par.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_policy{}, output_par.data(), output_par.data() + S,
 				ref_doses.data(),
 				array<const double*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-				params
-			);
-			parallel_gamma_index_implementer<double, 3>::finalize_pass(output_par.data(), output_par.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// parallel unsequenced
 		{
 			auto start = high_resolution_clock::now();
-			parallel_unsequenced_gamma_index_implementer<double, 3>::initialize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
-			parallel_unsequenced_gamma_index_implementer<double, 3>::minimize_pass(
-				output_par_unseq.data(), output_par_unseq.data() + S,
+			gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{}, output_par_unseq.data(), output_par_unseq.data() + S,
 				ref_doses.data(),
 				array<const double*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 				tar_doses.data(), tar_doses.data() + S,
 				array<const double*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-				params
-			);
-			parallel_unsequenced_gamma_index_implementer<double, 3>::finalize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
+				params);
 			auto end = high_resolution_clock::now();
 			BOOST_TEST_MESSAGE("parallel unsequenced took: " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 		}
 		// compare
 		{
-			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
-			auto par_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
-			auto par_unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
+			auto comp = [](auto a, auto b) {return (a <= 1.0 && b <= 1.0) || (std::abs(a - b) < epsilon) || b < a; };
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto par_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par.data(), output_par.data() + S, comp);
+			auto par_unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_par_unseq.data(), output_par_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 			BOOST_CHECK(par_equal_to_seq);
@@ -1060,16 +869,12 @@ BOOST_AUTO_TEST_CASE(performance_check_float)
 	local_gamma_index_params<float> params{ 0.5f, 12.0f };
 
 	auto start = high_resolution_clock::now();
-	parallel_unsequenced_gamma_index_implementer<float, 3>::initialize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
-	parallel_unsequenced_gamma_index_implementer<float, 3>::minimize_pass(
-		output_par_unseq.data(), output_par_unseq.data() + S,
+	gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{}, output_par_unseq.data(), output_par_unseq.data() + S,
 		ref_doses.data(),
 		array<const float*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 		tar_doses.data(), tar_doses.data() + S,
 		array<const float*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-		params
-	);
-	parallel_unsequenced_gamma_index_implementer<float, 3>::finalize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
+		params);
 	auto end = high_resolution_clock::now();
 	BOOST_TEST_MESSAGE("parallel unsequenced took (1000x1000 random image): " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 }
@@ -1111,16 +916,12 @@ BOOST_AUTO_TEST_CASE(performance_check_double)
 	local_gamma_index_params<double> params{ 0.5f, 12.0f };
 
 	auto start = high_resolution_clock::now();
-	parallel_unsequenced_gamma_index_implementer<double, 3>::initialize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
-	parallel_unsequenced_gamma_index_implementer<double, 3>::minimize_pass(
-		output_par_unseq.data(), output_par_unseq.data() + S,
+	gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{}, output_par_unseq.data(), output_par_unseq.data() + S,
 		ref_doses.data(),
 		array<const double*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 		tar_doses.data(), tar_doses.data() + S,
 		array<const double*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-		params
-	);
-	parallel_unsequenced_gamma_index_implementer<double, 3>::finalize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
+		params);
 	auto end = high_resolution_clock::now();
 	BOOST_TEST_MESSAGE("parallel unsequenced took (1000x1000 random image): " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 }
@@ -1204,16 +1005,12 @@ BOOST_AUTO_TEST_CASE(performance_vs_original_spiral_rectangle)
 	}
 	{
 		auto start = high_resolution_clock::now();
-		parallel_unsequenced_gamma_index_implementer<double, 3>::initialize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
-		parallel_unsequenced_gamma_index_implementer<double, 3>::minimize_pass(
-			output_par_unseq.data(), output_par_unseq.data() + S,
+		gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{}, output_par_unseq.data(), output_par_unseq.data() + S,
 			ref_doses.data(),
 			array<const double*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
 			tar_doses.data(), tar_doses.data() + S,
 			array<const double*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-			params
-		);
-		parallel_unsequenced_gamma_index_implementer<double, 3>::finalize_pass(output_par_unseq.data(), output_par_unseq.data() + S);
+			params);
 		auto end = high_resolution_clock::now();
 		BOOST_TEST_MESSAGE("parallel unsequenced took (" << SX << 'x' << SY << 'x' << SZ << " random image): " << duration_cast<nanoseconds>(end - start).count() / 1e9 << 's');
 	}
@@ -1226,62 +1023,62 @@ void expected_specializations_compile_without_errors()
 		// 1
 		{
 			auto& out = *(iwritable_image<float, 1>*)(nullptr);
-			auto& ref = *(irtdose_image<float, 1>*)(nullptr);
-			auto& tar = *(irtdose_image<float, 1>*)(nullptr);
+			auto& ref = *(idose_image<float, 1>*)(nullptr);
+			auto& tar = *(idose_image<float, 1>*)(nullptr);
 			local_gamma_index_params<float> lp{ 0,0 };
 			global_gamma_index_params<float> gp{ 0,0 };
 
-			gamma_index(std::execution::seq, out, ref, tar, lp);
-			gamma_index(std::execution::seq, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, seq, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, seq, out, ref, tar, gp);
 
-			gamma_index(std::execution::unseq, out, ref, tar, lp);
-			gamma_index(std::execution::unseq, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, unseq, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, unseq, out, ref, tar, gp);
 
-			gamma_index(std::execution::par, out, ref, tar, lp);
-			gamma_index(std::execution::par, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, par, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, par, out, ref, tar, gp);
 
-			gamma_index(std::execution::par_unseq, out, ref, tar, lp);
-			gamma_index(std::execution::par_unseq, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, par_unseq, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, par_unseq, out, ref, tar, gp);
 		}
 		// 2
 		{
 			auto& out = *(iwritable_image<float, 2>*)(nullptr);
-			auto& ref = *(irtdose_image<float, 2>*)(nullptr);
-			auto& tar = *(irtdose_image<float, 2>*)(nullptr);
+			auto& ref = *(idose_image<float, 2>*)(nullptr);
+			auto& tar = *(idose_image<float, 2>*)(nullptr);
 			local_gamma_index_params<float> lp{ 0,0 };
 			global_gamma_index_params<float> gp{ 0,0 };
 
-			gamma_index(std::execution::seq, out, ref, tar, lp);
-			gamma_index(std::execution::seq, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, seq, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, seq, out, ref, tar, gp);
 
-			gamma_index(std::execution::unseq, out, ref, tar, lp);
-			gamma_index(std::execution::unseq, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, unseq, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, unseq, out, ref, tar, gp);
 
-			gamma_index(std::execution::par, out, ref, tar, lp);
-			gamma_index(std::execution::par, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, par, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, par, out, ref, tar, gp);
 
-			gamma_index(std::execution::par_unseq, out, ref, tar, lp);
-			gamma_index(std::execution::par_unseq, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, par_unseq, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, par_unseq, out, ref, tar, gp);
 		}
 		// 3
 		{
 			auto& out = *(iwritable_image<float, 3>*)(nullptr);
-			auto& ref = *(irtdose_image<float, 3>*)(nullptr);
-			auto& tar = *(irtdose_image<float, 3>*)(nullptr);
+			auto& ref = *(idose_image<float, 3>*)(nullptr);
+			auto& tar = *(idose_image<float, 3>*)(nullptr);
 			local_gamma_index_params<float> lp{ 0,0 };
 			global_gamma_index_params<float> gp{ 0,0 };
 
-			gamma_index(std::execution::seq, out, ref, tar, lp);
-			gamma_index(std::execution::seq, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, seq, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, seq, out, ref, tar, gp);
 
-			gamma_index(std::execution::unseq, out, ref, tar, lp);
-			gamma_index(std::execution::unseq, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, unseq, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, unseq, out, ref, tar, gp);
 
-			gamma_index(std::execution::par, out, ref, tar, lp);
-			gamma_index(std::execution::par, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, par, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, par, out, ref, tar, gp);
 
-			gamma_index(std::execution::par_unseq, out, ref, tar, lp);
-			gamma_index(std::execution::par_unseq, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, par_unseq, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, par_unseq, out, ref, tar, gp);
 		}
 	}
 	// float64
@@ -1289,62 +1086,62 @@ void expected_specializations_compile_without_errors()
 		// 1
 		{
 			auto& out = *(iwritable_image<double, 1>*)(nullptr);
-			auto& ref = *(irtdose_image<double, 1>*)(nullptr);
-			auto& tar = *(irtdose_image<double, 1>*)(nullptr);
+			auto& ref = *(idose_image<double, 1>*)(nullptr);
+			auto& tar = *(idose_image<double, 1>*)(nullptr);
 			local_gamma_index_params<double> lp{ 0,0 };
 			global_gamma_index_params<double> gp{ 0,0 };
 
-			gamma_index(std::execution::seq, out, ref, tar, lp);
-			gamma_index(std::execution::seq, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, seq, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, seq, out, ref, tar, gp);
 
-			gamma_index(std::execution::unseq, out, ref, tar, lp);
-			gamma_index(std::execution::unseq, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, unseq, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, unseq, out, ref, tar, gp);
 
-			gamma_index(std::execution::par, out, ref, tar, lp);
-			gamma_index(std::execution::par, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, par, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, par, out, ref, tar, gp);
 
-			gamma_index(std::execution::par_unseq, out, ref, tar, lp);
-			gamma_index(std::execution::par_unseq, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, par_unseq, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, par_unseq, out, ref, tar, gp);
 		}
 		// 2
 		{
 			auto& out = *(iwritable_image<double, 2>*)(nullptr);
-			auto& ref = *(irtdose_image<double, 2>*)(nullptr);
-			auto& tar = *(irtdose_image<double, 2>*)(nullptr);
+			auto& ref = *(idose_image<double, 2>*)(nullptr);
+			auto& tar = *(idose_image<double, 2>*)(nullptr);
 			local_gamma_index_params<double> lp{ 0,0 };
 			global_gamma_index_params<double> gp{ 0,0 };
 
-			gamma_index(std::execution::seq, out, ref, tar, lp);
-			gamma_index(std::execution::seq, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, seq, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, seq, out, ref, tar, gp);
 
-			gamma_index(std::execution::unseq, out, ref, tar, lp);
-			gamma_index(std::execution::unseq, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, unseq, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, unseq, out, ref, tar, gp);
 
-			gamma_index(std::execution::par, out, ref, tar, lp);
-			gamma_index(std::execution::par, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, par, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, par, out, ref, tar, gp);
 
-			gamma_index(std::execution::par_unseq, out, ref, tar, lp);
-			gamma_index(std::execution::par_unseq, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, par_unseq, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, par_unseq, out, ref, tar, gp);
 		}
 		// 3
 		{
 			auto& out = *(iwritable_image<double, 3>*)(nullptr);
-			auto& ref = *(irtdose_image<double, 3>*)(nullptr);
-			auto& tar = *(irtdose_image<double, 3>*)(nullptr);
+			auto& ref = *(idose_image<double, 3>*)(nullptr);
+			auto& tar = *(idose_image<double, 3>*)(nullptr);
 			local_gamma_index_params<double> lp{ 0,0 };
 			global_gamma_index_params<double> gp{ 0,0 };
 
-			gamma_index(std::execution::seq, out, ref, tar, lp);
-			gamma_index(std::execution::seq, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, seq, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, seq, out, ref, tar, gp);
 
-			gamma_index(std::execution::unseq, out, ref, tar, lp);
-			gamma_index(std::execution::unseq, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, unseq, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, unseq, out, ref, tar, gp);
 
-			gamma_index(std::execution::par, out, ref, tar, lp);
-			gamma_index(std::execution::par, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, par, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, par, out, ref, tar, gp);
 
-			gamma_index(std::execution::par_unseq, out, ref, tar, lp);
-			gamma_index(std::execution::par_unseq, out, ref, tar, gp);
+			gamma_index(algorithm_version::classic{}, par_unseq, out, ref, tar, lp);
+			gamma_index(algorithm_version::classic{}, par_unseq, out, ref, tar, gp);
 		}
 	}
 }

@@ -2,7 +2,7 @@
 
 #include <math/common.hpp>
 
-namespace yagit::core::math::basic
+namespace yagit::core::math::single::basic
 {
 	template<typename Type>
 	inline constexpr Type dose_difference(

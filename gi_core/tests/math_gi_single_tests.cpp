@@ -1,14 +1,16 @@
 #include <math/gamma_index.hpp>
-#include <math/vectorized/gamma_index_single.hpp>
+#include <math/single/vectorized/gamma_index_single.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <random>
 #include <chrono>
 
 using namespace yagit::core::math;
+using namespace yagit::core::math::single;
 using namespace yagit::core::data;
 using namespace std;
 using namespace std::chrono;
+using namespace yagit::core::math::execution;
 
 BOOST_AUTO_TEST_CASE(single_relative_correctness_float)
 {
@@ -65,7 +67,7 @@ BOOST_AUTO_TEST_CASE(single_relative_correctness_float)
 				));
 
 			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 		}
@@ -86,7 +88,7 @@ BOOST_AUTO_TEST_CASE(single_relative_correctness_float)
 				));
 
 			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 		}
@@ -109,7 +111,7 @@ BOOST_AUTO_TEST_CASE(single_relative_correctness_float)
 				));
 
 			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 		}
@@ -133,7 +135,7 @@ BOOST_AUTO_TEST_CASE(single_relative_correctness_float)
 				));
 
 			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 		}
@@ -154,7 +156,7 @@ BOOST_AUTO_TEST_CASE(single_relative_correctness_float)
 				));
 
 			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 		}
@@ -177,7 +179,7 @@ BOOST_AUTO_TEST_CASE(single_relative_correctness_float)
 				));
 
 			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 		}
@@ -239,7 +241,7 @@ BOOST_AUTO_TEST_CASE(single_relative_correctness_double)
 				));
 
 			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 		}
@@ -260,7 +262,7 @@ BOOST_AUTO_TEST_CASE(single_relative_correctness_double)
 				));
 
 			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 		}
@@ -283,7 +285,7 @@ BOOST_AUTO_TEST_CASE(single_relative_correctness_double)
 				));
 
 			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 		}
@@ -307,7 +309,7 @@ BOOST_AUTO_TEST_CASE(single_relative_correctness_double)
 				));
 
 			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 		}
@@ -328,7 +330,7 @@ BOOST_AUTO_TEST_CASE(single_relative_correctness_double)
 				));
 
 			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 		}
@@ -351,7 +353,7 @@ BOOST_AUTO_TEST_CASE(single_relative_correctness_double)
 				));
 
 			auto comp = [](auto a, auto b) {return std::abs(a - b) < epsilon; };
-			auto unseq_equal_to_seq = equal(execution::par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
+			auto unseq_equal_to_seq = equal(par_unseq, output_seq.data(), output_seq.data() + S, output_unseq.data(), output_unseq.data() + S, comp);
 
 			BOOST_CHECK(unseq_equal_to_seq);
 		}

@@ -204,8 +204,7 @@ Image3D SpiralSolver3D::calculateGamma()
 
     // Iterating over the reference image
     auto total_size = refRShape[0] * refRShape[1] * refRShape[2];
-    atomic<size_t> idx = 0;
-#pragma omp parallel for
+
     for (int rz = 0; rz < refRShape[2]; rz++)
     {
         double dz = pow(ref[2][rz] - tar[2][corr[2][rz]], 2);
@@ -214,10 +213,6 @@ Image3D SpiralSolver3D::calculateGamma()
             double dy = pow(ref[1][ry] - tar[1][corr[1][ry]], 2);
             for (int rx = 0; rx < refRShape[0]; rx++)
             {
-                auto ridx = idx++;
-                if (ridx % 1024 == 0)
-                    cout << "Progress: " << (static_cast<double>(ridx) / total_size) << endl;
-
                 if (std::isnan(reference_.data()[rz][ry][rx]))
                 {
                     gamma[rz][ry][rx] = nan("");

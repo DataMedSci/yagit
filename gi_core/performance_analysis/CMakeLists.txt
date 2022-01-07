@@ -19,11 +19,13 @@ project(gi_core_performance_analysis)
 
 enable_testing()
 
+find_package(OpenCL REQUIRED)
+
 find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}" gi_core_performance_analysis_sources)
 
 add_executable(gi_core_performance_analysis ${gi_core_performance_analysis_sources})
-target_link_libraries(gi_core_performance_analysis PRIVATE gi_core)
-target_include_directories(gi_core_performance_analysis PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tests)
+target_link_libraries(gi_core_performance_analysis PRIVATE gi_core ${OpenCL_LIBRARIES})
+target_include_directories(gi_core_performance_analysis PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${OpenCL_INCLUDE_DIRS})
 
 set_target_properties(gi_core_performance_analysis
     PROPERTIES
@@ -31,5 +33,7 @@ set_target_properties(gi_core_performance_analysis
     CXX_STANDARD_REQUIRED YES
     CXX_EXTENSIONS NO
 )
+
+set_property(TARGET gi_core_performance_analysis PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set_default_output_directories(gi_core_performance_analysis)

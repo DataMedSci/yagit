@@ -20,16 +20,22 @@ project(gi_additions)
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(common)
 
+find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}/include" gi_additions_headers)
+find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}/src" gi_additions_sources)
+find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}/compat" gi_additions_compatibility_sources)
+
 find_c_and_cpp_files("${CMAKE_CURRENT_SOURCE_DIR}" gi_additions_sources)
 
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${gi_additions_sources})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${gi_additions_headers} ${gi_additions_sources} ${gi_additions_compatibility_sources})
 
-add_library(gi_additions STATIC ${gi_additions_sources})
-target_include_directories(gi_additions PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(gi_additions STATIC ${gi_additions_headers} ${gi_additions_sources} ${gi_additions_compatibility_sources})
+target_link_libraries(gi_additions PUBLIC gi_core)
+target_include_directories(gi_additions PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/compat)
+target_include_directories(gi_additions PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 set_target_properties(gi_additions
     PROPERTIES
-    CXX_STANDARD 11
+    CXX_STANDARD 20
     CXX_STANDARD_REQUIRED YES
     CXX_EXTENSIONS NO
 )

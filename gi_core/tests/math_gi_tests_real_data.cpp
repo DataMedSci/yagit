@@ -1,8 +1,8 @@
 #include <math/gamma_index.hpp>
-#include <math/vectorized/gamma_index_single.hpp>
 #include <boost/test/unit_test.hpp>
 #include <solver.h>
 #include <image.h>
+#include "../../gi_additions/include/additions.hpp"
 
 #include <chrono>
 #include <fstream>
@@ -13,6 +13,7 @@ using namespace yagit::core::math;
 using namespace yagit::core::data;
 using namespace std;
 using namespace std::chrono;
+using namespace yagit::core::math::execution;
 
 template<typename ElementType>
 struct dataset_static_info
@@ -54,9 +55,22 @@ raw_dataset_t load_raw_dataset_typed(const std::byte* input, size_t filesize)
 	std::memcpy(&dataset.info.image_spacing, input, sizeof(dataset.info.image_spacing));
 	input += sizeof(dataset.info.image_spacing);
 
+	auto inverted_image_data = make_unique<ElementType[]>(total_image_element_count);
 	dataset.image_data = make_unique<ElementType[]>(total_image_element_count);
 
-	std::memcpy(dataset.image_data.get(), input, total_image_size_in_bytes);
+	std::memcpy(inverted_image_data.get(), input, total_image_size_in_bytes);
+
+	for (size_t x = 0; x < dataset.info.image_size.sizes[0]; ++x)
+	{
+		for (size_t y = 0; y < dataset.info.image_size.sizes[1]; ++y)
+		{
+			for (size_t z = 0; z < dataset.info.image_size.sizes[2]; ++z)
+			{
+				dataset.image_data[(z * dataset.info.image_size.sizes[1] + y) * dataset.info.image_size.sizes[0] + x]
+					= inverted_image_data[(x * dataset.info.image_size.sizes[1] + y) * dataset.info.image_size.sizes[2] + z];
+			}
+		}
+	}
 
 	return dataset;
 }
@@ -145,13 +159,13 @@ prepared_dataset<ElementType> prepare_dataset(raw_dataset<ElementType>&& raw_ds)
 	auto y_c = p_ds.image_coords[1].get();
 	auto z_c = p_ds.image_coords[2].get();
 
-	auto y_skip = raw_ds.info.image_size.sizes[2];
-	auto x_skip = raw_ds.info.image_size.sizes[2] * raw_ds.info.image_size.sizes[1];
+	auto y_skip = raw_ds.info.image_size.sizes[0];
+	auto x_skip = raw_ds.info.image_size.sizes[0] * raw_ds.info.image_size.sizes[1];
 
-	for (size_t x = 0; x < raw_ds.info.image_size.sizes[0]; ++x)
+	for (size_t x = 0; x < raw_ds.info.image_size.sizes[2]; ++x)
 	{
 		auto x_c_end = x_c + x_skip;
-		fill(x_c, x_c_end, raw_ds.info.image_position[0] + raw_ds.info.image_spacing[0] * x);
+		fill(x_c, x_c_end, raw_ds.info.image_position[2] + raw_ds.info.image_spacing[2] * x);
 		x_c = x_c_end;
 
 		for (size_t y = 0; y < raw_ds.info.image_size.sizes[1]; ++y)
@@ -160,11 +174,65 @@ prepared_dataset<ElementType> prepare_dataset(raw_dataset<ElementType>&& raw_ds)
 			fill(y_c, y_c_end, raw_ds.info.image_position[1] + raw_ds.info.image_spacing[1] * y);
 			y_c = y_c_end;
 
-			for (size_t z = 0; z < raw_ds.info.image_size.sizes[2]; ++z)
+			for (size_t z = 0; z < raw_ds.info.image_size.sizes[0]; ++z)
 			{
-				*z_c++ = raw_ds.info.image_position[2] + raw_ds.info.image_spacing[2] * z;
+				*z_c++ = raw_ds.info.image_position[0] + raw_ds.info.image_spacing[0] * z;
 			}
 		}
+	}
+
+	{
+		auto count_not_nan = yagit::additions::active_voxels_count(p_ds.image_datapoints.get(), p_ds.image_datapoints.get() + total_image_element_count);
+		BOOST_TEST_MESSAGE("Input dataset voxel count not nan: " << count_not_nan);
+		BOOST_TEST_MESSAGE("Input dataset voxel count total: " << total_image_element_count);
+		BOOST_TEST_MESSAGE("Input dataset histogram (pre-filtered): ");
+		constexpr size_t bins_count = 10;
+		auto our_min = yagit::additions::min(p_ds.image_datapoints.get(), p_ds.image_datapoints.get() + total_image_element_count);
+		auto our_max = yagit::additions::max(p_ds.image_datapoints.get(), p_ds.image_datapoints.get() + total_image_element_count);
+		auto our_bin_spacing = (our_max - our_min) / bins_count;
+		array<ElementType, bins_count + 1> our_dels;
+		array<size_t, bins_count + 2> our_bins;
+		our_dels.front() = our_min;
+		our_dels.back() = our_max;
+		for (size_t i = 1; i < bins_count; i++)
+		{
+			our_dels[i] = our_min + i * our_bin_spacing;
+		}
+		yagit::additions::make_histogram<true>(our_bins.data(), p_ds.image_datapoints.get(), p_ds.image_datapoints.get() + total_image_element_count, our_dels.data(), our_dels.data() + our_dels.size());
+		for (size_t i = 0; i < bins_count; i++)
+		{
+			BOOST_TEST_MESSAGE("Range<" << our_dels[i] << ", " << our_dels[i + 1] << ">: " << our_bins[i]);
+		}
+		BOOST_TEST_MESSAGE("Not in delimeters: " << our_bins[bins_count]);
+		BOOST_TEST_MESSAGE("NaNs: " << our_bins[bins_count + 1]);
+	}
+
+	yagit::additions::filter_image_data_based_on_dose_cutoff(p_ds.image_datapoints.get(), p_ds.image_datapoints.get() + total_image_element_count, static_cast<ElementType>(0.05));
+
+	{
+		auto count_not_nan = yagit::additions::active_voxels_count(p_ds.image_datapoints.get(), p_ds.image_datapoints.get() + total_image_element_count);
+		BOOST_TEST_MESSAGE("Input dataset voxel count not nan: " << count_not_nan);
+		BOOST_TEST_MESSAGE("Input dataset voxel count total: " << total_image_element_count);
+		BOOST_TEST_MESSAGE("Input dataset histogram (post-filtered): ");
+		constexpr size_t bins_count = 10;
+		auto our_min = yagit::additions::min(p_ds.image_datapoints.get(), p_ds.image_datapoints.get() + total_image_element_count);
+		auto our_max = yagit::additions::max(p_ds.image_datapoints.get(), p_ds.image_datapoints.get() + total_image_element_count);
+		auto our_bin_spacing = (our_max - our_min) / bins_count;
+		array<ElementType, bins_count + 1> our_dels;
+		array<size_t, bins_count + 2> our_bins;
+		our_dels.front() = our_min;
+		our_dels.back() = our_max;
+		for (size_t i = 1; i < bins_count; i++)
+		{
+			our_dels[i] = our_min + i * our_bin_spacing;
+		}
+		yagit::additions::make_histogram<true>(our_bins.data(), p_ds.image_datapoints.get(), p_ds.image_datapoints.get() + total_image_element_count, our_dels.data(), our_dels.data() + our_dels.size());
+		for (size_t i = 0; i < bins_count; i++)
+		{
+			BOOST_TEST_MESSAGE("Range<" << our_dels[i] << ", " << our_dels[i + 1] << ">: " << our_bins[i]);
+		}
+		BOOST_TEST_MESSAGE("Not in delimeters: " << our_bins[bins_count]);
+		BOOST_TEST_MESSAGE("NaNs: " << our_bins[bins_count + 1]);
 	}
 
 	return p_ds;
@@ -202,16 +270,12 @@ optional<dataset_results<ElementType, GIParams>> run_gi(
 	results.gi_output = make_unique<ElementType[]>(total_image_element_count);
 
 	auto start = high_resolution_clock::now();
-	parallel_unsequenced_gamma_index_implementer<ElementType, 3>::initialize_pass(results.gi_output.get(), results.gi_output.get() + total_image_element_count);
-	parallel_unsequenced_gamma_index_implementer<ElementType, 3>::minimize_pass(
-		results.gi_output.get(), results.gi_output.get() + total_image_element_count,
+	gamma_index(algorithm_version::classic{}, parallel_policy{}, results.gi_output.get(), results.gi_output.get() + total_image_element_count,
 		reference.image_datapoints.get(),
 		array<const ElementType*, 3>{reference.image_coords[0].get(), reference.image_coords[1].get(), reference.image_coords[2].get()},
 		target.image_datapoints.get(), target.image_datapoints.get() + total_image_element_count,
 		array<const ElementType*, 3>{target.image_coords[0].get(), target.image_coords[1].get(), target.image_coords[2].get()},
-		results.params
-	);
-	parallel_unsequenced_gamma_index_implementer<ElementType, 3>::finalize_pass(results.gi_output.get(), results.gi_output.get() + total_image_element_count);
+		results.params);
 	auto end = high_resolution_clock::now();
 
 	results.time_taken = duration_cast<nanoseconds>(end - start);
@@ -251,7 +315,7 @@ unique_ptr<ElementType[]> convert_to_data(const Image3D& img)
 	for (size_t x = 0; x < shape[0]; x++)
 		for (size_t y = 0; y < shape[1]; y++)
 			for (size_t z = 0; z < shape[2]; z++)
-				data[(x * shape[1] + y) * shape[2] + z] = img.data()[z][y][x];
+				data[(x * shape[1] + y) * shape[2] + z] = img.data()[x][y][z];
 
 	return data;
 }
@@ -294,19 +358,86 @@ optional<dataset_results<ElementType, GIParams>> run_gi_spiral_rectangle(
 	return results;
 }
 
+template<typename ElementType>
+struct raw_output_data
+{
+	sizes<3> image_size;
+	unique_ptr<ElementType[]> image_data;
+};
+
+using raw_output_data_t = optional<variant<raw_output_data<float>, raw_output_data<double>>>;
+
+template<typename ElementType>
+raw_output_data_t load_raw_output_typed(const std::byte* input, size_t filesize)
+{
+	size_t required_filesize = sizeof(uint64_t) + sizeof(sizes<3>);
+	if (filesize < required_filesize)
+		return nullopt;
+
+	raw_output_data<ElementType> dataset;
+
+	std::memcpy(&dataset.image_size, input, sizeof(dataset.image_size));
+	input += sizeof(dataset.image_size);
+
+	auto total_image_element_count = total_size(dataset.image_size);
+	auto total_image_size_in_bytes = total_image_element_count * sizeof(ElementType);
+	required_filesize += total_image_size_in_bytes;
+	if (filesize < required_filesize)
+		return nullopt;
+
+	dataset.image_data = make_unique<ElementType[]>(total_image_element_count);
+
+	std::memcpy(dataset.image_data.get(), input, total_image_size_in_bytes);
+
+	return dataset;
+}
+
+raw_output_data_t load_raw_output(const filesystem::path& path)
+{
+	vector<std::byte> data;
+	size_t filesize = 0;
+
+	{
+		ifstream input(path, ifstream::binary);
+		if (!input.is_open())
+			return nullopt;
+
+		input.seekg(0, ios::end);
+		filesize = input.tellg();
+		input.seekg(0, ios::beg);
+
+		data.resize(filesize);
+
+		input.read(reinterpret_cast<char*>(data.data()), filesize);
+	}
+
+	const auto* cur_data = data.data();
+
+	size_t required_filesize = sizeof(uint64_t);
+	if (filesize < required_filesize)
+		return nullopt;
+
+	uint64_t is_float32;
+	std::memcpy(&is_float32, cur_data, sizeof(is_float32));
+	cur_data += sizeof(is_float32);
+
+	if (is_float32)
+		return load_raw_output_typed<float>(cur_data, filesize);
+	else
+		return load_raw_output_typed<double>(cur_data, filesize);
+}
 
 template<typename ElementType>
 ElementType get_distance_to_agreement(const prepared_dataset<ElementType>& reference)
 {
-	return std::max({ reference.info.image_spacing[0], reference.info.image_spacing[1], reference.info.image_spacing[2] }) * 10;
+	return static_cast<ElementType>(2.0);
 }
 
 template<typename ElementType>
 ElementType find_normalization_dose(const prepared_dataset<ElementType>& reference)
 {
 	auto total_image_element_count = total_size(reference.info.image_size);
-	auto el_it = std::max_element(reference.image_datapoints.get(), reference.image_datapoints.get() + total_image_element_count, [](auto&& largest, auto&& el) {return abs(largest) < abs(el); });
-	return *el_it;
+	return yagit::additions::max(reference.image_datapoints.get(), reference.image_datapoints.get() + total_image_element_count);
 }
 
 template<template<typename> typename GIParams, typename ElementType>
@@ -329,15 +460,65 @@ bool save_results(const filesystem::path& path, const dataset_results<ElementTyp
 	return true;
 }
 
+template<template<typename> typename GIParams, typename ElementType, typename ElementTypeO>
+void compare_results(const dataset_results<ElementType, GIParams>& data, const raw_output_data<ElementTypeO>& other_data)
+{
+	auto size_our = total_size(data.ref_info.image_size);
+	auto size_their = total_size(other_data.image_size);
+	BOOST_ASSERT(size_our == size_their);
+	
+	yagit::additions::filter_image_data_based_on_dose_cutoff(other_data.image_data.get(), other_data.image_data.get() + size_their, static_cast<ElementTypeO>(0));
+
+	auto gi_pr_our = yagit::additions::active_voxels_passing_rate(data.gi_output.get(), data.gi_output.get() + size_our);
+	auto gi_pr_their = yagit::additions::active_voxels_passing_rate(other_data.image_data.get(), other_data.image_data.get() + size_their);
+	BOOST_TEST_MESSAGE("GI Passing Rate (Our): " << gi_pr_our);
+	BOOST_TEST_MESSAGE("GI Passing Rate (Their): " << gi_pr_their);
+
+	constexpr size_t bins_count = 10;
+	auto our_min = yagit::additions::min(data.gi_output.get(), data.gi_output.get() + size_our);
+	auto their_min = yagit::additions::min(other_data.image_data.get(), other_data.image_data.get() + size_their);
+	auto our_max = yagit::additions::max(data.gi_output.get(), data.gi_output.get() + size_our);
+	auto their_max = yagit::additions::max(other_data.image_data.get(), other_data.image_data.get() + size_their);
+	auto our_bin_spacing = (our_max - our_min) / bins_count;
+	auto their_bin_spacing = (their_max - their_min) / bins_count;
+	array<ElementType, bins_count + 1> our_dels;
+	array<size_t, bins_count + 2> our_bins;
+	our_dels.front() = our_min;
+	our_dels.back() = our_max;
+	array<ElementTypeO, bins_count + 1> their_dels;
+	array<size_t, bins_count + 2> their_bins;
+	their_dels.front() = their_min;
+	their_dels.back() = their_max;
+	for (size_t i = 1; i < bins_count; i++)
+	{
+		our_dels[i] = our_min + i * our_bin_spacing;
+		their_dels[i] = their_min + i * their_bin_spacing;
+	}
+	yagit::additions::make_histogram<true>(our_bins.data(), data.gi_output.get(), data.gi_output.get() + size_our, our_dels.data(), our_dels.data() + our_dels.size());
+	yagit::additions::make_histogram<true>(their_bins.data(), other_data.image_data.get(), other_data.image_data.get() + size_their, their_dels.data(), their_dels.data() + their_dels.size());
+	BOOST_TEST_MESSAGE("Our output histogram: ");
+	for (size_t i = 0; i < bins_count; i++)
+	{
+		BOOST_TEST_MESSAGE("Range<" << our_dels[i] << ", " << our_dels[i+1] << ">: " << our_bins[i]);
+	}
+	BOOST_TEST_MESSAGE("Not in delimeters: " << our_bins[bins_count]);
+	BOOST_TEST_MESSAGE("NaNs: " << our_bins[bins_count + 1]);
+	BOOST_TEST_MESSAGE("Their output histogram: ");
+	for (size_t i = 0; i < bins_count; i++)
+	{
+		BOOST_TEST_MESSAGE("Range<" << their_dels[i] << ", " << their_dels[i + 1] << ">: " << their_bins[i]);
+	}
+	BOOST_TEST_MESSAGE("Not in delimeters: " << their_bins[bins_count]);
+	BOOST_TEST_MESSAGE("NaNs: " << their_bins[bins_count + 1]);
+}
+
+
 BOOST_AUTO_TEST_CASE(real_data_old_spiral_with_rectangle)
 {
-	using ref_tar_t = pair<string_view, string_view>;
-	array image_pairs =
+	using ref_tar_t = tuple<string_view, string_view, string_view>;
+	array<ref_tar_t, 1> image_pairs =
 	{
-		ref_tar_t{"data/raw/Ref.raw", "data/raw/Eval.raw"},
-		ref_tar_t{"data/raw/m1.raw", "data/raw/m2.raw"},
-		ref_tar_t{"data/raw/m3.raw", "data/raw/m4.raw"},
-		//ref_tar_t{"data/raw/Ref_highRes.raw", "data/raw/Eval_highRes.raw"}
+		ref_tar_t{"data/raw/Ref.raw", "data/raw/Eval.raw", "data/mhd/comp_Ref.mhd_Eval.mhd.out"},
 	};
 
 	auto prefix_local = "spiral_results_local_"s;
@@ -347,13 +528,15 @@ BOOST_AUTO_TEST_CASE(real_data_old_spiral_with_rectangle)
 
 	for (auto& ref_tar : image_pairs)
 	{
-		BOOST_TEST_MESSAGE("Reference: " << ref_tar.first);
-		BOOST_TEST_MESSAGE("Target: " << ref_tar.second);
+		BOOST_TEST_MESSAGE("Reference: " << get<0>(ref_tar));
+		BOOST_TEST_MESSAGE("Target: " << get<1>(ref_tar));
+		BOOST_TEST_MESSAGE("Other tool output: " << get<2>(ref_tar));
 
-		auto raw_reference = load_raw_dataset(ref_tar.first);
-		auto raw_target = load_raw_dataset(ref_tar.second);
+		auto raw_reference = load_raw_dataset(get<0>(ref_tar));
+		auto raw_target = load_raw_dataset(get<1>(ref_tar));
+		auto raw_output = load_raw_output(get<2>(ref_tar));
 
-		BOOST_ASSERT(raw_reference && raw_target);
+		BOOST_ASSERT(raw_reference && raw_target && raw_output);
 
 		auto conv_raw_target = std::visit([](auto&& raw_rds, auto&& raw_tds) {return force_convert(raw_rds, raw_tds); }, *raw_reference, *raw_target);
 
@@ -377,10 +560,13 @@ BOOST_AUTO_TEST_CASE(real_data_old_spiral_with_rectangle)
 			if (results_global)
 				BOOST_TEST_MESSAGE("Time taken global: " << results_global->time_taken.count() / 1e9 << "s");
 
-			if(!results_local || !save_results(filesystem::path(prefix_local + string(ref_tar.first)), *results_local))
-				BOOST_TEST_MESSAGE("Failed to save!");
-			if (!results_global || !save_results(filesystem::path(prefix_global + string(ref_tar.first)), *results_global))
-				BOOST_TEST_MESSAGE("Failed to save!");
+			if (!results_local)// || !save_results(filesystem::path(prefix_local + string(ref_tar.first)), *results_local))
+				BOOST_TEST_MESSAGE("Failed to calculate!");
+			if (!results_global)// || !save_results(filesystem::path(prefix_global + string(ref_tar.first)), *results_global))
+				BOOST_TEST_MESSAGE("Failed to calculate!");
+
+			std::visit([&](auto&& td) { compare_results(*results_local, td); }, *raw_output);
+			std::visit([&](auto&& td) { compare_results(*results_global, td); }, *raw_output);
 		}
 		else
 		{
@@ -391,23 +577,23 @@ BOOST_AUTO_TEST_CASE(real_data_old_spiral_with_rectangle)
 			if (results_global)
 				BOOST_TEST_MESSAGE("Time taken global: " << results_global->time_taken.count() / 1e9 << "s");
 
-			if (!results_local || !save_results(filesystem::path(prefix_local + string(ref_tar.first)), *results_local))
-				BOOST_TEST_MESSAGE("Failed to save!");
-			if (!results_global || !save_results(filesystem::path(prefix_global + string(ref_tar.first)), *results_global))
-				BOOST_TEST_MESSAGE("Failed to save!");
+			if (!results_local)// || !save_results(filesystem::path(prefix_local + string(ref_tar.first)), *results_local))
+				BOOST_TEST_MESSAGE("Failed to calculate!");
+			if (!results_global)// || !save_results(filesystem::path(prefix_global + string(ref_tar.first)), *results_global))
+				BOOST_TEST_MESSAGE("Failed to calculate!");
+
+			std::visit([&](auto&& td) { compare_results(*results_local, td); }, *raw_output);
+			std::visit([&](auto&& td) { compare_results(*results_global, td); }, *raw_output);
 		}
 	}
 }
 
 BOOST_AUTO_TEST_CASE(real_data_new_method)
 {
-	using ref_tar_t = pair<string_view, string_view>;
-	array image_pairs =
+	using ref_tar_t = tuple<string_view, string_view, string_view>;
+	array<ref_tar_t, 1> image_pairs =
 	{
-		ref_tar_t{"data/raw/Ref.raw", "data/raw/Eval.raw"},
-		ref_tar_t{"data/raw/m1.raw", "data/raw/m2.raw"},
-		ref_tar_t{"data/raw/m3.raw", "data/raw/m4.raw"},
-		//ref_tar_t{"data/raw/Ref_highRes.raw", "data/raw/Eval_highRes.raw"}
+		ref_tar_t{"data/raw/Ref.raw", "data/raw/Eval.raw", "data/mhd/comp_Ref.mhd_Eval.mhd.out"},
 	};
 	
 	auto prefix_local = "new_method_results_local_"s;
@@ -417,13 +603,15 @@ BOOST_AUTO_TEST_CASE(real_data_new_method)
 
 	for (auto& ref_tar : image_pairs)
 	{
-		BOOST_TEST_MESSAGE("Reference: " << ref_tar.first);
-		BOOST_TEST_MESSAGE("Target: " << ref_tar.second);
+		BOOST_TEST_MESSAGE("Reference: " << get<0>(ref_tar));
+		BOOST_TEST_MESSAGE("Target: " << get<1>(ref_tar));
+		BOOST_TEST_MESSAGE("Other tool output: " << get<2>(ref_tar));
 
-		auto raw_reference = load_raw_dataset(ref_tar.first);
-		auto raw_target = load_raw_dataset(ref_tar.second);
+		auto raw_reference = load_raw_dataset(get<0>(ref_tar));
+		auto raw_target = load_raw_dataset(get<1>(ref_tar));
+		auto raw_output = load_raw_output(get<2>(ref_tar));
 
-		BOOST_ASSERT(raw_reference && raw_target);
+		BOOST_ASSERT(raw_reference && raw_target && raw_output);
 
 		auto conv_raw_target = std::visit([](auto&& raw_rds, auto&& raw_tds) {return force_convert(raw_rds, raw_tds); }, *raw_reference, *raw_target);
 
@@ -447,10 +635,13 @@ BOOST_AUTO_TEST_CASE(real_data_new_method)
 			if (results_global)
 				BOOST_TEST_MESSAGE("Time taken global: " << results_global->time_taken.count() / 1e9 << "s");
 
-			if (!results_local || !save_results(filesystem::path(prefix_local + string(ref_tar.first)), *results_local))
-				BOOST_TEST_MESSAGE("Failed to save!");
-			if (!results_global || !save_results(filesystem::path(prefix_global + string(ref_tar.first)), *results_global))
-				BOOST_TEST_MESSAGE("Failed to save!");
+			if (!results_local)// || !save_results(filesystem::path(prefix_local + string(ref_tar.first)), *results_local))
+				BOOST_TEST_MESSAGE("Failed to calculate!");
+			if (!results_global)// || !save_results(filesystem::path(prefix_global + string(ref_tar.first)), *results_global))
+				BOOST_TEST_MESSAGE("Failed to calculate!");
+
+			std::visit([&](auto&& td) { compare_results(*results_local, td); }, *raw_output);
+			std::visit([&](auto&& td) { compare_results(*results_global, td); }, *raw_output);
 		}
 		else
 		{
@@ -461,10 +652,13 @@ BOOST_AUTO_TEST_CASE(real_data_new_method)
 			if (results_global)
 				BOOST_TEST_MESSAGE("Time taken global: " << results_global->time_taken.count() / 1e9 << "s");
 
-			if (!results_local || !save_results(filesystem::path(prefix_local + string(ref_tar.first)), *results_local))
-				BOOST_TEST_MESSAGE("Failed to save!");
-			if (!results_global || !save_results(filesystem::path(prefix_global + string(ref_tar.first)), *results_global))
-				BOOST_TEST_MESSAGE("Failed to save!");
+			if (!results_local)// || !save_results(filesystem::path(prefix_local + string(ref_tar.first)), *results_local))
+				BOOST_TEST_MESSAGE("Failed to calculate!");
+			if (!results_global)// || !save_results(filesystem::path(prefix_global + string(ref_tar.first)), *results_global))
+				BOOST_TEST_MESSAGE("Failed to calculate!");
+
+			std::visit([&](auto&& td) { compare_results(*results_local, td); }, *raw_output);
+			std::visit([&](auto&& td) { compare_results(*results_global, td); }, *raw_output);
 		}
 	}
 }

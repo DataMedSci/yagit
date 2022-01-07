@@ -26,7 +26,7 @@ namespace yagit::gdcm::data
 
     template<typename ElementType, size_t Dimensions>
     class input_image_region
-        : public virtual ycd::irtdose_image_region<ElementType, Dimensions>
+        : public virtual ycd::idose_image_region<ElementType, Dimensions>
     {
     protected:
         ::gdcm::ImageRegionReader& _image_region_reader;
@@ -102,7 +102,7 @@ namespace yagit::gdcm::data
 
             return {}; // ok
         }
-        virtual ycd::irtdose_image_region<ElementType, Dimensions - 1>* create_slice(size_t dimension, size_t index, error_code &ec) const override
+        virtual ycd::idose_image_region<ElementType, Dimensions - 1>* create_slice(size_t dimension, size_t index, error_code &ec) const override
         {
             ec = {};
             return nullptr; // not implemented
@@ -204,7 +204,7 @@ namespace yagit::gdcm::data
 
             return {};
         }
-        virtual ycd::irtdose_image_region<ElementType, Dimensions>* create_subregion(const ycd::data_region<Dimensions>& region, error_code& ec) const override
+        virtual ycd::idose_image_region<ElementType, Dimensions>* create_subregion(const ycd::data_region<Dimensions>& region, error_code& ec) const override
         {
             ycd::data_region <Dimensions> new_region = {{}, region.size};
             for (size_t i = 0; i < Dimensions; i++)
@@ -310,7 +310,7 @@ namespace yagit::gdcm::data
     template<typename ElementType, size_t Dimensions>
     class input_image
             : public input_image_region<ElementType, Dimensions>
-            , public ycd::irtdose_image<ElementType, Dimensions>
+            , public ycd::idose_image<ElementType, Dimensions>
     {
     public:
         input_image(::gdcm::ImageRegionReader& region_reader, const ycd::sizes<Dimensions>& image_size)
@@ -327,7 +327,7 @@ namespace yagit::gdcm::data
 
     template<typename ElementType, size_t Dimensions>
     class dataset_input_file_mapping
-        : public irtdose_dataset_input_file_mapping<ElementType, Dimensions>
+        : public idose_dataset_input_file_mapping<ElementType, Dimensions>
     {
     private:
         ::gdcm::ImageRegionReader _image_region_reader;
@@ -341,7 +341,7 @@ namespace yagit::gdcm::data
     public:
         virtual ~dataset_input_file_mapping() override = default;
     public:
-        virtual const ycd::irtdose_image<ElementType, Dimensions>& get_image() override
+        virtual const ycd::idose_image<ElementType, Dimensions>& get_image() override
         {
             return _image;
         }

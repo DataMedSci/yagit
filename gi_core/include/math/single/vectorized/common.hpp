@@ -4,7 +4,7 @@
 
 #include <simdpp/simd.h>
 
-namespace yagit::core::math::vectorized
+namespace yagit::core::math::single::vectorized
 {
 	template<typename Type, unsigned VectorSize>
 	struct vlocal_gamma_index_params {};
@@ -195,7 +195,6 @@ namespace yagit::core::math::vectorized
 		}
 	}
 	
-
 	template<unsigned VectorSize, typename F>
 	inline float find_if(const simdpp::float32<VectorSize>& v, F f)
 	{
@@ -207,4 +206,31 @@ namespace yagit::core::math::vectorized
 	{
 		return detail::find_if(v, f, make_index_sequence<VectorSize>());
 	}
+
+	template<typename Type>
+	struct fast_vector_size : std::integral_constant<size_t, 1> {};
+	template<>
+	struct fast_vector_size<int8_t> : std::integral_constant<size_t, SIMDPP_FAST_INT8_SIZE> {};
+	template<>
+	struct fast_vector_size<int16_t> : std::integral_constant<size_t, SIMDPP_FAST_INT16_SIZE> {};
+	template<>
+	struct fast_vector_size<int32_t> : std::integral_constant<size_t, SIMDPP_FAST_INT32_SIZE> {};
+	template<>
+	struct fast_vector_size<int64_t> : std::integral_constant<size_t, SIMDPP_FAST_INT64_SIZE> {};
+	template<>
+	struct fast_vector_size<uint8_t> : std::integral_constant<size_t, SIMDPP_FAST_INT8_SIZE> {};
+	template<>
+	struct fast_vector_size<uint16_t> : std::integral_constant<size_t, SIMDPP_FAST_INT16_SIZE> {};
+	template<>
+	struct fast_vector_size<uint32_t> : std::integral_constant<size_t, SIMDPP_FAST_INT32_SIZE> {};
+	template<>
+	struct fast_vector_size<uint64_t> : std::integral_constant<size_t, SIMDPP_FAST_INT64_SIZE> {};
+	template<>
+	struct fast_vector_size<float> : std::integral_constant<size_t, SIMDPP_FAST_FLOAT32_SIZE> {};
+	template<>
+	struct fast_vector_size<double> : std::integral_constant<size_t, SIMDPP_FAST_FLOAT64_SIZE> {};
+
+	template<typename Type>
+	constexpr size_t fast_vector_size_v = fast_vector_size<Type>::value;
+
 }

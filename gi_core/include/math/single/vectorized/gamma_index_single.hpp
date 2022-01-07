@@ -1,8 +1,8 @@
 #pragma once
 
-#include <math/vectorized/common.hpp>
+#include <math/single/vectorized/common.hpp>
 
-namespace yagit::core::math::vectorized
+namespace yagit::core::math::single::vectorized
 {
 	// -------- DD float32 --------
 

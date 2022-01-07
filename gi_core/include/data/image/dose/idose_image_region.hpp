@@ -2,7 +2,7 @@
 
 #include <common.hpp>
 #include <data/image/iimage_region.hpp>
-#include <data/image/rtdose/image_coordinates.hpp>
+#include <data/image/dose/image_coordinates.hpp>
 
 namespace yagit::core::data
 {
@@ -13,11 +13,11 @@ namespace yagit::core::data
 	/// <typeparam name="ElementType">Data point element type</typeparam>
 	/// <typeparam name="Dimensions">Dimensionality of image data point storage</typeparam>
 	template<typename ElementType, size_t Dimensions>
-	class irtdose_image_region
+	class idose_image_region
 		: public virtual iimage_region<ElementType, Dimensions>
 	{
 	public:
-		virtual ~irtdose_image_region() = default;
+		virtual ~idose_image_region() = default;
 	public:
 		/// <summary></summary>
 		/// <returns>Preferred implementation format to load the data point coordinates</returns>
@@ -40,11 +40,11 @@ namespace yagit::core::data
 		/// <param name="region">Subregion relative to region()</param>
 		/// <param name="ec">Error code</param>
 		/// <returns>iimage_region containing subregion defined by region</returns>
-		unique_ptr<irtdose_image_region<ElementType, Dimensions>> subregion(const data_region<Dimensions>& region, error_code& ec) const
+		unique_ptr<idose_image_region<ElementType, Dimensions>> subregion(const data_region<Dimensions>& region, error_code& ec) const
 		{
-			return unique_ptr<irtdose_image_region<ElementType, Dimensions>>(create_subregion(region, ec));
+			return unique_ptr<idose_image_region<ElementType, Dimensions>>(create_subregion(region, ec));
 		}
-		unique_ptr<irtdose_image_region<ElementType, Dimensions>> subregion(const data_region<Dimensions>& region) const
+		unique_ptr<idose_image_region<ElementType, Dimensions>> subregion(const data_region<Dimensions>& region) const
 		{
 			error_code ec;
 			return subregion(region, ec);
@@ -134,7 +134,7 @@ namespace yagit::core::data
 		/// <param name="index">: index along dimension-axi at which the slice should be taken</param>
 		/// <param name="ec">Error code</param>
 		/// <returns>Slice of iimage_region unless implementation error occured then nullptr</returns>
-		virtual irtdose_image_region<ElementType, Dimensions - 1>* create_slice(size_t dimension, size_t index, error_code& ec) const = 0;
+		virtual idose_image_region<ElementType, Dimensions - 1>* create_slice(size_t dimension, size_t index, error_code& ec) const = 0;
 
 		/// <summary>
 		/// <para>Obtains an iimage_region corresponding to provided subregion.</para>
@@ -149,9 +149,9 @@ namespace yagit::core::data
 		/// <param name="region">Subregion relative to region()</param>
 		/// <param name="ec">Error code</param>
 		/// <returns>transfers ownership of iimage_region containing subregion defined by region</returns>
-		virtual irtdose_image_region<ElementType, Dimensions>* create_subregion(const data_region<Dimensions>& region, error_code& ec) const = 0;
+		virtual idose_image_region<ElementType, Dimensions>* create_subregion(const data_region<Dimensions>& region, error_code& ec) const = 0;
 	};
 	
 	template<typename ElementType>
-	class irtdose_image_region<ElementType, 0> : public virtual iimage_region<ElementType, 0> {};
+	class idose_image_region<ElementType, 0> : public virtual iimage_region<ElementType, 0> {};
 }

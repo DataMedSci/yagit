@@ -10,6 +10,7 @@
 #include <functional>
 #include <variant>
 #include <numeric>
+#include <execution>
 
 #if(__cplusplus <= 202002L)
 #define ALLOCATE_AT_LEAST_NOT_DEFINED
