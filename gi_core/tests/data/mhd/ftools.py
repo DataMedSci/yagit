@@ -19,7 +19,7 @@ By default it is only needed to specify the reference and evaluation images and 
 like dose-difference, distance-to-agreement and dose-cutoff.
 """
 start_time = time.time()
-imgGI=ft.calcGammaIndex(imgRef, imgEval, DD=2, DTA=200, DCO=0.05, displayInfo=True)
+imgGI=ft.calcGammaIndex(imgRef, imgEval, DD=2, DTA=2, DCO=0.00001, stepSize=2.5, DDType='local', fractionalStepSize=False, displayInfo=True)
 end_time = time.time()
 
 """

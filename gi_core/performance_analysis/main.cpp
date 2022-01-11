@@ -280,9 +280,9 @@ cl_mem create_input_image_3D(const sizes<3>& size)
 	cl_image_desc desc
 	{
 		.image_type = CL_MEM_OBJECT_IMAGE3D,
-		.image_width = size.sizes[0],
-		.image_height = size.sizes[1],
-		.image_depth = size.sizes[2],
+		.image_width = size[0],
+		.image_height = size[1],
+		.image_depth = size[2],
 		.image_array_size = 0,
 		.image_row_pitch = 0,
 		.image_slice_pitch = 0,
@@ -309,9 +309,9 @@ cl_mem create_output_image_3D(const sizes<3>& size)
 	cl_image_desc desc
 	{
 		.image_type = CL_MEM_OBJECT_IMAGE3D,
-		.image_width = size.sizes[0],
-		.image_height = size.sizes[1],
-		.image_depth = size.sizes[2],
+		.image_width = size[0],
+		.image_height = size[1],
+		.image_depth = size[2],
 		.image_array_size = 0,
 		.image_row_pitch = 0,
 		.image_slice_pitch = 0,
@@ -330,14 +330,14 @@ cl_mem create_output_image_3D(const sizes<3>& size)
 void copy_to_device(cl_mem image, const float* data, const sizes<3>& size)
 {
 	size_t origin[3] = { 0,0,0 };
-	if (check(clEnqueueWriteImage(command_queue, image, true, origin, size.sizes, 0, 0, data, 0, nullptr, nullptr)))
+	if (check(clEnqueueWriteImage(command_queue, image, true, origin, size.data(), 0, 0, data, 0, nullptr, nullptr)))
 		return;
 }
 
 void copy_from_device(cl_mem image, float* data, const sizes<3>& size)
 {
 	size_t origin[3] = { 0,0,0 };
-	if (check(clEnqueueReadImage(command_queue, image, true, origin, size.sizes, 0, 0, data, 0, nullptr, nullptr)))
+	if (check(clEnqueueReadImage(command_queue, image, true, origin, size.data(), 0, 0, data, 0, nullptr, nullptr)))
 		return;
 }
 
@@ -345,7 +345,7 @@ template<typename T, size_t D>
 array<int, D> to_int(const array<T, D>& vs)
 {
 	array<int, D> res;
-	transform(begin(vs), end(vs), begin(res), [](auto&& v) {return static_cast<int>(v); });
+	std::transform(begin(vs), end(vs), begin(res), [](auto&& v) {return static_cast<int>(v); });
 	return res;
 }
 
@@ -353,7 +353,7 @@ template<typename T, size_t D>
 array<float, D> to_float(const array<T, D>& vs)
 {
 	array<float, D> res;
-	transform(begin(vs), end(vs), begin(res), [](auto&& v) {return static_cast<float>(v); });
+	std::transform(begin(vs), end(vs), begin(res), [](auto&& v) {return static_cast<float>(v); });
 	return res;
 }
 
@@ -361,7 +361,7 @@ template<typename T, size_t D>
 array<T, D> operator*(const array<T, D>& vs1, const array<T, D>& vs2)
 {
 	array<T, D> res;
-	transform(begin(vs1), end(vs1), begin(vs2), begin(res), [](auto&& v1, auto&& v2) {return v1 * v2; });
+	std::transform(begin(vs1), end(vs1), begin(vs2), begin(res), [](auto&& v1, auto&& v2) {return v1 * v2; });
 	return res;
 }
 
@@ -369,7 +369,7 @@ template<typename T, size_t D>
 array<T, D> operator+(const array<T, D>& vs1, const array<T, D>& vs2)
 {
 	array<T, D> res;
-	transform(begin(vs1), end(vs1), begin(vs2), begin(res), [](auto&& v1, auto&& v2) {return v1 + v2; });
+	std::transform(begin(vs1), end(vs1), begin(vs2), begin(res), [](auto&& v1, auto&& v2) {return v1 + v2; });
 	return res;
 }
 
@@ -377,7 +377,7 @@ template<typename T, size_t D>
 array<T, D> operator-(const array<T, D>& vs1, const array<T, D>& vs2)
 {
 	array<T, D> res;
-	transform(begin(vs1), end(vs1), begin(vs2), begin(res), [](auto&& v1, auto&& v2) {return v1 - v2; });
+	std::transform(begin(vs1), end(vs1), begin(vs2), begin(res), [](auto&& v1, auto&& v2) {return v1 - v2; });
 	return res;
 }
 
@@ -385,7 +385,7 @@ template<typename T, size_t D>
 array<T, D> operator/(const array<T, D>& vs1, const array<T, D>& vs2)
 {
 	array<T, D> res;
-	transform(begin(vs1), end(vs1), begin(vs2), begin(res), [](auto&& v1, auto&& v2) {return v1 / v2; });
+	std::transform(begin(vs1), end(vs1), begin(vs2), begin(res), [](auto&& v1, auto&& v2) {return v1 / v2; });
 	return res;
 }
 
@@ -393,7 +393,7 @@ template<typename T, size_t D>
 array<T, D> ceil(const array<T, D>& vs)
 {
 	array<T, D> res;
-	transform(begin(vs), end(vs), begin(res), [](auto&& v) {return ceil(v); });
+	std::transform(begin(vs), end(vs), begin(res), [](auto&& v) {return ceil(v); });
 	return res;
 }
 
@@ -402,7 +402,7 @@ template<typename T, size_t D>
 array<T, D> floor(const array<T, D>& vs)
 {
 	array<T, D> res;
-	transform(begin(vs), end(vs), begin(res), [](auto&& v) {return floor(v); });
+	std::transform(begin(vs), end(vs), begin(res), [](auto&& v) {return floor(v); });
 	return res;
 }
 
@@ -410,7 +410,7 @@ template<typename T, size_t D>
 array<T, D> min(const array<T, D>& vs1, const array<T, D>& vs2)
 {
 	array<T, D> res;
-	transform(begin(vs1), end(vs1), begin(vs2), begin(res), [](auto&& v1, auto&& v2) {return min(v1, v2); });
+	std::transform(begin(vs1), end(vs1), begin(vs2), begin(res), [](auto&& v1, auto&& v2) {return min(v1, v2); });
 	return res;
 }
 
@@ -418,7 +418,7 @@ template<typename T, size_t D>
 array<T, D> max(const array<T, D>& vs1, const array<T, D>& vs2)
 {
 	array<T, D> res;
-	transform(begin(vs1), end(vs1), begin(vs2), begin(res), [](auto&& v1, auto&& v2) {return max(v1, v2); });
+	std::transform(begin(vs1), end(vs1), begin(vs2), begin(res), [](auto&& v1, auto&& v2) {return max(v1, v2); });
 	return res;
 }
 
@@ -496,15 +496,14 @@ void run_3d_gi_fd(cl_mem out, cl_mem ref, cl_mem tar, cl_mem ref_x, cl_mem ref_y
 	tar_spac.z = spacing[2];
 	if (check(clSetKernelArg(local_f64_kernels[2], 10, sizeof(cl_float3), &tar_spac)))
 		return;
-	auto distance_to_agreement = std::sqrt(p.distance_to_agreement_squared);
-	if (check(clSetKernelArg(local_f64_kernels[2], 11, sizeof(cl_float), &distance_to_agreement)))
+	if (check(clSetKernelArg(local_f64_kernels[2], 11, sizeof(cl_float), &p.distance_to_agreement_normalization())))
 		return;
-	if (check(clSetKernelArg(local_f64_kernels[2], 12, sizeof(cl_float), &p.percentage)))
+	if (check(clSetKernelArg(local_f64_kernels[2], 12, sizeof(cl_float), &p.reference_dose_percentage())))
 		return;
 
-	debug_logic(distance_to_agreement, { 4,4,4 }, array<int, 3>{(int)size.sizes[0], (int)size.sizes[1], (int)size.sizes[2]}, pos, spacing);
+	debug_logic(p.distance_to_agreement_normalization(), { 4,4,4 }, array<int, 3>{(int)size[0], (int)size[1], (int)size[2]}, pos, spacing);
 	size_t local_size[3] = { 1, 1, 1 };
-	if (check(clEnqueueNDRangeKernel(command_queue, local_f64_kernels[2], 3, nullptr, size.sizes, local_size, 0, nullptr, nullptr)))
+	if (check(clEnqueueNDRangeKernel(command_queue, local_f64_kernels[2], 3, nullptr, size.data(), local_size, 0, nullptr, nullptr)))
 		return;
 	clFinish(command_queue);
 }
@@ -526,17 +525,18 @@ void init_pipeline()
 	auto image_size = sizes<3>{ 1024, 1024, 1024 };
 }
 
-void gen_coords(const array<float, 3>& pos, const array<float, 3>& spacing, float* xs, float* ys, float* zs, const sizes<3>& size)
+template<typename ElementType>
+void gen_coords(const array<ElementType, 3>& pos, const array<ElementType, 3>& spacing, ElementType* xs, ElementType* ys, ElementType* zs, const sizes<3>& size)
 {
-	for (size_t x = 0; x < size.sizes[0]; x++)
+	for (size_t x = 0; x < size[0]; x++)
 	{
-		for (size_t y = 0; y < size.sizes[1]; y++)
+		for (size_t y = 0; y < size[1]; y++)
 		{
-			for (size_t z = 0; z < size.sizes[2]; z++)
+			for (size_t z = 0; z < size[2]; z++)
 			{
-				xs[(x * size.sizes[1] + y) * size.sizes[2] + z] = pos[0] + spacing[0] * x;
-				ys[(x * size.sizes[1] + y) * size.sizes[2] + z] = pos[1] + spacing[1] * y;
-				zs[(x * size.sizes[1] + y) * size.sizes[2] + z] = pos[2] + spacing[2] * z;
+				xs[(x * size[1] + y) * size[2] + z] = pos[0] + spacing[0] * x;
+				ys[(x * size[1] + y) * size[2] + z] = pos[1] + spacing[1] * y;
+				zs[(x * size[1] + y) * size[2] + z] = pos[2] + spacing[2] * z;
 			}
 		}
 	}
@@ -634,7 +634,9 @@ void test_float()
 	vector<float> ref_x(S, 0.0f);
 	vector<float> ref_y(S, 0.0f);
 	vector<float> ref_z(S, 0.0f);
-	gen_coords({ 0.0f,0.0f, 0.0f }, { 0.1f,0.2f,0.3f }, ref_x.data(), ref_y.data(), ref_z.data(), { SX, SY, SZ });
+	array<float, 3> ref_pos = { 0.0f,0.0f, 0.0f };//{ 0.07f,0.02f, 0.05f };
+	array<float, 3> ref_spac = { 0.1f,0.2f,0.3f };
+	gen_coords(ref_pos, ref_spac, ref_x.data(), ref_y.data(), ref_z.data(), { SX, SY, SZ });
 
 
 	vector<float> tar_doses(S, 0.0f);
@@ -655,12 +657,32 @@ void test_float()
 
 	local_gamma_index_params<float> params{ 0.5f, 1.0f };
 
-	gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{}, output_par_unseq.data(), output_par_unseq.data() + S,
-		ref_doses.data(),
-		array<const float*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
-		tar_doses.data(), tar_doses.data() + S,
-		array<const float*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-		params);
+	gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{},
+		yagit::core::math::output_image_view<float, 3>{.output = { output_par_unseq.data(), output_par_unseq.data() + S }, .image_size = { SX, SY, SZ }},
+		yagit::core::math::input_uniform_image_view<float, 3>{
+			.doses = { ref_doses.data(), ref_doses.data() + S },
+			.image_size = { SX, SY, SZ },
+			.image_metadata = { .image_position = ref_pos, .image_spacing = ref_spac }	
+		},
+		yagit::core::math::input_uniform_image_view<float, 3>{
+			.doses = { tar_doses.data(), tar_doses.data() + S },
+			.image_size = { SX, SY, SZ },
+			.image_metadata = { .image_position = tar_pos, .image_spacing = tar_spac }	
+		},
+		algorithm_version::classic::parameters<float, 3>{
+			.reference_image_coordinates = { 
+				yagit::core::data::const_view<float>{ref_x.data(), ref_x.data() + S},
+				yagit::core::data::const_view<float>{ref_y.data(), ref_y.data() + S},
+				yagit::core::data::const_view<float>{ref_z.data(), ref_z.data() + S}
+			},
+			.target_image_coordinates = {
+				yagit::core::data::const_view<float>{tar_x.data(), tar_x.data() + S},
+				yagit::core::data::const_view<float>{tar_y.data(), tar_y.data() + S},
+				yagit::core::data::const_view<float>{tar_z.data(), tar_z.data() + S}
+			}
+		},
+		params
+	);
 
 	auto end = chrono::high_resolution_clock::now();
 
@@ -674,7 +696,8 @@ void test_double()
 	default_random_engine e1(r());
 	uniform_real_distribution<double> uniform_dist(0.0, 10.0f);
 
-	constexpr size_t S = 200 * 80 * 20;
+	constexpr size_t SX = 2, SY = 2, SZ = 2;
+	constexpr size_t S = SX * SY * SZ;
 	constexpr double epsilon = 1e-9;
 
 	vector<double> output_seq(S, 0.0);
@@ -686,32 +709,51 @@ void test_double()
 	vector<double> ref_x(S, 0.0);
 	vector<double> ref_y(S, 0.0);
 	vector<double> ref_z(S, 0.0);
+	array<double, 3> ref_pos = { 0.0,0.0, 0.0 };
+	array<double, 3> ref_spac = { 0.1,0.2,0.3 };
+	gen_coords(ref_pos, ref_spac, ref_x.data(), ref_y.data(), ref_z.data(), { SX, SY, SZ });
 
 	vector<double> tar_doses(S, 0.0);
 	vector<double> tar_x(S, 0.0);
 	vector<double> tar_y(S, 0.0);
 	vector<double> tar_z(S, 0.0);
+	array<double, 3> tar_pos = { 0.0,0.0,0.0 };
+	array<double, 3> tar_spac = { 0.1,0.2,0.3 };
+	gen_coords(tar_pos, tar_spac, tar_x.data(), tar_y.data(), tar_z.data(), { SX, SY, SZ });
 
 	auto gen = [&]() {return uniform_dist(e1); };
 
 	std::generate_n(ref_doses.data(), S, gen);
-	std::generate_n(ref_x.data(), S, gen);
-	std::generate_n(ref_y.data(), S, gen);
-	std::generate_n(ref_z.data(), S, gen);
-
 	std::generate_n(tar_doses.data(), S, gen);
-	std::generate_n(tar_x.data(), S, gen);
-	std::generate_n(tar_y.data(), S, gen);
-	std::generate_n(tar_z.data(), S, gen);
 
 	local_gamma_index_params<double> params{ 0.5f, 1.0f };
 
-	gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{}, output_par_unseq.data(), output_par_unseq.data() + S,
-		ref_doses.data(),
-		array<const double*, 3>{ref_x.data(), ref_y.data(), ref_z.data()},
-		tar_doses.data(), tar_doses.data() + S,
-		array<const double*, 3>{tar_x.data(), tar_y.data(), tar_z.data()},
-		params);
+	gamma_index(algorithm_version::classic{}, parallel_unsequenced_policy{},
+		yagit::core::math::output_image_view<double, 3>{.output = { output_par_unseq.data(), output_par_unseq.data() + S }, .image_size = { SX, SY, SZ }},
+		yagit::core::math::input_uniform_image_view<double, 3>{
+			.doses = { ref_doses.data(), ref_doses.data() + S },
+			.image_size = { SX, SY, SZ },
+			.image_metadata = { .image_position = ref_pos, .image_spacing = ref_spac }	
+		},
+		yagit::core::math::input_uniform_image_view<double, 3>{
+			.doses = { tar_doses.data(), tar_doses.data() + S },
+			.image_size = { SX, SY, SZ },
+			.image_metadata = { .image_position = tar_pos, .image_spacing = tar_spac }	
+		},
+		algorithm_version::classic::parameters<double, 3>{
+			.reference_image_coordinates = { 
+				yagit::core::data::const_view<double>{ref_x.data(), ref_x.data() + S},
+				yagit::core::data::const_view<double>{ref_y.data(), ref_y.data() + S},
+				yagit::core::data::const_view<double>{ref_z.data(), ref_z.data() + S}
+			},
+			.target_image_coordinates = {
+				yagit::core::data::const_view<double>{tar_x.data(), tar_x.data() + S},
+				yagit::core::data::const_view<double>{tar_y.data(), tar_y.data() + S},
+				yagit::core::data::const_view<double>{tar_z.data(), tar_z.data() + S}
+			}
+		},
+		params
+	);
 }
 
 void test_orig_sr()

@@ -1,4 +1,4 @@
-#include <math/gamma_index.hpp>
+/*#include <math/gamma_index.hpp>
 #include <boost/test/unit_test.hpp>
 #include <solver.h>
 #include <image.h>
@@ -661,4 +661,4 @@ BOOST_AUTO_TEST_CASE(real_data_new_method)
 			std::visit([&](auto&& td) { compare_results(*results_global, td); }, *raw_output);
 		}
 	}
-}
+}*/

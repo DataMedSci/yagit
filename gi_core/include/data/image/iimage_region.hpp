@@ -18,10 +18,6 @@ namespace yagit::core::data
 	public:
 		virtual ~iimage_region() = default;
 	public:
-		/// <summary></summary>
-		/// <returns>Preferred implementation format to load the data points</returns>
-		virtual data_format<Dimensions> preferred_data_format() const = 0;
-		
 		/// <summary>
 		/// <para>Region of original image represented by this iimage_region. (relative to iimage - not parent iimage_region) </para>
 		/// </summary>
@@ -82,25 +78,25 @@ namespace yagit::core::data
 		/// <param name="ec">Error code</param>
 		/// <returns>Loaded image data into memory buffer (image_data)</returns>
 		template<typename Allocator = std::allocator<ElementType>>
-		optional<image_data<ElementType, Dimensions>> load(const data_format<Dimensions>& format, Allocator allocator, error_code& ec) const
+		optional<image_data<ElementType, Dimensions>> load(Allocator allocator, error_code& ec) const
 		{
 			size_t required_size = 0;
 
-			if (ec = load(nullptr, format, required_size))
+			if (ec = load(nullptr, required_size))
 				return nullopt;
 
 			auto storage = allocate_at_least_for_image_data(std::move(allocator), required_size);
 
-			if (ec = load(storage.get(), format, required_size))
+			if (ec = load(storage.get(), required_size))
 				return nullopt;
 
-			return image_data(std::move(storage), region(), format, required_size);
+			return image_data(std::move(storage), region(), required_size);
 		}
 		template<typename Allocator = std::allocator<ElementType>>
-		optional<image_data<ElementType, Dimensions>> load(const data_format<Dimensions>& format, Allocator allocator) const
+		optional<image_data<ElementType, Dimensions>> load(Allocator allocator) const
 		{
 			error_code ec;
-			return load(format, allocator, ec);
+			return load(allocator, ec);
 		}
 	protected:
 		/// <summary>
@@ -115,7 +111,7 @@ namespace yagit::core::data
 		/// Else is treated as an input informing about size of allocated storage, handling as input is implementation defined.
 		/// </param>
 		/// <returns>Error code informing about error that occured during execution unless success</returns>
-		virtual error_code load(ElementType* data_storage, const data_format<Dimensions>& format, size_t& required_size) const = 0;
+		virtual error_code load(ElementType* data_storage, size_t& required_size) const = 0;
 
 		/// <summary>
 		/// <para>Implementable method responsive for slicing iimage_region</para>

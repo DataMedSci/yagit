@@ -4,52 +4,60 @@
 
 namespace yagit::core::math
 {
-	template<typename Type, size_t Dimensions, typename ParamsType>
+	template<
+		typename ElementType,
+		size_t Dimensions,
+		AnyInputImageView<ElementType, Dimensions> InputImageViewType0,
+		AnyInputImageView<ElementType, Dimensions> InputImageViewType1,
+		LocalOrGlobalGammaIndexParameters<ElementType> GIParamsType
+	>
 	constexpr error_code gamma_index(
-		algorithm_version::classic al_v,
-		execution::unsequenced_policy ex_p,
-		view<Type> gamma_index_output, view<Type> gamma_index_output_end,
-		const_view<Type> reference_doses,
-		array<const_view<Type>, Dimensions> reference_coordinates,
-		const_view<Type> target_doses, const_view<Type> target_doses_end,
-		array<const_view<Type>, Dimensions> target_coordinates,
-		const ParamsType& params
+		algorithm_version::classic _v,
+		execution::unsequenced_policy policy_params,
+		const output_image_view<ElementType, Dimensions>& gamma_index_output,
+		const InputImageViewType0& reference_image,
+		const InputImageViewType1& target_image,
+		const algorithm_version::classic::parameters<ElementType, Dimensions>& classic_params,
+		const GIParamsType& params
 	)
 	{
 		return classic::vectorized::detail::gamma_index(
-			helpers::gi_params<Type, Dimensions, ParamsType, algorithm_version::classic, execution::unsequenced_policy>{
-			gamma_index_output, gamma_index_output_end,
-				reference_doses,
-				reference_coordinates,
-				target_doses, target_doses_end,
-				target_coordinates,
-				params,
-				al_v,
-				ex_p
-		});
+			_v,
+			policy_params,
+			gamma_index_output,
+			reference_image,
+			target_image,
+			classic_params,
+			prepare_gi_params<ElementType>(params)
+		);
 	}
 
-	template<size_t VectorSize, typename Type, size_t Dimensions, typename ParamsType, typename = std::enable_if_t<is_power_of_two_v<VectorSize>>>
+	template<
+		size_t VectorSize,
+		typename ElementType,
+		size_t Dimensions,
+		AnyInputImageView<ElementType, Dimensions> InputImageViewType0,
+		AnyInputImageView<ElementType, Dimensions> InputImageViewType1,
+		LocalOrGlobalGammaIndexParameters<ElementType> GIParamsType
+	>
 	constexpr error_code gamma_index(
-		algorithm_version::classic al_v,
-		execution::unsequenced_policy ex_p,
-		view<Type> gamma_index_output, view<Type> gamma_index_output_end,
-		const_view<Type> reference_doses,
-		array<const_view<Type>, Dimensions> reference_coordinates,
-		const_view<Type> target_doses, const_view<Type> target_doses_end,
-		array<const_view<Type>, Dimensions> target_coordinates,
-		const ParamsType& params
+		algorithm_version::classic _v,
+		execution::unsequenced_policy policy_params,
+		const output_image_view<ElementType, Dimensions>& gamma_index_output,
+		const InputImageViewType0& reference_image,
+		const InputImageViewType1& target_image,
+		const algorithm_version::classic::parameters<ElementType, Dimensions>& classic_params,
+		const GIParamsType& params
 	)
 	{
-		return classic::vectorized::detail::gamma_index<VectorSize>(
-			gamma_index_output, gamma_index_output_end,
-			reference_doses,
-			reference_coordinates,
-			target_doses, target_doses_end,
-			target_coordinates,
-			params,
-			al_v,
-			ex_p
-			);
+		return classic::vectorized::detail::gamma_indexv<VectorSize>(
+			_v,
+			policy_params,
+			gamma_index_output,
+			reference_image,
+			target_image,
+			classic_params,
+			prepare_gi_params<ElementType>(params)
+		);
 	}
 }

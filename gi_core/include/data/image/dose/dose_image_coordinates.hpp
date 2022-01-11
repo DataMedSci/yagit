@@ -7,29 +7,33 @@ namespace yagit::core::data
 {
 
 	template<typename ElementType, size_t Dimensions>
-	using image_position = array<ElementType, Dimensions>;
+	using image_position_t = array<ElementType, Dimensions>;
 
 	template<typename ElementType, size_t Dimensions>
-	using uniform_image_spacing = array<ElementType, Dimensions>;
+	using uniform_image_spacing_t = array<ElementType, Dimensions>;
 
 	template<typename ElementType, size_t Dimensions>
-	using nonuniform_image_spacing = array<const_view<ElementType>, Dimensions>;
+	using nonuniform_image_spacing_t = array<const_view<ElementType>, Dimensions>;
 
 	template<typename ElementType, size_t Dimensions>
 	class image_coordinates
 	{
-	protected:
-		image_position<ElementType, Dimensions> _image_position;
+	private:
+		image_position_t<ElementType, Dimensions> _image_position;
 	public:
-		constexpr image_coordinates(const image_position<ElementType, Dimensions>& img_position)
+		constexpr image_coordinates(const image_position_t<ElementType, Dimensions>& img_position)
 			: _image_position(img_position)
 		{}
 	public:
 		virtual ~image_coordinates() noexcept = default;
 	public:
-		constexpr const image_position<ElementType, Dimensions>& position() const noexcept
+		constexpr const image_position_t<ElementType, Dimensions>& image_position() const noexcept
 		{
 			return _image_position;
+		}
+		constexpr const image_position_t<ElementType, Dimensions>& image_position(size_t dimension) const noexcept
+		{
+			return image_position()[dimension];
 		}
 	};
 
@@ -43,34 +47,44 @@ namespace yagit::core::data
 		: public image_coordinates<ElementType, Dimensions>
 	{
 	private:
-		uniform_image_spacing<ElementType, Dimensions> _image_spacing;
+		uniform_image_spacing_t<ElementType, Dimensions> _image_spacing;
 	public:
-		constexpr uniform_image_coordinates(const image_position<ElementType, Dimensions>& img_position, const uniform_image_spacing<ElementType, Dimensions>& img_spacing)
+		constexpr uniform_image_coordinates(const image_position_t<ElementType, Dimensions>& img_position, const uniform_image_spacing_t<ElementType, Dimensions>& img_spacing)
 			: image_coordinates<ElementType, Dimensions>(img_position)
 			, _image_spacing(img_spacing)
 		{}
 	public:
-		constexpr const uniform_image_spacing<ElementType, Dimensions>& spacing() const noexcept
+		virtual ~uniform_image_coordinates() noexcept override = default;
+	public:
+		constexpr const uniform_image_spacing_t<ElementType, Dimensions>& image_spacing() const noexcept
 		{
 			return _image_spacing;
 		}
+		constexpr const ElementType& image_spacing(size_t dimension) const noexcept
+		{
+			return image_spacing()[dimension];
+		}
+	public:
+		template<size_t Dimension>
+		constexpr ElementType voxel_index_to_position(size_t voxel_index) const noexcept
+		{
+			return static_cast<ElementType>(image_position(Dimension) + image_spacing(Dimension) * voxel_index);
+		}
+		template<size_t Dimension>
+		constexpr size_t position_to_voxel_index(ElementType position) const noexcept
+		{
+			return static_cast<size_t>(std::round((position - image_position(Dimension)) / image_spacing(Dimension)));
+		}
+	public:
 		template<size_t Dimension>
 		constexpr void voxel_indices_to_positions(const_view<size_t> voxel_indices, const_view<size_t> voxel_indices_end, view<ElementType> positions) const noexcept
 		{
-			std::transform(voxel_indices, voxel_indices_end, positions, [this](auto&& voxel_index)
-				{
-					return static_cast<ElementType>(image_coordinates<ElementType, Dimensions>::_image_position[Dimension] + _image_spacing[Dimension] * voxel_index);
-				}
-			);
+			std::transform(voxel_indices, voxel_indices_end, positions, voxel_index_to_position<Dimension>);
 		}
 		template<size_t Dimension>
 		constexpr void positions_to_voxel_indices(const_view<ElementType> positions, const_view<ElementType> positions_end, view<size_t> voxel_indices) const noexcept
 		{
-			std::transform(positions, positions_end, voxel_indices, [this](auto&& position)
-				{
-					return static_cast<ElementType>(std::round((position - image_coordinates<ElementType, Dimensions>::_image_position[Dimension]) / _image_spacing[Dimension]));
-				}
-			);
+			std::transform(positions, positions_end, voxel_indices, position_to_voxel_index<Dimension>);
 		}
 	};
 
@@ -81,11 +95,11 @@ namespace yagit::core::data
 	private:
 		array<std::vector<ElementType, Allocator>, Dimensions> _image_spacing;
 		array<std::vector<ElementType, Allocator>, Dimensions> _image_spacing_partial_sum;
-		nonuniform_image_spacing<ElementType, Dimensions> _nu_image_spacing;
+		nonuniform_image_spacing_t<ElementType, Dimensions> _nu_image_spacing;
 	private:
 		template<size_t Dimension>
 		static std::vector<ElementType, Allocator> initialize_image_spacing(
-			const nonuniform_image_spacing<ElementType, Dimensions>& img_spacing,
+			const nonuniform_image_spacing_t<ElementType, Dimensions>& img_spacing,
 			const sizes<Dimensions>& img_size,
 			const Allocator& alloc)
 		{
@@ -96,7 +110,7 @@ namespace yagit::core::data
 		}
 		template<size_t... I>
 		static array<std::vector<ElementType, Allocator>, Dimensions> initialize_image_spacing(
-			const nonuniform_image_spacing<ElementType, Dimensions>& img_spacing,
+			const nonuniform_image_spacing_t<ElementType, Dimensions>& img_spacing,
 			const sizes<Dimensions>& img_size,
 			const Allocator& alloc,
 			std::index_sequence<I...>)
@@ -108,7 +122,7 @@ namespace yagit::core::data
 
 		template<size_t Dimension>
 		static std::vector<ElementType, Allocator> initialize_image_spacing_partial_sum(
-			const nonuniform_image_spacing<ElementType, Dimensions>& img_spacing,
+			const nonuniform_image_spacing_t<ElementType, Dimensions>& img_spacing,
 			const sizes<Dimensions>& img_size,
 			const Allocator& alloc)
 		{
@@ -121,7 +135,7 @@ namespace yagit::core::data
 		}
 		template<size_t... I>
 		static array<std::vector<ElementType, Allocator>, Dimensions> initialize_image_spacing_partial_sum(
-			const nonuniform_image_spacing<ElementType, Dimensions>& img_spacing,
+			const nonuniform_image_spacing_t<ElementType, Dimensions>& img_spacing,
 			const sizes<Dimensions>& img_size,
 			const Allocator& alloc,
 			std::index_sequence<I...>)
@@ -132,7 +146,7 @@ namespace yagit::core::data
 		}
 
 		template<size_t... I>
-		static nonuniform_image_spacing<ElementType, Dimensions> initialize_nu_image_spacing(
+		static nonuniform_image_spacing_t<ElementType, Dimensions> initialize_nu_image_spacing(
 			const array<std::vector<ElementType, Allocator>, Dimensions>& img_spacing,
 			std::index_sequence<I...>)
 		{
@@ -142,8 +156,8 @@ namespace yagit::core::data
 		}
 	public:
 		nonuniform_image_coordinates(
-			const image_position<ElementType, Dimensions>& img_position,
-			const nonuniform_image_spacing<ElementType, Dimensions>& img_spacing,
+			const image_position_t<ElementType, Dimensions>& img_position,
+			const nonuniform_image_spacing_t<ElementType, Dimensions>& img_spacing,
 			const sizes<Dimensions>& img_size,
 			const Allocator& allocator
 			)
@@ -153,29 +167,22 @@ namespace yagit::core::data
 			, _nu_image_spacing(initialize_nu_image_spacing(_image_spacing, make_index_sequence<Dimensions>()))
 		{ }
 	public:
-		const uniform_image_spacing<ElementType, Dimensions>& spacing() const noexcept
+		virtual ~nonuniform_image_coordinates() override = default;
+	public:
+		constexpr const nonuniform_image_spacing_t<ElementType, Dimensions>& image_spacing() const noexcept
 		{
 			return _image_spacing;
 		}
-		template<size_t Dimension>
-		constexpr void voxel_indices_to_positions(const_view<size_t> voxel_indices, const_view<size_t> voxel_indices_end, view<ElementType> positions) const noexcept
+		constexpr const const_view<ElementType>& image_spacing(size_t dimension) const noexcept
 		{
-			std::transform(voxel_indices, voxel_indices_end, positions, [this](auto&& voxel_index)
-				{
-					return static_cast<ElementType>(image_coordinates<ElementType, Dimensions>::_image_position[Dimension] + _image_spacing_partial_sum[Dimension][voxel_index]);
-				}
-			);
+			return image_spacing()[dimension];
 		}
+	public:
 		template<size_t Dimension>
-		constexpr void positions_to_voxel_indices(const_view<ElementType> positions, const_view<ElementType> positions_end, view<size_t> voxel_indices) const noexcept
+		constexpr ElementType voxel_index_to_position(size_t voxel_index)
 		{
-			std::transform(positions, positions_end, voxel_indices, [this](auto&& position)
-				{
-					return position_to_voxel_index<Dimension>(position);
-				}
-			);
+			return static_cast<ElementType>(image_position(Dimension) + _image_spacing_partial_sum[Dimension][voxel_index]);
 		}
-	private:
 		template<size_t Dimension>
 		constexpr size_t position_to_voxel_index(ElementType position)
 		{
@@ -197,6 +204,17 @@ namespace yagit::core::data
 				else
 					return g_it - b;
 			}
+		}
+	public:
+		template<size_t Dimension>
+		constexpr void voxel_indices_to_positions(const_view<size_t> voxel_indices, const_view<size_t> voxel_indices_end, view<ElementType> positions) const noexcept
+		{
+			std::transform(voxel_indices, voxel_indices_end, positions, voxel_index_to_position<Dimension>);
+		}
+		template<size_t Dimension>
+		constexpr void positions_to_voxel_indices(const_view<ElementType> positions, const_view<ElementType> positions_end, view<size_t> voxel_indices) const noexcept
+		{
+			std::transform(positions, positions_end, voxel_indices, position_to_voxel_index<Dimension>);
 		}
 	};
 }

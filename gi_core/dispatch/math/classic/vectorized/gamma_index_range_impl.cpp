@@ -12,38 +12,38 @@ namespace yagit::core::math::classic::vectorized::detail
 	{
 		// -------- float32 --------
 
-		IMPLEMENT_CLASSIC_UNSEQ_GI(float, 1, local_gamma_index_params<float>);
-		IMPLEMENT_CLASSIC_UNSEQ_GI(float, 2, local_gamma_index_params<float>);
-		IMPLEMENT_CLASSIC_UNSEQ_GI(float, 3, local_gamma_index_params<float>);
-		IMPLEMENT_CLASSIC_UNSEQ_GI(float, 1, global_gamma_index_params<float>);
-		IMPLEMENT_CLASSIC_UNSEQ_GI(float, 2, global_gamma_index_params<float>);
-		IMPLEMENT_CLASSIC_UNSEQ_GI(float, 3, global_gamma_index_params<float>);
+		IMPLEMENT_CLASSIC_UNSEQ_GI(float, 1, UNPACK(input_uniform_image_view<float, 1>), UNPACK(input_uniform_image_view<float, 1>), local_gamma_index_params<float>);
+		IMPLEMENT_CLASSIC_UNSEQ_GI(float, 2, UNPACK(input_uniform_image_view<float, 2>), UNPACK(input_uniform_image_view<float, 2>), local_gamma_index_params<float>);
+		IMPLEMENT_CLASSIC_UNSEQ_GI(float, 3, UNPACK(input_uniform_image_view<float, 3>), UNPACK(input_uniform_image_view<float, 3>), local_gamma_index_params<float>);
+		IMPLEMENT_CLASSIC_UNSEQ_GI(float, 1, UNPACK(input_uniform_image_view<float, 1>), UNPACK(input_uniform_image_view<float, 1>), global_gamma_index_params<float>);
+		IMPLEMENT_CLASSIC_UNSEQ_GI(float, 2, UNPACK(input_uniform_image_view<float, 2>), UNPACK(input_uniform_image_view<float, 2>), global_gamma_index_params<float>);
+		IMPLEMENT_CLASSIC_UNSEQ_GI(float, 3, UNPACK(input_uniform_image_view<float, 3>), UNPACK(input_uniform_image_view<float, 3>), global_gamma_index_params<float>);
 
 		// -------- float64 --------
 
-		IMPLEMENT_CLASSIC_UNSEQ_GI(double, 1, local_gamma_index_params<double>);
-		IMPLEMENT_CLASSIC_UNSEQ_GI(double, 2, local_gamma_index_params<double>);
-		IMPLEMENT_CLASSIC_UNSEQ_GI(double, 3, local_gamma_index_params<double>);
-		IMPLEMENT_CLASSIC_UNSEQ_GI(double, 1, global_gamma_index_params<double>);
-		IMPLEMENT_CLASSIC_UNSEQ_GI(double, 2, global_gamma_index_params<double>);
-		IMPLEMENT_CLASSIC_UNSEQ_GI(double, 3, global_gamma_index_params<double>);
+		IMPLEMENT_CLASSIC_UNSEQ_GI(double, 1, UNPACK(input_uniform_image_view<double, 1>), UNPACK(input_uniform_image_view<double, 1>), local_gamma_index_params<double>);
+		IMPLEMENT_CLASSIC_UNSEQ_GI(double, 2, UNPACK(input_uniform_image_view<double, 2>), UNPACK(input_uniform_image_view<double, 2>), local_gamma_index_params<double>);
+		IMPLEMENT_CLASSIC_UNSEQ_GI(double, 3, UNPACK(input_uniform_image_view<double, 3>), UNPACK(input_uniform_image_view<double, 3>), local_gamma_index_params<double>);
+		IMPLEMENT_CLASSIC_UNSEQ_GI(double, 1, UNPACK(input_uniform_image_view<double, 1>), UNPACK(input_uniform_image_view<double, 1>), global_gamma_index_params<double>);
+		IMPLEMENT_CLASSIC_UNSEQ_GI(double, 2, UNPACK(input_uniform_image_view<double, 2>), UNPACK(input_uniform_image_view<double, 2>), global_gamma_index_params<double>);
+		IMPLEMENT_CLASSIC_UNSEQ_GI(double, 3, UNPACK(input_uniform_image_view<double, 3>), UNPACK(input_uniform_image_view<double, 3>), global_gamma_index_params<double>);
 	}
 
 	// -------- float32 --------
 
-	MAKE_CLASSIC_UNSEQ_DISPATCHER(float, 1, local_gamma_index_params<float>);
-	MAKE_CLASSIC_UNSEQ_DISPATCHER(float, 2, local_gamma_index_params<float>);
-	MAKE_CLASSIC_UNSEQ_DISPATCHER(float, 3, local_gamma_index_params<float>);
-	MAKE_CLASSIC_UNSEQ_DISPATCHER(float, 1, global_gamma_index_params<float>);
-	MAKE_CLASSIC_UNSEQ_DISPATCHER(float, 2, global_gamma_index_params<float>);
-	MAKE_CLASSIC_UNSEQ_DISPATCHER(float, 3, global_gamma_index_params<float>);
+	MAKE_CLASSIC_UNSEQ_DISPATCHER(float, 1, UNPACK(input_uniform_image_view<float, 1>), UNPACK(input_uniform_image_view<float, 1>), local_gamma_index_params<float>);
+	MAKE_CLASSIC_UNSEQ_DISPATCHER(float, 2, UNPACK(input_uniform_image_view<float, 2>), UNPACK(input_uniform_image_view<float, 2>), local_gamma_index_params<float>);
+	MAKE_CLASSIC_UNSEQ_DISPATCHER(float, 3, UNPACK(input_uniform_image_view<float, 3>), UNPACK(input_uniform_image_view<float, 3>), local_gamma_index_params<float>);
+	MAKE_CLASSIC_UNSEQ_DISPATCHER(float, 1, UNPACK(input_uniform_image_view<float, 1>), UNPACK(input_uniform_image_view<float, 1>), global_gamma_index_params<float>);
+	MAKE_CLASSIC_UNSEQ_DISPATCHER(float, 2, UNPACK(input_uniform_image_view<float, 2>), UNPACK(input_uniform_image_view<float, 2>), global_gamma_index_params<float>);
+	MAKE_CLASSIC_UNSEQ_DISPATCHER(float, 3, UNPACK(input_uniform_image_view<float, 3>), UNPACK(input_uniform_image_view<float, 3>), global_gamma_index_params<float>);
 
 	// -------- float64 --------
 
-	MAKE_CLASSIC_UNSEQ_DISPATCHER(double, 1, local_gamma_index_params<double>);
-	MAKE_CLASSIC_UNSEQ_DISPATCHER(double, 2, local_gamma_index_params<double>);
-	MAKE_CLASSIC_UNSEQ_DISPATCHER(double, 3, local_gamma_index_params<double>);
-	MAKE_CLASSIC_UNSEQ_DISPATCHER(double, 1, global_gamma_index_params<double>);
-	MAKE_CLASSIC_UNSEQ_DISPATCHER(double, 2, global_gamma_index_params<double>);
-	MAKE_CLASSIC_UNSEQ_DISPATCHER(double, 3, global_gamma_index_params<double>);
+	MAKE_CLASSIC_UNSEQ_DISPATCHER(double, 1, UNPACK(input_uniform_image_view<double, 1>), UNPACK(input_uniform_image_view<double, 1>), local_gamma_index_params<double>);
+	MAKE_CLASSIC_UNSEQ_DISPATCHER(double, 2, UNPACK(input_uniform_image_view<double, 2>), UNPACK(input_uniform_image_view<double, 2>), local_gamma_index_params<double>);
+	MAKE_CLASSIC_UNSEQ_DISPATCHER(double, 3, UNPACK(input_uniform_image_view<double, 3>), UNPACK(input_uniform_image_view<double, 3>), local_gamma_index_params<double>);
+	MAKE_CLASSIC_UNSEQ_DISPATCHER(double, 1, UNPACK(input_uniform_image_view<double, 1>), UNPACK(input_uniform_image_view<double, 1>), global_gamma_index_params<double>);
+	MAKE_CLASSIC_UNSEQ_DISPATCHER(double, 2, UNPACK(input_uniform_image_view<double, 2>), UNPACK(input_uniform_image_view<double, 2>), global_gamma_index_params<double>);
+	MAKE_CLASSIC_UNSEQ_DISPATCHER(double, 3, UNPACK(input_uniform_image_view<double, 3>), UNPACK(input_uniform_image_view<double, 3>), global_gamma_index_params<double>);
 }

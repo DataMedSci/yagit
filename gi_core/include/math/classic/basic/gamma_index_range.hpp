@@ -4,30 +4,35 @@
 
 namespace yagit::core::math
 {
-	template<typename Type, size_t Dimensions, typename ParamsType>
+	template<
+		typename ElementType,
+		size_t Dimensions,
+		AnyInputImageView<ElementType, Dimensions> InputImageViewType0,
+		AnyInputImageView<ElementType, Dimensions> InputImageViewType1,
+		LocalOrGlobalGammaIndexParameters<ElementType> GIParamsType
+	>
 	constexpr error_code gamma_index(
-		algorithm_version::classic,
-		execution::sequenced_policy,
-		view<Type> gamma_index_output, view<Type> gamma_index_output_end,
-		const_view<Type> reference_doses,
-		array<const_view<Type>, Dimensions> reference_coordinates,
-		const_view<Type> target_doses, const_view<Type> target_doses_end,
-		array<const_view<Type>, Dimensions> target_coordinates,
-		const ParamsType& params
+		algorithm_version::classic _v,
+		execution::sequenced_policy policy_params,
+		const output_image_view<ElementType, Dimensions>& gamma_index_output,
+		const InputImageViewType0& reference_image,
+		const InputImageViewType1& target_image,
+		const algorithm_version::classic::parameters<ElementType, Dimensions>& classic_params,
+		const GIParamsType& params
 	)
 	{
-		if (auto ec = classic::basic::detail::gamma_index_initialize_pass(gamma_index_output, gamma_index_output_end))
+		if (auto ec = classic::basic::detail::gamma_index_initialize_pass(policy_params, gamma_index_output))
 			return ec;
 		if (auto ec = classic::basic::detail::gamma_index_minimize_pass(
-			gamma_index_output, gamma_index_output_end,
-			reference_doses,
-			reference_coordinates,
-			target_doses, target_doses_end,
-			target_coordinates,
-			params
+			policy_params,
+			gamma_index_output,
+			reference_image,
+			target_image,
+			classic_params,
+			prepare_gi_params<ElementType>(params)
 		))
 			return ec;
-		if (auto ec = classic::basic::detail::gamma_index_finalize_pass(gamma_index_output, gamma_index_output_end))
+		if (auto ec = classic::basic::detail::gamma_index_finalize_pass(policy_params, gamma_index_output))
 			return ec;
 		return {};
 	}

@@ -2,7 +2,7 @@
 
 #include <common.hpp>
 #include <data/image/iimage_region.hpp>
-#include <data/image/dose/image_coordinates.hpp>
+#include <data/image/dose/dose_image_coordinates.hpp>
 
 namespace yagit::core::data
 {
@@ -19,13 +19,6 @@ namespace yagit::core::data
 	public:
 		virtual ~idose_image_region() = default;
 	public:
-		/// <summary></summary>
-		/// <returns>Preferred implementation format to load the data point coordinates</returns>
-		template<size_t Dimension>
-		data_format<Dimensions> preferred_coordinates_format() const
-		{
-			return preferred_coordinates_format(Dimension);
-		}
 
 		/// <summary>
 		/// <para>Obtains an iimage_region corresponding to provided subregion.</para>
@@ -66,27 +59,20 @@ namespace yagit::core::data
 		/// <param name="allocator">: Allocator to use for data storage allocation</param>
 		/// <param name="ec">Error code</param>
 		/// <returns>Loaded image data point coordinates into memory buffer (image_data)</returns>
-		template<size_t Dimension, typename Allocator = std::allocator<ElementType>, typename = std::enable_if_t<(Dimension < Dimensions)>>
-		optional<image_coordinates<ElementType, Dimensions>> load_coordinates(const data_format<Dimensions>& format, Allocator allocator, error_code& ec) const
+		template<typename Allocator = std::allocator<ElementType>>
+		optional<variant<uniform_image_coordinates<ElementType, Dimensions>, nonuniform_image_coordinates<ElementType, Dimensions, Allocator>>>
+			load_coordinates(Allocator allocator, error_code& ec) const
 		{
-			size_t required_size = 0;
-
-			if (ec = load_coordinates(nullptr, Dimension, format, required_size))
-				return nullopt;
-
-			auto storage = this->allocate_at_least_for_image_data(std::move(allocator), required_size);
-
-			if (ec = load_coordinates(storage.get(), Dimension, format, required_size))
-				return nullopt;
-
-			return image_coordinates(std::move(storage), this->region(), format, required_size);
+			// TODO: implement
+			return nullopt;
 		}
-		template<size_t Dimension, typename Allocator = std::allocator<ElementType>, typename = std::enable_if_t<(Dimension < Dimensions)>>
-		optional<image_coordinates<ElementType, Dimensions>> load_coordinates(const data_format<Dimensions>& format, Allocator allocator) const
+
+		bool has_nonuniform_spacing() const
 		{
 			error_code ec;
-			return load_coordinates(format, allocator, ec);
+			return has_nonuniform_spacing(ec);
 		}
+		virtual bool has_nonuniform_spacing(error_code& ec) = 0;
 
 		/// <summary>
 		/// <para>Returns image slice along <paramref name="Dimension"/> axi at <paramref name="index"/></para>
@@ -109,9 +95,9 @@ namespace yagit::core::data
 			return slice<Dimension>(index, ec);
 		}
 	protected:
-		/// <summary></summary>
-		/// <returns>Preferred implementation format to load the data point coordinates</returns>
-		virtual data_format<Dimensions> preferred_coordinates_format(size_t dimension) const = 0;
+		virtual image_position_t<ElementType, Dimensions> load_image_position(error_code& ec) const = 0;
+		virtual error_code load_image_spacing_uniform(uniform_image_spacing_t<ElementType, Dimensions>& uniform_image_spacing) const = 0;
+		virtual error_code load_image_spacing_nonuniform(nonuniform_image_spacing_t<ElementType, Dimensions>& nonuniform_image_spacing) const = 0;
 
 		/// <summary>
 		/// <para>Implementable method responsible for data point coordinates loading</para>
@@ -125,7 +111,7 @@ namespace yagit::core::data
 		/// Else is treated as an input informing about size of allocated storage, handling as input is implementation defined.
 		/// </param>
 		/// <returns>Error code informing about error that occured during execution unless success</returns>
-		virtual error_code load_coordinates(ElementType* data_storage, size_t dimension, const data_format<Dimensions>& format, size_t& required_size) const = 0;
+		virtual error_code load_coordinates(ElementType* data_storage, size_t dimension, size_t& required_size) const = 0;
 
 		/// <summary>
 		/// <para>Implementable method responsive for slicing iimage_region</para>

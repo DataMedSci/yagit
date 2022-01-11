@@ -2,317 +2,89 @@
 
 #include <math/single/vectorized/common.hpp>
 
-namespace yagit::core::math::single::vectorized
+namespace yagit::core::math::vectorized::single
 {
-	// -------- DD float32 --------
-
-	template<unsigned VectorSize, typename E0, typename E1>
-	inline simdpp::float32<VectorSize> dose_difference(
-		const simdpp::float32<VectorSize, E0>& reference_dose, const simdpp::float32<VectorSize, E1>& target_dose,
-		const vlocal_gamma_index_params<float, VectorSize>& params)
+	template<typename ElementType, size_t VectorSize, LocalVectorGammaIndexParameters<ElementType, VectorSize> LocalGIParams>
+	inline vec_t<ElementType, VectorSize> dose_difference(
+		const vec_t<ElementType, VectorSize>& reference_dose, const vec_t<ElementType, VectorSize>& target_dose,
+		const LocalGIParams& params)
 	{
-		auto intermediate = (reference_dose - target_dose) / (reference_dose * params.percentage);
+		auto intermediate = (reference_dose - target_dose) / (reference_dose * reference_dose_percentage<ElementType, VectorSize>(params));
 		return intermediate * intermediate;
 	}
 
-	template<unsigned VectorSize, typename E0, typename E1>
-	inline simdpp::float32<VectorSize> dose_difference(
-		const simdpp::float32<VectorSize, E0>& reference_dose, const simdpp::float32<VectorSize, E1>& target_dose,
-		const vglobal_gamma_index_params<float, VectorSize>& params)
+	template<typename ElementType, size_t VectorSize, GlobalVectorGammaIndexParameters<ElementType, VectorSize> GlobalGIParams>
+	inline vec_t<ElementType, VectorSize> dose_difference(
+		const vec_t<ElementType, VectorSize>& reference_dose, const vec_t<ElementType, VectorSize>& target_dose,
+		const GlobalGIParams& params)
 	{
 		auto intermediate = (reference_dose - target_dose);
-		return (intermediate * intermediate) / params.dose_difference_squared;
+		return (intermediate * intermediate) / absolute_dose_difference_squared<ElementType, VectorSize>(params);
 	}
 
-	// -------- DD float64 --------
-
-	template<unsigned VectorSize, typename E0, typename E1>
-	inline simdpp::float64<VectorSize> dose_difference(
-		const simdpp::float64<VectorSize, E0>& reference_dose, const simdpp::float64<VectorSize, E1>& target_dose,
-		const vlocal_gamma_index_params<double, VectorSize>& params)
-	{
-		auto intermediate = (reference_dose - target_dose) / (reference_dose * params.percentage);
-		return intermediate * intermediate;
-	}
-
-	template<unsigned VectorSize, typename E0, typename E1>
-	inline simdpp::float64<VectorSize> dose_difference(
-		const simdpp::float64<VectorSize, E0>& reference_dose, const simdpp::float64<VectorSize, E1>& target_dose,
-		const vglobal_gamma_index_params<double, VectorSize>& params)
-	{
-		auto intermediate = (reference_dose - target_dose);
-		return (intermediate * intermediate) / params.dose_difference_squared;
-	}
-
-	// -------- DTA float32 --------
-
-	template<unsigned VectorSize, typename E0, typename E1>
-	inline simdpp::float32<VectorSize> distance_to_agreement(
-		const simdpp::float32<VectorSize, E0>& reference_x,
-		const simdpp::float32<VectorSize, E1>& target_x,
-		const vlocal_gamma_index_params<float, VectorSize>& params)
+	template<typename ElementType, size_t VectorSize, GenericVectorGammaIndexParameters<ElementType, VectorSize> GenericGIParams>
+	inline vec_t<ElementType, VectorSize> distance_to_agreement(
+		const vec_t<ElementType, VectorSize>& reference_x,
+		const vec_t<ElementType, VectorSize>& target_x,
+		const GenericGIParams& params)
 	{
 		auto intermediate_x = (target_x - reference_x);
-		return (intermediate_x * intermediate_x) / params.distance_to_agreement_squared;
+		return (intermediate_x * intermediate_x) / distance_to_agreement_normalization_squared<ElementType, VectorSize>(params);
 	}
 
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3>
-	inline simdpp::float32<VectorSize> distance_to_agreement(
-		const simdpp::float32<VectorSize, E0>& reference_x, const simdpp::float32<VectorSize, E1>& reference_y,
-		const simdpp::float32<VectorSize, E2>& target_x, const simdpp::float32<VectorSize, E3>& target_y,
-		const vlocal_gamma_index_params<float, VectorSize>& params)
+	template<typename ElementType, size_t VectorSize, GenericVectorGammaIndexParameters<ElementType, VectorSize> GenericGIParams>
+	inline vec_t<ElementType, VectorSize> distance_to_agreement(
+		const vec_t<ElementType, VectorSize>& reference_x, const vec_t<ElementType, VectorSize>& reference_y,
+		const vec_t<ElementType, VectorSize>& target_x, const vec_t<ElementType, VectorSize>& target_y,
+		const GenericGIParams& params)
 	{
 		auto intermediate_x = (target_x - reference_x);
 		auto intermediate_y = (target_y - reference_y);
-		return (intermediate_x * intermediate_x + intermediate_y * intermediate_y) / params.distance_to_agreement_squared;
+		return (intermediate_x * intermediate_x + intermediate_y * intermediate_y) / distance_to_agreement_normalization_squared<ElementType, VectorSize>(params);
 	}
 
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3, typename E4, typename E5>
-	inline simdpp::float32<VectorSize> distance_to_agreement(
-		const simdpp::float32<VectorSize, E0>& reference_x, const simdpp::float32<VectorSize, E1>& reference_y, const simdpp::float32<VectorSize, E2>& reference_z,
-		const simdpp::float32<VectorSize, E3>& target_x, const simdpp::float32<VectorSize, E4>& target_y, const simdpp::float32<VectorSize, E5>& target_z,
-		const vlocal_gamma_index_params<float, VectorSize>& params)
+	template<typename ElementType, size_t VectorSize, GenericVectorGammaIndexParameters<ElementType, VectorSize> GenericGIParams>
+	inline vec_t<ElementType, VectorSize> distance_to_agreement(
+		const vec_t<ElementType, VectorSize>& reference_x, const vec_t<ElementType, VectorSize>& reference_y, const vec_t<ElementType, VectorSize>& reference_z,
+		const vec_t<ElementType, VectorSize>& target_x, const vec_t<ElementType, VectorSize>& target_y, const vec_t<ElementType, VectorSize>& target_z,
+		const GenericGIParams& params)
 	{
 		auto intermediate_x = (target_x - reference_x);
 		auto intermediate_y = (target_y - reference_y);
 		auto intermediate_z = (target_z - reference_z);
-		return (intermediate_x * intermediate_x + intermediate_y * intermediate_y + intermediate_z * intermediate_z) / params.distance_to_agreement_squared;
+		return (intermediate_x * intermediate_x + intermediate_y * intermediate_y + intermediate_z * intermediate_z) / distance_to_agreement_normalization_squared<ElementType, VectorSize>(params);
 	}
 
-	template<unsigned VectorSize, typename E0, typename E1>
-	inline simdpp::float32<VectorSize> distance_to_agreement(
-		const simdpp::float32<VectorSize, E0>& reference_x,
-		const simdpp::float32<VectorSize, E1>& target_x,
-		const vglobal_gamma_index_params<float, VectorSize>& params)
+	template<typename ElementType, size_t VectorSize, LocalOrGlobalVectorGammaIndexParameters<ElementType, VectorSize> GIParams>
+	inline vec_t<ElementType, VectorSize> gamma_index(
+		const vec_t<ElementType, VectorSize>& reference_dose,
+		const vec_t<ElementType, VectorSize>& target_dose,
+		const vec_t<ElementType, VectorSize>& reference_x,
+		const vec_t<ElementType, VectorSize>& target_x,
+		const GIParams& params)
 	{
-		auto intermediate_x = (target_x - reference_x);
-		return (intermediate_x * intermediate_x) / params.distance_to_agreement_squared;
+		return dose_difference<ElementType, VectorSize>(reference_dose, target_dose, params) + distance_to_agreement<ElementType, VectorSize>(reference_x, target_x, params);
 	}
 
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3>
-	inline simdpp::float32<VectorSize> distance_to_agreement(
-		const simdpp::float32<VectorSize, E0>& reference_x, const simdpp::float32<VectorSize, E1>& reference_y,
-		const simdpp::float32<VectorSize, E2>& target_x, const simdpp::float32<VectorSize, E3>& target_y,
-		const vglobal_gamma_index_params<float, VectorSize>& params)
+	template<typename ElementType, size_t VectorSize, LocalOrGlobalVectorGammaIndexParameters<ElementType, VectorSize> GIParams>
+	inline vec_t<ElementType, VectorSize> gamma_index(
+		const vec_t<ElementType, VectorSize>& reference_dose,
+		const vec_t<ElementType, VectorSize>& target_dose,
+		const vec_t<ElementType, VectorSize>& reference_x, const vec_t<ElementType, VectorSize>& reference_y,
+		const vec_t<ElementType, VectorSize>& target_x, const vec_t<ElementType, VectorSize>& target_y,
+		const GIParams& params)
 	{
-		auto intermediate_x = (target_x - reference_x);
-		auto intermediate_y = (target_y - reference_y);
-		return (intermediate_x * intermediate_x + intermediate_y * intermediate_y) / params.distance_to_agreement_squared;
+		return dose_difference<ElementType, VectorSize>(reference_dose, target_dose, params) + distance_to_agreement<ElementType, VectorSize>(reference_x, reference_y, target_x, target_y, params);
 	}
 
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3, typename E4, typename E5>
-	inline simdpp::float32<VectorSize> distance_to_agreement(
-		const simdpp::float32<VectorSize, E0>& reference_x, const simdpp::float32<VectorSize, E1>& reference_y, const simdpp::float32<VectorSize, E2>& reference_z,
-		const simdpp::float32<VectorSize, E3>& target_x, const simdpp::float32<VectorSize, E4>& target_y, const simdpp::float32<VectorSize, E5>& target_z,
-		const vglobal_gamma_index_params<float, VectorSize>& params)
+	template<typename ElementType, size_t VectorSize, LocalOrGlobalVectorGammaIndexParameters<ElementType, VectorSize> GIParams>
+	inline vec_t<ElementType, VectorSize> gamma_index(
+		const vec_t<ElementType, VectorSize>& reference_dose,
+		const vec_t<ElementType, VectorSize>& target_dose,
+		const vec_t<ElementType, VectorSize>& reference_x, const vec_t<ElementType, VectorSize>& reference_y, const vec_t<ElementType, VectorSize>& reference_z,
+		const vec_t<ElementType, VectorSize>& target_x, const vec_t<ElementType, VectorSize>& target_y, const vec_t<ElementType, VectorSize>& target_z,
+		const GIParams& params)
 	{
-		auto intermediate_x = (target_x - reference_x);
-		auto intermediate_y = (target_y - reference_y);
-		auto intermediate_z = (target_z - reference_z);
-		return (intermediate_x * intermediate_x + intermediate_y * intermediate_y + intermediate_z * intermediate_z) / params.distance_to_agreement_squared;
-	}
-
-	// -------- DTA float64 --------
-
-	template<unsigned VectorSize, typename E0, typename E1>
-	inline simdpp::float64<VectorSize> distance_to_agreement(
-		const simdpp::float64<VectorSize, E0>& reference_x,
-		const simdpp::float64<VectorSize, E1>& target_x,
-		const vlocal_gamma_index_params<double, VectorSize>& params)
-	{
-		auto intermediate_x = (target_x - reference_x);
-		return (intermediate_x * intermediate_x) / params.distance_to_agreement_squared;
-	}
-
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3>
-	inline simdpp::float64<VectorSize> distance_to_agreement(
-		const simdpp::float64<VectorSize, E0>& reference_x, const simdpp::float64<VectorSize, E1>& reference_y,
-		const simdpp::float64<VectorSize, E2>& target_x, const simdpp::float64<VectorSize, E3>& target_y,
-		const vlocal_gamma_index_params<double, VectorSize>& params)
-	{
-		auto intermediate_x = (target_x - reference_x);
-		auto intermediate_y = (target_y - reference_y);
-		return (intermediate_x * intermediate_x + intermediate_y * intermediate_y) / params.distance_to_agreement_squared;
-	}
-
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3, typename E4, typename E5>
-	inline simdpp::float64<VectorSize> distance_to_agreement(
-		const simdpp::float64<VectorSize, E0>& reference_x, const simdpp::float64<VectorSize, E1>& reference_y, const simdpp::float64<VectorSize, E2>& reference_z,
-		const simdpp::float64<VectorSize, E3>& target_x, const simdpp::float64<VectorSize, E4>& target_y, const simdpp::float64<VectorSize, E5>& target_z,
-		const vlocal_gamma_index_params<double, VectorSize>& params)
-	{
-		auto intermediate_x = (target_x - reference_x);
-		auto intermediate_y = (target_y - reference_y);
-		auto intermediate_z = (target_z - reference_z);
-		return (intermediate_x * intermediate_x + intermediate_y * intermediate_y + intermediate_z * intermediate_z) / params.distance_to_agreement_squared;
-	}
-
-	template<unsigned VectorSize, typename E0, typename E1>
-	inline simdpp::float64<VectorSize> distance_to_agreement(
-		const simdpp::float64<VectorSize, E0>& reference_x,
-		const simdpp::float64<VectorSize, E1>& target_x,
-		const vglobal_gamma_index_params<double, VectorSize>& params)
-	{
-		auto intermediate_x = (target_x - reference_x);
-		return (intermediate_x * intermediate_x) / params.distance_to_agreement_squared;
-	}
-
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3>
-	inline simdpp::float64<VectorSize> distance_to_agreement(
-		const simdpp::float64<VectorSize, E0>& reference_x, const simdpp::float64<VectorSize, E1>& reference_y,
-		const simdpp::float64<VectorSize, E2>& target_x, const simdpp::float64<VectorSize, E3>& target_y,
-		const vglobal_gamma_index_params<double, VectorSize>& params)
-	{
-		auto intermediate_x = (target_x - reference_x);
-		auto intermediate_y = (target_y - reference_y);
-		return (intermediate_x * intermediate_x + intermediate_y * intermediate_y) / params.distance_to_agreement_squared;
-	}
-
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3, typename E4, typename E5>
-	inline simdpp::float64<VectorSize> distance_to_agreement(
-		const simdpp::float64<VectorSize, E0>& reference_x, const simdpp::float64<VectorSize, E1>& reference_y, const simdpp::float64<VectorSize, E2>& reference_z,
-		const simdpp::float64<VectorSize, E3>& target_x, const simdpp::float64<VectorSize, E4>& target_y, const simdpp::float64<VectorSize, E5>& target_z,
-		const vglobal_gamma_index_params<double, VectorSize>& params)
-	{
-		auto intermediate_x = (target_x - reference_x);
-		auto intermediate_y = (target_y - reference_y);
-		auto intermediate_z = (target_z - reference_z);
-		return (intermediate_x * intermediate_x + intermediate_y * intermediate_y + intermediate_z * intermediate_z) / params.distance_to_agreement_squared;
-	}
-
-	// -------- GI float32 --------
-
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3>
-	inline simdpp::float32<VectorSize> gamma_index(
-		const simdpp::float32<VectorSize, E0>& reference_dose,
-		const simdpp::float32<VectorSize, E1>& target_dose,
-		const simdpp::float32<VectorSize, E2>& reference_x,
-		const simdpp::float32<VectorSize, E3>& target_x,
-		const vlocal_gamma_index_params<float, VectorSize>& params)
-	{
-		return dose_difference(reference_dose, target_dose, params) + distance_to_agreement(reference_x, target_x, params);
-	}
-
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3, typename E4, typename E5>
-	inline simdpp::float32<VectorSize> gamma_index(
-		const simdpp::float32<VectorSize, E0>& reference_dose,
-		const simdpp::float32<VectorSize, E1>& target_dose,
-		const simdpp::float32<VectorSize, E2>& reference_x, const simdpp::float32<VectorSize, E3>& reference_y,
-		const simdpp::float32<VectorSize, E4>& target_x, const simdpp::float32<VectorSize, E5>& target_y,
-		const vlocal_gamma_index_params<float, VectorSize>& params)
-	{
-		return dose_difference(reference_dose, target_dose, params) + distance_to_agreement(reference_x, reference_y, target_x, target_y, params);
-	}
-
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3, typename E4, typename E5, typename E6, typename E7>
-	inline simdpp::float32<VectorSize> gamma_index(
-		const simdpp::float32<VectorSize, E0>& reference_dose,
-		const simdpp::float32<VectorSize, E1>& target_dose,
-		const simdpp::float32<VectorSize, E2>& reference_x, const simdpp::float32<VectorSize, E3>& reference_y, const simdpp::float32<VectorSize, E4>& reference_z,
-		const simdpp::float32<VectorSize, E5>& target_x, const simdpp::float32<VectorSize, E6>& target_y, const simdpp::float32<VectorSize, E7>& target_z,
-		const vlocal_gamma_index_params<float, VectorSize>& params)
-	{
-		return dose_difference(reference_dose, target_dose, params) + distance_to_agreement(reference_x, reference_y, reference_z, target_x, target_y, target_z, params);
-	}
-
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3>
-	inline simdpp::float32<VectorSize> gamma_index(
-		const simdpp::float32<VectorSize, E0>& reference_dose,
-		const simdpp::float32<VectorSize, E1>& target_dose,
-		const simdpp::float32<VectorSize, E2>& reference_x,
-		const simdpp::float32<VectorSize, E3>& target_x,
-		const vglobal_gamma_index_params<float, VectorSize>& params)
-	{
-		return dose_difference(reference_dose, target_dose, params) + distance_to_agreement(reference_x, target_x, params);
-	}
-
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3, typename E4, typename E5>
-	inline simdpp::float32<VectorSize> gamma_index(
-		const simdpp::float32<VectorSize, E0>& reference_dose,
-		const simdpp::float32<VectorSize, E1>& target_dose,
-		const simdpp::float32<VectorSize, E2>& reference_x, const simdpp::float32<VectorSize, E3>& reference_y,
-		const simdpp::float32<VectorSize, E4>& target_x, const simdpp::float32<VectorSize, E5>& target_y,
-		const vglobal_gamma_index_params<float, VectorSize>& params)
-	{
-		return dose_difference(reference_dose, target_dose, params) + distance_to_agreement(reference_x, reference_y, target_x, target_y, params);
-	}
-
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3, typename E4, typename E5, typename E6, typename E7>
-	inline simdpp::float32<VectorSize> gamma_index(
-		const simdpp::float32<VectorSize, E0>& reference_dose,
-		const simdpp::float32<VectorSize, E1>& target_dose,
-		const simdpp::float32<VectorSize, E2>& reference_x, const simdpp::float32<VectorSize, E3>& reference_y, const simdpp::float32<VectorSize, E4>& reference_z,
-		const simdpp::float32<VectorSize, E5>& target_x, const simdpp::float32<VectorSize, E6>& target_y, const simdpp::float32<VectorSize, E7>& target_z,
-		const vglobal_gamma_index_params<float, VectorSize>& params)
-	{
-		return dose_difference(reference_dose, target_dose, params) + distance_to_agreement(reference_x, reference_y, reference_z, target_x, target_y, target_z, params);
-	}
-
-	// -------- GI float64 --------
-
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3>
-	inline simdpp::float64<VectorSize> gamma_index(
-		const simdpp::float64<VectorSize, E0>& reference_dose,
-		const simdpp::float64<VectorSize, E1>& target_dose,
-		const simdpp::float64<VectorSize, E2>& reference_x,
-		const simdpp::float64<VectorSize, E3>& target_x,
-		const vlocal_gamma_index_params<double, VectorSize>& params)
-	{
-		return dose_difference(reference_dose, target_dose, params) + distance_to_agreement(reference_x, target_x, params);
-	}
-
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3, typename E4, typename E5>
-	inline simdpp::float64<VectorSize> gamma_index(
-		const simdpp::float64<VectorSize, E0>& reference_dose,
-		const simdpp::float64<VectorSize, E1>& target_dose,
-		const simdpp::float64<VectorSize, E2>& reference_x, const simdpp::float64<VectorSize, E3>& reference_y,
-		const simdpp::float64<VectorSize, E4>& target_x, const simdpp::float64<VectorSize, E5>& target_y,
-		const vlocal_gamma_index_params<double, VectorSize>& params)
-	{
-		return dose_difference(reference_dose, target_dose, params) + distance_to_agreement(reference_x, reference_y, target_x, target_y, params);
-	}
-
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3, typename E4, typename E5, typename E6, typename E7>
-	inline simdpp::float64<VectorSize> gamma_index(
-		const simdpp::float64<VectorSize, E0>& reference_dose,
-		const simdpp::float64<VectorSize, E1>& target_dose,
-		const simdpp::float64<VectorSize, E2>& reference_x, const simdpp::float64<VectorSize, E3>& reference_y, const simdpp::float64<VectorSize, E4>& reference_z,
-		const simdpp::float64<VectorSize, E5>& target_x, const simdpp::float64<VectorSize, E6>& target_y, const simdpp::float64<VectorSize, E7>& target_z,
-		const vlocal_gamma_index_params<double, VectorSize>& params)
-	{
-		return dose_difference(reference_dose, target_dose, params) + distance_to_agreement(reference_x, reference_y, reference_z, target_x, target_y, target_z, params);
-	}
-
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3>
-	inline simdpp::float64<VectorSize> gamma_index(
-		const simdpp::float64<VectorSize, E0>& reference_dose,
-		const simdpp::float64<VectorSize, E1>& target_dose,
-		const simdpp::float64<VectorSize, E2>& reference_x,
-		const simdpp::float64<VectorSize, E3>& target_x,
-		const vglobal_gamma_index_params<double, VectorSize>& params)
-	{
-		return dose_difference(reference_dose, target_dose, params) + distance_to_agreement(reference_x, target_x, params);
-	}
-
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3, typename E4, typename E5>
-	inline simdpp::float64<VectorSize> gamma_index(
-		const simdpp::float64<VectorSize, E0>& reference_dose,
-		const simdpp::float64<VectorSize, E1>& target_dose,
-		const simdpp::float64<VectorSize, E2>& reference_x, const simdpp::float64<VectorSize, E3>& reference_y,
-		const simdpp::float64<VectorSize, E4>& target_x, const simdpp::float64<VectorSize, E5>& target_y,
-		const vglobal_gamma_index_params<double, VectorSize>& params)
-	{
-		return dose_difference(reference_dose, target_dose, params) + distance_to_agreement(reference_x, reference_y, target_x, target_y, params);
-	}
-
-	template<unsigned VectorSize, typename E0, typename E1, typename E2, typename E3, typename E4, typename E5, typename E6, typename E7>
-	inline simdpp::float64<VectorSize> gamma_index(
-		const simdpp::float64<VectorSize, E0>& reference_dose,
-		const simdpp::float64<VectorSize, E1>& target_dose,
-		const simdpp::float64<VectorSize, E2>& reference_x, const simdpp::float64<VectorSize, E3>& reference_y, const simdpp::float64<VectorSize, E4>& reference_z,
-		const simdpp::float64<VectorSize, E5>& target_x, const simdpp::float64<VectorSize, E6>& target_y, const simdpp::float64<VectorSize, E7>& target_z,
-		const vglobal_gamma_index_params<double, VectorSize>& params)
-	{
-		return dose_difference(reference_dose, target_dose, params) + distance_to_agreement(reference_x, reference_y, reference_z, target_x, target_y, target_z, params);
+		return dose_difference<ElementType, VectorSize>(reference_dose, target_dose, params) + distance_to_agreement<ElementType, VectorSize>(reference_x, reference_y, reference_z, target_x, target_y, target_z, params);
 	}
 }

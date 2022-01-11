@@ -1,6 +1,7 @@
-#include <math/gamma_index.hpp>
-#include <math/single/vectorized/gamma_index_single.hpp>
 #include <boost/test/unit_test.hpp>
+
+#include <math/single/basic/gamma_index_single.hpp>
+#include <math/single/vectorized/gamma_index_single.hpp>
 
 #include <random>
 #include <chrono>
@@ -12,6 +13,7 @@ using namespace std;
 using namespace std::chrono;
 using namespace yagit::core::math::execution;
 
+/*
 BOOST_AUTO_TEST_CASE(single_relative_correctness_float)
 {
 	BOOST_TEST_MESSAGE("------------ single_relative_correctness_float ------------");
@@ -359,3 +361,4 @@ BOOST_AUTO_TEST_CASE(single_relative_correctness_double)
 		}
 	}
 }
+*/
