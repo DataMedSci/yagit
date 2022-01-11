@@ -38,3 +38,5 @@ set_target_properties(gi_wrapper
 )
 
 set_default_output_directories(gi_wrapper)
+
+install(TARGETS gi_wrapper ARCHIVE DESTINATION libs COMPONENT libraries)

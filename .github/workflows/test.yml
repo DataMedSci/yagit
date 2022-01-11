@@ -65,6 +65,34 @@ jobs:
           buildWithCMake: true  # use CMake to trigger build process
           useVcpkgToolchainFile: '${{ matrix.useVcpkgToolchainFile }}'  # use vcpkg to install dependencies (i.e. wxwidgets) on Windows
 
+    - name: Pack files on Linux
+      if: ${{ runner.os == 'Linux' }}
+      run: |
+        cd build/
+        sudo cpack -C Release
+
+    - name: Pack files on Windows
+      if: ${{ runner.os == 'Windows' }}
+      run: | # CPM and NSIS seem to have some issue with absolute paths, the following two lines are a workaround to stop errors
+        sed -i_bak -e '/ABSOLUTE path INSTALL DESTINATION forbidden (by caller)/d' D:/a/gi-yagit/gi-yagit/build/_deps/libsimdpp-build/cmake_install.cmake
+        sed -i_bak -e '/ABSOLUTE path INSTALL DESTINATION forbidden (by caller)/d' D:/a/gi-yagit/gi-yagit/build/_deps/libsimdpp-build/simdpp/cmake_install.cmake
+        cd build/
+        cpack -C Release
+
+    - name: Upload Linux files
+      if: ${{ runner.os == 'Linux' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: Linux
+        path: build/yAGIT**
+
+    - name: Upload Windows files
+      if: ${{ runner.os == 'Windows' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: Windows
+        path: build/yAGIT**
+
     - name: Run unit tests
       run: |
            build/bin/release/gi_core_tests --log_level=message

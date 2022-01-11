@@ -85,3 +85,5 @@ set_default_output_directories(gi_core)
 add_subdirectory(tests)
 # GI_PERFORMANCE_ANALYSIS
 add_subdirectory(performance_analysis)
+
+install(TARGETS gi_core ARCHIVE DESTINATION libs COMPONENT libraries)
