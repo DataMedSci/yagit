@@ -1,0 +1,6 @@
+[requires]
+gdcm/3.0.20
+
+[generators]
+CMakeDeps
+CMakeToolchain
