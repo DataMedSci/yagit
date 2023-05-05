@@ -23,17 +23,16 @@ namespace yagit{
 
 // number of frames, rows and columns in image
 struct DataSize{
-    uint32_t frames;  // size_t?
+    uint32_t frames;
     uint32_t rows;
     uint32_t columns;
 
     bool operator==(const DataSize& other) const = default;
 };
 
-// spacing before offset??
 // TODO: desc
 // position of first pixel in milimeters [mm]
-struct DataOffset{  // maybe double?
+struct DataOffset{
     float framesOffset;
     float rowsOffset;
     float columnsOffset;
@@ -41,11 +40,9 @@ struct DataOffset{  // maybe double?
     bool operator==(const DataOffset& other) const = default;
 };
 
-// distance between frames, rows and columns in mm
 // TODO: desc
-// difference between consecutive pixels in milimeters [mm]
-// NOT YET: value can be negative
-struct DataSpacing{  // maybe double?
+// distance between consecutive pixels in milimeters [mm]
+struct DataSpacing{
     float framesSpacing;
     float rowsSpacing;
     float columnsSpacing;
@@ -54,6 +51,6 @@ struct DataSpacing{  // maybe double?
 };
 
 // DataDirection??
-// with bools or +1/-1
+// with bools or +1/-1 or enum
 
 }

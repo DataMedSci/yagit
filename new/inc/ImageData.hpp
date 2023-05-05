@@ -20,6 +20,9 @@
 #include <vector>
 #include <stdexcept>
 #include <algorithm>
+#include <numeric>
+#include <cmath>
+#include <limits>
 
 #include "DataStructs.hpp"
 #include "Image.hpp"
@@ -33,6 +36,8 @@ public:
     using size_type = std::vector<value_type>::size_type;
     using reference = value_type&;
     using const_reference = const value_type&;
+    using pointer = std::vector<value_type>::pointer;
+    using const_pointer = std::vector<value_type>::const_pointer;
 
     ImageData() = delete;
     template <typename U>
@@ -48,7 +53,7 @@ public:
     ImageData(ImageData&& other) noexcept = delete;
     ImageData& operator=(ImageData&& other) noexcept = delete;
 
-    bool operator==(const ImageData& other) const = default; // add: dont compare m_min and m_max
+    bool operator==(const ImageData& other) const = default;
 
     DataSize getSize() const;
     DataOffset getOffset() const;
@@ -64,21 +69,35 @@ public:
     const T& at(uint32_t z, uint32_t y, uint32_t x) const;
     T& get(uint32_t z, uint32_t y, uint32_t x);
     const T& get(uint32_t z, uint32_t y, uint32_t x) const;
-    // T& operator[](uint32_t z, uint32_t y, uint32_t x);  // C++23 required (Multidimensional subscript operator)
     T& get(uint32_t index);
     const T& get(uint32_t index) const;
 
+    pointer data();
+    const_pointer data() const;
+
     std::vector<T> getData() const;
     Image2D<T> getImage2D(uint32_t frame, ImagePlane imgPlane = ImagePlane::Axial) const;
-    Image3D<T> getImage3D() const;
+    Image3D<T> getImage3D(ImagePlane imgPlane = ImagePlane::Axial) const;
 
     ImageData getImageData2D(uint32_t frame, ImagePlane imgPlane = ImagePlane::Axial) const;
+    ImageData getImageData3D(ImagePlane imgPlane) const;
 
-    T getMin() const;
-    // T getMin(const std::function<bool(float)>& filter>) const;
-    T getMax() const;
-    // T getMean() const;
-    // T getStd() const;
+    T min() const;
+    T max() const;
+    T sum() const;
+    T mean() const;
+    T var() const;
+
+    T nanmin() const;
+    T nanmax() const;
+    T nansum() const;
+    T nanmean() const;
+    T nanvar() const;
+
+    size_type nansize() const;
+
+    bool containsNan() const;
+    bool containsInf() const;
 
 protected:
     std::vector<T> m_data;
@@ -86,9 +105,6 @@ protected:
     DataSize m_size;
     DataOffset m_offset;
     DataSpacing m_spacing;
-
-    mutable T m_min; // won't that be more trouble than it's worth?? (when using T& get(...) we need to "null" it)
-    mutable T m_max;
 };
 
 }

@@ -24,9 +24,6 @@ namespace yagit{
 class DoseData : public ImageData<float>{
 public:
     using ImageData<float>::ImageData;
-    // DoseData(const std::vector<value_type>& data, const DataSize& size, const DataOffset& offset, const DataSpacing& spacing);
-    // DoseData(const Image2D<value_type>& image2d, const DataOffset& offset, const DataSpacing& spacing);
-    // DoseData(const Image3D<value_type>& image3d, const DataOffset& offset, const DataSpacing& spacing);
     DoseData(const ImageData<float>& imageData);
 
     DoseData(const DoseData& other) = default;

@@ -46,10 +46,8 @@ int main(){
     const std::string evalImgFilename{"logfile_dose_beam_4.dcm"};
 
     try{
-        const yagit::DoseData refImg = yagit::DataReader::readRTDoseDicom(refImgFilename);
-        std::cout << "----------------------------------\n";
-        const yagit::DoseData evalImg = yagit::DataReader::readRTDoseDicom(evalImgFilename);
-        std::cout << "----------------------------------\n";
+        const yagit::DoseData refImg = yagit::DataReader::readRTDoseDicom(refImgFilename, false);
+        const yagit::DoseData evalImg = yagit::DataReader::readRTDoseDicom(evalImgFilename, false);
 
         yagit::DataSize size = refImg.getSize();
         int yframe = size.rows / 2;
@@ -62,18 +60,18 @@ int main(){
         printDataInfo(evalImg2D);
         std::cout << "----------------------------------\n";
 
-        const auto refMaxDose = refImg2D.getMax();
+        const auto refMaxDose = refImg2D.max();
         float dd = 3;  // [%]
         float dta = 3;  // [mm]
         auto normalization = yagit::GammaNormalization::Global;
         float globalNormDose = refMaxDose;
-        float doseCutoff = 0;//0.1 * refMaxDose;
+        float doseCutoff = 0.02 * refMaxDose;
         yagit::GammaParameters gammaParams{dd, dta, normalization, globalNormDose, doseCutoff};
 
 
         std::vector<double> times;
 
-        for(int i=0; i < 10; i++){
+        for(int i=0; i < 3; i++){
             auto begin = std::chrono::steady_clock::now();
 
             const yagit::GammaResult gammaRes = yagit::gammaIndex2D(refImg2D, evalImg2D, gammaParams);
@@ -83,9 +81,14 @@ int main(){
             std::cout << "Time: " << timeSec << "[s]" << std::endl;
             times.push_back(timeSec);
 
-            std::cout << "GPR: " << gammaRes.getPassingRate() * 100 << "%\n";
-            std::cout << "Gamma min: " << gammaRes.getMin() << "\n";
-            std::cout << "Gamma max: " << gammaRes.getMax() << "\n";
+            std::cout << "GIPR: " << gammaRes.passingRate() * 100 << "%\n"
+                      << "Gamma min: " << gammaRes.minGamma() << "\n"
+                      << "Gamma max: " << gammaRes.maxGamma() << "\n"
+                      << "Gamma mean: " << gammaRes.meanGamma() << "\n"
+                      << "Size: " << gammaRes.size() << "\n"
+                      << "Contains NAN: " << gammaRes.containsNan() << "\n"
+                      << "Number of NANs: " << gammaRes.size() - gammaRes.nansize() << "\n";
+
             std::cout << "---------------------\n";
         }
 

@@ -23,8 +23,8 @@
 
 namespace yagit{
 
-GammaResult gammaIndex2D(const DoseData& refImg2D, const DoseData& evalImg2D, GammaParameters gammaParams);
-GammaResult gammaIndex2_5D(const DoseData& refImg2_5D, const DoseData& evalImg2_5D, GammaParameters gammaParams, ImagePlane imgPlane = ImagePlane::Axial);
-GammaResult gammaIndex3D(const DoseData& refImg3D, const DoseData& evalImg3D, GammaParameters gammaParams);
+GammaResult gammaIndex2D(const DoseData& refImg2D, const DoseData& evalImg2D, const GammaParameters& gammaParams);
+GammaResult gammaIndex2_5D(const DoseData& refImg2_5D, const DoseData& evalImg2_5D, const GammaParameters& gammaParams);
+GammaResult gammaIndex3D(const DoseData& refImg3D, const DoseData& evalImg3D, const GammaParameters& gammaParams);
 
 }

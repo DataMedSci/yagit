@@ -35,6 +35,10 @@ add_executable(test3 src/test3.cpp)
 target_link_libraries(test3
     yagit
 )
+add_executable(test_clean src/test_clean.cpp)
+target_link_libraries(test_clean
+    yagit
+)
 # 
 
 if(MSVC)

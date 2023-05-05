@@ -107,11 +107,11 @@ gdcm::SwapCode getDataEndianness(const std::optional<gdcm::UIComp>& transferSynt
 }
 }
 
-DoseData DataReader::readRTDoseDicom(const std::string& file){
+DoseData DataReader::readRTDoseDicom(const std::string& file, bool displayInfo){
     gdcm::Reader reader;
     reader.SetFileName(file.c_str());
     if(!reader.Read()) {
-        throw std::runtime_error("Cannot read " + file + " file");
+        throw std::runtime_error("cannot read " + file + " file");
     }
     
     const gdcm::DataSet& ds = reader.GetFile().GetDataSet();
@@ -139,7 +139,6 @@ DoseData DataReader::readRTDoseDicom(const std::string& file){
         throw std::runtime_error("DICOM file doesn't have attribute Image Position Patient (0020,0032)");
     }
 
-    // ???
     auto imageOrientationPatient = getMultipleValues(ds, ImageOrientationPatientAttr);
     if(imageOrientationPatient.size() != 6){
         throw std::runtime_error("DICOM file doesn't have attribute Image Orientation Patient (0020,0037) containig 6 elements");
@@ -147,9 +146,8 @@ DoseData DataReader::readRTDoseDicom(const std::string& file){
     for(auto& el : imageOrientationPatient){
         el = static_cast<int>(el * 1e5 + 0.5) / 1e5;  // round number to 5 decimal places
     }
-    // check if abs_orient is [1,0,0,0,1,0] or [0,1,0,1,0,0] - other are not supported
-    // add convertion of spacing depending on orientation??
-    // ???
+    // TODO: check if abs_orient is [1,0,0,0,1,0] or [0,1,0,1,0,0] - other are not supported
+    // TODO: add convertion of spacing depending on orientation??
 
     auto pixelSpacing = getMultipleValues(ds, PixelSpacingAttr);  // row and column spacing
     if(pixelSpacing.size() != 2){
@@ -167,7 +165,7 @@ DoseData DataReader::readRTDoseDicom(const std::string& file){
             sliceThicknessVal = gridFrameOffsetVector[1] - gridFrameOffsetVector[0];
             for(int i=2; i < gridFrameOffsetVector.size(); i++){
                 if(gridFrameOffsetVector[i] - gridFrameOffsetVector[i-1] != sliceThicknessVal){
-                    throw std::runtime_error("Uneven spacing in Grid Frame Offset Vector (3004,000C) not supported");
+                    throw std::runtime_error("uneven spacing in Grid Frame Offset Vector (3004,000C) not supported");
                 }
             }
         }
@@ -226,40 +224,34 @@ DoseData DataReader::readRTDoseDicom(const std::string& file){
         throw std::runtime_error("compression Transfer Syntax UIDs not supported");
     }
 
-    // TEMPORARY - for debug purposes only
-    std::cout << "Modality: " << *modality << "\n";
-    std::cout << "TransferSyntaxUID: " << (transferSyntaxUID.has_value() ? std::string(*transferSyntaxUID)
-                                                                         : std::string("")) << "\n";
-    std::cout << "NumberOfFrames: " << *frames << "\n"
-              << "Rows: " << *rows << "\n"
-              << "Columns: " << *columns << "\n"
-              << "ImagePositionPatient: " << imagePositionPatient[0] << " " // xyz
-                                          << imagePositionPatient[1] << " "
-                                          << imagePositionPatient[2] << "\n"
-              << "ImageOrientationPatient: " << imageOrientationPatient[0] << " "
-                                             << imageOrientationPatient[1] << " "
-                                             << imageOrientationPatient[2] << " "
-                                             << imageOrientationPatient[3] << " "
-                                             << imageOrientationPatient[4] << " "
-                                             << imageOrientationPatient[5] << "\n";
-    std::cout << "PixelSpacing: " << pixelSpacing[0] << " " << pixelSpacing[1] << "\n"
-              << "SliceThickness value: " << sliceThicknessVal << "\n";
-    std::cout << "DoseGridScaling: " << *doseGridScaling << "\n";
-    std::cout << "SamplesPerPixel: " << *samplesPerPixel << "\n"
-              << "PhotometricInterpretation: " << *photometricInterpretation << "\n"
-              << "BitsAllocated: " << *bitsAllocated << "\n"
-              << "BitsStored: " << *bitsStored << "\n"
-              << "HighBit: " << *highBit << "\n"
-              << "PixelRepresentation: " << *pixelRepresentation << "\n";
-    if(*bitsAllocated == 32){
-        // (frame, row, column) = (z, y, x)
-        int z = 100, y = 80, x = 70;
-        std::cout << "PixelData[" << z << "," << y << "," << x << "]: "
-                  << reinterpret_cast<uint32_t*>(pixelData.data())[z*(rows.value()*columns.value()) + y*columns.value() + x] << "\n";
-        std::cout << "PixelData[" << z << "," << y << "," << x << "]: "
-                  << reinterpret_cast<uint32_t*>(pixelData.data())[(z*rows.value() + y)*columns.value() + x] << "\n";
+    if(displayInfo){
+        std::cout << "Modality: " << *modality << "\n";
+        std::cout << "TransferSyntaxUID: " << (transferSyntaxUID.has_value() ? std::string(*transferSyntaxUID)
+                                                                             : std::string("")) << "\n";
+        std::cout << "NumberOfFrames: " << *frames << "\n"
+                  << "Rows: " << *rows << "\n"
+                  << "Columns: " << *columns << "\n"
+                  << "ImagePositionPatient: " << imagePositionPatient[0] << " "   // x
+                                              << imagePositionPatient[1] << " "   // y
+                                              << imagePositionPatient[2] << "\n"  // z
+                  << "ImageOrientationPatient: " << imageOrientationPatient[0] << " "
+                                                 << imageOrientationPatient[1] << " "
+                                                 << imageOrientationPatient[2] << " "
+                                                 << imageOrientationPatient[3] << " "
+                                                 << imageOrientationPatient[4] << " "
+                                                 << imageOrientationPatient[5] << "\n";
+        std::cout << "PixelSpacing: " << pixelSpacing[0] << " "   // row spacing
+                                      << pixelSpacing[1] << "\n"  // column spacing
+                  << "SliceThickness value: " << sliceThicknessVal << "\n";  // frame spacing
+        std::cout << "DoseGridScaling: " << *doseGridScaling << "\n";
+        std::cout << "SamplesPerPixel: " << *samplesPerPixel << "\n"
+                  << "PhotometricInterpretation: " << *photometricInterpretation << "\n"
+                  << "BitsAllocated: " << *bitsAllocated << "\n"
+                  << "BitsStored: " << *bitsStored << "\n"
+                  << "HighBit: " << *highBit << "\n"
+                  << "PixelRepresentation: " << *pixelRepresentation << "\n";
+        std::cout << "PixelData: array of " << pixelData.size() << " bytes\n";
     }
-    // END TEMPORARY
 
 
     std::vector<float> doseData;
@@ -267,12 +259,13 @@ DoseData DataReader::readRTDoseDicom(const std::string& file){
     doseData.reserve(doseDataSize);
 
     // convert uint pixelData to float doseData
+    // dose = float(double(PixelData) * double(DoseGridScaling))
+    // Dose is float, because there is little difference between double and float doses.
+    // And in gamma calculations, this difference has little significance.
+    // Thanks to this, the data takes up less memory and calculations are performed faster.
     if(*bitsAllocated == 32){
         const uint32_t* dataPtr = reinterpret_cast<uint32_t*>(pixelData.data());
         for(int i=0; i < doseDataSize; i++, dataPtr++){
-            // add comment about casts
-            // i tak jest cutoff
-            // also comment in DoseData
             doseData.emplace_back(static_cast<float>(static_cast<double>(*dataPtr) * doseGridScaling.value()));
         }
     }

@@ -22,9 +22,30 @@
 
 namespace yagit{
 
-float GammaResult::getPassingRate() const{
-    // take into account -1 from dose cutoff?
-    return static_cast<float>(std::count_if(m_data.begin(), m_data.end(), [](const auto& el) { return el <= 1; })) / m_data.size();
+float GammaResult::passingRate() const{
+    return static_cast<float>(std::count_if(m_data.begin(), m_data.end(), [](const auto& el) {
+        return !std::isnan(el) && el <= 1;
+    })) / nansize();
+}
+
+float GammaResult::minGamma() const{
+    return nanmin();
+}
+
+float GammaResult::maxGamma() const{
+    return nanmax();
+}
+
+float GammaResult::sumGamma() const{
+    return nansum();
+}
+
+float GammaResult::meanGamma() const{
+    return nanmean();
+}
+
+float GammaResult::varGamma() const{
+    return nanvar();
 }
 
 }

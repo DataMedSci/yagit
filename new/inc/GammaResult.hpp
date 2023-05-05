@@ -33,7 +33,13 @@ public:
 
     bool operator==(const GammaResult& other) const = default;
 
-    float getPassingRate() const;
+    float passingRate() const;
+
+    float minGamma() const;
+    float maxGamma() const;
+    float sumGamma() const;
+    float meanGamma() const;
+    float varGamma() const;
 };
 
 }

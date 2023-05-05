@@ -26,7 +26,7 @@ using Image2D = std::vector<std::vector<T>>;
 template <typename T>
 using Image3D = std::vector<Image2D<T>>;
 
-// desc
+// TODO: desc
 // Axial/Transverse/Horizontal
 // Coronal/Frontal
 // Sagittal/Longitudinal

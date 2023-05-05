@@ -25,8 +25,8 @@ namespace yagit{
 
 class DataReader{
 public:
-    static DoseData readRTDoseDicom(const std::string& file);
-    // maybe other methods for reading other input???
+    static DoseData readRTDoseDicom(const std::string& file, bool displayInfo = false);
+    // TODO: other methods for reading other data (e.g. MetaImage)
 };
 
 }
