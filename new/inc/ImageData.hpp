@@ -50,8 +50,11 @@ public:
     ImageData(const ImageData& other) = default;
     ImageData& operator=(const ImageData& other) = default;
 
-    ImageData(ImageData&& other) noexcept = delete;
-    ImageData& operator=(ImageData&& other) noexcept = delete;
+    // ImageData(ImageData&& other) noexcept = delete;
+    // ImageData& operator=(ImageData&& other) noexcept = delete;
+
+    ImageData(ImageData&& other) noexcept = default;
+    ImageData& operator=(ImageData&& other) noexcept = default;
 
     bool operator==(const ImageData& other) const = default;
 

@@ -17,34 +17,25 @@
  ******************************************************************************************/
 #pragma once
 
-#include <vector>
+#include "DoseData.hpp"
+#include "Image.hpp"
 
 namespace yagit{
 
-template <typename T>
-using Image2D = std::vector<std::vector<T>>;
-template <typename T>
-using Image3D = std::vector<Image2D<T>>;
+class Interpolation{
+public:
+    static DoseData linear(const DoseData& img, float spacing, ImageAxis axis);
+    static DoseData bilinear(const DoseData& img, float firstAxisSpacing, float secondAxisSpacing, ImagePlane plane);
+    static DoseData trilinear(const DoseData& img, const DataSpacing& spacing);
 
-// TODO: desc
-enum class ImageAxis{
-    Z,
-    Y,
-    X
-};
+    static DoseData linear(const DoseData& img, float offset, float spacing, ImageAxis axis);
+    static DoseData bilinear(const DoseData& img, float firstAxisOffset, float secondAxisOffset,
+                             float firstAxisSpacing, float secondAxisSpacing, ImagePlane plane);
+    static DoseData trilinear(const DoseData& img, const DataOffset& offset, const DataSpacing& spacing);
 
-// TODO: desc
-// Axial/Transverse/Horizontal
-// Coronal/Frontal
-// Sagittal/Longitudinal
-enum class ImagePlane{
-    Axial = 0,
-    Transverse = 0,
-    Horizontal = 0,
-    Coronal = 1,
-    Frontal = 1,
-    Sagittal = 2,
-    Longitudinal = 2
+    static DoseData linear(const DoseData& evalImg, const DoseData& refImg, ImageAxis axis);
+    static DoseData bilinear(const DoseData& evalImg, const DoseData& refImg, ImagePlane plane);
+    static DoseData trilinear(const DoseData& evalImg, const DoseData& refImg);
 };
 
 }

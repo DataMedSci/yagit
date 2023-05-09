@@ -23,7 +23,7 @@ template <typename U>
 ImageData<T>::ImageData(const std::vector<U>& data, const DataSize& size, const DataOffset& offset, const DataSpacing& spacing)
     : m_data(data.begin(), data.end()), m_size(size), m_offset(offset), m_spacing(spacing) {
     if(data.size() != size.frames * size.rows * size.columns){
-        throw std::invalid_argument("data size is inconsistent with data size information");
+        throw std::invalid_argument("size is inconsistent with data size information");
     }
 }
 
@@ -163,7 +163,7 @@ Image2D<T> ImageData<T>::getImage2D(uint32_t frame, ImagePlane imgPlane) const{
         for(uint32_t y = 0; y < m_size.rows; y++){
             img2d.emplace_back();
             const T* beginData = m_data.data() + (frame * m_size.rows + y) * m_size.columns;
-            const T* endData = beginData + m_size.rows;
+            const T* endData = beginData + m_size.columns;
             img2d[y].insert(img2d[y].end(), beginData, endData);
         }
     }

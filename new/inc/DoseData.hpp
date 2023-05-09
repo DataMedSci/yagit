@@ -29,8 +29,11 @@ public:
     DoseData(const DoseData& other) = default;
     DoseData& operator=(const DoseData& other) = default;
 
-    DoseData(DoseData&& other) noexcept = delete;
-    DoseData& operator=(DoseData&& other) noexcept = delete;
+    // DoseData(DoseData&& other) noexcept = delete;
+    // DoseData& operator=(DoseData&& other) noexcept = delete;
+
+    DoseData(DoseData&& other) noexcept = default;
+    DoseData& operator=(DoseData&& other) noexcept = default;
 
     bool operator==(const DoseData& other) const = default;
 };

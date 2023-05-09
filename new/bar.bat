@@ -7,5 +7,5 @@ cd ..
 if %COMPILE_RESULT% EQU 0 (
     echo:
     echo RUNNING...
-    build\Release\test.exe
+    build\Release\test_interp_2d_3d.exe
 )
