@@ -21,6 +21,9 @@
 
 namespace yagit{
 
+/**
+ * @brief Container storing gamma index values
+ */
 class GammaResult : public ImageData<float>{
 public:
     using ImageData<float>::ImageData;
@@ -33,12 +36,18 @@ public:
 
     bool operator==(const GammaResult& other) const = default;
 
+    /// @brief The percentage of elements that are less than or equal to 1. It doesn't take into account NaN values.
     float passingRate() const;
 
+    /// @brief Minimum value of gamma index. It doesn't take into account NaN values.
     float minGamma() const;
+    /// @brief Maximum value of gamma index. It doesn't take into account NaN values.
     float maxGamma() const;
+    /// @brief Sum of values of gamma index. It doesn't take into account NaN values.
     float sumGamma() const;
+    /// @brief Mean of values of gamma index. It doesn't take into account NaN values.
     float meanGamma() const;
+    /// @brief Variance of values of gamma index. It doesn't take into account NaN values.
     float varGamma() const;
 };
 

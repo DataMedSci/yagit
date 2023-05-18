@@ -23,10 +23,8 @@ namespace yagit{
  *  @brief Enum with types of calculating absolute dose difference criterion
 */
 enum class GammaNormalization{
-    /// Using any value you choose (e.g. max reference value)
-    Global,
-    /// Using local reference value (value at current voxel)
-    Local
+    Global,  ///< Using any value you choose (e.g. max reference value)
+    Local    ///< Using local reference value (value at current voxel)
 };
 
 /** @struct GammaParameters

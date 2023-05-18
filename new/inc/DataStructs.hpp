@@ -25,12 +25,9 @@ namespace yagit{
  * @brief Number of frames, rows and columns in 3D image
  */
 struct DataSize{
-    /// Number of frames
-    uint32_t frames;
-    /// Number of rows
-    uint32_t rows;
-    /// Number of columns
-    uint32_t columns;
+    uint32_t frames;   ///< Number of frames
+    uint32_t rows;     ///< Number of rows
+    uint32_t columns;  ///< Number of columns
 
     bool operator==(const DataSize& other) const = default;
 };
@@ -40,12 +37,9 @@ struct DataSize{
  * @note Values can be negative
  */
 struct DataOffset{
-    /// Position of first frame in image in milimeters [mm]
-    float framesOffset;
-    /// Position of first row in image in milimeters [mm]
-    float rowsOffset;
-    /// Position of first column in image in milimeters [mm]
-    float columnsOffset;
+    float framesOffset;   ///< Position of first frame in image in milimeters [mm]
+    float rowsOffset;     ///< Position of first row in image in milimeters [mm]
+    float columnsOffset;  ///< Position of first column in image in milimeters [mm]
 
     bool operator==(const DataOffset& other) const = default;
 };
@@ -55,12 +49,9 @@ struct DataOffset{
  * @note Values should be positive
  */
 struct DataSpacing{
-    /// Spacing between frames in milimeters [mm]
-    float framesSpacing;
-    /// Spacing between rows in milimeters [mm]
-    float rowsSpacing;
-    /// Spacing between columns in milimeters [mm]
-    float columnsSpacing;
+    float framesSpacing;   ///< Spacing between frames in milimeters [mm]
+    float rowsSpacing;     ///< Spacing between rows in milimeters [mm]
+    float columnsSpacing;  ///< Spacing between columns in milimeters [mm]
 
     bool operator==(const DataSpacing& other) const = default;
 };

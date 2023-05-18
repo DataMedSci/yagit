@@ -17,7 +17,7 @@
  ******************************************************************************************/
 /**
  * @file
- * @brief This file provides a simple example of using yagit - 2D gamma index with interpolation of eval img.
+ * @brief This file provides a simple example of using yagit - 3D gamma index with interpolation of eval img.
  * 
  * @example{lineno}
  * This file provides a simple example of using yagit - 3D gamma index with interpolation of eval img.

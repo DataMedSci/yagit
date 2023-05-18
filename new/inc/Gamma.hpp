@@ -23,8 +23,34 @@
 
 namespace yagit{
 
+/**
+ * @brief Calculate 2D gamma index using classic method
+ * @param refImg2D 2D reference image
+ * @param evalImg2D 2D evaluated image
+ * @param gammaParams Parameters of gamma index
+ * @return 2D image containig gamma index values
+ * @note It doesn't take into account the frame offset (z-offset)
+ */
 GammaResult gammaIndex2D(const DoseData& refImg2D, const DoseData& evalImg2D, const GammaParameters& gammaParams);
-GammaResult gammaIndex2_5D(const DoseData& refImg2_5D, const DoseData& evalImg2_5D, const GammaParameters& gammaParams);
+
+/**
+ * @brief Calculate 2.5D gamma index using classic method.
+ * It calculates gamma index slice by slice going along axial plane.
+ * @param refImg3D 3D reference image
+ * @param evalImg3D 3D evaluated image
+ * @param gammaParams Parameters of gamma index
+ * @return 3D image containig gamma index values
+ * @note It takes into account the frame offset (z-offset)
+ */
+GammaResult gammaIndex2_5D(const DoseData& refImg3D, const DoseData& evalImg3D, const GammaParameters& gammaParams);
+
+/**
+ * @brief Calculate 3D gamma index using classic method
+ * @param refImg3D 3D reference image
+ * @param evalImg3D 3D evaluated image
+ * @param gammaParams Parameters of gamma index
+ * @return 3D image containig gamma index values 
+ */
 GammaResult gammaIndex3D(const DoseData& refImg3D, const DoseData& evalImg3D, const GammaParameters& gammaParams);
 
 }

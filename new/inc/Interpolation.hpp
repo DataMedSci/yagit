@@ -20,22 +20,127 @@
 #include "DoseData.hpp"
 #include "Image.hpp"
 
-namespace yagit{
+namespace yagit::Interpolation{
 
-class Interpolation{
-public:
-    static DoseData linear(const DoseData& img, float spacing, ImageAxis axis);
-    static DoseData bilinear(const DoseData& img, float firstAxisSpacing, float secondAxisSpacing, ImagePlane plane);
-    static DoseData trilinear(const DoseData& img, const DataSpacing& spacing);
+/**
+ * @brief Linear interpolation along @a axis with new spacing
+ * @param img Image to interpolate.
+ * It can be 1D, 2D or 3D image - interpolation is done along one axis and won't take into account other axes.
+ * @param spacing New spacing by which interpolation is performed
+ * @param axis Axis along which interpolation is performed
+ * @return Interpolated image with new spacing
+ */
+DoseData linearAlongAxis(const DoseData& img, float spacing, ImageAxis axis);
 
-    static DoseData linear(const DoseData& img, float offset, float spacing, ImageAxis axis);
-    static DoseData bilinear(const DoseData& img, float firstAxisOffset, float secondAxisOffset,
-                             float firstAxisSpacing, float secondAxisSpacing, ImagePlane plane);
-    static DoseData trilinear(const DoseData& img, const DataOffset& offset, const DataSpacing& spacing);
+/**
+ * @brief Bilinear interpolation on @a plane with new spacing
+ * @param img Image to interpolate.
+ * It can be 1D, 2D or 3D image - interpolation is done on one plane and won't take into account other planes.
+ * @param firstAxisSpacing First spacing by which interpolation is performed.
+ * E.g. when interpolating on plane YX, @a firstAxisSpacing is applied to Y axis.
+ * @param secondAxisSpacing Second spacing by which interpolation is performed.
+ * E.g. when interpolating on plane YX, @a secondAxisSpacing is applied to X axis.
+ * @param plane Plane on which interpolation is performed
+ * @return Interpolated image with new spacing
+ */
+DoseData bilinearOnPlane(const DoseData& img, float firstAxisSpacing, float secondAxisSpacing, ImagePlane plane);
 
-    static DoseData linear(const DoseData& evalImg, const DoseData& refImg, ImageAxis axis);
-    static DoseData bilinear(const DoseData& evalImg, const DoseData& refImg, ImagePlane plane);
-    static DoseData trilinear(const DoseData& evalImg, const DoseData& refImg);
-};
+/**
+ * @brief Trilinear interpolation - along all axes (Z, Y, X) - with new spacing
+ * @param img Image to interpolate.
+ * @param spacing New spacing by which interpolation is performed
+ * @return Interpolated image with new spacing
+ */
+DoseData trilinear(const DoseData& img, const DataSpacing& spacing);
+
+/**
+ * @brief Linear interpolation along @a axis on new grid with @a offset and @a spacing
+ * 
+ * On an infinite grid spanning all directions, utilizing new @a offset and @a spacing,
+ * we determine the values that are on this grid and lying on the edge or in the middle of the interpolated image.
+ * 
+ * @param img Image to interpolate.
+ * It can be 1D, 2D or 3D image - interpolation is done along one axis and won't take into account other axes.
+ * @param offset Offset of interpolation grid. New grid on which image is interpolated will be offsetted by this value
+ * @param spacing New spacing by which interpolation is performed
+ * @param axis Axis along which interpolation is performed
+ * @return Image interpolated on new grid
+ */
+DoseData linearAlongAxis(const DoseData& img, float offset, float spacing, ImageAxis axis);
+
+/**
+ * @brief Bilinear interpolation on @a plane on new grid with offset and spacing.
+ * 
+ * On an infinite grid spanning all directions, utilizing new offsets and spacings,
+ * we determine the values that are on this grid and lying on the edge or in the middle of the interpolated image.
+ * 
+ * @param img Image to interpolate.
+ * It can be 1D, 2D or 3D image - interpolation is done on one plane and won't take into account other planes.
+ * @param firstAxisOffset First offset of interpolation grid. 
+ * E.g. when interpolating on plane YX, @a firstAxisOffset is applied to Y axis.
+ * New grid on which image is interpolated will be offsetted by this value.
+ * @param secondAxisOffset Second offset of interpolation grid.
+ * E.g. when interpolating on plane YX, @a secondAxisOffset is applied to X axis.
+ * New grid on which image is interpolated will be offsetted by this value.
+ * @param firstAxisSpacing First spacing by which interpolation is performed. 
+ * E.g. when interpolating on plane YX, @a firstAxisSpacing is applied to Y axis.
+ * @param secondAxisSpacing Second spacing by which interpolation is performed. 
+ * E.g. when interpolating on plane YX, @a secondAxisSpacing is applied to X axis.
+ * @param plane Plane on which interpolation is performed
+ * @return Image interpolated on new grid
+ */
+DoseData bilinearOnPlane(const DoseData& img, float firstAxisOffset, float secondAxisOffset,
+                         float firstAxisSpacing, float secondAxisSpacing, ImagePlane plane);
+
+/**
+ * @brief Trilinear interpolation - along all axes (Z, Y, X) - on new grid with @a offset and @a spacing.
+ * 
+ * On an infinite grid spanning all directions, utilizing new @a offset and @a spacing,
+ * we determine the values that are on this grid and lying on the edge or in the middle of the interpolated image.
+ * 
+ * @param img Image to interpolate.
+ * @param offset Offset of interpolation grid. New grid on which image is interpolated will be offsetted by this value
+ * @param spacing New spacing by which interpolation is performed
+ * @return Image interpolated on new grid
+ */
+DoseData trilinear(const DoseData& img, const DataOffset& offset, const DataSpacing& spacing);
+
+/**
+ * @brief Linear interpolation along @a axis on the grid of @a refImg.
+ * 
+ * On an infinite grid spanning all directions, utilizing offset and spacing of @a refImg,
+ * we determine the values that are on this grid and lying on the edge or in the middle of the interpolated image.
+ * 
+ * @param evalImg Image to interpolate
+ * @param refImg Image from which offset and spacing is retrieved and used to create grid on which interpolation is performed
+ * @param axis Axis along which interpolation is performed
+ * @return Image interpolated on the grid of @a refImg
+ */
+DoseData linearAlongAxis(const DoseData& evalImg, const DoseData& refImg, ImageAxis axis);
+
+/**
+ * @brief Bilinear interpolation on @a plane on the grid of @a refImg.
+ * 
+ * On an infinite grid spanning all directions, utilizing offset and spacing of @a refImg,
+ * we determine the values that are on this grid and lying on the edge or in the middle of the interpolated image.
+ * 
+ * @param evalImg Image to interpolate
+ * @param refImg Image from which offset and spacing is retrieved and used to create grid on which interpolation is performed
+ * @param plane Plane on which interpolation is performed
+ * @return Image interpolated on the grid of @a refImg
+ */
+DoseData bilinearAlongPlane(const DoseData& evalImg, const DoseData& refImg, ImagePlane plane);
+
+/**
+ * @brief Trilinear interpolation - along all axes (Z, Y, X) - on the grid of @a refImg.
+ * 
+ * On an infinite grid spanning all directions, utilizing offset and spacing of @a refImg,
+ * we determine the values that are on this grid and lying on the edge or in the middle of the interpolated image.
+ * 
+ * @param evalImg Image to interpolate
+ * @param refImg Image from which offset and spacing is retrieved and used to create grid on which interpolation is performed
+ * @return Image interpolated on the grid of @a refImg
+ */
+DoseData trilinear(const DoseData& evalImg, const DoseData& refImg);
 
 }

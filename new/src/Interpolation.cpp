@@ -18,9 +18,9 @@
 
 #include "Interpolation.hpp"
 
-namespace yagit{
+namespace yagit::Interpolation{
 
-DoseData Interpolation::linear(const DoseData& img, float spacing, ImageAxis axis){
+DoseData linearAlongAxis(const DoseData& img, float spacing, ImageAxis axis){
     if(axis == ImageAxis::Z){
         float oldSpacing = img.getSpacing().framesSpacing;
         if(spacing == oldSpacing){
@@ -116,26 +116,31 @@ DoseData Interpolation::linear(const DoseData& img, float spacing, ImageAxis axi
     }
 }
 
-DoseData Interpolation::bilinear(const DoseData& img, float firstAxisSpacing, float secondAxisSpacing, ImagePlane plane){
-    if(plane == ImagePlane::Axial){  // YX
-        return linear(linear(img, firstAxisSpacing, ImageAxis::Y), secondAxisSpacing, ImageAxis::X);
+DoseData bilinearOnPlane(const DoseData& img, float firstAxisSpacing, float secondAxisSpacing, ImagePlane plane){
+    if(plane == ImagePlane::YX){
+        return linearAlongAxis(linearAlongAxis(img, firstAxisSpacing, ImageAxis::Y), secondAxisSpacing, ImageAxis::X);
     }
-    else if(plane == ImagePlane::Coronal){  // ZX
-        return linear(linear(img, firstAxisSpacing, ImageAxis::Z), secondAxisSpacing, ImageAxis::X);
+    else if(plane == ImagePlane::ZX){
+        return linearAlongAxis(linearAlongAxis(img, firstAxisSpacing, ImageAxis::Z), secondAxisSpacing, ImageAxis::X);
     }
-    else if(plane == ImagePlane::Sagittal){  // ZY
-        return linear(linear(img, firstAxisSpacing, ImageAxis::Z), secondAxisSpacing, ImageAxis::Y);
+    else if(plane == ImagePlane::ZY){
+        return linearAlongAxis(linearAlongAxis(img, firstAxisSpacing, ImageAxis::Z), secondAxisSpacing, ImageAxis::Y);
     }
     else{
         throw std::invalid_argument("invalid plane");
     }
 }
 
-DoseData Interpolation::trilinear(const DoseData& img, const DataSpacing& spacing){
-    return linear(linear(linear(img, spacing.framesSpacing, ImageAxis::Z), spacing.rowsSpacing, ImageAxis::Y), spacing.columnsSpacing, ImageAxis::X);
+DoseData trilinear(const DoseData& img, const DataSpacing& spacing){
+    return linearAlongAxis(
+        linearAlongAxis(
+            linearAlongAxis(
+                img, spacing.framesSpacing, ImageAxis::Z),
+            spacing.rowsSpacing, ImageAxis::Y),
+        spacing.columnsSpacing, ImageAxis::X);
 }
 
-DoseData Interpolation::linear(const DoseData& img, float offset, float spacing, ImageAxis axis){
+DoseData linearAlongAxis(const DoseData& img, float offset, float spacing, ImageAxis axis){
     if(axis == ImageAxis::Z){
         // closest point greater than img_offset which is one of points (offset +/- n*spacing)
         float zOffset = offset + std::ceil((img.getOffset().framesOffset - offset) / spacing) * spacing;
@@ -252,27 +257,42 @@ DoseData Interpolation::linear(const DoseData& img, float offset, float spacing,
     }
 }
 
-DoseData Interpolation::bilinear(const DoseData& img, float firstAxisOffset, float secondAxisOffset,
-                                 float firstAxisSpacing, float secondAxisSpacing, ImagePlane plane){
-    if(plane == ImagePlane::Axial){  // YX
-        return linear(linear(img, firstAxisOffset, firstAxisSpacing, ImageAxis::Y), secondAxisOffset, secondAxisSpacing, ImageAxis::X);
+DoseData bilinearOnPlane(const DoseData& img, float firstAxisOffset, float secondAxisOffset,
+                         float firstAxisSpacing, float secondAxisSpacing, ImagePlane plane){
+    if(plane == ImagePlane::YX){
+        return linearAlongAxis(
+            linearAlongAxis(
+                img, firstAxisOffset, firstAxisSpacing, ImageAxis::Y),
+            secondAxisOffset, secondAxisSpacing, ImageAxis::X);
     }
-    else if(plane == ImagePlane::Coronal){  // ZX
-        return linear(linear(img, firstAxisOffset, firstAxisSpacing, ImageAxis::Z), secondAxisOffset, secondAxisSpacing, ImageAxis::X);
+    else if(plane == ImagePlane::ZX){
+        return linearAlongAxis(
+            linearAlongAxis(
+                img, firstAxisOffset, firstAxisSpacing, ImageAxis::Z),
+            secondAxisOffset, secondAxisSpacing, ImageAxis::X);
     }
-    else if(plane == ImagePlane::Sagittal){  // ZY
-        return linear(linear(img, firstAxisOffset, firstAxisSpacing, ImageAxis::Z), secondAxisOffset, secondAxisSpacing, ImageAxis::Y);
+    else if(plane == ImagePlane::ZY){
+        return linearAlongAxis(
+            linearAlongAxis(
+                img, firstAxisOffset, firstAxisSpacing, ImageAxis::Z),
+            secondAxisOffset, secondAxisSpacing, ImageAxis::Y);
     }
     else{
         throw std::invalid_argument("invalid plane");
     }
 }
 
-DoseData Interpolation::trilinear(const DoseData& img, const DataOffset& offset, const DataSpacing& spacing){
-    return linear(linear(linear(img, offset.framesOffset, spacing.framesSpacing, ImageAxis::Z), offset.rowsOffset, spacing.rowsSpacing, ImageAxis::Y), offset.columnsOffset, spacing.columnsSpacing, ImageAxis::X);
+DoseData trilinear(const DoseData& img, const DataOffset& offset, const DataSpacing& spacing){
+    return linearAlongAxis(
+        linearAlongAxis(
+            linearAlongAxis(
+                img, offset.framesOffset, spacing.framesSpacing, ImageAxis::Z),
+            offset.rowsOffset, spacing.rowsSpacing, ImageAxis::Y),
+        offset.columnsOffset, spacing.columnsSpacing, ImageAxis::X);
+
 }
 
-DoseData Interpolation::linear(const DoseData& evalImg, const DoseData& refImg, ImageAxis axis){
+DoseData linearAlongAxis(const DoseData& evalImg, const DoseData& refImg, ImageAxis axis){
     float offset = 0;
     float spacing = 0;
     if(axis == ImageAxis::Z){
@@ -290,25 +310,25 @@ DoseData Interpolation::linear(const DoseData& evalImg, const DoseData& refImg, 
     else{
         throw std::invalid_argument("invalid axis");
     }
-    return linear(evalImg, offset, spacing, axis);
+    return linearAlongAxis(evalImg, offset, spacing, axis);
 }
 
-DoseData Interpolation::bilinear(const DoseData& evalImg, const DoseData& refImg, ImagePlane plane){
+DoseData bilinearOnPlane(const DoseData& evalImg, const DoseData& refImg, ImagePlane plane){
     float offset1 = 0, offset2 = 0;
     float spacing1 = 0, spacing2 = 0;
-    if(plane == ImagePlane::Axial){  // YX
+    if(plane == ImagePlane::YX){
         offset1 = refImg.getOffset().rowsOffset;
         offset2 = refImg.getOffset().columnsOffset;
         spacing1 = refImg.getSpacing().rowsSpacing;
         spacing2 = refImg.getSpacing().columnsSpacing;
     }
-    else if(plane == ImagePlane::Coronal){  // ZX
+    else if(plane == ImagePlane::ZX){
         offset1 = refImg.getOffset().framesOffset;
         offset2 = refImg.getOffset().columnsOffset;
         spacing1 = refImg.getSpacing().framesSpacing;
         spacing2 = refImg.getSpacing().columnsSpacing;
     }
-    else if(plane == ImagePlane::Sagittal){  // ZY
+    else if(plane == ImagePlane::ZY){
         offset1 = refImg.getOffset().framesOffset;
         offset2 = refImg.getOffset().rowsOffset;
         spacing1 = refImg.getSpacing().framesSpacing;
@@ -317,10 +337,10 @@ DoseData Interpolation::bilinear(const DoseData& evalImg, const DoseData& refImg
     else{
         throw std::invalid_argument("invalid plane");
     }
-    return bilinear(evalImg, offset1, offset2, spacing1, spacing2, plane);
+    return bilinearOnPlane(evalImg, offset1, offset2, spacing1, spacing2, plane);
 }
 
-DoseData Interpolation::trilinear(const DoseData& evalImg, const DoseData& refImg){
+DoseData trilinear(const DoseData& evalImg, const DoseData& refImg){
     return trilinear(evalImg, refImg.getOffset(), refImg.getSpacing());
 }
 

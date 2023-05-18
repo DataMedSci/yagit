@@ -21,6 +21,9 @@
 
 namespace yagit{
 
+/**
+ * @brief Container storing dose image (the image pixel values are of type float)
+ */
 class DoseData : public ImageData<float>{
 public:
     using ImageData<float>::ImageData;

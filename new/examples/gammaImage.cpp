@@ -58,7 +58,7 @@ void printDoseData(const yagit::DoseData& doseData){
               << "spacing: (" << spacing.framesSpacing << ", " << spacing.rowsSpacing << ", " << spacing.columnsSpacing << ")\n";
 }
 
-int main(int argc, char** argv){
+int main(){
 
     yagit::Image2D<float> refImg = {
         {0.93, 0.95},

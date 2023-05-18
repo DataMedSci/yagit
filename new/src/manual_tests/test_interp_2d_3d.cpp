@@ -80,23 +80,23 @@ int main(){
     yagit::DoseData d(img, {0,0,0}, {1,1,1});
     printDataInfo(d);
 
-    auto dyx = yagit::Interpolation::bilinear(d, 0.5, 0.5, yagit::ImagePlane::Axial);
+    auto dyx = yagit::Interpolation::bilinearOnPlane(d, 0.5, 0.5, yagit::ImagePlane::Axial);
     printDataInfo(dyx);
 
-    auto dzx = yagit::Interpolation::bilinear(d, 0.5, 0.5, yagit::ImagePlane::Coronal);
+    auto dzx = yagit::Interpolation::bilinearOnPlane(d, 0.5, 0.5, yagit::ImagePlane::Coronal);
     printDataInfo(dzx);
 
-    auto dzy = yagit::Interpolation::bilinear(d, 0.5, 0.5, yagit::ImagePlane::Sagittal);
+    auto dzy = yagit::Interpolation::bilinearOnPlane(d, 0.5, 0.5, yagit::ImagePlane::Sagittal);
     printDataInfo(dzy);
 
     std::cout << "_______________\n";
 
-    printDataInfo(yagit::Interpolation::linear(d, 0.1, 0.5, yagit::ImageAxis::Y));
-    printDataInfo(yagit::Interpolation::linear(d, 0.1, 0.5, yagit::ImageAxis::X));
+    printDataInfo(yagit::Interpolation::linearAlongAxis(d, 0.1, 0.5, yagit::ImageAxis::Y));
+    printDataInfo(yagit::Interpolation::linearAlongAxis(d, 0.1, 0.5, yagit::ImageAxis::X));
 
-    printDataInfo(yagit::Interpolation::bilinear(d, 0.1, 0.1, 0.5, 0.5, yagit::ImagePlane::Axial));
-    printDataInfo(yagit::Interpolation::bilinear(d, 0.1, 0.1, 0.5, 0.5, yagit::ImagePlane::Coronal));
-    printDataInfo(yagit::Interpolation::bilinear(d, 0.1, 0.1, 0.5, 0.5, yagit::ImagePlane::Sagittal));
+    printDataInfo(yagit::Interpolation::bilinearOnPlane(d, 0.1, 0.1, 0.5, 0.5, yagit::ImagePlane::Axial));
+    printDataInfo(yagit::Interpolation::bilinearOnPlane(d, 0.1, 0.1, 0.5, 0.5, yagit::ImagePlane::Coronal));
+    printDataInfo(yagit::Interpolation::bilinearOnPlane(d, 0.1, 0.1, 0.5, 0.5, yagit::ImagePlane::Sagittal));
 
     std::cout << "============================================\n";
 
@@ -127,7 +127,7 @@ int main(){
     
     printDataStats(refImg);
 
-    // printDataStats(yagit::Interpolation::linear(refImg, 1, yagit::ImageAxis::Z));
+    // printDataStats(yagit::Interpolation::linearAlongAxis(refImg, 1, yagit::ImageAxis::Z));
     // printDataStats(yagit::Interpolation::trilinear(refImg, {1,1,1}));
     printDataStats(yagit::Interpolation::trilinear(refImg, {0.1,0.1,0.1}, {1,1,1}));
 

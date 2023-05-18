@@ -21,30 +21,43 @@
 
 namespace yagit{
 
+/**
+ * @brief Type for storing 2D image
+ * @tparam T type of pixel value
+ */
 template <typename T>
 using Image2D = std::vector<std::vector<T>>;
+
+/**
+ * @brief Type for storing 3D image
+ * @tparam T type of voxel value
+ */
 template <typename T>
 using Image3D = std::vector<Image2D<T>>;
 
-// TODO: desc
+/**
+ * @brief Axis of image (Z, Y, X)
+ */
 enum class ImageAxis{
-    Z,
-    Y,
-    X
+    Z,  ///< Z axis
+    Y,  ///< Y axis
+    X   ///< X axis
 };
 
-// TODO: desc
-// Axial/Transverse/Horizontal
-// Coronal/Frontal
-// Sagittal/Longitudinal
+/**
+ * @brief Plane of image (YX, ZX, ZY)
+ */
 enum class ImagePlane{
-    Axial = 0,
-    Transverse = 0,
-    Horizontal = 0,
-    Coronal = 1,
-    Frontal = 1,
-    Sagittal = 2,
-    Longitudinal = 2
+    Axial = 0,          ///< YX plane (Axial, Transverse, Horizontal)
+    Transverse = 0,     ///< YX plane (Axial, Transverse, Horizontal)
+    Horizontal = 0,     ///< YX plane (Axial, Transverse, Horizontal)
+    YX = 0,             ///< YX plane (Axial, Transverse, Horizontal)
+    Coronal = 1,        ///< ZX plane (Coronal, Frontal)
+    Frontal = 1,        ///< ZX plane (Coronal, Frontal)
+    ZX = 1,             ///< ZX plane (Coronal, Frontal)
+    Sagittal = 2,       ///< ZY plane (Sagittal, Longitudinal)
+    Longitudinal = 2,   ///< ZY plane (Sagittal, Longitudinal)
+    ZY = 2              ///< ZY plane (Sagittal, Longitudinal)
 };
 
 }
