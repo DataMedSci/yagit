@@ -25,7 +25,7 @@
 #include <gdcmTagKeywords.h>
 #include <gdcmByteSwap.h>
 
-namespace yagit{
+namespace yagit::DataReader{
 
 namespace{
 const gdcm::Keywords::TransferSyntaxUID TransferSyntaxUIDAttr;                   // (0x0002, 0x0010)  UI
@@ -107,7 +107,7 @@ gdcm::SwapCode getDataEndianness(const std::optional<gdcm::UIComp>& transferSynt
 }
 }
 
-DoseData DataReader::readRTDoseDicom(const std::string& file, bool displayInfo){
+DoseData readRTDoseDicom(const std::string& file, bool displayInfo){
     gdcm::Reader reader;
     reader.SetFileName(file.c_str());
     if(!reader.Read()) {

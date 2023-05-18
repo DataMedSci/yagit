@@ -64,9 +64,9 @@ GammaResult gammaIndex2D(const DoseData& refImg2D, const DoseData& evalImg2D, co
     if(evalImg2D.getSize().frames > 1){
         throw std::invalid_argument("evaluated image is not 2D (frames > 1)");
     }
-    if(refImg2D.getOffset().framesOffset != evalImg2D.getOffset().framesOffset){
-        throw std::invalid_argument("reference image and evaluated image don't have equal frames offsets (z-offsets)"); // exception or print warning?
-    }
+    // if(refImg2D.getOffset().framesOffset != evalImg2D.getOffset().framesOffset){
+    //     throw std::invalid_argument("reference image and evaluated image don't have equal frames offsets (z-offsets)"); // exception or print warning?
+    // }
     validateGammaParameters(gammaParams);
 
     std::vector<float> gammaVals;

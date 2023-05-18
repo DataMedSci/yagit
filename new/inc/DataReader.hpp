@@ -21,12 +21,16 @@
 
 #include "DoseData.hpp"
 
-namespace yagit{
+namespace yagit::DataReader{
 
-class DataReader{
-public:
-    static DoseData readRTDoseDicom(const std::string& file, bool displayInfo = false);
-    // TODO: other methods for reading other data (e.g. MetaImage)
-};
+/**
+ * @brief Read RT Dose DICOM file and retrieve dose image from it
+ * @param file File path to RT Dose DICOM (.dcm)
+ * @param displayInfo Whether to show additional information read from the file
+ * @return Image containing dose and image info (size, offset, spacing) retrieved from DICOM file
+ */
+DoseData readRTDoseDicom(const std::string& file, bool displayInfo = false);
+
+// TODO: other methods for reading other data (e.g. MetaImage)
 
 }

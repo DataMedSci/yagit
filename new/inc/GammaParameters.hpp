@@ -20,28 +20,28 @@
 namespace yagit{
 
 /** @enum GammaNormalization
- *  @brief enum with types of calculating absolute dose difference criterion
- *  @note Global - using any value you choose (e.g. max reference value)
- *  @note Local - using local reference value
+ *  @brief Enum with types of calculating absolute dose difference criterion
 */
 enum class GammaNormalization{
+    /// Using any value you choose (e.g. max reference value)
     Global,
+    /// Using local reference value (value at current voxel)
     Local
 };
 
 /** @struct GammaParameters
- *  @brief struct with parameters of gamma index
- *  @note ddThreshold - acceptance criterion for dose difference (DD) in percents [%]
- *  @note dtaThreshold - acceptance criterion for distance to agreement (DTA) in milimeters [mm]
- *  @note normalization - type of calculating absolute dose difference criterion
- *  @note globalNormDose - value used for global normalization
- *  @note doseCutoff - value of dose below which gamma index will not be calculated
+ *  @brief Structure with parameters of gamma index
  */
 struct GammaParameters{
+    /// Acceptance criterion for dose difference (DD) in percents [%]
     float ddThreshold;
+    /// Acceptance criterion for distance to agreement (DTA) in milimeters [mm]
     float dtaThreshold;
+    /// Type of calculating absolute dose difference criterion
     GammaNormalization normalization;
+    /// Value used for global normalization
     float globalNormDose;
+    /// Value of dose below which gamma index will not be calculated
     float doseCutoff;
 };
 

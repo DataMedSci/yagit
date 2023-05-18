@@ -21,36 +21,51 @@
 
 namespace yagit{
 
-// number of frames, rows and columns in image
+/**
+ * @brief Number of frames, rows and columns in 3D image
+ */
 struct DataSize{
+    /// Number of frames
     uint32_t frames;
+    /// Number of rows
     uint32_t rows;
+    /// Number of columns
     uint32_t columns;
 
     bool operator==(const DataSize& other) const = default;
 };
 
-// TODO: desc
-// position of first pixel in milimeters [mm]
+/**
+ * @brief Position of first voxel in 3D image in milimeters [mm]
+ * @note Values can be negative
+ */
 struct DataOffset{
+    /// Position of first frame in image in milimeters [mm]
     float framesOffset;
+    /// Position of first row in image in milimeters [mm]
     float rowsOffset;
+    /// Position of first column in image in milimeters [mm]
     float columnsOffset;
 
     bool operator==(const DataOffset& other) const = default;
 };
 
-// TODO: desc
-// distance between consecutive pixels in milimeters [mm]
+/**
+ * @brief Distance between voxels in 3D image in milimeters [mm]
+ * @note Values should be positive
+ */
 struct DataSpacing{
+    /// Spacing between frames in milimeters [mm]
     float framesSpacing;
+    /// Spacing between rows in milimeters [mm]
     float rowsSpacing;
+    /// Spacing between columns in milimeters [mm]
     float columnsSpacing;
 
     bool operator==(const DataSpacing& other) const = default;
 };
 
-// DataDirection??
-// with bools or +1/-1 or enum
+// TODO: DataDirection with 3 enum fields
+// enum with 2 possible values: Forward, Backward
 
 }
