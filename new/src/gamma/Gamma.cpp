@@ -57,7 +57,7 @@ void validateGammaParameters(const GammaParameters& gammaParams){
 }
 
 // in this version Z coordinate is not used!!!
-GammaResult gammaIndex2D(const DoseData& refImg2D, const DoseData& evalImg2D, const GammaParameters& gammaParams){
+GammaResult gammaIndex2D(const ImageData& refImg2D, const ImageData& evalImg2D, const GammaParameters& gammaParams){
     if(refImg2D.getSize().frames > 1){
         throw std::invalid_argument("reference image is not 2D (frames > 1)");
     }
@@ -120,7 +120,7 @@ GammaResult gammaIndex2D(const DoseData& refImg2D, const DoseData& evalImg2D, co
     return GammaResult(gammaVals, refImg2D.getSize(), refImg2D.getOffset(), refImg2D.getSpacing());
 }
 
-GammaResult gammaIndex2_5D(const DoseData& refImg3D, const DoseData& evalImg3D, const GammaParameters& gammaParams){
+GammaResult gammaIndex2_5D(const ImageData& refImg3D, const ImageData& evalImg3D, const GammaParameters& gammaParams){
     if(refImg3D.getSize().frames != evalImg3D.getSize().frames){
         throw std::invalid_argument("reference image and evaluated image don't have the same number of frames");
     }
@@ -182,7 +182,7 @@ GammaResult gammaIndex2_5D(const DoseData& refImg3D, const DoseData& evalImg3D, 
     return GammaResult(gammaVals, refImg3D.getSize(), refImg3D.getOffset(), refImg3D.getSpacing());
 }
 
-GammaResult gammaIndex3D(const DoseData& refImg3D, const DoseData& evalImg3D, const GammaParameters& gammaParams){
+GammaResult gammaIndex3D(const ImageData& refImg3D, const ImageData& evalImg3D, const GammaParameters& gammaParams){
     validateGammaParameters(gammaParams);
 
     std::vector<float> gammaVals;

@@ -16,145 +16,117 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  ******************************************************************************************/
 
+#include "ImageData.hpp"
+
+#include <stdexcept>
+#include <algorithm>
+#include <numeric>
+#include <cmath>
+#include <limits>
+
 namespace yagit{
 
-template <typename T>
-template <typename U>
-ImageData<T>::ImageData(const std::vector<U>& data, const DataSize& size, const DataOffset& offset, const DataSpacing& spacing)
-    : m_data(data.begin(), data.end()), m_size(size), m_offset(offset), m_spacing(spacing) {
-    if(data.size() != size.frames * size.rows * size.columns){
-        throw std::invalid_argument("size is inconsistent with data size information");
-    }
+namespace{
+using value_type = ImageData::value_type;
+using reference = ImageData::reference;
+using const_reference = ImageData::const_reference;
+using pointer = ImageData::pointer;
+using const_pointer = ImageData::const_pointer;
 }
 
-template <typename T>
-template <typename U>
-ImageData<T>::ImageData(const Image2D<U>& image2d, const DataOffset& offset, const DataSpacing& spacing)
-    : m_offset(offset), m_spacing(spacing) {
-    const uint32_t rows = image2d.size();
-    const uint32_t columns = image2d.at(0).size();
-    for(const auto& v : image2d){
-        if(v.size() != columns){
-            throw std::invalid_argument("inner vectors don't have the same size");
-        }
-        m_data.insert(m_data.end(), v.begin(), v.end());
-    }
-
-    m_size = DataSize{1, rows, columns};
+ImageData::ImageData(ImageData&& other) noexcept
+    : m_data(std::move(other.m_data)), m_size(other.m_size), m_offset(other.m_offset), m_spacing(other.m_spacing){
+    other.m_size = {0, 0, 0};
+    other.m_offset = {0, 0, 0};
+    other.m_spacing = {0, 0, 0};
 }
 
-template <typename T>
-template <typename U>
-ImageData<T>::ImageData(const Image3D<U>& image3d, const DataOffset& offset, const DataSpacing& spacing)
-    : m_offset(offset), m_spacing(spacing) {
-    const uint32_t frames = image3d.size();
-    const uint32_t rows = image3d.at(0).size();
-    const uint32_t columns = image3d.at(0).at(0).size();
-    for(const auto& v : image3d){
-        if(v.size() != rows){
-            throw std::invalid_argument("firstly nested vectors don't have the same size");
-        }
-        for(const auto& v2 : v){
-            if(v2.size() != columns){
-                throw std::invalid_argument("double nested vectors don't have the same size");
-            }
-            m_data.insert(m_data.end(), v2.begin(), v2.end());
-        }
+ImageData& ImageData::operator=(ImageData&& other) noexcept{
+    if(this != &other){
+        m_data = std::move(other.m_data);
+        m_size = other.m_size;
+        m_offset = other.m_offset;
+        m_spacing = other.m_spacing;
+        other.m_size = {0, 0, 0};
+        other.m_offset = {0, 0, 0};
+        other.m_spacing = {0, 0, 0};
     }
-
-    m_size = DataSize{frames, rows, columns};
+    return *this;
 }
 
-template <typename T>
-DataSize ImageData<T>::getSize() const{
+DataSize ImageData::getSize() const{
     return m_size;
 }
 
-template <typename T>
-DataOffset ImageData<T>::getOffset() const{
+DataOffset ImageData::getOffset() const{
     return m_offset;
 }
 
-template <typename T>
-DataSpacing ImageData<T>::getSpacing() const{
+DataSpacing ImageData::getSpacing() const{
     return m_spacing;
 }
 
-template <typename T>
-void ImageData<T>::setSize(const DataSize& size){
+void ImageData::setSize(const DataSize& size){
     if(m_size.frames * m_size.rows * m_size.columns != size.frames * size.rows * size.columns){
         throw std::invalid_argument("the total number of elements in the new size does not match the total number of elements in the old size");
     }
     m_size = size;
 }
 
-template <typename T>
-void ImageData<T>::setOffset(const DataOffset& offset){
+void ImageData::setOffset(const DataOffset& offset){
     m_offset = offset;
 }
 
-template <typename T>
-void ImageData<T>::setSpacing(const DataSpacing& spacing){
+void ImageData::setSpacing(const DataSpacing& spacing){
     m_spacing = spacing;
 }
 
-template <typename T>
-ImageData<T>::size_type ImageData<T>::size() const{
+ImageData::size_type ImageData::size() const{
     return m_data.size();
 }
 
-template <typename T>
-T& ImageData<T>::at(uint32_t z, uint32_t y, uint32_t x){
-    return const_cast<T&>(const_cast<const ImageData*>(this)->at(z, y, x));
+reference ImageData::at(uint32_t z, uint32_t y, uint32_t x){
+    return const_cast<reference>(const_cast<const ImageData*>(this)->at(z, y, x));
 }
 
-template <typename T>
-const T& ImageData<T>::at(uint32_t z, uint32_t y, uint32_t x) const{
+const_reference ImageData::at(uint32_t z, uint32_t y, uint32_t x) const{
     if(z >= m_size.frames || y >= m_size.rows || x >= m_size.columns){
         throw std::out_of_range("data index out of range");
     }
     return get(z, y, x);
 }
 
-template <typename T>
-T& ImageData<T>::get(uint32_t z, uint32_t y, uint32_t x){
-    return const_cast<T&>(const_cast<const ImageData*>(this)->get(z, y, x));
+reference ImageData::get(uint32_t z, uint32_t y, uint32_t x){
+    return const_cast<reference>(const_cast<const ImageData*>(this)->get(z, y, x));
 }
 
-template <typename T>
-const T& ImageData<T>::get(uint32_t z, uint32_t y, uint32_t x) const{
+const_reference ImageData::get(uint32_t z, uint32_t y, uint32_t x) const{
     return m_data[(z * m_size.rows + y) * m_size.columns + x];
 }
 
-template <typename T>
-T& ImageData<T>::get(uint32_t index){
-    return const_cast<T&>(const_cast<const ImageData*>(this)->get(index));
+reference ImageData::get(uint32_t index){
+    return const_cast<reference>(const_cast<const ImageData*>(this)->get(index));
 }
 
-template <typename T>
-const T& ImageData<T>::get(uint32_t index) const{
+const_reference ImageData::get(uint32_t index) const{
     return m_data[index];
 }
 
-template <typename T>
-ImageData<T>::pointer ImageData<T>::data(){
-    return const_cast<T&>(const_cast<const ImageData*>(this)->data());
+pointer ImageData::data(){
+    return const_cast<pointer>(const_cast<const ImageData*>(this)->data());
 }
 
-template <typename T>
-ImageData<T>::const_pointer ImageData<T>::data() const{
+const_pointer ImageData::data() const{
     return m_data.data();
 }
 
-template <typename T>
-std::vector<T> ImageData<T>::getData() const{
+std::vector<value_type> ImageData::getData() const{
     return m_data;
 }
 
 // info about image plane is not saved in ImageData
-template <typename T>
-Image2D<T> ImageData<T>::getImage2D(uint32_t frame, ImagePlane imgPlane) const{
-    Image2D<T> img2d;
+Image2D<value_type> ImageData::getImage2D(uint32_t frame, ImagePlane imgPlane) const{
+    Image2D<value_type> img2d;
     if(imgPlane == ImagePlane::Axial){  // YX
         if(frame >= m_size.frames){
             throw std::out_of_range("frame out of range (frame >= nr of frames)");
@@ -162,8 +134,8 @@ Image2D<T> ImageData<T>::getImage2D(uint32_t frame, ImagePlane imgPlane) const{
         img2d.reserve(m_size.rows);
         for(uint32_t y = 0; y < m_size.rows; y++){
             img2d.emplace_back();
-            const T* beginData = m_data.data() + (frame * m_size.rows + y) * m_size.columns;
-            const T* endData = beginData + m_size.columns;
+            const value_type* beginData = m_data.data() + (frame * m_size.rows + y) * m_size.columns;
+            const value_type* endData = beginData + m_size.columns;
             img2d[y].insert(img2d[y].end(), beginData, endData);
         }
     }
@@ -197,9 +169,8 @@ Image2D<T> ImageData<T>::getImage2D(uint32_t frame, ImagePlane imgPlane) const{
 }
 
 // info about image plane is not saved in ImageData
-template <typename T>
-Image3D<T> ImageData<T>::getImage3D(ImagePlane imgPlane) const{
-    Image3D<T> img3d;
+Image3D<value_type> ImageData::getImage3D(ImagePlane imgPlane) const{
+    Image3D<value_type> img3d;
     if(imgPlane == ImagePlane::Axial){  // ZYX
         img3d.reserve(m_size.frames);
         for(uint32_t z = 0; z < m_size.frames; z++){
@@ -221,8 +192,7 @@ Image3D<T> ImageData<T>::getImage3D(ImagePlane imgPlane) const{
     return img3d;
 }
 
-template <typename T>
-ImageData<T> ImageData<T>::getImageData2D(uint32_t frame, ImagePlane imgPlane) const{
+ImageData ImageData::getImageData2D(uint32_t frame, ImagePlane imgPlane) const{
     DataOffset offset{};
     DataSpacing spacing{};
 
@@ -239,11 +209,10 @@ ImageData<T> ImageData<T>::getImageData2D(uint32_t frame, ImagePlane imgPlane) c
         spacing = {0, m_spacing.framesSpacing, m_spacing.rowsSpacing};
     }
 
-    return ImageData<T>(getImage2D(frame, imgPlane), offset, spacing);
+    return ImageData(getImage2D(frame, imgPlane), offset, spacing);
 }
 
-template <typename T>
-ImageData<T> ImageData<T>::getImageData3D(ImagePlane imgPlane) const{
+ImageData ImageData::getImageData3D(ImagePlane imgPlane) const{
     if(imgPlane == ImagePlane::Axial){
         return *this;
     }
@@ -260,41 +229,35 @@ ImageData<T> ImageData<T>::getImageData3D(ImagePlane imgPlane) const{
             spacing = {m_spacing.columnsSpacing, m_spacing.framesSpacing, m_spacing.rowsSpacing};
         }
 
-        return ImageData<T>(getImage3D(imgPlane), offset, spacing);
+        return ImageData(getImage3D(imgPlane), offset, spacing);
     }
 }
 
-template <typename T>
-T ImageData<T>::min() const{
+value_type ImageData::min() const{
     return *std::min_element(m_data.begin(), m_data.end());
 }
 
-template <typename T>
-T ImageData<T>::max() const{
+value_type ImageData::max() const{
     return *std::max_element(m_data.begin(), m_data.end());
 }
 
-template <typename T>
-T ImageData<T>::sum() const{
-    return std::accumulate(m_data.begin(), m_data.end(), T());
+value_type ImageData::sum() const{
+    return std::accumulate(m_data.begin(), m_data.end(), value_type());
 }
 
-template <typename T>
-T ImageData<T>::mean() const{
+value_type ImageData::mean() const{
     return sum() / size();
 }
 
-template <typename T>
-T ImageData<T>::var() const{
-    const T meanV = mean();
-    return std::accumulate(m_data.begin(), m_data.end(), T(), [&meanV](auto a, auto b){
+value_type ImageData::var() const{
+    const value_type meanV = mean();
+    return std::accumulate(m_data.begin(), m_data.end(), value_type(), [&meanV](auto a, auto b){
         return a + (b - meanV) * (b - meanV);
     }) / size();
 }
 
-template <typename T>
-T ImageData<T>::nanmin() const{
-    T minV = std::numeric_limits<T>::infinity();
+value_type ImageData::nanmin() const{
+    value_type minV = std::numeric_limits<value_type>::infinity();
     for(const auto& el : m_data){
         if(!std::isnan(el) && el < minV){
             minV = el;
@@ -303,9 +266,8 @@ T ImageData<T>::nanmin() const{
     return minV;
 }
 
-template <typename T>
-T ImageData<T>::nanmax() const{
-    T maxV = -std::numeric_limits<T>::infinity();
+value_type ImageData::nanmax() const{
+    value_type maxV = -std::numeric_limits<value_type>::infinity();
     for(const auto& el : m_data){
         if(!std::isnan(el) && el > maxV){
             maxV = el;
@@ -314,36 +276,30 @@ T ImageData<T>::nanmax() const{
     return maxV;
 }
 
-template <typename T>
-T ImageData<T>::nansum() const{
-    return std::accumulate(m_data.begin(), m_data.end(), T(), [](auto a, auto b){ return !isnan(b) ? (a+b) : a; });
+value_type ImageData::nansum() const{
+    return std::accumulate(m_data.begin(), m_data.end(), value_type(), [](auto a, auto b){ return !isnan(b) ? (a+b) : a; });
 }
 
-template <typename T>
-T ImageData<T>::nanmean() const{
+value_type ImageData::nanmean() const{
     return nansum() / nansize();
 }
 
-template <typename T>
-T ImageData<T>::nanvar() const{
-    const T meanVal = nanmean();
-    return std::accumulate(m_data.begin(), m_data.end(), T(), [&meanVal](const auto& a, const auto& b){
+value_type ImageData::nanvar() const{
+    const value_type meanVal = nanmean();
+    return std::accumulate(m_data.begin(), m_data.end(), value_type(), [&meanVal](const auto& a, const auto& b){
         return !isnan(b) ? (a + (b - meanVal) * (b - meanVal)) : a;
     }) / nansize();
 }
 
-template <typename T>
-ImageData<T>::size_type ImageData<T>::nansize() const{
+ImageData::size_type ImageData::nansize() const{
     return std::count_if(m_data.begin(), m_data.end(), [](const auto& el) { return !std::isnan(el); });
 }
 
-template <typename T>
-bool ImageData<T>::containsNan() const{
+bool ImageData::containsNan() const{
     return std::find_if(m_data.begin(), m_data.end(), [](const auto& el) { return std::isnan(el); }) != m_data.end();
 }
 
-template <typename T>
-bool ImageData<T>::containsInf() const{
+bool ImageData::containsInf() const{
     return std::find_if(m_data.begin(), m_data.end(), [](const auto& el) { return std::isinf(el); }) != m_data.end();
 }
 

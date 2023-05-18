@@ -19,7 +19,7 @@
 
 #include <string>
 
-#include "DoseData.hpp"
+#include "ImageData.hpp"
 
 namespace yagit::DataReader{
 
@@ -29,7 +29,7 @@ namespace yagit::DataReader{
  * @param displayInfo Whether to show additional information read from the file
  * @return Image containing dose and image info (size, offset, spacing) retrieved from DICOM file
  */
-DoseData readRTDoseDicom(const std::string& file, bool displayInfo = false);
+ImageData readRTDoseDicom(const std::string& file, bool displayInfo = false);
 
 // TODO: other methods for reading other data (e.g. MetaImage)
 

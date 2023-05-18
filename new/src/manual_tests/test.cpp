@@ -21,16 +21,16 @@
 
 #include <iostream>
 #include <numeric>
+#include <algorithm>
 
 #include "DataReader.hpp"
-#include "DoseData.hpp"
+#include "ImageData.hpp"
 
 #include "GammaParameters.hpp"
 #include "GammaResult.hpp"
 #include "Gamma.hpp"
 
-template <typename T>
-void printDataInfo(const yagit::ImageData<T>& data){
+void printDataInfo(const yagit::ImageData& data){
     yagit::DataSize size = data.getSize();
     yagit::DataOffset offset = data.getOffset();
     yagit::DataSpacing spacing = data.getSpacing();
@@ -59,8 +59,7 @@ void printVecInfo(const std::vector<float>& vec){
     std::cout << "sum: " << std::accumulate(vec.begin(), vec.end(), 0.0) << "\n";
 }
 
-template <typename T>
-void printDataStatsInfo(const yagit::ImageData<T>& data){
+void printDataStatsInfo(const yagit::ImageData& data){
     std::cout << "size: " << data.size() << "\n"
               << "min: " << data.min() << "\n"
               << "max: " << data.max() << "\n"
@@ -69,8 +68,7 @@ void printDataStatsInfo(const yagit::ImageData<T>& data){
               << "var: " << data.var() << "\n";
 }
 
-template <typename T>
-void printDataStatsNanInfo(const yagit::ImageData<T>& data){
+void printDataStatsNanInfo(const yagit::ImageData& data){
     std::cout << "size: " << data.size() << "\n"
               << "nansize: " << data.nansize() << "\n"
               << "nanmin: " << data.nanmin() << "\n"
@@ -86,7 +84,7 @@ int main(){
 
     try{
         const std::string filename{"original_dose_beam_4.dcm"};
-        yagit::DoseData data = yagit::DataReader::readRTDoseDicom(filename, true);
+        yagit::ImageData data = yagit::DataReader::readRTDoseDicom(filename, true);
 
         std::cout << "--------------------------------------------------\n";
         std::cout << "DATA from DICOM RT Dose\n";
@@ -107,11 +105,11 @@ int main(){
             {3.3, 0.1, 0.4, 9.3, 9.9, 2.2},
             {0.1, 5.3, 0.1, 9.9, 2.2, 3.3}
         };
-        yagit::DoseData data2d(img2d, {0,1,20}, {2,2,2});
+        yagit::ImageData data2d(img2d, {0,1,20}, {2,2,2});
 
         std::cout << data2d.get(0, 1, 1) << "\n";
 
-        const yagit::DoseData constData2d(data2d);
+        const yagit::ImageData constData2d(data2d);
         std::cout << constData2d.get(0, 1, 1) << "\n";
 
 
@@ -127,7 +125,7 @@ int main(){
                 {7.1, 0.3}
             }
         };
-        yagit::DoseData data3d(img3d, {10,23,45}, {2,5,7});
+        yagit::ImageData data3d(img3d, {10,23,45}, {2,5,7});
 
         std::cout << data3d.get(0, 1, 1) << "\n";
         std::cout << data3d.get(0, 0, 1) << "\n";
@@ -160,18 +158,18 @@ int main(){
         //===========================================================================================================
         std::cout << "==================================================\n";
     
-        // yagit::DoseData d0;
-        yagit::DoseData d1(img2d, {0,0,0}, {1,1,1});
+        // yagit::ImageData d0;
+        yagit::ImageData d1(img2d, {0,0,0}, {1,1,1});
         
-        yagit::DoseData d1c(d1);
-        yagit::DoseData d1c2 = d1;
+        yagit::ImageData d1c(d1);
+        yagit::ImageData d1c2 = d1;
 
-        // yagit::DoseData d1m(std::move(d1));
-        // yagit::DoseData d1m2 = std::move(d1);
+        // yagit::ImageData d1m(std::move(d1));
+        // yagit::ImageData d1m2 = std::move(d1);
 
         std::cout << std::boolalpha << (d1 == d1) << " ";
 
-        yagit::ImageData<float> id1(img2d, {0,0,0}, {1,1,1});
+        yagit::ImageData id1(img2d, {0,0,0}, {1,1,1});
         std::cout << std::boolalpha << (id1 == id1) << "\n";
 
         std::cout << std::boolalpha << (yagit::DataSize{1,1,1} == yagit::DataSize{3,3,3}) << " "
@@ -184,10 +182,10 @@ int main(){
         //     {1,2,3},
         //     {4,5,6}
         // };
-        // yagit::ImageData<float> idint(img2dint, {0,0,0}, {1,1,1});
+        // yagit::ImageData idint(img2dint, {0,0,0}, {1,1,1});
 
         // std::vector<float> vf{1.5, 2.23, 3.12, 9.0};
-        // yagit::ImageData<int> idint2(vf, {1,1,4}, {0,0,0}, {1,1,1});
+        // yagit::ImageData idint2(vf, {1,1,4}, {0,0,0}, {1,1,1});
 
         // for(int i=0; i < idint2.size(); i++){
         //     std::cout << idint2.get(i) << " ";
@@ -241,8 +239,8 @@ int main(){
         yagit::Image2D<float> img2{
             {2,1}, {2,3}
         };
-        yagit::DoseData dr(img1, {0,0,0}, {0,2,2});
-        yagit::DoseData de(img2, {0,0,0}, {0,2,2});
+        yagit::ImageData dr(img1, {0,0,0}, {0,2,2});
+        yagit::ImageData de(img2, {0,0,0}, {0,2,2});
 
         // expected:
         // [[2/3, 0], [2/3, 2/3]]
@@ -252,8 +250,8 @@ int main(){
 
         img1 = {{0.93, 0.95}, {0.97, 1.00}};
         img2 = {{0.95, 0.97}, {1.00, 1.03}};
-        yagit::DoseData dr2(img1, {0,0,-1}, {0,1,1});
-        yagit::DoseData de2(img2, {0,-1,0}, {0,1,1});
+        yagit::ImageData dr2(img1, {0,0,-1}, {0,1,1});
+        yagit::ImageData de2(img2, {0,-1,0}, {0,1,1});
         // expected:
         // [[0.816496, 0.333333], [0.942809, 0.333333]]
         std::cout << yagit::gammaIndex2D(dr2, de2, {3,3, yagit::GammaNormalization::Global, dr2.max(), 0}).getImage2D(0);
@@ -271,13 +269,13 @@ int main(){
 
         std::cout << "\n-----------------\n";
 
-        yagit::ImageData<float> statsData(std::vector<float>{2,7,3,9,4,1,0,4,3,6,10,2,6,1,5}, {1,1,15}, {0,0,0}, {1,1,1});
+        yagit::ImageData statsData(std::vector<float>{2,7,3,9,4,1,0,4,3,6,10,2,6,1,5}, {1,1,15}, {0,0,0}, {1,1,1});
         printDataStatsInfo(statsData);
 
         std::cout << "\n-----------------\n";
 
         const float nan = std::numeric_limits<float>::quiet_NaN();
-        yagit::ImageData<float> statsData2(std::vector<float>{nan,2,7,3,9,4,1,0,nan,4,3,6,10,2,6,1,5,nan}, {1,1,15+3}, {0,0,0}, {1,1,1});
+        yagit::ImageData statsData2(std::vector<float>{nan,2,7,3,9,4,1,0,nan,4,3,6,10,2,6,1,5,nan}, {1,1,15+3}, {0,0,0}, {1,1,1});
         printDataStatsInfo(statsData2);
         std::cout << "\n-------\n";
         printDataStatsNanInfo(statsData2);

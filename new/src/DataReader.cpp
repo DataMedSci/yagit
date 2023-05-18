@@ -107,7 +107,7 @@ gdcm::SwapCode getDataEndianness(const std::optional<gdcm::UIComp>& transferSynt
 }
 }
 
-DoseData readRTDoseDicom(const std::string& file, bool displayInfo){
+ImageData readRTDoseDicom(const std::string& file, bool displayInfo){
     gdcm::Reader reader;
     reader.SetFileName(file.c_str());
     if(!reader.Read()) {
@@ -276,7 +276,7 @@ DoseData readRTDoseDicom(const std::string& file, bool displayInfo){
         }
     }
 
-    return DoseData(doseData,
+    return ImageData(doseData,
                     DataSize(*frames, *rows, *columns),
                     DataOffset(imagePositionPatient[2], imagePositionPatient[1], imagePositionPatient[0]),
                     DataSpacing(sliceThicknessVal, pixelSpacing[0], pixelSpacing[1]));

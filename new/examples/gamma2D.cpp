@@ -44,8 +44,8 @@ int main(int argc, char** argv){
     const std::string evalImgPath{argv[2]};
 
     try{
-        yagit::DoseData refImg = yagit::DataReader::readRTDoseDicom(refImgPath);
-        yagit::DoseData evalImg = yagit::DataReader::readRTDoseDicom(evalImgPath);
+        yagit::ImageData refImg = yagit::DataReader::readRTDoseDicom(refImgPath);
+        yagit::ImageData evalImg = yagit::DataReader::readRTDoseDicom(evalImgPath);
 
         // get 2D coronal frame from the middle of the images
         uint32_t yframe = refImg.getSize().rows / 2;

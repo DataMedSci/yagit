@@ -17,7 +17,7 @@
  ******************************************************************************************/
 #pragma once
 
-#include "DoseData.hpp"
+#include "ImageData.hpp"
 #include "GammaParameters.hpp"
 #include "GammaResult.hpp"
 
@@ -31,7 +31,7 @@ namespace yagit{
  * @return 2D image containig gamma index values
  * @note It doesn't take into account the frame offset (z-offset)
  */
-GammaResult gammaIndex2D(const DoseData& refImg2D, const DoseData& evalImg2D, const GammaParameters& gammaParams);
+GammaResult gammaIndex2D(const ImageData& refImg2D, const ImageData& evalImg2D, const GammaParameters& gammaParams);
 
 /**
  * @brief Calculate 2.5D gamma index using classic method.
@@ -42,7 +42,7 @@ GammaResult gammaIndex2D(const DoseData& refImg2D, const DoseData& evalImg2D, co
  * @return 3D image containig gamma index values
  * @note It takes into account the frame offset (z-offset)
  */
-GammaResult gammaIndex2_5D(const DoseData& refImg3D, const DoseData& evalImg3D, const GammaParameters& gammaParams);
+GammaResult gammaIndex2_5D(const ImageData& refImg3D, const ImageData& evalImg3D, const GammaParameters& gammaParams);
 
 /**
  * @brief Calculate 3D gamma index using classic method
@@ -51,6 +51,6 @@ GammaResult gammaIndex2_5D(const DoseData& refImg3D, const DoseData& evalImg3D, 
  * @param gammaParams Parameters of gamma index
  * @return 3D image containig gamma index values 
  */
-GammaResult gammaIndex3D(const DoseData& refImg3D, const DoseData& evalImg3D, const GammaParameters& gammaParams);
+GammaResult gammaIndex3D(const ImageData& refImg3D, const ImageData& evalImg3D, const GammaParameters& gammaParams);
 
 }

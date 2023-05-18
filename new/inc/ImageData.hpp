@@ -19,10 +19,6 @@
 
 #include <vector>
 #include <stdexcept>
-#include <algorithm>
-#include <numeric>
-#include <cmath>
-#include <limits>
 
 #include "DataStructs.hpp"
 #include "Image.hpp"
@@ -36,13 +32,13 @@ namespace yagit{
  * 
  * @note It doesn't contain information in what plane image is oriented.
  * Instead it assumes that all images are in the axial plane.
- * 
- * @tparam T type of pixel value
  */
-template <typename T>
 class ImageData{
 public:
-    using value_type = T;
+    // dose data is stored as float type
+    // it is float instead of a double, because float provides sufficient precision for gamma index calculations
+    // additionally, it takes two times less space and has better optimization possibilities
+    using value_type = float;
     using size_type = std::vector<value_type>::size_type;
     using reference = value_type&;
     using const_reference = const value_type&;
@@ -60,11 +56,8 @@ public:
     ImageData(const ImageData& other) = default;
     ImageData& operator=(const ImageData& other) = default;
 
-    // ImageData(ImageData&& other) noexcept = delete;
-    // ImageData& operator=(ImageData&& other) noexcept = delete;
-
-    ImageData(ImageData&& other) noexcept = default;
-    ImageData& operator=(ImageData&& other) noexcept = default;
+    ImageData(ImageData&& other) noexcept;
+    ImageData& operator=(ImageData&& other) noexcept;
 
     bool operator==(const ImageData& other) const = default;
 
@@ -83,30 +76,30 @@ public:
     /// @brief Number of elements of image (frames*rows*columns)
     size_type size() const;
 
-    /// @brief Get image element at position (frame, row, column) ensuring that the position is within the valid range
-    T& at(uint32_t frame, uint32_t row, uint32_t column);
-    /// @brief Get image element at position (frame, row, column) ensuring that the position is within the valid range
-    const T& at(uint32_t frame, uint32_t row, uint32_t column) const;
+    /// @brief Check that the position is within the valid range and get image element at position (frame, row, column)
+    reference at(uint32_t frame, uint32_t row, uint32_t column);
+    /// @brief Check that the position is within the valid range and get image element at position (frame, row, column)
+    const_reference at(uint32_t frame, uint32_t row, uint32_t column) const;
 
     /// @brief Get image element at position (frame, row, column)
-    T& get(uint32_t frame, uint32_t row, uint32_t column);
+    reference get(uint32_t frame, uint32_t row, uint32_t column);
     /// @brief Get image element at position (frame, row, column)
-    const T& get(uint32_t frame, uint32_t row, uint32_t column) const;
+    const_reference get(uint32_t frame, uint32_t row, uint32_t column) const;
 
     /// @brief Get element at @a index of flattened image
-    T& get(uint32_t index);
+    reference get(uint32_t index);
     /// @brief Get element at @a index of flattened image
-    const T& get(uint32_t index) const;
+    const_reference get(uint32_t index) const;
 
     pointer data();
     const_pointer data() const;
 
     /// @brief Returns copy of flattened image
-    std::vector<T> getData() const;
+    std::vector<value_type> getData() const;
     /// @brief Returns copy of 2D fragment of image
-    Image2D<T> getImage2D(uint32_t frame, ImagePlane plane = ImagePlane::Axial) const;
+    Image2D<value_type> getImage2D(uint32_t frame, ImagePlane plane = ImagePlane::Axial) const;
     /// @brief Returns copy of 3D image
-    Image3D<T> getImage3D(ImagePlane plane = ImagePlane::Axial) const;
+    Image3D<value_type> getImage3D(ImagePlane plane = ImagePlane::Axial) const;
 
     /**
      * @brief Get the ImageData containing a 2D fragment of current image
@@ -125,22 +118,22 @@ public:
      */
     ImageData getImageData3D(ImagePlane plane) const;
 
-    T min() const;
-    T max() const;
-    T sum() const;
-    T mean() const;
-    T var() const;
+    value_type min() const;
+    value_type max() const;
+    value_type sum() const;
+    value_type mean() const;
+    value_type var() const;
 
     /// @brief Minimum value of the image, ignoring any NaNs
-    T nanmin() const;
+    value_type nanmin() const;
     /// @brief Maximum value of the image, ignoring any NaNs
-    T nanmax() const;
+    value_type nanmax() const;
     /// @brief Sum of image values, ignoring any NaNs
-    T nansum() const;
+    value_type nansum() const;
     /// @brief Mean of image values, ignoring any NaNs
-    T nanmean() const;
+    value_type nanmean() const;
     /// @brief Variance of image values, ignoring any NaNs
-    T nanvar() const;
+    value_type nanvar() const;
 
     /// @brief Number of elements of image, ignoring any NaNs
     size_type nansize() const;
@@ -149,13 +142,56 @@ public:
     bool containsInf() const;
 
 protected:
-    std::vector<T> m_data;
+    std::vector<value_type> m_data;
 
     DataSize m_size;
     DataOffset m_offset;
     DataSpacing m_spacing;
 };
 
+
+template <typename U>
+ImageData::ImageData(const std::vector<U>& data, const DataSize& size, const DataOffset& offset, const DataSpacing& spacing)
+    : m_data(data.begin(), data.end()), m_size(size), m_offset(offset), m_spacing(spacing) {
+    if(data.size() != size.frames * size.rows * size.columns){
+        throw std::invalid_argument("size is inconsistent with data size information");
+    }
 }
 
-#include "ImageData.tpp"
+template <typename U>
+ImageData::ImageData(const Image2D<U>& image2d, const DataOffset& offset, const DataSpacing& spacing)
+    : m_offset(offset), m_spacing(spacing) {
+    const uint32_t rows = image2d.size();
+    const uint32_t columns = image2d.at(0).size();
+    for(const auto& v : image2d){
+        if(v.size() != columns){
+            throw std::invalid_argument("inner vectors don't have the same size");
+        }
+        m_data.insert(m_data.end(), v.begin(), v.end());
+    }
+
+    m_size = DataSize{1, rows, columns};
+}
+
+template <typename U>
+ImageData::ImageData(const Image3D<U>& image3d, const DataOffset& offset, const DataSpacing& spacing)
+    : m_offset(offset), m_spacing(spacing) {
+    const uint32_t frames = image3d.size();
+    const uint32_t rows = image3d.at(0).size();
+    const uint32_t columns = image3d.at(0).at(0).size();
+    for(const auto& v : image3d){
+        if(v.size() != rows){
+            throw std::invalid_argument("firstly nested vectors don't have the same size");
+        }
+        for(const auto& v2 : v){
+            if(v2.size() != columns){
+                throw std::invalid_argument("double nested vectors don't have the same size");
+            }
+            m_data.insert(m_data.end(), v2.begin(), v2.end());
+        }
+    }
+
+    m_size = DataSize{frames, rows, columns};
+}
+
+}

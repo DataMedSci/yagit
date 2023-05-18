@@ -19,32 +19,33 @@
 #include "GammaResult.hpp"
 
 #include <algorithm>
+#include <cmath>
 
 namespace yagit{
 
-float GammaResult::passingRate() const{
-    return static_cast<float>(std::count_if(m_data.begin(), m_data.end(), [](const auto& el) {
+GammaResult::value_type GammaResult::passingRate() const{
+    return static_cast<value_type>(std::count_if(m_data.begin(), m_data.end(), [](const auto& el) {
         return !std::isnan(el) && el <= 1;
     })) / nansize();
 }
 
-float GammaResult::minGamma() const{
+GammaResult::value_type GammaResult::minGamma() const{
     return nanmin();
 }
 
-float GammaResult::maxGamma() const{
+GammaResult::value_type GammaResult::maxGamma() const{
     return nanmax();
 }
 
-float GammaResult::sumGamma() const{
+GammaResult::value_type GammaResult::sumGamma() const{
     return nansum();
 }
 
-float GammaResult::meanGamma() const{
+GammaResult::value_type GammaResult::meanGamma() const{
     return nanmean();
 }
 
-float GammaResult::varGamma() const{
+GammaResult::value_type GammaResult::varGamma() const{
     return nanvar();
 }
 

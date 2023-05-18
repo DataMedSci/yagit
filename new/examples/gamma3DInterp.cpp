@@ -59,10 +59,10 @@ int main(int argc, char** argv){
 
     try{
         std::cout << "Reading reference image\n";
-        yagit::DoseData refImg = yagit::DataReader::readRTDoseDicom(refImgPath, true);
+        yagit::ImageData refImg = yagit::DataReader::readRTDoseDicom(refImgPath, true);
         std::cout << "------------------------------\n";
         std::cout << "Reading evaluated image\n";
-        yagit::DoseData evalImg = yagit::DataReader::readRTDoseDicom(evalImgPath, true);
+        yagit::ImageData evalImg = yagit::DataReader::readRTDoseDicom(evalImgPath, true);
         std::cout << "------------------------------\n";
 
         // interpolate eval image to have values on the same grid as ref image

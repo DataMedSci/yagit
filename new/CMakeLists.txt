@@ -11,8 +11,8 @@ set(CMAKE_CXX_STANDARD 20) # for now, only for default operator==
 find_package(GDCM REQUIRED)
 
 add_library(yagit
-    # src/ImageData.cpp
-    src/DoseData.cpp # CMAKE_SOURCE_DIR?
+    src/ImageData.cpp
+    src/ImageData.cpp # CMAKE_SOURCE_DIR?
     src/gamma/Gamma.cpp
     src/GammaResult.cpp
     src/DataReader.cpp

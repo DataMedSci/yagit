@@ -20,7 +20,6 @@
 #include "DataStructs.hpp"
 #include "Image.hpp"
 #include "ImageData.hpp"
-#include "DoseData.hpp"
 #include "GammaResult.hpp"
 
 #include "Gamma.hpp"

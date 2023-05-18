@@ -17,7 +17,7 @@
  ******************************************************************************************/
 #pragma once
 
-#include "DoseData.hpp"
+#include "ImageData.hpp"
 #include "Image.hpp"
 
 namespace yagit::Interpolation{
@@ -30,7 +30,7 @@ namespace yagit::Interpolation{
  * @param axis Axis along which interpolation is performed
  * @return Interpolated image with new spacing
  */
-DoseData linearAlongAxis(const DoseData& img, float spacing, ImageAxis axis);
+ImageData linearAlongAxis(const ImageData& img, float spacing, ImageAxis axis);
 
 /**
  * @brief Bilinear interpolation on @a plane with new spacing
@@ -43,7 +43,7 @@ DoseData linearAlongAxis(const DoseData& img, float spacing, ImageAxis axis);
  * @param plane Plane on which interpolation is performed
  * @return Interpolated image with new spacing
  */
-DoseData bilinearOnPlane(const DoseData& img, float firstAxisSpacing, float secondAxisSpacing, ImagePlane plane);
+ImageData bilinearOnPlane(const ImageData& img, float firstAxisSpacing, float secondAxisSpacing, ImagePlane plane);
 
 /**
  * @brief Trilinear interpolation - along all axes (Z, Y, X) - with new spacing
@@ -51,7 +51,7 @@ DoseData bilinearOnPlane(const DoseData& img, float firstAxisSpacing, float seco
  * @param spacing New spacing by which interpolation is performed
  * @return Interpolated image with new spacing
  */
-DoseData trilinear(const DoseData& img, const DataSpacing& spacing);
+ImageData trilinear(const ImageData& img, const DataSpacing& spacing);
 
 /**
  * @brief Linear interpolation along @a axis on new grid with @a offset and @a spacing
@@ -66,7 +66,7 @@ DoseData trilinear(const DoseData& img, const DataSpacing& spacing);
  * @param axis Axis along which interpolation is performed
  * @return Image interpolated on new grid
  */
-DoseData linearAlongAxis(const DoseData& img, float offset, float spacing, ImageAxis axis);
+ImageData linearAlongAxis(const ImageData& img, float offset, float spacing, ImageAxis axis);
 
 /**
  * @brief Bilinear interpolation on @a plane on new grid with offset and spacing.
@@ -89,8 +89,8 @@ DoseData linearAlongAxis(const DoseData& img, float offset, float spacing, Image
  * @param plane Plane on which interpolation is performed
  * @return Image interpolated on new grid
  */
-DoseData bilinearOnPlane(const DoseData& img, float firstAxisOffset, float secondAxisOffset,
-                         float firstAxisSpacing, float secondAxisSpacing, ImagePlane plane);
+ImageData bilinearOnPlane(const ImageData& img, float firstAxisOffset, float secondAxisOffset,
+                          float firstAxisSpacing, float secondAxisSpacing, ImagePlane plane);
 
 /**
  * @brief Trilinear interpolation - along all axes (Z, Y, X) - on new grid with @a offset and @a spacing.
@@ -103,7 +103,7 @@ DoseData bilinearOnPlane(const DoseData& img, float firstAxisOffset, float secon
  * @param spacing New spacing by which interpolation is performed
  * @return Image interpolated on new grid
  */
-DoseData trilinear(const DoseData& img, const DataOffset& offset, const DataSpacing& spacing);
+ImageData trilinear(const ImageData& img, const DataOffset& offset, const DataSpacing& spacing);
 
 /**
  * @brief Linear interpolation along @a axis on the grid of @a refImg.
@@ -116,7 +116,7 @@ DoseData trilinear(const DoseData& img, const DataOffset& offset, const DataSpac
  * @param axis Axis along which interpolation is performed
  * @return Image interpolated on the grid of @a refImg
  */
-DoseData linearAlongAxis(const DoseData& evalImg, const DoseData& refImg, ImageAxis axis);
+ImageData linearAlongAxis(const ImageData& evalImg, const ImageData& refImg, ImageAxis axis);
 
 /**
  * @brief Bilinear interpolation on @a plane on the grid of @a refImg.
@@ -129,7 +129,7 @@ DoseData linearAlongAxis(const DoseData& evalImg, const DoseData& refImg, ImageA
  * @param plane Plane on which interpolation is performed
  * @return Image interpolated on the grid of @a refImg
  */
-DoseData bilinearAlongPlane(const DoseData& evalImg, const DoseData& refImg, ImagePlane plane);
+ImageData bilinearAlongPlane(const ImageData& evalImg, const ImageData& refImg, ImagePlane plane);
 
 /**
  * @brief Trilinear interpolation - along all axes (Z, Y, X) - on the grid of @a refImg.
@@ -141,6 +141,6 @@ DoseData bilinearAlongPlane(const DoseData& evalImg, const DoseData& refImg, Ima
  * @param refImg Image from which offset and spacing is retrieved and used to create grid on which interpolation is performed
  * @return Image interpolated on the grid of @a refImg
  */
-DoseData trilinear(const DoseData& evalImg, const DoseData& refImg);
+ImageData trilinear(const ImageData& evalImg, const ImageData& refImg);
 
 }

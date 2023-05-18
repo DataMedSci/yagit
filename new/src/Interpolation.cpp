@@ -18,9 +18,12 @@
 
 #include "Interpolation.hpp"
 
+#include <cmath>
+#include <stdexcept>
+
 namespace yagit::Interpolation{
 
-DoseData linearAlongAxis(const DoseData& img, float spacing, ImageAxis axis){
+ImageData linearAlongAxis(const ImageData& img, float spacing, ImageAxis axis){
     if(axis == ImageAxis::Z){
         float oldSpacing = img.getSpacing().framesSpacing;
         if(spacing == oldSpacing){
@@ -49,7 +52,7 @@ DoseData linearAlongAxis(const DoseData& img, float spacing, ImageAxis axis){
             }
         }
         DataSpacing newSpacing{spacing, img.getSpacing().rowsSpacing, img.getSpacing().columnsSpacing};
-        return DoseData(newImg, img.getOffset(), newSpacing);
+        return ImageData(newImg, img.getOffset(), newSpacing);
     }
     else if(axis == ImageAxis::Y){
         float oldSpacing = img.getSpacing().rowsSpacing;
@@ -79,7 +82,7 @@ DoseData linearAlongAxis(const DoseData& img, float spacing, ImageAxis axis){
             }
         }
         DataSpacing newSpacing{img.getSpacing().framesSpacing, spacing, img.getSpacing().columnsSpacing};
-        return DoseData(newImg, img.getOffset(), newSpacing);
+        return ImageData(newImg, img.getOffset(), newSpacing);
     }
     else if(axis == ImageAxis::X){
         float oldSpacing = img.getSpacing().columnsSpacing;
@@ -109,14 +112,14 @@ DoseData linearAlongAxis(const DoseData& img, float spacing, ImageAxis axis){
             }
         }
         DataSpacing newSpacing{img.getSpacing().framesSpacing, img.getSpacing().rowsSpacing, spacing};
-        return DoseData(newImg, img.getOffset(), newSpacing);
+        return ImageData(newImg, img.getOffset(), newSpacing);
     }
     else{
         throw std::invalid_argument("invalid axis");
     }
 }
 
-DoseData bilinearOnPlane(const DoseData& img, float firstAxisSpacing, float secondAxisSpacing, ImagePlane plane){
+ImageData bilinearOnPlane(const ImageData& img, float firstAxisSpacing, float secondAxisSpacing, ImagePlane plane){
     if(plane == ImagePlane::YX){
         return linearAlongAxis(linearAlongAxis(img, firstAxisSpacing, ImageAxis::Y), secondAxisSpacing, ImageAxis::X);
     }
@@ -131,7 +134,7 @@ DoseData bilinearOnPlane(const DoseData& img, float firstAxisSpacing, float seco
     }
 }
 
-DoseData trilinear(const DoseData& img, const DataSpacing& spacing){
+ImageData trilinear(const ImageData& img, const DataSpacing& spacing){
     return linearAlongAxis(
         linearAlongAxis(
             linearAlongAxis(
@@ -140,7 +143,7 @@ DoseData trilinear(const DoseData& img, const DataSpacing& spacing){
         spacing.columnsSpacing, ImageAxis::X);
 }
 
-DoseData linearAlongAxis(const DoseData& img, float offset, float spacing, ImageAxis axis){
+ImageData linearAlongAxis(const ImageData& img, float offset, float spacing, ImageAxis axis){
     if(axis == ImageAxis::Z){
         // closest point greater than img_offset which is one of points (offset +/- n*spacing)
         float zOffset = offset + std::ceil((img.getOffset().framesOffset - offset) / spacing) * spacing;
@@ -176,7 +179,7 @@ DoseData linearAlongAxis(const DoseData& img, float offset, float spacing, Image
         }
         DataOffset newOffset{zOffset, img.getOffset().rowsOffset, img.getOffset().columnsOffset};
         DataSpacing newSpacing{spacing, img.getSpacing().rowsSpacing, img.getSpacing().columnsSpacing};
-        return DoseData(newImg, newOffset, newSpacing);
+        return ImageData(newImg, newOffset, newSpacing);
     }
     else if(axis == ImageAxis::Y){
         // closest point greater than img_offset which is one of points (offset +/- n*spacing)
@@ -213,7 +216,7 @@ DoseData linearAlongAxis(const DoseData& img, float offset, float spacing, Image
         }
         DataOffset newOffset{img.getOffset().framesOffset, yOffset, img.getOffset().columnsOffset};
         DataSpacing newSpacing{img.getSpacing().framesSpacing, spacing, img.getSpacing().columnsSpacing};
-        return DoseData(newImg, newOffset, newSpacing);
+        return ImageData(newImg, newOffset, newSpacing);
     }
     else if(axis == ImageAxis::X){
         // closest point greater than img_offset which is one of points (offset +/- n*spacing)
@@ -250,14 +253,14 @@ DoseData linearAlongAxis(const DoseData& img, float offset, float spacing, Image
         }
         DataOffset newOffset{img.getOffset().framesOffset, img.getOffset().rowsOffset, xOffset};
         DataSpacing newSpacing{img.getSpacing().framesSpacing, img.getSpacing().rowsSpacing, spacing};
-        return DoseData(newImg, newOffset, newSpacing);
+        return ImageData(newImg, newOffset, newSpacing);
     }
     else{
         throw std::invalid_argument("invalid axis");
     }
 }
 
-DoseData bilinearOnPlane(const DoseData& img, float firstAxisOffset, float secondAxisOffset,
+ImageData bilinearOnPlane(const ImageData& img, float firstAxisOffset, float secondAxisOffset,
                          float firstAxisSpacing, float secondAxisSpacing, ImagePlane plane){
     if(plane == ImagePlane::YX){
         return linearAlongAxis(
@@ -282,7 +285,7 @@ DoseData bilinearOnPlane(const DoseData& img, float firstAxisOffset, float secon
     }
 }
 
-DoseData trilinear(const DoseData& img, const DataOffset& offset, const DataSpacing& spacing){
+ImageData trilinear(const ImageData& img, const DataOffset& offset, const DataSpacing& spacing){
     return linearAlongAxis(
         linearAlongAxis(
             linearAlongAxis(
@@ -292,7 +295,7 @@ DoseData trilinear(const DoseData& img, const DataOffset& offset, const DataSpac
 
 }
 
-DoseData linearAlongAxis(const DoseData& evalImg, const DoseData& refImg, ImageAxis axis){
+ImageData linearAlongAxis(const ImageData& evalImg, const ImageData& refImg, ImageAxis axis){
     float offset = 0;
     float spacing = 0;
     if(axis == ImageAxis::Z){
@@ -313,7 +316,7 @@ DoseData linearAlongAxis(const DoseData& evalImg, const DoseData& refImg, ImageA
     return linearAlongAxis(evalImg, offset, spacing, axis);
 }
 
-DoseData bilinearOnPlane(const DoseData& evalImg, const DoseData& refImg, ImagePlane plane){
+ImageData bilinearOnPlane(const ImageData& evalImg, const ImageData& refImg, ImagePlane plane){
     float offset1 = 0, offset2 = 0;
     float spacing1 = 0, spacing2 = 0;
     if(plane == ImagePlane::YX){
@@ -340,7 +343,7 @@ DoseData bilinearOnPlane(const DoseData& evalImg, const DoseData& refImg, ImageP
     return bilinearOnPlane(evalImg, offset1, offset2, spacing1, spacing2, plane);
 }
 
-DoseData trilinear(const DoseData& evalImg, const DoseData& refImg){
+ImageData trilinear(const ImageData& evalImg, const ImageData& refImg){
     return trilinear(evalImg, refImg.getOffset(), refImg.getSpacing());
 }
 

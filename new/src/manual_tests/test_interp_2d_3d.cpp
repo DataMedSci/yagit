@@ -54,7 +54,7 @@ void printImage3D(const yagit::Image3D<float>& img){
     }
 }
 
-void printDataStats(const yagit::DoseData& data){
+void printDataStats(const yagit::ImageData& data){
     yagit::DataSize size = data.getSize();
     yagit::DataOffset offset = data.getOffset();
     yagit::DataSpacing spacing = data.getSpacing();
@@ -64,7 +64,7 @@ void printDataStats(const yagit::DoseData& data){
               << "spacing(" << spacing.framesSpacing << ", " << spacing.rowsSpacing << ", " << spacing.columnsSpacing << ")\n";
 }
 
-void printDataInfo(const yagit::DoseData& data){
+void printDataInfo(const yagit::ImageData& data){
     printDataStats(data);
     printImage3D(data.getImage3D());;
     std::cout << "-----------------------------\n";
@@ -77,7 +77,7 @@ int main(){
         {10,11,12,13,14}
     };
 
-    yagit::DoseData d(img, {0,0,0}, {1,1,1});
+    yagit::ImageData d(img, {0,0,0}, {1,1,1});
     printDataInfo(d);
 
     auto dyx = yagit::Interpolation::bilinearOnPlane(d, 0.5, 0.5, yagit::ImagePlane::Axial);
@@ -112,7 +112,7 @@ int main(){
         }
     };
 
-    yagit::DoseData d3d(img3d, {0,0,0}, {1,1,1});
+    yagit::ImageData d3d(img3d, {0,0,0}, {1,1,1});
     printDataInfo(d3d);
 
     printDataInfo(yagit::Interpolation::trilinear(d3d, {0.5,0.5,0.5}));
@@ -123,7 +123,7 @@ int main(){
 
     std::cout << "============================================\n";
     const std::string refImgFilename{"original_dose_beam_4.dcm"};
-    yagit::DoseData refImg = yagit::DataReader::readRTDoseDicom(refImgFilename);
+    yagit::ImageData refImg = yagit::DataReader::readRTDoseDicom(refImgFilename);
     
     printDataStats(refImg);
 
@@ -133,7 +133,7 @@ int main(){
 
     std::cout << "============================================\n";
     const std::string evalImgFilename{"logfile_dose_beam_4.dcm"};
-    yagit::DoseData evalImg = yagit::DataReader::readRTDoseDicom(evalImgFilename);
+    yagit::ImageData evalImg = yagit::DataReader::readRTDoseDicom(evalImgFilename);
     auto eOffset = evalImg.getOffset();
     evalImg.setOffset(yagit::DataOffset(eOffset.framesOffset + 0.3, eOffset.rowsOffset - 0.2, eOffset.columnsOffset + 0.1));
     printDataStats(refImg);

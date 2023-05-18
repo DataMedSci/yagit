@@ -47,12 +47,12 @@ void printImage2D(const yagit::Image2D<float>& img){
     std::cout << "]\n";
 }
 
-void printDoseData(const yagit::DoseData& doseData){
-    printImage2D(doseData.getImage2D(0));
+void printImageData(const yagit::ImageData& ImageData){
+    printImage2D(ImageData.getImage2D(0));
 
-    yagit::DataSize size = doseData.getSize();
-    yagit::DataOffset offset = doseData.getOffset();
-    yagit::DataSpacing spacing = doseData.getSpacing();
+    yagit::DataSize size = ImageData.getSize();
+    yagit::DataOffset offset = ImageData.getOffset();
+    yagit::DataSpacing spacing = ImageData.getSpacing();
     std::cout << "size: (" << size.frames << ", " << size.rows << ", " << size.columns << ")\n"
               << "offset: (" << offset.framesOffset << ", " << offset.rowsOffset << ", " << offset.columnsOffset << ")\n"
               << "spacing: (" << spacing.framesSpacing << ", " << spacing.rowsSpacing << ", " << spacing.columnsSpacing << ")\n";
@@ -74,14 +74,14 @@ int main(){
     yagit::DataSpacing refSpacing{0, 1, 1};
     yagit::DataSpacing evalSpacing{0, 1, 1};
 
-    yagit::DoseData refImgDose(refImg, refOffset, refSpacing);
-    yagit::DoseData evalImgDose(evalImg, evalOffset, evalSpacing);
+    yagit::ImageData refImgDose(refImg, refOffset, refSpacing);
+    yagit::ImageData evalImgDose(evalImg, evalOffset, evalSpacing);
 
     std::cout << "Reference image:\n";
-    printDoseData(refImgDose);
+    printImageData(refImgDose);
     std::cout << "------------------------------\n";
     std::cout << "Evaluated image:\n";
-    printDoseData(evalImgDose);
+    printImageData(evalImgDose);
     std::cout << "------------------------------\n";
 
     float refMaxDose = refImgDose.max();

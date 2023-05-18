@@ -44,8 +44,8 @@ int main(int argc, char** argv){
     const std::string evalImgPath{argv[2]};
 
     try{
-        const yagit::DoseData refImg = yagit::DataReader::readRTDoseDicom(refImgPath);
-        const yagit::DoseData evalImg = yagit::DataReader::readRTDoseDicom(evalImgPath);
+        const yagit::ImageData refImg = yagit::DataReader::readRTDoseDicom(refImgPath);
+        const yagit::ImageData evalImg = yagit::DataReader::readRTDoseDicom(evalImgPath);
 
         float refMaxDose = refImg.max();
         yagit::GammaParameters gammaParams;

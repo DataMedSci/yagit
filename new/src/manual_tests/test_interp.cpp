@@ -35,8 +35,7 @@ std::ostream& operator<<(std::ostream& out, const std::vector<T>& v) {
     return out;
 }
 
-template <typename T>
-void printDataInfo(const yagit::ImageData<T>& data){
+void printDataInfo(const yagit::ImageData& data){
     yagit::DataSize size = data.getSize();
     yagit::DataOffset offset = data.getOffset();
     yagit::DataSpacing spacing = data.getSpacing();
@@ -51,26 +50,26 @@ void printDataInfo(const yagit::ImageData<T>& data){
 int main(){
     std::cout << "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ\n";
     std::vector<float> img{0,1,2,3,4,5};
-    yagit::DoseData d(img, yagit::DataSize(img.size(),1,1), {0,0,0}, {1,1,1});
+    yagit::ImageData d(img, yagit::DataSize(img.size(),1,1), {0,0,0}, {1,1,1});
     printDataInfo(d);
 
-    yagit::DoseData di2 = yagit::Interpolation::linearAlongAxis(d, 0.5, yagit::ImageAxis::Z);
+    yagit::ImageData di2 = yagit::Interpolation::linearAlongAxis(d, 0.5, yagit::ImageAxis::Z);
     printDataInfo(di2);
-    yagit::DoseData di3 = yagit::Interpolation::linearAlongAxis(d, 1/3.f, yagit::ImageAxis::Z);
+    yagit::ImageData di3 = yagit::Interpolation::linearAlongAxis(d, 1/3.f, yagit::ImageAxis::Z);
     printDataInfo(di3);
-    yagit::DoseData di03 = yagit::Interpolation::linearAlongAxis(d, 0.3, yagit::ImageAxis::Z);
+    yagit::ImageData di03 = yagit::Interpolation::linearAlongAxis(d, 0.3, yagit::ImageAxis::Z);
     printDataInfo(di03);
-    yagit::DoseData dib = yagit::Interpolation::linearAlongAxis(d, 2, yagit::ImageAxis::Z);
+    yagit::ImageData dib = yagit::Interpolation::linearAlongAxis(d, 2, yagit::ImageAxis::Z);
     printDataInfo(dib);
 
     std::cout << "===========================================\n";
 
     std::vector<float> img2{8,23,5,1};
-    yagit::DoseData d2(img2, yagit::DataSize(img2.size(),1,1), {0,0,0}, {1,1,1});
+    yagit::ImageData d2(img2, yagit::DataSize(img2.size(),1,1), {0,0,0}, {1,1,1});
     printDataInfo(d2);
-    yagit::DoseData d2i = yagit::Interpolation::linearAlongAxis(d2, 0.4, yagit::ImageAxis::Z);
+    yagit::ImageData d2i = yagit::Interpolation::linearAlongAxis(d2, 0.4, yagit::ImageAxis::Z);
     printDataInfo(d2i);
-    yagit::DoseData d2i20 = yagit::Interpolation::linearAlongAxis(d2, 20, yagit::ImageAxis::Z);
+    yagit::ImageData d2i20 = yagit::Interpolation::linearAlongAxis(d2, 20, yagit::ImageAxis::Z);
     printDataInfo(d2i20);
 
     std::cout << "===========================================\n";
@@ -79,13 +78,13 @@ int main(){
     d.setSize({1,uint32_t(img.size()),1});
     printDataInfo(d);
 
-    yagit::DoseData di2y = yagit::Interpolation::linearAlongAxis(d, 0.5, yagit::ImageAxis::Y);
+    yagit::ImageData di2y = yagit::Interpolation::linearAlongAxis(d, 0.5, yagit::ImageAxis::Y);
     printDataInfo(di2y);
-    yagit::DoseData di3y = yagit::Interpolation::linearAlongAxis(d, 1/3.f, yagit::ImageAxis::Y);
+    yagit::ImageData di3y = yagit::Interpolation::linearAlongAxis(d, 1/3.f, yagit::ImageAxis::Y);
     printDataInfo(di3y);
-    yagit::DoseData di03y = yagit::Interpolation::linearAlongAxis(d, 0.3, yagit::ImageAxis::Y);
+    yagit::ImageData di03y = yagit::Interpolation::linearAlongAxis(d, 0.3, yagit::ImageAxis::Y);
     printDataInfo(di03y);
-    yagit::DoseData diby = yagit::Interpolation::linearAlongAxis(d, 2, yagit::ImageAxis::Y);
+    yagit::ImageData diby = yagit::Interpolation::linearAlongAxis(d, 2, yagit::ImageAxis::Y);
     printDataInfo(diby);
 
     std::cout << "===========================================\n";
@@ -93,9 +92,9 @@ int main(){
     d2.setSize({1,uint32_t(img2.size()),1});
     printDataInfo(d2);
 
-    yagit::DoseData d2iy = yagit::Interpolation::linearAlongAxis(d2, 0.4, yagit::ImageAxis::Y);
+    yagit::ImageData d2iy = yagit::Interpolation::linearAlongAxis(d2, 0.4, yagit::ImageAxis::Y);
     printDataInfo(d2iy);
-    yagit::DoseData d2i20y = yagit::Interpolation::linearAlongAxis(d2, 20, yagit::ImageAxis::Y);
+    yagit::ImageData d2i20y = yagit::Interpolation::linearAlongAxis(d2, 20, yagit::ImageAxis::Y);
     printDataInfo(d2i20y);
 
     std::cout << "===========================================\n";
@@ -104,13 +103,13 @@ int main(){
     d.setSize({1,1,uint32_t(img.size())});
     printDataInfo(d);
 
-    yagit::DoseData di2x = yagit::Interpolation::linearAlongAxis(d, 0.5, yagit::ImageAxis::X);
+    yagit::ImageData di2x = yagit::Interpolation::linearAlongAxis(d, 0.5, yagit::ImageAxis::X);
     printDataInfo(di2x);
-    yagit::DoseData di3x = yagit::Interpolation::linearAlongAxis(d, 1/3.f, yagit::ImageAxis::X);
+    yagit::ImageData di3x = yagit::Interpolation::linearAlongAxis(d, 1/3.f, yagit::ImageAxis::X);
     printDataInfo(di3x);
-    yagit::DoseData di03x = yagit::Interpolation::linearAlongAxis(d, 0.3, yagit::ImageAxis::X);
+    yagit::ImageData di03x = yagit::Interpolation::linearAlongAxis(d, 0.3, yagit::ImageAxis::X);
     printDataInfo(di03x);
-    yagit::DoseData dibx = yagit::Interpolation::linearAlongAxis(d, 2, yagit::ImageAxis::X);
+    yagit::ImageData dibx = yagit::Interpolation::linearAlongAxis(d, 2, yagit::ImageAxis::X);
     printDataInfo(dibx);
 
     std::cout << "===========================================\n";
@@ -118,9 +117,9 @@ int main(){
     d2.setSize({1,1,uint32_t(img2.size())});
     printDataInfo(d2);
 
-    yagit::DoseData d2ix = yagit::Interpolation::linearAlongAxis(d2, 0.4, yagit::ImageAxis::X);
+    yagit::ImageData d2ix = yagit::Interpolation::linearAlongAxis(d2, 0.4, yagit::ImageAxis::X);
     printDataInfo(d2ix);
-    yagit::DoseData d2i20x = yagit::Interpolation::linearAlongAxis(d2, 20, yagit::ImageAxis::X);
+    yagit::ImageData d2i20x = yagit::Interpolation::linearAlongAxis(d2, 20, yagit::ImageAxis::X);
     printDataInfo(d2i20x);
 
     std::cout << "===========================================\n";
