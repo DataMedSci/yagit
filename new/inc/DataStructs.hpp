@@ -38,9 +38,9 @@ struct DataSize{
  * @note Values can be negative
  */
 struct DataOffset{
-    float framesOffset;   ///< Position of first frame in image in milimeters [mm]
-    float rowsOffset;     ///< Position of first row in image in milimeters [mm]
-    float columnsOffset;  ///< Position of first column in image in milimeters [mm]
+    float frames;   ///< Position of first frame in image in milimeters [mm]
+    float rows;     ///< Position of first row in image in milimeters [mm]
+    float columns;  ///< Position of first column in image in milimeters [mm]
 
     bool operator==(const DataOffset& other) const = default;
 };
@@ -50,9 +50,9 @@ struct DataOffset{
  * @note Values should be positive
  */
 struct DataSpacing{
-    float framesSpacing;   ///< Spacing between frames in milimeters [mm]
-    float rowsSpacing;     ///< Spacing between rows in milimeters [mm]
-    float columnsSpacing;  ///< Spacing between columns in milimeters [mm]
+    float frames;   ///< Spacing between frames in milimeters [mm]
+    float rows;     ///< Spacing between rows in milimeters [mm]
+    float columns;  ///< Spacing between columns in milimeters [mm]
 
     bool operator==(const DataSpacing& other) const = default;
 };

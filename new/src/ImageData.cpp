@@ -128,7 +128,6 @@ std::vector<value_type> ImageData::getData() const{
     return m_data;
 }
 
-// info about image plane is not saved in ImageData
 Image2D<value_type> ImageData::getImage2D(uint32_t frame, ImagePlane imgPlane) const{
     Image2D<value_type> img2d;
     if(imgPlane == ImagePlane::Axial){  // YX
@@ -172,7 +171,6 @@ Image2D<value_type> ImageData::getImage2D(uint32_t frame, ImagePlane imgPlane) c
     return img2d;
 }
 
-// info about image plane is not saved in ImageData
 Image3D<value_type> ImageData::getImage3D(ImagePlane imgPlane) const{
     Image3D<value_type> img3d;
     if(imgPlane == ImagePlane::Axial){  // ZYX
@@ -201,16 +199,16 @@ ImageData ImageData::getImageData2D(uint32_t frame, ImagePlane imgPlane) const{
     DataSpacing spacing{};
 
     if(imgPlane == ImagePlane::Axial){
-        offset = {m_offset.framesOffset + frame * m_spacing.framesSpacing, m_offset.rowsOffset, m_offset.columnsOffset};
-        spacing = {0, m_spacing.rowsSpacing, m_spacing.columnsSpacing};
+        offset = {m_offset.frames + frame * m_spacing.frames, m_offset.rows, m_offset.columns};
+        spacing = {0, m_spacing.rows, m_spacing.columns};
     }
     else if(imgPlane == ImagePlane::Coronal){
-        offset = {m_offset.rowsOffset + frame * m_spacing.rowsSpacing, m_offset.framesOffset, m_offset.columnsOffset};
-        spacing = {0, m_spacing.framesSpacing, m_spacing.columnsSpacing};
+        offset = {m_offset.rows + frame * m_spacing.rows, m_offset.frames, m_offset.columns};
+        spacing = {0, m_spacing.frames, m_spacing.columns};
     }
     else if(imgPlane == ImagePlane::Sagittal){
-        offset = {m_offset.columnsOffset + frame * m_spacing.columnsSpacing, m_offset.framesOffset, m_offset.rowsOffset};
-        spacing = {0, m_spacing.framesSpacing, m_spacing.rowsSpacing};
+        offset = {m_offset.columns + frame * m_spacing.columns, m_offset.frames, m_offset.rows};
+        spacing = {0, m_spacing.frames, m_spacing.rows};
     }
 
     return ImageData(getImage2D(frame, imgPlane), offset, spacing);
@@ -225,12 +223,12 @@ ImageData ImageData::getImageData3D(ImagePlane imgPlane) const{
         DataSpacing spacing{};
 
         if(imgPlane == ImagePlane::Coronal){
-            offset = {m_offset.rowsOffset, m_offset.framesOffset, m_offset.columnsOffset};
-            spacing = {m_spacing.rowsSpacing, m_spacing.framesSpacing, m_spacing.columnsSpacing};
+            offset = {m_offset.rows, m_offset.frames, m_offset.columns};
+            spacing = {m_spacing.rows, m_spacing.frames, m_spacing.columns};
         }
         else if(imgPlane == ImagePlane::Sagittal){
-            offset = {m_offset.columnsOffset, m_offset.framesOffset, m_offset.rowsOffset};
-            spacing = {m_spacing.columnsSpacing, m_spacing.framesSpacing, m_spacing.rowsSpacing};
+            offset = {m_offset.columns, m_offset.frames, m_offset.rows};
+            spacing = {m_spacing.columns, m_spacing.frames, m_spacing.rows};
         }
 
         return ImageData(getImage3D(imgPlane), offset, spacing);

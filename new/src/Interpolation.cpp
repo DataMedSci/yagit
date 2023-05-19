@@ -26,7 +26,7 @@ namespace yagit::Interpolation{
 
 ImageData linearAlongAxis(const ImageData& img, float spacing, ImageAxis axis){
     if(axis == ImageAxis::Z){
-        float oldSpacing = img.getSpacing().framesSpacing;
+        float oldSpacing = img.getSpacing().frames;
         if(spacing == oldSpacing){
             return img;
         }
@@ -52,11 +52,11 @@ ImageData linearAlongAxis(const ImageData& img, float spacing, ImageAxis axis){
                 }
             }
         }
-        DataSpacing newSpacing{spacing, img.getSpacing().rowsSpacing, img.getSpacing().columnsSpacing};
+        DataSpacing newSpacing{spacing, img.getSpacing().rows, img.getSpacing().columns};
         return ImageData(newImg, img.getOffset(), newSpacing);
     }
     else if(axis == ImageAxis::Y){
-        float oldSpacing = img.getSpacing().rowsSpacing;
+        float oldSpacing = img.getSpacing().rows;
         if(spacing == oldSpacing){
             return img;
         }
@@ -82,11 +82,11 @@ ImageData linearAlongAxis(const ImageData& img, float spacing, ImageAxis axis){
                 }
             }
         }
-        DataSpacing newSpacing{img.getSpacing().framesSpacing, spacing, img.getSpacing().columnsSpacing};
+        DataSpacing newSpacing{img.getSpacing().frames, spacing, img.getSpacing().columns};
         return ImageData(newImg, img.getOffset(), newSpacing);
     }
     else if(axis == ImageAxis::X){
-        float oldSpacing = img.getSpacing().columnsSpacing;
+        float oldSpacing = img.getSpacing().columns;
         if(spacing == oldSpacing){
             return img;
         }
@@ -112,7 +112,7 @@ ImageData linearAlongAxis(const ImageData& img, float spacing, ImageAxis axis){
                 }
             }
         }
-        DataSpacing newSpacing{img.getSpacing().framesSpacing, img.getSpacing().rowsSpacing, spacing};
+        DataSpacing newSpacing{img.getSpacing().frames, img.getSpacing().rows, spacing};
         return ImageData(newImg, img.getOffset(), newSpacing);
     }
     else{
@@ -139,19 +139,19 @@ ImageData trilinear(const ImageData& img, const DataSpacing& spacing){
     return linearAlongAxis(
         linearAlongAxis(
             linearAlongAxis(
-                img, spacing.framesSpacing, ImageAxis::Z),
-            spacing.rowsSpacing, ImageAxis::Y),
-        spacing.columnsSpacing, ImageAxis::X);
+                img, spacing.frames, ImageAxis::Z),
+            spacing.rows, ImageAxis::Y),
+        spacing.columns, ImageAxis::X);
 }
 
 ImageData linearAlongAxis(const ImageData& img, float offset, float spacing, ImageAxis axis){
     if(axis == ImageAxis::Z){
         // closest point greater than img_offset which is one of points (offset +/- n*spacing)
-        float zOffset = offset + std::ceil((img.getOffset().framesOffset - offset) / spacing) * spacing;
+        float zOffset = offset + std::ceil((img.getOffset().frames - offset) / spacing) * spacing;
         // then this point is reduced by img_offset to be relative to point 0
-        float zOffsetRel = zOffset - img.getOffset().framesOffset;
+        float zOffsetRel = zOffset - img.getOffset().frames;
 
-        float oldSpacing = img.getSpacing().framesSpacing;
+        float oldSpacing = img.getSpacing().frames;
         if(zOffsetRel == 0 && spacing == oldSpacing){
             return img;
         }
@@ -178,17 +178,17 @@ ImageData linearAlongAxis(const ImageData& img, float offset, float spacing, Ima
                 }
             }
         }
-        DataOffset newOffset{zOffset, img.getOffset().rowsOffset, img.getOffset().columnsOffset};
-        DataSpacing newSpacing{spacing, img.getSpacing().rowsSpacing, img.getSpacing().columnsSpacing};
+        DataOffset newOffset{zOffset, img.getOffset().rows, img.getOffset().columns};
+        DataSpacing newSpacing{spacing, img.getSpacing().rows, img.getSpacing().columns};
         return ImageData(newImg, newOffset, newSpacing);
     }
     else if(axis == ImageAxis::Y){
         // closest point greater than img_offset which is one of points (offset +/- n*spacing)
-        float yOffset = offset + std::ceil((img.getOffset().rowsOffset - offset) / spacing) * spacing;
+        float yOffset = offset + std::ceil((img.getOffset().rows - offset) / spacing) * spacing;
         // then this point is reduced by img_offset to be relative to point 0
-        float yOffsetRel = yOffset - img.getOffset().rowsOffset;
+        float yOffsetRel = yOffset - img.getOffset().rows;
 
-        float oldSpacing = img.getSpacing().rowsSpacing;
+        float oldSpacing = img.getSpacing().rows;
         if(yOffsetRel == 0 && spacing == oldSpacing){
             return img;
         }
@@ -215,17 +215,17 @@ ImageData linearAlongAxis(const ImageData& img, float offset, float spacing, Ima
                 }
             }
         }
-        DataOffset newOffset{img.getOffset().framesOffset, yOffset, img.getOffset().columnsOffset};
-        DataSpacing newSpacing{img.getSpacing().framesSpacing, spacing, img.getSpacing().columnsSpacing};
+        DataOffset newOffset{img.getOffset().frames, yOffset, img.getOffset().columns};
+        DataSpacing newSpacing{img.getSpacing().frames, spacing, img.getSpacing().columns};
         return ImageData(newImg, newOffset, newSpacing);
     }
     else if(axis == ImageAxis::X){
         // closest point greater than img_offset which is one of points (offset +/- n*spacing)
-        float xOffset = offset + std::ceil((img.getOffset().columnsOffset - offset) / spacing) * spacing;
+        float xOffset = offset + std::ceil((img.getOffset().columns - offset) / spacing) * spacing;
         // then this point is reduced by img_offset to be relative to point 0
-        float xOffsetRel = xOffset - img.getOffset().columnsOffset;
+        float xOffsetRel = xOffset - img.getOffset().columns;
 
-        float oldSpacing = img.getSpacing().columnsSpacing;
+        float oldSpacing = img.getSpacing().columns;
         if(xOffsetRel == 0 && spacing == oldSpacing){
             return img;
         }
@@ -252,8 +252,8 @@ ImageData linearAlongAxis(const ImageData& img, float offset, float spacing, Ima
                 }
             }
         }
-        DataOffset newOffset{img.getOffset().framesOffset, img.getOffset().rowsOffset, xOffset};
-        DataSpacing newSpacing{img.getSpacing().framesSpacing, img.getSpacing().rowsSpacing, spacing};
+        DataOffset newOffset{img.getOffset().frames, img.getOffset().rows, xOffset};
+        DataSpacing newSpacing{img.getSpacing().frames, img.getSpacing().rows, spacing};
         return ImageData(newImg, newOffset, newSpacing);
     }
     else{
@@ -290,9 +290,9 @@ ImageData trilinear(const ImageData& img, const DataOffset& offset, const DataSp
     return linearAlongAxis(
         linearAlongAxis(
             linearAlongAxis(
-                img, offset.framesOffset, spacing.framesSpacing, ImageAxis::Z),
-            offset.rowsOffset, spacing.rowsSpacing, ImageAxis::Y),
-        offset.columnsOffset, spacing.columnsSpacing, ImageAxis::X);
+                img, offset.frames, spacing.frames, ImageAxis::Z),
+            offset.rows, spacing.rows, ImageAxis::Y),
+        offset.columns, spacing.columns, ImageAxis::X);
 
 }
 
@@ -300,16 +300,16 @@ ImageData linearAlongAxis(const ImageData& evalImg, const ImageData& refImg, Ima
     float offset = 0;
     float spacing = 0;
     if(axis == ImageAxis::Z){
-        offset = refImg.getOffset().framesOffset;
-        spacing = refImg.getSpacing().framesSpacing;
+        offset = refImg.getOffset().frames;
+        spacing = refImg.getSpacing().frames;
     }
     else if(axis == ImageAxis::Y){
-        offset = refImg.getOffset().rowsOffset;
-        spacing = refImg.getSpacing().rowsSpacing;
+        offset = refImg.getOffset().rows;
+        spacing = refImg.getSpacing().rows;
     }
     else if(axis == ImageAxis::X){
-        offset = refImg.getOffset().columnsOffset;
-        spacing = refImg.getSpacing().columnsSpacing;
+        offset = refImg.getOffset().columns;
+        spacing = refImg.getSpacing().columns;
     }
     else{
         throw std::invalid_argument("invalid axis");
@@ -321,22 +321,22 @@ ImageData bilinearOnPlane(const ImageData& evalImg, const ImageData& refImg, Ima
     float offset1 = 0, offset2 = 0;
     float spacing1 = 0, spacing2 = 0;
     if(plane == ImagePlane::YX){
-        offset1 = refImg.getOffset().rowsOffset;
-        offset2 = refImg.getOffset().columnsOffset;
-        spacing1 = refImg.getSpacing().rowsSpacing;
-        spacing2 = refImg.getSpacing().columnsSpacing;
+        offset1 = refImg.getOffset().rows;
+        offset2 = refImg.getOffset().columns;
+        spacing1 = refImg.getSpacing().rows;
+        spacing2 = refImg.getSpacing().columns;
     }
     else if(plane == ImagePlane::ZX){
-        offset1 = refImg.getOffset().framesOffset;
-        offset2 = refImg.getOffset().columnsOffset;
-        spacing1 = refImg.getSpacing().framesSpacing;
-        spacing2 = refImg.getSpacing().columnsSpacing;
+        offset1 = refImg.getOffset().frames;
+        offset2 = refImg.getOffset().columns;
+        spacing1 = refImg.getSpacing().frames;
+        spacing2 = refImg.getSpacing().columns;
     }
     else if(plane == ImagePlane::ZY){
-        offset1 = refImg.getOffset().framesOffset;
-        offset2 = refImg.getOffset().rowsOffset;
-        spacing1 = refImg.getSpacing().framesSpacing;
-        spacing2 = refImg.getSpacing().rowsSpacing;
+        offset1 = refImg.getOffset().frames;
+        offset2 = refImg.getOffset().rows;
+        spacing1 = refImg.getSpacing().frames;
+        spacing2 = refImg.getSpacing().rows;
     }
     else{
         throw std::invalid_argument("invalid plane");

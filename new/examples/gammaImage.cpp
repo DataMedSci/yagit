@@ -55,8 +55,8 @@ void printImageData(const yagit::ImageData& ImageData){
     yagit::DataOffset offset = ImageData.getOffset();
     yagit::DataSpacing spacing = ImageData.getSpacing();
     std::cout << "size: (" << size.frames << ", " << size.rows << ", " << size.columns << ")\n"
-              << "offset: (" << offset.framesOffset << ", " << offset.rowsOffset << ", " << offset.columnsOffset << ")\n"
-              << "spacing: (" << spacing.framesSpacing << ", " << spacing.rowsSpacing << ", " << spacing.columnsSpacing << ")\n";
+              << "offset: (" << offset.frames << ", " << offset.rows << ", " << offset.columns << ")\n"
+              << "spacing: (" << spacing.frames << ", " << spacing.rows << ", " << spacing.columns << ")\n";
 }
 
 int main(){

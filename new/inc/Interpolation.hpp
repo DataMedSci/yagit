@@ -130,7 +130,7 @@ ImageData linearAlongAxis(const ImageData& evalImg, const ImageData& refImg, Ima
  * @param plane Plane on which interpolation is performed
  * @return Image interpolated on the grid of @a refImg
  */
-ImageData bilinearAlongPlane(const ImageData& evalImg, const ImageData& refImg, ImagePlane plane);
+ImageData bilinearOnPlane(const ImageData& evalImg, const ImageData& refImg, ImagePlane plane);
 
 /**
  * @brief Trilinear interpolation - along all axes (Z, Y, X) - on the grid of @a refImg.
