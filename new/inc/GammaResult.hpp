@@ -31,23 +31,20 @@ public:
     GammaResult(const GammaResult& other) = default;
     GammaResult& operator=(const GammaResult& other) = default;
 
-    GammaResult(GammaResult&& other) noexcept = delete;
-    GammaResult& operator=(GammaResult&& other) noexcept = delete;
-
     bool operator==(const GammaResult& other) const = default;
 
-    /// @brief The percentage of elements that are less than or equal to 1. It doesn't take into account NaN values.
+    /// @brief The percentage of elements that are less than or equal to 1. It ignores NaN values.
     value_type passingRate() const;
 
-    /// @brief Minimum value of gamma index. It doesn't take into account NaN values.
+    /// @brief Minimum value of gamma index. It ignores NaN values.
     value_type minGamma() const;
-    /// @brief Maximum value of gamma index. It doesn't take into account NaN values.
+    /// @brief Maximum value of gamma index. It ignores NaN values.
     value_type maxGamma() const;
-    /// @brief Sum of values of gamma index. It doesn't take into account NaN values.
+    /// @brief Sum of values of gamma index. It ignores NaN values.
     value_type sumGamma() const;
-    /// @brief Mean of values of gamma index. It doesn't take into account NaN values.
+    /// @brief Mean of values of gamma index. It ignores NaN values.
     value_type meanGamma() const;
-    /// @brief Variance of values of gamma index. It doesn't take into account NaN values.
+    /// @brief Variance of values of gamma index. It ignores NaN values.
     value_type varGamma() const;
 };
 

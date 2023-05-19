@@ -34,6 +34,9 @@ using pointer = ImageData::pointer;
 using const_pointer = ImageData::const_pointer;
 }
 
+ImageData::ImageData(std::vector<value_type>&& data, const DataSize& size, const DataOffset& offset, const DataSpacing& spacing) noexcept
+    : m_data(std::move(data)), m_size(size), m_offset(offset), m_spacing(spacing) {}
+
 ImageData::ImageData(ImageData&& other) noexcept
     : m_data(std::move(other.m_data)), m_size(other.m_size), m_offset(other.m_offset), m_spacing(other.m_spacing){
     other.m_size = {0, 0, 0};

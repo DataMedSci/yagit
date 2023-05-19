@@ -28,23 +28,23 @@
 namespace yagit::DataReader{
 
 namespace{
-const gdcm::Keywords::TransferSyntaxUID TransferSyntaxUIDAttr;                   // (0x0002, 0x0010)  UI
-const gdcm::Keywords::Modality ModalityAttr;                                     // (0x0008, 0x0060)  CS
-const gdcm::Keywords::SliceThickness SliceThicknessAttr;                         // (0x0018, 0x0050)  DS
-const gdcm::Keywords::ImagePositionPatient ImagePositionPatientAttr;             // (0x0020, 0x0032)  DS
-const gdcm::Keywords::ImageOrientationPatient ImageOrientationPatientAttr;       // (0x0020, 0x0037)  DS
-const gdcm::Keywords::SamplesPerPixel SamplesPerPixelAttr;                       // (0x0028, 0x0002)  US
-const gdcm::Keywords::PhotometricInterpretation PhotometricInterpretationAttr;   // (0x0028, 0x0004)  CS
-const gdcm::Keywords::NumberOfFrames NumberOfFramesAttr;                         // (0x0028, 0x0008)  IS
-const gdcm::Keywords::Rows RowsAttr;                                             // (0x0028, 0x0010)  US
-const gdcm::Keywords::Columns ColumnsAttr;                                       // (0x0028, 0x0011)  US
-const gdcm::Keywords::PixelSpacing PixelSpacingAttr;                             // (0x0028, 0x0030)  DS
-const gdcm::Keywords::BitsAllocated BitsAllocatedAttr;                           // (0x0028, 0x0100)  US
-const gdcm::Keywords::BitsStored BitsStoredAttr;                                 // (0x0028, 0x0101)  US
-const gdcm::Keywords::HighBit HighBitAttr;                                       // (0x0028, 0x0102)  US
-const gdcm::Keywords::PixelRepresentation PixelRepresentationAttr;               // (0x0028, 0x0103)  US
-const gdcm::Keywords::GridFrameOffsetVector GridFrameOffsetVectorAttr;           // (0x3004, 0x000C)  DS
-const gdcm::Keywords::DoseGridScaling DoseGridScalingAttr;                       // (0x3004, 0x000E)  DS
+const gdcm::Keywords::TransferSyntaxUID TransferSyntaxUIDAttr{};                   // (0x0002, 0x0010)  UI
+const gdcm::Keywords::Modality ModalityAttr{};                                     // (0x0008, 0x0060)  CS
+const gdcm::Keywords::SliceThickness SliceThicknessAttr{};                         // (0x0018, 0x0050)  DS
+const gdcm::Keywords::ImagePositionPatient ImagePositionPatientAttr{};             // (0x0020, 0x0032)  DS
+const gdcm::Keywords::ImageOrientationPatient ImageOrientationPatientAttr{};       // (0x0020, 0x0037)  DS
+const gdcm::Keywords::SamplesPerPixel SamplesPerPixelAttr{};                       // (0x0028, 0x0002)  US
+const gdcm::Keywords::PhotometricInterpretation PhotometricInterpretationAttr{};   // (0x0028, 0x0004)  CS
+const gdcm::Keywords::NumberOfFrames NumberOfFramesAttr{};                         // (0x0028, 0x0008)  IS
+const gdcm::Keywords::Rows RowsAttr{};                                             // (0x0028, 0x0010)  US
+const gdcm::Keywords::Columns ColumnsAttr{};                                       // (0x0028, 0x0011)  US
+const gdcm::Keywords::PixelSpacing PixelSpacingAttr{};                             // (0x0028, 0x0030)  DS
+const gdcm::Keywords::BitsAllocated BitsAllocatedAttr{};                           // (0x0028, 0x0100)  US
+const gdcm::Keywords::BitsStored BitsStoredAttr{};                                 // (0x0028, 0x0101)  US
+const gdcm::Keywords::HighBit HighBitAttr{};                                       // (0x0028, 0x0102)  US
+const gdcm::Keywords::PixelRepresentation PixelRepresentationAttr{};               // (0x0028, 0x0103)  US
+const gdcm::Keywords::GridFrameOffsetVector GridFrameOffsetVectorAttr;             // (0x3004, 0x000C)  DS
+const gdcm::Keywords::DoseGridScaling DoseGridScalingAttr{};                       // (0x3004, 0x000E)  DS
 
 const gdcm::Tag PixelDataTag{0x7FE0, 0x0010};
 
@@ -143,6 +143,7 @@ ImageData readRTDoseDicom(const std::string& file, bool displayInfo){
     if(imageOrientationPatient.size() != 6){
         throw std::runtime_error("DICOM file doesn't have attribute Image Orientation Patient (0020,0037) containig 6 elements");
     }
+    // direction cosines sometimes have innacurate values (e.g. -2.05203471e-10 instead of 0), so we round them
     for(auto& el : imageOrientationPatient){
         el = static_cast<int>(el * 1e5 + 0.5) / 1e5;  // round number to 5 decimal places
     }
@@ -276,10 +277,15 @@ ImageData readRTDoseDicom(const std::string& file, bool displayInfo){
         }
     }
 
-    return ImageData(doseData,
-                    DataSize(*frames, *rows, *columns),
-                    DataOffset(imagePositionPatient[2], imagePositionPatient[1], imagePositionPatient[0]),
-                    DataSpacing(sliceThicknessVal, pixelSpacing[0], pixelSpacing[1]));
+    DataSize size(*frames, *rows, *columns);
+    DataOffset offset(static_cast<float>(imagePositionPatient[2]),
+                      static_cast<float>(imagePositionPatient[1]),
+                      static_cast<float>(imagePositionPatient[0]));
+    DataSpacing spacing(static_cast<float>(sliceThicknessVal),
+                        static_cast<float>(pixelSpacing[0]),
+                        static_cast<float>(pixelSpacing[1]));
+
+    return ImageData(std::move(doseData), size, offset, spacing);
 }
 
 }

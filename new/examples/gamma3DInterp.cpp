@@ -35,15 +35,15 @@
 
 #include <yagit.hpp>
 
-std::string doubleToString(double d){
+std::string floatToString(float d){
     std::ostringstream oss;
     oss << d;
     return oss.str(); 
 }
 
 std::string gammaParametersToString(const yagit::GammaParameters& gammaParams){
-    std::string dd = doubleToString(gammaParams.ddThreshold);
-    std::string dta = doubleToString(gammaParams.dtaThreshold);
+    std::string dd = floatToString(gammaParams.ddThreshold);
+    std::string dta = floatToString(gammaParams.dtaThreshold);
     char norm = gammaParams.normalization == yagit::GammaNormalization::Global ? 'G' : 'L';
     return dd + "%" + norm + "/" + dta + "mm";
 }

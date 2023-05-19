@@ -28,7 +28,8 @@ namespace yagit{
 /**
  * @brief Container storing image and its metadata (size, offset, spacing)
  * 
- * Images are in format (frame, row, column) corresponding to (z, y, x) axises.
+ * Images are in format (frame, row, column) corresponding to (z, y, x) axes.
+ * Coordinates are based on DICOM Reference Coordinate System (RCS).
  * 
  * @note It doesn't contain information in what plane image is oriented.
  * Instead it assumes that all images are in the axial plane.
@@ -46,12 +47,15 @@ public:
     using const_pointer = std::vector<value_type>::const_pointer;
 
     ImageData() = delete;
+
     template <typename U>
     ImageData(const std::vector<U>& data, const DataSize& size, const DataOffset& offset, const DataSpacing& spacing);
     template <typename U>
     ImageData(const Image2D<U>& image2d, const DataOffset& offset, const DataSpacing& spacing);
     template <typename U>
     ImageData(const Image3D<U>& image3d, const DataOffset& offset, const DataSpacing& spacing);
+
+    ImageData(std::vector<value_type>&& data, const DataSize& size, const DataOffset& offset, const DataSpacing& spacing) noexcept;
 
     ImageData(const ImageData& other) = default;
     ImageData& operator=(const ImageData& other) = default;
@@ -76,14 +80,16 @@ public:
     /// @brief Number of elements of image (frames*rows*columns)
     size_type size() const;
 
-    /// @brief Check that the position is within the valid range and get image element at position (frame, row, column)
+    /// @brief Check that the position (@a frame, @a row, @a column) is within the valid range
+    /// and get image element at that position
     reference at(uint32_t frame, uint32_t row, uint32_t column);
-    /// @brief Check that the position is within the valid range and get image element at position (frame, row, column)
+    /// @brief Check that the position (@a frame, @a row, @a column) is within the valid range
+    /// and get image element at that position
     const_reference at(uint32_t frame, uint32_t row, uint32_t column) const;
 
-    /// @brief Get image element at position (frame, row, column)
+    /// @brief Get image element at position (@a frame, @a row, @a column)
     reference get(uint32_t frame, uint32_t row, uint32_t column);
-    /// @brief Get image element at position (frame, row, column)
+    /// @brief Get image element at position (@a frame, @a row, @a column)
     const_reference get(uint32_t frame, uint32_t row, uint32_t column) const;
 
     /// @brief Get element at @a index of flattened image
@@ -118,10 +124,20 @@ public:
      */
     ImageData getImageData3D(ImagePlane plane) const;
 
+    /// @brief Minimum value of the image
+    /// @warning If image starts with NaN, then minimum value will be NaN
     value_type min() const;
+    /// @brief Maximum value of the image
+    /// @warning If image starts with NaN, then maximum value will be NaN
     value_type max() const;
+    /// @brief Sum of image values
+    /// @warning If image contains NaN, then sum will be Nan
     value_type sum() const;
+    /// @brief Mean of image values
+    /// @warning If image contains NaN, then mean will be Nan
     value_type mean() const;
+    /// @brief Variance of image values
+    /// @warning If image contains NaN, then variance will be Nan
     value_type var() const;
 
     /// @brief Minimum value of the image, ignoring any NaNs

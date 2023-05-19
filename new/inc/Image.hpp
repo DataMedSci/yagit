@@ -37,6 +37,7 @@ using Image3D = std::vector<Image2D<T>>;
 
 /**
  * @brief Axis of image (Z, Y, X)
+ * Axes based on DICOM Reference Coordinate System (RCS)
  */
 enum class ImageAxis{
     Z,  ///< Z axis
@@ -45,7 +46,8 @@ enum class ImageAxis{
 };
 
 /**
- * @brief Plane of image (YX, ZX, ZY)
+ * @brief Plane of image (YX, ZX, ZY).
+ * Planes based on DICOM Reference Coordinate System (RCS)
  */
 enum class ImagePlane{
     Axial = 0,          ///< YX plane (Axial, Transverse, Horizontal)
