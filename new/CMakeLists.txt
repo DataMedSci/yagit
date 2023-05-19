@@ -18,9 +18,10 @@ add_library(yagit
     src/DataReader.cpp
     src/Interpolation.cpp
 )
+
 target_include_directories(yagit PUBLIC inc) # PUBLIC?
-target_link_libraries(yagit
-    gdcm::gdcm
+target_link_libraries(yagit PRIVATE
+    gdcmCommon gdcmDSED
 )
 
 # add_executable(test src/test.cpp)
@@ -35,5 +36,5 @@ endif()
 if(MSVC)
     # target_compile_options(yagit PRIVATE /W4) # /WX
 else()
-    target_compile_options(yagit PRIVATE -Wall -Wextra -Wpedantic) # -Werror
+    # target_compile_options(yagit PRIVATE -Wall -Wextra -Wpedantic) # -Werror
 endif()

@@ -43,5 +43,4 @@ jobs:
     - name: Run example
       working-directory: ${{github.workspace}}/new/build
       run: |
-        ls -R
-        ./bin/examples/gammaImage
+        ./examples/gammaImage
