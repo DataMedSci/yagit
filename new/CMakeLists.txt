@@ -29,7 +29,7 @@ target_link_libraries(yagit
 # )
 
 if(BUILD_EXAMPLES)
-    add_subdirectory(Examples)
+    add_subdirectory(examples)
 endif()
 
 if(MSVC)
