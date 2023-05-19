@@ -29,11 +29,6 @@ class GammaResult : public ImageData{
 public:
     using ImageData::ImageData;
 
-    GammaResult(const GammaResult& other) = default;
-    GammaResult& operator=(const GammaResult& other) = default;
-
-    bool operator==(const GammaResult& other) const = default;
-
     /// @brief The percentage of elements that are less than or equal to 1. It ignores NaN values.
     value_type passingRate() const;
 

@@ -30,7 +30,9 @@ struct DataSize{
     uint32_t rows;     ///< Number of rows
     uint32_t columns;  ///< Number of columns
 
-    bool operator==(const DataSize& other) const = default;
+    bool operator==(const DataSize& other) const{
+        return frames == other.frames && rows == other.rows && columns == other.columns;
+    }
 };
 
 /**
@@ -42,7 +44,9 @@ struct DataOffset{
     float rows;     ///< Position of first row in image in milimeters [mm]
     float columns;  ///< Position of first column in image in milimeters [mm]
 
-    bool operator==(const DataOffset& other) const = default;
+    bool operator==(const DataOffset& other) const{
+        return frames == other.frames && rows == other.rows && columns == other.columns;
+    }
 };
 
 /**
@@ -54,7 +58,9 @@ struct DataSpacing{
     float rows;     ///< Spacing between rows in milimeters [mm]
     float columns;  ///< Spacing between columns in milimeters [mm]
 
-    bool operator==(const DataSpacing& other) const = default;
+    bool operator==(const DataSpacing& other) const{
+        return frames == other.frames && rows == other.rows && columns == other.columns;
+    }
 };
 
 // TODO: DataDirection with 3 enum fields

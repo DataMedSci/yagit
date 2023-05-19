@@ -58,6 +58,10 @@ ImageData& ImageData::operator=(ImageData&& other) noexcept{
     return *this;
 }
 
+bool ImageData::operator==(const ImageData& other) const{
+    return m_data == other.m_data && m_size == other.m_size && m_offset == other.m_offset && m_spacing == other.m_spacing;
+}
+
 DataSize ImageData::getSize() const{
     return m_size;
 }

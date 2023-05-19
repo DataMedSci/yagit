@@ -3,18 +3,14 @@ project(giyagit)
 
 option(BUILD_EXAMPLES "Enable compilation of examples" OFF)
 
-# set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD 20) # for now, only for default operator==
-
-# set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_CXX_STANDARD 17)
 
 find_package(GDCM REQUIRED)
 
 add_library(yagit
     src/ImageData.cpp
-    src/ImageData.cpp # CMAKE_SOURCE_DIR?
-    src/gamma/Gamma.cpp
     src/GammaResult.cpp
+    src/gamma/Gamma.cpp
     src/DataReader.cpp
     src/Interpolation.cpp
 )
@@ -34,6 +30,7 @@ if(BUILD_EXAMPLES)
 endif()
 
 if(MSVC)
+    # line below is commented, because msvc compiler shows also warnings from external dependencies, but it should not
     # target_compile_options(yagit PRIVATE /W4) # /WX
 else()
     target_compile_options(yagit PRIVATE -Wall -Wextra -Wpedantic) # -Werror

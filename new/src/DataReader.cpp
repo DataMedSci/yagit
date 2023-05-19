@@ -161,11 +161,11 @@ ImageData readRTDoseDicom(const std::string& file, bool displayInfo){
         auto sliceThickness = getValue(ds, SliceThicknessAttr);
         if(sliceThickness == std::nullopt || *sliceThickness == 0){
             auto gridFrameOffsetVector = getMultipleValues(ds, GridFrameOffsetVectorAttr);
-            if(gridFrameOffsetVector.size() != *frames){
+            if(gridFrameOffsetVector.size() != static_cast<size_t>(*frames)){
                 throw std::runtime_error("DICOM file doesn't have attribute Slice Thickness (0018,0050) and Grid Frame Offset Vector (3004,000C) with " + std::to_string(*frames) + " elements");
             }
             sliceThicknessVal = gridFrameOffsetVector[1] - gridFrameOffsetVector[0];
-            for(int i=2; i < gridFrameOffsetVector.size(); i++){
+            for(size_t i=2; i < gridFrameOffsetVector.size(); i++){
                 if(gridFrameOffsetVector[i] - gridFrameOffsetVector[i-1] != sliceThicknessVal){
                     throw std::runtime_error("uneven spacing in Grid Frame Offset Vector (3004,000C) not supported");
                 }
@@ -267,24 +267,26 @@ ImageData readRTDoseDicom(const std::string& file, bool displayInfo){
     // Thanks to this, the data takes up less memory and calculations are performed faster.
     if(*bitsAllocated == 32){
         const uint32_t* dataPtr = reinterpret_cast<uint32_t*>(pixelData.data());
-        for(int i=0; i < doseDataSize; i++, dataPtr++){
+        for(size_t i=0; i < doseDataSize; i++, dataPtr++){
             doseData.emplace_back(static_cast<float>(static_cast<double>(*dataPtr) * doseGridScaling.value()));
         }
     }
     else if(*bitsAllocated == 16){
         const uint16_t* dataPtr = reinterpret_cast<uint16_t*>(pixelData.data());
-        for(int i=0; i < doseDataSize; i++, dataPtr++){
+        for(size_t i=0; i < doseDataSize; i++, dataPtr++){
             doseData.emplace_back(static_cast<float>(static_cast<double>(*dataPtr) * doseGridScaling.value()));
         }
     }
 
-    DataSize size(*frames, *rows, *columns);
-    DataOffset offset(static_cast<float>(imagePositionPatient[2]),
+    DataSize size{static_cast<uint32_t>(*frames),
+                  static_cast<uint32_t>(*rows),
+                  static_cast<uint32_t>(*columns)};
+    DataOffset offset{static_cast<float>(imagePositionPatient[2]),
                       static_cast<float>(imagePositionPatient[1]),
-                      static_cast<float>(imagePositionPatient[0]));
-    DataSpacing spacing(static_cast<float>(sliceThicknessVal),
+                      static_cast<float>(imagePositionPatient[0])};
+    DataSpacing spacing{static_cast<float>(sliceThicknessVal),
                         static_cast<float>(pixelSpacing[0]),
-                        static_cast<float>(pixelSpacing[1]));
+                        static_cast<float>(pixelSpacing[1])};
 
     return ImageData(std::move(doseData), size, offset, spacing);
 }

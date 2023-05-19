@@ -82,3 +82,6 @@ _deps
 
 # Doxygen html output
 docs/html/
+
+# DICOM files
+*.dcm

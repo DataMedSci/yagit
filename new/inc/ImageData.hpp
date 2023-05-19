@@ -64,7 +64,7 @@ public:
     ImageData(ImageData&& other) noexcept;
     ImageData& operator=(ImageData&& other) noexcept;
 
-    bool operator==(const ImageData& other) const = default;
+    bool operator==(const ImageData& other) const;
 
     DataSize getSize() const;
     DataOffset getOffset() const;
