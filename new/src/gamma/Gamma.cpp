@@ -19,6 +19,7 @@
 
 #include "Gamma.hpp"
 
+#include <string>
 #include <limits>
 #include <cmath>
 
@@ -32,14 +33,17 @@ const float Inf{std::numeric_limits<float>::infinity()};
 }
 
 namespace{
+// calculate squared 1D Euclidean distance
 constexpr float distSq1D(float x1, float x2){
     return (x2 - x1) * (x2 - x1);
 }
 
+// calculate squared 2D Euclidean distance
 constexpr float distSq2D(float x1, float y1, float x2, float y2){
     return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
 }
 
+// calculate squared 3D Euclidean distance
 constexpr float distSq3D(float x1, float y1, float z1, float x2, float y2, float z2){
     return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1);
 }
@@ -59,10 +63,10 @@ void validateGammaParameters(const GammaParameters& gammaParams){
 
 GammaResult gammaIndex2D(const ImageData& refImg2D, const ImageData& evalImg2D, const GammaParameters& gammaParams){
     if(refImg2D.getSize().frames > 1){
-        throw std::invalid_argument("reference image is not 2D (frames > 1)");
+        throw std::invalid_argument("reference image is not 2D (frames=" + std::to_string(refImg2D.getSize().frames) + " > 1)");
     }
     if(evalImg2D.getSize().frames > 1){
-        throw std::invalid_argument("evaluated image is not 2D (frames > 1)");
+        throw std::invalid_argument("evaluated image is not 2D (frames=" + std::to_string(evalImg2D.getSize().frames) + " > 1)");
     }
     validateGammaParameters(gammaParams);
 
@@ -83,6 +87,7 @@ GammaResult gammaIndex2D(const ImageData& refImg2D, const ImageData& evalImg2D, 
             float doseRef = refImg2D.get(indRef);
             // assign a value of NaN to points that are below the dose cutoff
             // or where the gamma index calculation is not possible due to division by zero
+            // (i.e. where reference dose used for local normalization is zero)
             if(doseRef < gammaParams.doseCutoff || (gammaParams.normalization == yagit::GammaNormalization::Local && doseRef == 0)){
                 gammaVals.emplace_back(Nan);
             }
@@ -149,6 +154,7 @@ GammaResult gammaIndex2_5D(const ImageData& refImg3D, const ImageData& evalImg3D
                 float doseRef = refImg3D.get(indRef);
                 // assign a value of NaN to points that are below the dose cutoff
                 // or where the gamma index calculation is not possible due to division by zero
+                // (i.e. where reference dose used for local normalization is zero)
                 if(doseRef < gammaParams.doseCutoff || (gammaParams.normalization == yagit::GammaNormalization::Local && doseRef == 0)){
                     gammaVals.emplace_back(Nan);
                 }
@@ -215,6 +221,7 @@ GammaResult gammaIndex3D(const ImageData& refImg3D, const ImageData& evalImg3D, 
                 float doseRef = refImg3D.get(indRef);
                 // assign a value of NaN to points that are below the dose cutoff
                 // or where the gamma index calculation is not possible due to division by zero
+                // (i.e. where reference dose used for local normalization is zero)
                 if(doseRef < gammaParams.doseCutoff || (gammaParams.normalization == yagit::GammaNormalization::Local && doseRef == 0)){
                     gammaVals.emplace_back(Nan);
                 }
