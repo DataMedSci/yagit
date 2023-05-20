@@ -12,6 +12,7 @@ add_library(yagit
     src/GammaResult.cpp
     src/gamma/Gamma.cpp
     src/DataReader.cpp
+    src/DataWriter.cpp
     src/Interpolation.cpp
 )
 
@@ -24,6 +25,10 @@ target_link_libraries(yagit PRIVATE
 # target_link_libraries(test
 #     yagit
 # )
+add_executable(testWriter src/testWriter.cpp)
+target_link_libraries(testWriter
+    yagit
+)
 
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)

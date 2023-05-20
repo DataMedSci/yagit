@@ -27,7 +27,8 @@
  * - Then it calculates 3%G/3mm 3D gamma index of those images using classic method.
  * Also, it is set to not take into account voxels with dose below 10% of max reference dose -
  * in this case, NaN value will be set.
- * - At the end it prints gamma index passing rate and other info.
+ * - After that, it prints gamma index passing rate and other info.
+ * - At the end, it saves result to MetaImage file.
  */
 
 #include <string>
@@ -52,7 +53,7 @@ std::string gammaParametersToString(const yagit::GammaParameters& gammaParams){
 int main(int argc, char** argv){
     if(argc <= 2){
         std::cerr << "too few arguments\n";
-        std::cerr << "Usage: gammaInterp3D refImgPath evalImgPath\n";
+        std::cerr << "Usage: gamma3DInterp refImgPath evalImgPath\n";
     }
 
     const std::string refImgPath{argv[1]};
@@ -87,7 +88,7 @@ int main(int argc, char** argv){
                   << "Gamma max: " << gammaRes.maxGamma() << "\n"
                   << "NaN values: " << gammaRes.size() - gammaRes.nansize() << " / " << gammaRes.size() << "\n";
 
-        // TODO: save gamma result to file
+        yagit::DataWriter::writeToMetaImage(gammaRes, "gamma_index_3d.mha");
     }
     catch(const std::exception &e){
         std::cerr << "ERROR: " << e.what() << "\n";

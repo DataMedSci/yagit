@@ -16,16 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with 'yet Another Gamma Index Tool'.  If not, see <http://www.gnu.org/licenses/>.
  ********************************************************************************************/
-#pragma once
 
-#include "DataStructs.hpp"
-#include "Image.hpp"
-#include "ImageData.hpp"
-#include "GammaResult.hpp"
+// TEMPORARY FILE!!!
+// FOR TESTING ONLY
 
-#include "Gamma.hpp"
+#include <yagit.hpp>
 
-#include "Interpolation.hpp"
+int main(){
+    yagit::Image3D<float> img3d = {
+        {
+            {1,2},
+            {0,0}
+        },
+        {
+            {0,1},
+            {2,2}
+        },
+        {
+            {0.1, 0.2},
+            {0.3, 0.4}
+        }
+    };
 
-#include "DataReader.hpp"
-#include "DataWriter.hpp"
+    yagit::ImageData img(img3d, {2,3,4}, {1,1,1});
+
+    yagit::DataWriter::writeToMetaImage(img, "image.mha");
+}

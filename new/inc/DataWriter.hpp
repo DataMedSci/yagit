@@ -18,14 +18,17 @@
  ********************************************************************************************/
 #pragma once
 
-#include "DataStructs.hpp"
-#include "Image.hpp"
+#include <string>
+
 #include "ImageData.hpp"
-#include "GammaResult.hpp"
 
-#include "Gamma.hpp"
+namespace yagit::DataWriter{
 
-#include "Interpolation.hpp"
+/**
+ * @brief Write image to MetaImage file (.mha)
+ * @param img Image to save
+ * @param filepath File path where image will be saved
+ */
+void writeToMetaImage(const ImageData& img, const std::string& filepath);
 
-#include "DataReader.hpp"
-#include "DataWriter.hpp"
+}

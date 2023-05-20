@@ -108,11 +108,11 @@ gdcm::SwapCode getDataEndianness(const std::optional<gdcm::UIComp>& transferSynt
 }
 }
 
-ImageData readRTDoseDicom(const std::string& file, bool displayInfo){
+ImageData readRTDoseDicom(const std::string& filepath, bool displayInfo){
     gdcm::Reader reader;
-    reader.SetFileName(file.c_str());
+    reader.SetFileName(filepath.c_str());
     if(!reader.Read()) {
-        throw std::runtime_error("cannot read " + file + " file");
+        throw std::runtime_error("cannot read " + filepath + " file");
     }
     
     const gdcm::DataSet& ds = reader.GetFile().GetDataSet();
