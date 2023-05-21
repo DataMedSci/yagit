@@ -133,24 +133,24 @@ public:
     value_type max() const;
     /// @brief Sum of image values
     /// @warning If image contains NaN, then sum will be Nan
-    value_type sum() const;
+    double sum() const;
     /// @brief Mean of image values
     /// @warning If image contains NaN, then mean will be Nan
-    value_type mean() const;
+    double mean() const;
     /// @brief Variance of image values
     /// @warning If image contains NaN, then variance will be Nan
-    value_type var() const;
+    double var() const;
 
     /// @brief Minimum value of the image, ignoring any NaNs
     value_type nanmin() const;
     /// @brief Maximum value of the image, ignoring any NaNs
     value_type nanmax() const;
     /// @brief Sum of image values, ignoring any NaNs
-    value_type nansum() const;
+    double nansum() const;
     /// @brief Mean of image values, ignoring any NaNs
-    value_type nanmean() const;
+    double nanmean() const;
     /// @brief Variance of image values, ignoring any NaNs
-    value_type nanvar() const;
+    double nanvar() const;
 
     /// @brief Number of elements of image, ignoring any NaNs
     size_type nansize() const;

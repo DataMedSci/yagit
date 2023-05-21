@@ -38,15 +38,15 @@ GammaResult::value_type GammaResult::maxGamma() const{
     return nanmax();
 }
 
-GammaResult::value_type GammaResult::sumGamma() const{
+double GammaResult::sumGamma() const{
     return nansum();
 }
 
-GammaResult::value_type GammaResult::meanGamma() const{
+double GammaResult::meanGamma() const{
     return nanmean();
 }
 
-GammaResult::value_type GammaResult::varGamma() const{
+double GammaResult::varGamma() const{
     return nanvar();
 }
 

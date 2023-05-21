@@ -48,12 +48,12 @@ void printImage2D(const yagit::Image2D<float>& img){
     std::cout << "]\n";
 }
 
-void printImageData(const yagit::ImageData& ImageData){
-    printImage2D(ImageData.getImage2D(0));
+void printImageData(const yagit::ImageData& imageData){
+    printImage2D(imageData.getImage2D(0));
 
-    yagit::DataSize size = ImageData.getSize();
-    yagit::DataOffset offset = ImageData.getOffset();
-    yagit::DataSpacing spacing = ImageData.getSpacing();
+    yagit::DataSize size = imageData.getSize();
+    yagit::DataOffset offset = imageData.getOffset();
+    yagit::DataSpacing spacing = imageData.getSpacing();
     std::cout << "size: (" << size.frames << ", " << size.rows << ", " << size.columns << ")\n"
               << "offset: (" << offset.frames << ", " << offset.rows << ", " << offset.columns << ")\n"
               << "spacing: (" << spacing.frames << ", " << spacing.rows << ", " << spacing.columns << ")\n";

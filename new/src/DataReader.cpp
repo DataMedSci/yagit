@@ -20,6 +20,7 @@
 #include "DataReader.hpp"
 
 #include <optional>
+#include <fstream>
 
 #include <gdcmReader.h>
 #include <gdcmAttribute.h>
@@ -77,18 +78,18 @@ std::vector<typename gdcm::Attribute<G, E>::ArrayType> getMultipleValues(const g
     return {&attr.GetValue(0), &attr.GetValue(attr.GetNumberOfValues()-1) + 1};
 }
 
-std::vector<uint8_t> getPixelData(const gdcm::DataSet& ds){
+std::vector<char> getPixelData(const gdcm::DataSet& ds){
     if(!ds.FindDataElement(PixelDataTag)){
         return {};
     }
     const gdcm::DataElement& data = ds.GetDataElement(PixelDataTag);
     uint32_t dataLength = data.GetVL();
     const char* dataPtr = data.GetByteValue()->GetPointer();
-    return std::vector<uint8_t>(dataPtr, dataPtr + dataLength);
+    return std::vector<char>(dataPtr, dataPtr + dataLength);
 }
 
 template<typename T>
-void swapBytesToSystemEndianness(std::vector<uint8_t>& data, gdcm::SwapCode dataEndianness){
+void swapBytesToSystemEndianness(std::vector<char>& data, gdcm::SwapCode dataEndianness){
     gdcm::ByteSwap<T>::SwapRangeFromSwapCodeIntoSystem(reinterpret_cast<T*>(data.data()), dataEndianness, data.size());
 }
 
@@ -105,6 +106,31 @@ gdcm::SwapCode getDataEndianness(const std::optional<gdcm::UIComp>& transferSynt
     else{
         return gdcm::SwapCode::Unknown;
     }
+}
+
+template <typename T>
+void convertPixelDataToFloatData(const std::vector<char>& pixelData, std::vector<float>& floatData){
+    const T* dataPtr = reinterpret_cast<const T*>(pixelData.data());
+    const size_t dataSize = pixelData.size() / sizeof(T);
+    for(size_t i=0; i < dataSize; i++, dataPtr++){
+        floatData.emplace_back(static_cast<float>(*dataPtr));
+    }
+}
+
+std::string ltrim(std::string str){
+    str.erase(str.begin(), std::find_if(str.begin(), str.end(), [](unsigned char c) {
+        return !std::isspace(c);
+    }));
+    return str;
+}
+std::string rtrim(std::string str){
+    str.erase(std::find_if(str.rbegin(), str.rend(), [](unsigned char c) {
+        return !std::isspace(c);
+    }).base(), str.end());
+    return str;
+}
+std::string trim(std::string str){
+    return ltrim(rtrim(str));
 }
 }
 
@@ -206,7 +232,7 @@ ImageData readRTDoseDicom(const std::string& filepath, bool displayInfo){
         throw std::runtime_error("DICOM file doesn't have attribute Pixel Representation (0028,0103) equal to 0");
     }
 
-    std::vector<uint8_t> pixelData = getPixelData(ds);
+    std::vector<char> pixelData = getPixelData(ds);
     uint32_t correctDataSize = frames.value() * rows.value() * columns.value() * bitsAllocated.value() / 8; // expected number of bytes of data
     if(pixelData.size() != correctDataSize){
         throw std::runtime_error("DICOM file doesn't have attribute Pixel Data (7FE0,0010) containing " + std::to_string(correctDataSize) + " bytes of data");
@@ -266,13 +292,13 @@ ImageData readRTDoseDicom(const std::string& filepath, bool displayInfo){
     // And in gamma calculations, this difference has little significance.
     // Thanks to this, the data takes up less memory and calculations are performed faster.
     if(*bitsAllocated == 32){
-        const uint32_t* dataPtr = reinterpret_cast<uint32_t*>(pixelData.data());
+        const uint32_t* dataPtr = reinterpret_cast<const uint32_t*>(pixelData.data());
         for(size_t i=0; i < doseDataSize; i++, dataPtr++){
             doseData.emplace_back(static_cast<float>(static_cast<double>(*dataPtr) * doseGridScaling.value()));
         }
     }
     else if(*bitsAllocated == 16){
-        const uint16_t* dataPtr = reinterpret_cast<uint16_t*>(pixelData.data());
+        const uint16_t* dataPtr = reinterpret_cast<const uint16_t*>(pixelData.data());
         for(size_t i=0; i < doseDataSize; i++, dataPtr++){
             doseData.emplace_back(static_cast<float>(static_cast<double>(*dataPtr) * doseGridScaling.value()));
         }
@@ -289,6 +315,248 @@ ImageData readRTDoseDicom(const std::string& filepath, bool displayInfo){
                         static_cast<float>(pixelSpacing[1])};
 
     return ImageData(std::move(doseData), size, offset, spacing);
+}
+
+ImageData readMetaImage(const std::string& filepath, bool displayInfo){
+    std::ifstream file(filepath, std::ios::binary);
+    if(!file.is_open()){
+        throw std::runtime_error("cannot read " + filepath + " file");
+    }
+
+    DataSize size{};
+    DataOffset offset{};
+    DataSpacing spacing{};
+
+    gdcm::SwapCode dataEndianness = gdcm::SwapCode::LittleEndian;
+    uint32_t typeBytesSize = 1;
+    std::string type{""};
+
+    bool objectTypeOccurred = false;
+    bool nDimsOccurred = false;
+    bool dimSizeOccurred = false;
+    bool offsetOccurred = false;
+    bool elementSpacingOccurred = false;
+    bool elementTypeOccurred = false;
+    bool elementDataFileOccurred = false;
+
+    std::string line;
+    while(std::getline(file, line)){
+        size_t eqPos = line.find('=');
+        const std::string tag = trim(line.substr(0, eqPos));
+        const std::string value = trim(line.substr(eqPos+1));
+
+        if(tag == "ObjectType"){
+            if(value != "Image"){
+                throw std::runtime_error("MetaImage file doesn't have value Image in ObjectType tag");
+            }
+            objectTypeOccurred = true;
+            if(displayInfo){
+                std::cout << "ObjectType = Image\n";
+            }
+        }
+        else if(tag == "NDims"){
+            // TODO: add support for 2D images
+            if(value != "3"){
+                throw std::runtime_error("non 3-dimensional data not supported");
+            }
+            nDimsOccurred = true;
+            if(displayInfo){
+                std::cout << "NDims = 3\n";
+            }
+        }
+        else if(tag == "DimSize"){
+            std::istringstream ss(value);
+            ss >> size.columns >> size.rows >> size.frames;
+            if(ss.fail()){
+                throw std::runtime_error("DimSize tag has too few elements or some elements aren't integers");
+            }
+            dimSizeOccurred = true;
+            if(displayInfo){
+                std::cout << "DimSize = " << size.columns << " " << size.rows << " " << size.frames << "\n";
+            }
+        }
+        else if(tag == "Offset" || tag == "Position" || tag == "Origin"){
+            std::istringstream ss(value);
+            ss >> offset.columns >> offset.rows >> offset.frames;
+            if(ss.fail()){
+                throw std::runtime_error(tag + " tag has too few elements or some elements aren't floats");
+            }
+            offsetOccurred = true;
+            if(displayInfo){
+                std::cout << tag << " = " << offset.columns << " " << offset.rows << " " << offset.frames << "\n";
+            }
+        }
+        else if(tag == "ElementSpacing" || tag == "ElementSize"){
+            std::istringstream ss(value);
+            ss >> spacing.columns >> spacing.rows >> spacing.frames;
+            if(ss.fail()){
+                throw std::runtime_error(tag + " tag has too few elements or some elements aren't floats");
+            }
+            elementSpacingOccurred = true;
+            if(displayInfo){
+                std::cout << tag << " = " << spacing.columns << " " << spacing.rows << " " << spacing.frames << "\n";
+            }
+        }
+        else if(tag == "Rotation" || tag == "Orientation" || tag == "TransformMatrix"){
+            int orient[9];
+            std::istringstream ss(value);
+            ss >> orient[0] >> orient[1] >> orient[2]
+               >> orient[3] >> orient[4] >> orient[5]
+               >> orient[6] >> orient[7] >> orient[8];
+            // TODO: add support for different orientations
+            if(ss.fail()){
+                throw std::runtime_error(tag + " tag has too few elements or some elements aren't integers");
+            }
+            if(displayInfo){
+                std::cout << tag << " = "
+                          << orient[0] << " " << orient[1] << " " << orient[2] << " "
+                          << orient[3] << " " << orient[4] << " " << orient[5] << " "
+                          << orient[6] << " " << orient[7] << " " << orient[8] << "\n";
+            }
+        }
+        else if(tag == "BinaryData"){
+            if(value != "True"){
+                throw std::runtime_error("non binary data not supported");
+            }
+            if(displayInfo){
+                std::cout << tag << " = " << value << "\n";
+            }
+        }
+        else if(tag == "BinaryDataByteOrderMSB"){
+            dataEndianness = (value == "True" ? gdcm::SwapCode::BigEndian : gdcm::SwapCode::LittleEndian);
+            if(displayInfo){
+                std::cout << tag << " = " << value << "\n";
+            }
+        }
+        else if(tag == "CompressedData"){
+            if(value != "False"){
+                throw std::runtime_error("compressed data not supported");
+            }
+            if(displayInfo){
+                std::cout << tag << " = " << value << "\n";
+            }
+        }
+        else if(tag == "ElementType"){
+            if(value == "MET_ASCII_CHAR_TYPE" || value == "MET_CHAR" || value == "MET_UCHAR"){
+                typeBytesSize = 1;
+            }
+            else if(value == "MET_SHORT" || value == "MET_USHORT"){
+                typeBytesSize = 2;
+            }
+            else if(value == "MET_INT" || value == "MET_UINT" ||
+                    value == "MET_LONG" || value == "MET_ULONG"){
+                typeBytesSize = 4;
+            }
+            else if(value == "MET_LONG_LONG" || value == "MET_ULONG_LONG"){
+                typeBytesSize = 8;
+            }
+            else if(value == "MET_FLOAT"){
+                typeBytesSize = 4;
+            }
+            else if(value == "MET_DOUBLE"){
+                typeBytesSize = 8;
+            }
+            else{
+                throw std::runtime_error(value + " data type not supported");
+            }
+            type = value;
+            elementTypeOccurred = true;
+            if(displayInfo){
+                std::cout << tag << " = " << value << "\n";
+            }
+        }
+        else if(tag == "ElementDataFile"){
+            if(value != "LOCAL"){
+                throw std::runtime_error("non-local data not supported");
+            }
+            elementDataFileOccurred = true;
+            if(displayInfo){
+                std::cout << tag << " = " << value << "\n";
+            }
+            break;
+        }
+    }
+
+    // check if all necessary tags occurred
+    if(objectTypeOccurred == false){
+        throw std::runtime_error("ObjectType tag didn't occurred");
+    }
+    if(nDimsOccurred == false){
+        throw std::runtime_error("NDims tag didn't occurred");
+    }
+    if(dimSizeOccurred == false){
+        throw std::runtime_error("DimSize tag didn't occurred");
+    }
+    if(offsetOccurred == false){
+        throw std::runtime_error("Offset/Position/Origin tag didn't occurred");
+    }
+    if(elementSpacingOccurred == false){
+        throw std::runtime_error("ElementSpacing/ElementSize tag didn't occurred");
+    }
+    if(elementTypeOccurred == false){
+        throw std::runtime_error("ElementType tag didn't occurred");
+    }
+    if(elementDataFileOccurred == false){
+        throw std::runtime_error("ElementDataFile tag didn't occurred");
+    }
+
+    // read pixel data
+    size_t dataSize = size.frames * size.rows * size.columns;
+    size_t bytes = dataSize * typeBytesSize;
+    std::vector<char> pixelData(bytes);
+    file.read(pixelData.data(), bytes);
+
+    file.close();
+
+    // convert data to system endianness
+    if(typeBytesSize == 2){
+        swapBytesToSystemEndianness<int16_t>(pixelData, dataEndianness);
+    }
+    else if(typeBytesSize == 4){
+        swapBytesToSystemEndianness<int32_t>(pixelData, dataEndianness);
+    }
+    // gdcm doesn't support swap endian for 64-bit data
+    // TODO: implement your own
+    // else if(typeBytesSize == 8){
+    //     swapBytesToSystemEndianness<int64_t>(pixelData, dataEndianness);
+    // }
+
+    // convert bytes data to float data
+    std::vector<float> floatData;
+    floatData.reserve(dataSize);
+
+    if(type == "MET_ASCII_CHAR_TYPE" || type == "MET_CHAR"){
+        convertPixelDataToFloatData<int8_t>(pixelData, floatData);
+    }
+    else if(type == "MET_UCHAR"){
+        convertPixelDataToFloatData<uint8_t>(pixelData, floatData);
+    }
+    else if(type == "MET_SHORT"){
+        convertPixelDataToFloatData<int16_t>(pixelData, floatData);
+    }
+    else if(type == "MET_USHORT"){
+        convertPixelDataToFloatData<uint16_t>(pixelData, floatData);
+    }
+    else if(type == "MET_INT" || type == "MET_LONG"){
+        convertPixelDataToFloatData<int32_t>(pixelData, floatData);
+    }
+    else if(type == "MET_UINT" || type == "MET_ULONG"){
+        convertPixelDataToFloatData<uint32_t>(pixelData, floatData);
+    }
+    else if(type == "MET_LONG_LONG"){
+        convertPixelDataToFloatData<int64_t>(pixelData, floatData);
+    }
+    else if(type == "MET_ULONG_LONG"){
+        convertPixelDataToFloatData<uint64_t>(pixelData, floatData);
+    }
+    else if(type == "MET_FLOAT"){
+        convertPixelDataToFloatData<float>(pixelData, floatData);
+    }
+    else if(type == "MET_DOUBLE"){
+        convertPixelDataToFloatData<double>(pixelData, floatData);
+    }
+
+    return ImageData(std::move(floatData), size, offset, spacing);
 }
 
 }

@@ -32,6 +32,12 @@ namespace yagit::DataReader{
  */
 ImageData readRTDoseDicom(const std::string& filepath, bool displayInfo = false);
 
-// TODO: other methods for reading other data (e.g. MetaImage)
+/**
+ * @brief Read MetaImage file and retrieve image from it
+ * @param filepath File path to MetaImage file (.mha)
+ * @param displayInfo Whether to show additional information read from the file
+ * @return Image and its info (size, offset, spacing) retrieved from MetaImage file 
+ */
+ImageData readMetaImage(const std::string& filepath, bool displayInfo = false);
 
 }

@@ -58,12 +58,7 @@ void writeToMetaImage(const ImageData& img, const std::string& filepath){
          << "DimSize = " << size.columns << " " << size.rows << " " << size.frames << "\n"
          << "Offset = " << offset.columns << " " << offset.rows << " " << offset.frames << "\n"
          << "ElementSpacing = " << spacing.columns << " " << spacing.rows << " " << spacing.frames << "\n"
-         << "Orientation = 1 0 0 0 1 0 0 0 1\n"
-         // TODO: check if 2 tags below are necessary
-         // MetaImage is based on "from" labels, DICOM is based on "to" labels (e.g. from Right to Left)
-         // i.e. MetaImage's RAI is equal to DICOM's LPS
-         //  << "AnatomicalOrientation = RAI\n"
-         //  << "CenterOfRotation = 0 0 0\n"
+         << "Orientation = 1 0 0 0 1 0 0 0 1\n"  // TODO: add support for different orientations
          << "BinaryData = True\n"
          << "BinaryDataByteOrderMSB = " << isBigEndian << "\n"
          << "CompressedData = False\n"

@@ -5,7 +5,7 @@ Library written in C++ for performing efficient comparisons of DICOM images usin
 ## Installation
 
 Build steps:
-1. Creating directory with built library
+1. Creating a directory where the library will be built
 ```
 mkdir build && cd build
 ```
@@ -20,7 +20,7 @@ cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
 sudo apt-get install libgdcm-dev
 cmake ..
 ```
-3. Building library
+3. Building the library
 ```
 cmake --build . --config=Release
 ```

@@ -2,7 +2,7 @@
 
 cd build
 echo CONFIGURING CMAKE...
-cmake .. -DBUILD_EXAMPLES=ON
+cmake .. -DBUILD_EXAMPLES=OFF
 
 echo:
 echo COMPILING...
@@ -15,7 +15,7 @@ if %COMPILE_RESULT% EQU 0 (
     echo RUNNING...
     @REM build\Release\test.exe
     @REM build\examples\Release\gamma3DInterp.exe original_dose_beam_4.dcm logfile_dose_beam_4.dcm
+    @REM build\examples\Release\gamma25D.exe original_dose_beam_4.dcm logfile_dose_beam_4.dcm
     @REM build\examples\Release\gammaImage.exe
-    build\examples\Release\gamma25D.exe original_dose_beam_4.dcm logfile_dose_beam_4.dcm
-    @REM build\Release\testWriter.exe
+    build\Release\testMetaimage.exe
 )
