@@ -40,7 +40,7 @@ void writeToMetaImage(const ImageData& img, const std::string& filepath){
         spacing.frames = 1;
     }
 
-    std::string isBigEndian = gdcm::ByteSwap<uint16_t>::SystemIsBigEndian() ? "True" : "False";
+    std::string isBigEndian = (gdcm::ByteSwap<uint16_t>::SystemIsBigEndian() ? "True" : "False");
 
     std::string elementType;
     if constexpr(std::is_same_v<ImageData::value_type, float>){

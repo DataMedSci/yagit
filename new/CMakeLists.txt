@@ -25,10 +25,6 @@ target_link_libraries(yagit PRIVATE
 # target_link_libraries(test
 #     yagit
 # )
-add_executable(testMetaimage src/testMetaimage.cpp)
-target_link_libraries(testMetaimage
-    yagit
-)
 
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)

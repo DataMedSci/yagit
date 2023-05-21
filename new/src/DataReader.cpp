@@ -90,7 +90,7 @@ std::vector<char> getPixelData(const gdcm::DataSet& ds){
 
 template<typename T>
 void swapBytesToSystemEndianness(std::vector<char>& data, gdcm::SwapCode dataEndianness){
-    gdcm::ByteSwap<T>::SwapRangeFromSwapCodeIntoSystem(reinterpret_cast<T*>(data.data()), dataEndianness, data.size());
+    gdcm::ByteSwap<T>::SwapRangeFromSwapCodeIntoSystem(reinterpret_cast<T*>(data.data()), dataEndianness, data.size() / sizeof(T));
 }
 
 gdcm::SwapCode getDataEndianness(const std::optional<gdcm::UIComp>& transferSyntaxUID){
@@ -106,31 +106,6 @@ gdcm::SwapCode getDataEndianness(const std::optional<gdcm::UIComp>& transferSynt
     else{
         return gdcm::SwapCode::Unknown;
     }
-}
-
-template <typename T>
-void convertPixelDataToFloatData(const std::vector<char>& pixelData, std::vector<float>& floatData){
-    const T* dataPtr = reinterpret_cast<const T*>(pixelData.data());
-    const size_t dataSize = pixelData.size() / sizeof(T);
-    for(size_t i=0; i < dataSize; i++, dataPtr++){
-        floatData.emplace_back(static_cast<float>(*dataPtr));
-    }
-}
-
-std::string ltrim(std::string str){
-    str.erase(str.begin(), std::find_if(str.begin(), str.end(), [](unsigned char c) {
-        return !std::isspace(c);
-    }));
-    return str;
-}
-std::string rtrim(std::string str){
-    str.erase(std::find_if(str.rbegin(), str.rend(), [](unsigned char c) {
-        return !std::isspace(c);
-    }).base(), str.end());
-    return str;
-}
-std::string trim(std::string str){
-    return ltrim(rtrim(str));
 }
 }
 
@@ -317,6 +292,84 @@ ImageData readRTDoseDicom(const std::string& filepath, bool displayInfo){
     return ImageData(std::move(doseData), size, offset, spacing);
 }
 
+namespace{
+const std::string ObjectTypeTag{"ObjectType"};
+const std::string NDimsTag{"NDims"};
+const std::string DimSizeTag{"DimSize"};
+const std::string OffsetTag{"Offset"};
+const std::string PositionTag{"Position"};
+const std::string OriginTag{"Origin"};
+const std::string ElementSpacingTag{"ElementSpacing"};
+const std::string ElementSizeTag{"ElementSize"};
+const std::string RotationTag{"Rotation"};
+const std::string OrientationTag{"Orientation"};
+const std::string TransformMatrixTag{"TransformMatrix"};
+const std::string BinaryDataTag{"BinaryData"};
+const std::string BinaryDataByteOrderMSBTag{"BinaryDataByteOrderMSB"};
+const std::string CompressedDataTag{"CompressedData"};
+const std::string ElementTypeTag{"ElementType"};
+const std::string ElementDataFileTag{"ElementDataFile"};
+
+const std::string AsciiCharType{"MET_ASCII_CHAR_TYPE"};
+const std::string CharType{"MET_CHAR"};
+const std::string UcharType{"MET_UCHAR"};
+const std::string ShortType{"MET_SHORT"};
+const std::string UshortType{"MET_USHORT"};
+const std::string IntType{"MET_INT"};
+const std::string UintType{"MET_UINT"};
+const std::string LongType{"MET_LONG"};
+const std::string UlongType{"MET_ULONG"};
+const std::string LongLongType{"MET_LONG_LONG"};
+const std::string UlongLongType{"MET_ULONG_LONG"};
+const std::string FloatType{"MET_FLOAT"};
+const std::string DoubleType{"MET_DOUBLE"};
+}
+
+namespace{
+template <typename T>
+void convertPixelDataToFloatData(const std::vector<char>& pixelData, std::vector<float>& floatData){
+    const T* dataPtr = reinterpret_cast<const T*>(pixelData.data());
+    const size_t dataSize = pixelData.size() / sizeof(T);
+    for(size_t i=0; i < dataSize; i++, dataPtr++){
+        floatData.emplace_back(static_cast<float>(*dataPtr));
+    }
+}
+
+std::string ltrim(std::string str){
+    str.erase(str.begin(), std::find_if(str.begin(), str.end(), [](unsigned char c) {
+        return !std::isspace(c);
+    }));
+    return str;
+}
+std::string rtrim(std::string str){
+    str.erase(std::find_if(str.rbegin(), str.rend(), [](unsigned char c) {
+        return !std::isspace(c);
+    }).base(), str.end());
+    return str;
+}
+std::string trim(std::string str){
+    return ltrim(rtrim(str));
+}
+
+inline void swapBytes64(uint64_t& value){
+    value = (((value & 0xff00000000000000ull) >> 56) |
+             ((value & 0x00ff000000000000ull) >> 40) |
+             ((value & 0x0000ff0000000000ull) >> 24) |
+             ((value & 0x000000ff00000000ull) >> 8 ) |
+             ((value & 0x00000000ff000000ull) << 8 ) |
+             ((value & 0x0000000000ff0000ull) << 24) |
+             ((value & 0x000000000000ff00ull) << 40) |
+             ((value & 0x00000000000000ffull) << 56));
+}
+
+void swapBytes64(std::vector<char>& data){
+    uint64_t* dataPtr = reinterpret_cast<uint64_t*>(data.data());
+    for(size_t i = 0; i < data.size() / sizeof(uint64_t); i++, dataPtr++){
+        swapBytes64(*dataPtr);
+    }
+}
+}
+
 ImageData readMetaImage(const std::string& filepath, bool displayInfo){
     std::ifstream file(filepath, std::ios::binary);
     if(!file.is_open()){
@@ -345,59 +398,48 @@ ImageData readMetaImage(const std::string& filepath, bool displayInfo){
         const std::string tag = trim(line.substr(0, eqPos));
         const std::string value = trim(line.substr(eqPos+1));
 
-        if(tag == "ObjectType"){
+        if(displayInfo){
+            std::cout << tag << " = " << value << "\n";
+        }
+
+        if(tag == ObjectTypeTag){
             if(value != "Image"){
                 throw std::runtime_error("MetaImage file doesn't have value Image in ObjectType tag");
             }
             objectTypeOccurred = true;
-            if(displayInfo){
-                std::cout << "ObjectType = Image\n";
-            }
         }
-        else if(tag == "NDims"){
+        else if(tag == NDimsTag){
             // TODO: add support for 2D images
             if(value != "3"){
                 throw std::runtime_error("non 3-dimensional data not supported");
             }
             nDimsOccurred = true;
-            if(displayInfo){
-                std::cout << "NDims = 3\n";
-            }
         }
-        else if(tag == "DimSize"){
+        else if(tag == DimSizeTag){
             std::istringstream ss(value);
             ss >> size.columns >> size.rows >> size.frames;
             if(ss.fail()){
-                throw std::runtime_error("DimSize tag has too few elements or some elements aren't integers");
+                throw std::runtime_error(tag + " tag has too few elements or some elements aren't integers");
             }
             dimSizeOccurred = true;
-            if(displayInfo){
-                std::cout << "DimSize = " << size.columns << " " << size.rows << " " << size.frames << "\n";
-            }
         }
-        else if(tag == "Offset" || tag == "Position" || tag == "Origin"){
+        else if(tag == OffsetTag || tag == PositionTag || tag == OriginTag){
             std::istringstream ss(value);
             ss >> offset.columns >> offset.rows >> offset.frames;
             if(ss.fail()){
                 throw std::runtime_error(tag + " tag has too few elements or some elements aren't floats");
             }
             offsetOccurred = true;
-            if(displayInfo){
-                std::cout << tag << " = " << offset.columns << " " << offset.rows << " " << offset.frames << "\n";
-            }
         }
-        else if(tag == "ElementSpacing" || tag == "ElementSize"){
+        else if(tag == ElementSpacingTag || tag == ElementSizeTag){
             std::istringstream ss(value);
             ss >> spacing.columns >> spacing.rows >> spacing.frames;
             if(ss.fail()){
                 throw std::runtime_error(tag + " tag has too few elements or some elements aren't floats");
             }
             elementSpacingOccurred = true;
-            if(displayInfo){
-                std::cout << tag << " = " << spacing.columns << " " << spacing.rows << " " << spacing.frames << "\n";
-            }
         }
-        else if(tag == "Rotation" || tag == "Orientation" || tag == "TransformMatrix"){
+        else if(tag == RotationTag || tag == OrientationTag || tag == TransformMatrixTag){
             int orient[9];
             std::istringstream ss(value);
             ss >> orient[0] >> orient[1] >> orient[2]
@@ -407,53 +449,34 @@ ImageData readMetaImage(const std::string& filepath, bool displayInfo){
             if(ss.fail()){
                 throw std::runtime_error(tag + " tag has too few elements or some elements aren't integers");
             }
-            if(displayInfo){
-                std::cout << tag << " = "
-                          << orient[0] << " " << orient[1] << " " << orient[2] << " "
-                          << orient[3] << " " << orient[4] << " " << orient[5] << " "
-                          << orient[6] << " " << orient[7] << " " << orient[8] << "\n";
-            }
         }
-        else if(tag == "BinaryData"){
+        else if(tag == BinaryDataTag){
             if(value != "True"){
                 throw std::runtime_error("non binary data not supported");
             }
-            if(displayInfo){
-                std::cout << tag << " = " << value << "\n";
-            }
         }
-        else if(tag == "BinaryDataByteOrderMSB"){
+        else if(tag == BinaryDataByteOrderMSBTag){
             dataEndianness = (value == "True" ? gdcm::SwapCode::BigEndian : gdcm::SwapCode::LittleEndian);
-            if(displayInfo){
-                std::cout << tag << " = " << value << "\n";
-            }
         }
-        else if(tag == "CompressedData"){
+        else if(tag == CompressedDataTag){
             if(value != "False"){
                 throw std::runtime_error("compressed data not supported");
             }
-            if(displayInfo){
-                std::cout << tag << " = " << value << "\n";
-            }
         }
-        else if(tag == "ElementType"){
-            if(value == "MET_ASCII_CHAR_TYPE" || value == "MET_CHAR" || value == "MET_UCHAR"){
+        else if(tag == ElementTypeTag){
+            if(value == AsciiCharType || value == CharType || value == UcharType){
                 typeBytesSize = 1;
             }
-            else if(value == "MET_SHORT" || value == "MET_USHORT"){
+            else if(value == ShortType || value == UshortType){
                 typeBytesSize = 2;
             }
-            else if(value == "MET_INT" || value == "MET_UINT" ||
-                    value == "MET_LONG" || value == "MET_ULONG"){
+            else if(value == IntType || value == UintType ||
+                    value == LongType || value == UlongType ||
+                    value == FloatType){
                 typeBytesSize = 4;
             }
-            else if(value == "MET_LONG_LONG" || value == "MET_ULONG_LONG"){
-                typeBytesSize = 8;
-            }
-            else if(value == "MET_FLOAT"){
-                typeBytesSize = 4;
-            }
-            else if(value == "MET_DOUBLE"){
+            else if(value == LongLongType || value == UlongLongType ||
+                    value == DoubleType){
                 typeBytesSize = 8;
             }
             else{
@@ -461,18 +484,12 @@ ImageData readMetaImage(const std::string& filepath, bool displayInfo){
             }
             type = value;
             elementTypeOccurred = true;
-            if(displayInfo){
-                std::cout << tag << " = " << value << "\n";
-            }
         }
-        else if(tag == "ElementDataFile"){
+        else if(tag == ElementDataFileTag){
             if(value != "LOCAL"){
                 throw std::runtime_error("non-local data not supported");
             }
             elementDataFileOccurred = true;
-            if(displayInfo){
-                std::cout << tag << " = " << value << "\n";
-            }
             break;
         }
     }
@@ -505,54 +522,61 @@ ImageData readMetaImage(const std::string& filepath, bool displayInfo){
     size_t bytes = dataSize * typeBytesSize;
     std::vector<char> pixelData(bytes);
     file.read(pixelData.data(), bytes);
+    std::streamsize bytesRead = file.gcount();
+    if(bytesRead != bytes){
+        throw std::runtime_error("pixel data doesn't contain " + std::to_string(bytes) + " bytes of data");
+    }
 
     file.close();
 
     // convert data to system endianness
-    if(typeBytesSize == 2){
-        swapBytesToSystemEndianness<int16_t>(pixelData, dataEndianness);
+    gdcm::SwapCode systemEndianness = (gdcm::ByteSwap<uint16_t>::SystemIsBigEndian() ? gdcm::SwapCode::BigEndian
+                                                                                     : gdcm::SwapCode::LittleEndian);
+    if(systemEndianness != dataEndianness){
+        if(typeBytesSize == 2){
+            swapBytesToSystemEndianness<uint16_t>(pixelData, dataEndianness);
+        }
+        else if(typeBytesSize == 4){
+            swapBytesToSystemEndianness<uint32_t>(pixelData, dataEndianness);
+        }
+        // gdcm doesn't support bytes swap for 64-bit data, so we use our own
+        else if(typeBytesSize == 8){
+            swapBytes64(pixelData);
+        }
     }
-    else if(typeBytesSize == 4){
-        swapBytesToSystemEndianness<int32_t>(pixelData, dataEndianness);
-    }
-    // gdcm doesn't support swap endian for 64-bit data
-    // TODO: implement your own
-    // else if(typeBytesSize == 8){
-    //     swapBytesToSystemEndianness<int64_t>(pixelData, dataEndianness);
-    // }
 
     // convert bytes data to float data
     std::vector<float> floatData;
     floatData.reserve(dataSize);
 
-    if(type == "MET_ASCII_CHAR_TYPE" || type == "MET_CHAR"){
+    if(type == AsciiCharType || type == CharType){
         convertPixelDataToFloatData<int8_t>(pixelData, floatData);
     }
-    else if(type == "MET_UCHAR"){
+    else if(type == UcharType){
         convertPixelDataToFloatData<uint8_t>(pixelData, floatData);
     }
-    else if(type == "MET_SHORT"){
+    else if(type == ShortType){
         convertPixelDataToFloatData<int16_t>(pixelData, floatData);
     }
-    else if(type == "MET_USHORT"){
+    else if(type == UshortType){
         convertPixelDataToFloatData<uint16_t>(pixelData, floatData);
     }
-    else if(type == "MET_INT" || type == "MET_LONG"){
+    else if(type == IntType || type == LongType){
         convertPixelDataToFloatData<int32_t>(pixelData, floatData);
     }
-    else if(type == "MET_UINT" || type == "MET_ULONG"){
+    else if(type == UintType || type == UlongType){
         convertPixelDataToFloatData<uint32_t>(pixelData, floatData);
     }
-    else if(type == "MET_LONG_LONG"){
+    else if(type == LongLongType){
         convertPixelDataToFloatData<int64_t>(pixelData, floatData);
     }
-    else if(type == "MET_ULONG_LONG"){
+    else if(type == UlongLongType){
         convertPixelDataToFloatData<uint64_t>(pixelData, floatData);
     }
-    else if(type == "MET_FLOAT"){
+    else if(type == FloatType){
         convertPixelDataToFloatData<float>(pixelData, floatData);
     }
-    else if(type == "MET_DOUBLE"){
+    else if(type == DoubleType){
         convertPixelDataToFloatData<double>(pixelData, floatData);
     }
 
