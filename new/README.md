@@ -37,7 +37,7 @@ cmake .. -DBUILD_EXAMPLES=ON
 And to start `gammaImage` example, run
 * on Linux
 ```
-./examples/release/gammaImage
+./examples/gammaImage
 ```
 * on Windows
 ```
