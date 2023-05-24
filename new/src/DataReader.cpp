@@ -19,8 +19,8 @@
 
 #include "DataReader.hpp"
 
-#include <optional>
 #include <fstream>
+#include <optional>
 
 #include <gdcmReader.h>
 #include <gdcmAttribute.h>
