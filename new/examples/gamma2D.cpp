@@ -52,7 +52,7 @@ int main(int argc, char** argv){
         // get 2D coronal frame from the middle of the images
         uint32_t yframe = refImg.getSize().rows / 2;
         refImg = refImg.getImageData2D(yframe, yagit::ImagePlane::Coronal);
-        evalImg = refImg.getImageData2D(yframe, yagit::ImagePlane::Coronal);
+        evalImg = evalImg.getImageData2D(yframe, yagit::ImagePlane::Coronal);
 
         float refMaxDose = refImg.max();
         yagit::GammaParameters gammaParams;
