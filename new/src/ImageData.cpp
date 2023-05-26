@@ -59,7 +59,16 @@ ImageData& ImageData::operator=(ImageData&& other) noexcept{
 }
 
 bool ImageData::operator==(const ImageData& other) const{
-    return m_data == other.m_data && m_size == other.m_size && m_offset == other.m_offset && m_spacing == other.m_spacing;
+    if(m_size != other.m_size || m_offset != other.m_offset || m_spacing != other.m_spacing){
+        return false;
+    }
+    for(size_t i = 0; i < m_data.size(); i++){
+        if(std::abs(m_data[i] - other.m_data[i]) > std::max(std::abs(m_data[i]), std::abs(other.m_data[i])) *
+                                                   2 * std::numeric_limits<value_type>::epsilon()){
+            return false;
+        }
+    }
+    return true;
 }
 
 DataSize ImageData::getSize() const{

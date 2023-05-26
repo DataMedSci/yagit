@@ -25,6 +25,10 @@ target_link_libraries(yagit PRIVATE
 # target_link_libraries(test
 #     yagit
 # )
+add_executable(testWendling src/testWendling.cpp)
+target_link_libraries(testWendling
+    yagit
+)
 
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
@@ -34,5 +38,5 @@ if(MSVC)
     # line below is commented, because msvc compiler shows also warnings from external dependencies, but it should not
     # target_compile_options(yagit PRIVATE /W4) # /WX
 else()
-    target_compile_options(yagit PRIVATE -Wall -Wextra -Wpedantic) # -Werror
+    target_compile_options(yagit PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
