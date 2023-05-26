@@ -523,7 +523,7 @@ ImageData readMetaImage(const std::string& filepath, bool displayInfo){
     std::vector<char> pixelData(bytes);
     file.read(pixelData.data(), bytes);
     std::streamsize bytesRead = file.gcount();
-    if(bytesRead != bytes){
+    if(bytesRead != static_cast<std::streamsize>(bytes)){
         throw std::runtime_error("pixel data doesn't contain " + std::to_string(bytes) + " bytes of data");
     }
 
