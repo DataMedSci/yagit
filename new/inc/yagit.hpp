@@ -23,8 +23,10 @@
 #include "ImageData.hpp"
 #include "GammaResult.hpp"
 
+#include "GammaParameters.hpp"
 #include "Gamma.hpp"
 
 #include "Interpolation.hpp"
 
 #include "DataReader.hpp"
+#include "DataWriter.hpp"

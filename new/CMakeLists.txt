@@ -12,6 +12,7 @@ add_library(yagit
     src/GammaResult.cpp
     src/gamma/Gamma.cpp
     src/DataReader.cpp
+    src/DataWriter.cpp
     src/Interpolation.cpp
 )
 

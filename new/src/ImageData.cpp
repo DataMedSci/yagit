@@ -247,17 +247,17 @@ value_type ImageData::max() const{
     return *std::max_element(m_data.begin(), m_data.end());
 }
 
-value_type ImageData::sum() const{
-    return std::accumulate(m_data.begin(), m_data.end(), value_type());
+double ImageData::sum() const{
+    return std::accumulate(m_data.begin(), m_data.end(), double());
 }
 
-value_type ImageData::mean() const{
+double ImageData::mean() const{
     return sum() / size();
 }
 
-value_type ImageData::var() const{
-    const value_type meanV = mean();
-    return std::accumulate(m_data.begin(), m_data.end(), value_type(), [&meanV](auto a, auto b){
+double ImageData::var() const{
+    const double meanV = mean();
+    return std::accumulate(m_data.begin(), m_data.end(), double(), [&meanV](double a, value_type b){
         return a + (b - meanV) * (b - meanV);
     }) / size();
 }
@@ -282,17 +282,19 @@ value_type ImageData::nanmax() const{
     return maxV;
 }
 
-value_type ImageData::nansum() const{
-    return std::accumulate(m_data.begin(), m_data.end(), value_type(), [](auto a, auto b){ return !std::isnan(b) ? (a+b) : a; });
+double ImageData::nansum() const{
+    return std::accumulate(m_data.begin(), m_data.end(), double(), [](double a, value_type b){
+        return !std::isnan(b) ? (a+b) : a;
+    });
 }
 
-value_type ImageData::nanmean() const{
+double ImageData::nanmean() const{
     return nansum() / nansize();
 }
 
-value_type ImageData::nanvar() const{
-    const value_type meanVal = nanmean();
-    return std::accumulate(m_data.begin(), m_data.end(), value_type(), [&meanVal](const auto& a, const auto& b){
+double ImageData::nanvar() const{
+    const double meanVal = nanmean();
+    return std::accumulate(m_data.begin(), m_data.end(), double(), [&meanVal](double a, value_type b){
         return !std::isnan(b) ? (a + (b - meanVal) * (b - meanVal)) : a;
     }) / nansize();
 }

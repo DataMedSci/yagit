@@ -16,38 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with 'yet Another Gamma Index Tool'.  If not, see <http://www.gnu.org/licenses/>.
  ********************************************************************************************/
+#pragma once
 
-#include "GammaResult.hpp"
+#include <string>
 
-#include <algorithm>
-#include <cmath>
+#include "ImageData.hpp"
 
-namespace yagit{
+namespace yagit::DataWriter{
 
-GammaResult::value_type GammaResult::passingRate() const{
-    return static_cast<value_type>(std::count_if(m_data.begin(), m_data.end(), [](value_type el) {
-        return !std::isnan(el) && el <= 1;
-    })) / nansize();
-}
-
-GammaResult::value_type GammaResult::minGamma() const{
-    return nanmin();
-}
-
-GammaResult::value_type GammaResult::maxGamma() const{
-    return nanmax();
-}
-
-double GammaResult::sumGamma() const{
-    return nansum();
-}
-
-double GammaResult::meanGamma() const{
-    return nanmean();
-}
-
-double GammaResult::varGamma() const{
-    return nanvar();
-}
+/**
+ * @brief Write image to MetaImage file (.mha)
+ * @param img Image to save
+ * @param filepath File path where image will be saved
+ */
+void writeToMetaImage(const ImageData& img, const std::string& filepath);
 
 }

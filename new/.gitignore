@@ -85,3 +85,8 @@ docs/html/
 
 # DICOM files
 *.dcm
+
+# MetaImage files
+*.mha
+*.mhd
+*.raw

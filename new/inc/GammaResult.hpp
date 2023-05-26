@@ -37,11 +37,11 @@ public:
     /// @brief Maximum value of gamma index. It ignores NaN values.
     value_type maxGamma() const;
     /// @brief Sum of values of gamma index. It ignores NaN values.
-    value_type sumGamma() const;
+    double sumGamma() const;
     /// @brief Mean of values of gamma index. It ignores NaN values.
-    value_type meanGamma() const;
+    double meanGamma() const;
     /// @brief Variance of values of gamma index. It ignores NaN values.
-    value_type varGamma() const;
+    double varGamma() const;
 };
 
 }
