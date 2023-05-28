@@ -29,6 +29,10 @@ add_executable(testWendling src/testWendling.cpp)
 target_link_libraries(testWendling
     yagit
 )
+add_executable(testWendlingTime src/testWendlingTime.cpp)
+target_link_libraries(testWendlingTime
+    yagit
+)
 
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)

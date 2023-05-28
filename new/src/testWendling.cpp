@@ -62,7 +62,6 @@ void printGammaResult(const yagit::GammaResult& gammaRes){
 
 void printDifferent(const yagit::ImageData& img1, const yagit::ImageData& img2){
     int cnt = 0;
-    std::cout << "DIFFERENT:\n";
     for(size_t i = 0; i < img1.size(); i++){
         if(std::abs(img1.get(i) - img2.get(i)) > std::max(std::abs(img1.get(i)), std::abs(img2.get(i))) * 2 * std::numeric_limits<float>::epsilon()){
             cnt++;
@@ -74,7 +73,7 @@ void printDifferent(const yagit::ImageData& img1, const yagit::ImageData& img2){
             // std::cout << "img[" << f << "," << r << "," << c << "] : " << img1.get(i) << ", " << img2.get(i) << "\n";
         }
     }
-    std::cout << cnt << " / " << img1.size() << "\n";
+    std::cout << "DIFFERENT: " << cnt << " / " << img1.size() << "\n";
 }
 
 int main(int argc, char** argv){
@@ -91,7 +90,8 @@ int main(int argc, char** argv){
         yagit::ImageData evalImg = yagit::DataReader::readRTDoseDicom(evalImgPath);
 
         // yagit::DataOffset off = refImg.getOffset();
-        // off.rows += 1;
+        // // off.rows -= 3;
+        // off.frames += 3;
         // refImg.setOffset(off);
 
         // uint32_t zframe = refImg.getSize().frames / 2 + 2;
@@ -112,32 +112,32 @@ int main(int argc, char** argv){
         gammaParams.globalNormDose = refMaxDose;
         gammaParams.doseCutoff = 0;
         gammaParams.maxSearchDistance = 10;  // [mm]
-        gammaParams.stepSize = gammaParams.dtaThreshold / 10;
-        // gammaParams.stepSize = refImg.getSpacing().rows;
+        // gammaParams.stepSize = gammaParams.dtaThreshold / 10;
+        gammaParams.stepSize = refImg.getSpacing().rows;
         
         auto begin = std::chrono::steady_clock::now();
-        yagit::GammaResult gammaRes = yagit::gammaIndex3DWendling(refImg, evalImg, gammaParams);
+        yagit::GammaResult gammaRes = yagit::gammaIndex2_5DWendling(refImg, evalImg, gammaParams);
         auto end = std::chrono::steady_clock::now();
         auto timeMs = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
         printGammaResult(gammaRes);
         std::cout << "Time: " << timeMs << " [ms]" << std::endl;
-        yagit::DataWriter::writeToMetaImage(gammaRes, "testWendling_wendling3.mha");
+        // yagit::DataWriter::writeToMetaImage(gammaRes, "testWendling_wendling25n.mha");
 
-        // std::cout << "------------------\n";
+        std::cout << "------------------\n";
 
-        // begin = std::chrono::steady_clock::now();
-        // yagit::GammaResult gammaRes2 = yagit::gammaIndex3D(refImg, evalImg, gammaParams);
-        // end = std::chrono::steady_clock::now();
-        // timeMs = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
-        // printGammaResult(gammaRes2);
-        // std::cout << "Time: " << timeMs << " [ms]" << std::endl;
+        begin = std::chrono::steady_clock::now();
+        yagit::GammaResult gammaRes2 = yagit::gammaIndex2_5D(refImg, evalImg, gammaParams);
+        end = std::chrono::steady_clock::now();
+        timeMs = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+        printGammaResult(gammaRes2);
+        std::cout << "Time: " << timeMs << " [ms]" << std::endl;
         // yagit::DataWriter::writeToMetaImage(gammaRes2, "testWendling_classic3.mha");
 
-        // std::cout << "------------------\n";
+        std::cout << "------------------\n";
 
-        // std::cout << "THE SAME: " << (gammaRes == gammaRes2) << "\n";
+        std::cout << "THE SAME: " << (gammaRes == gammaRes2) << "\n";
 
-        // printDifferent(gammaRes, gammaRes2);
+        printDifferent(gammaRes, gammaRes2);
         
 
     }

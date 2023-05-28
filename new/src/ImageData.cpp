@@ -71,18 +71,6 @@ bool ImageData::operator==(const ImageData& other) const{
     return true;
 }
 
-DataSize ImageData::getSize() const{
-    return m_size;
-}
-
-DataOffset ImageData::getOffset() const{
-    return m_offset;
-}
-
-DataSpacing ImageData::getSpacing() const{
-    return m_spacing;
-}
-
 void ImageData::setSize(const DataSize& size){
     if(m_size.frames * m_size.rows * m_size.columns != size.frames * size.rows * size.columns){
         throw std::invalid_argument("the total number of elements in the new size does not match the total number of elements in the old size");
@@ -98,10 +86,6 @@ void ImageData::setSpacing(const DataSpacing& spacing){
     m_spacing = spacing;
 }
 
-ImageData::size_type ImageData::size() const{
-    return m_data.size();
-}
-
 reference ImageData::at(uint32_t z, uint32_t y, uint32_t x){
     return const_cast<reference>(const_cast<const ImageData*>(this)->at(z, y, x));
 }
@@ -111,30 +95,6 @@ const_reference ImageData::at(uint32_t z, uint32_t y, uint32_t x) const{
         throw std::out_of_range("data index out of range");
     }
     return get(z, y, x);
-}
-
-reference ImageData::get(uint32_t z, uint32_t y, uint32_t x){
-    return const_cast<reference>(const_cast<const ImageData*>(this)->get(z, y, x));
-}
-
-const_reference ImageData::get(uint32_t z, uint32_t y, uint32_t x) const{
-    return m_data[(z * m_size.rows + y) * m_size.columns + x];
-}
-
-reference ImageData::get(uint32_t index){
-    return const_cast<reference>(const_cast<const ImageData*>(this)->get(index));
-}
-
-const_reference ImageData::get(uint32_t index) const{
-    return m_data[index];
-}
-
-pointer ImageData::data(){
-    return const_cast<pointer>(const_cast<const ImageData*>(this)->data());
-}
-
-const_pointer ImageData::data() const{
-    return m_data.data();
 }
 
 std::vector<value_type> ImageData::getData() const{

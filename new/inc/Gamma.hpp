@@ -55,6 +55,8 @@ GammaResult gammaIndex2_5D(const ImageData& refImg3D, const ImageData& evalImg3D
  */
 GammaResult gammaIndex3D(const ImageData& refImg3D, const ImageData& evalImg3D, const GammaParameters& gammaParams);
 
+// TODO: desc
+// TODO: add link to paper? in classic method too?
 GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& evalImg2D, const GammaParameters& gammaParams);
 
 GammaResult gammaIndex2_5DWendling(const ImageData& refImg3D, const ImageData& evalImg3D, const GammaParameters& gammaParams);
