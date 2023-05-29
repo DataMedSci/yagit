@@ -21,6 +21,7 @@
 #include "Interpolation.hpp"
 
 #include <string>
+#include <tuple>
 #include <algorithm>
 #include <cmath>
 #include <limits>
