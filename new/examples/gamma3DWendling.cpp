@@ -23,8 +23,7 @@
  * @example{lineno}
  * This file provides a simple example of using yagit - 3D gamma index with interpolation of eval img.
  * - First, it reads reference image and evaluated image from DICOM files.
- * - After that, it interpolates eval image to be on the same grid as ref image.
- * - Then it calculates 3%G/3mm 3D gamma index of those images using classic method.
+ * - Then it calculates 3%G/3mm 3D gamma index of those images using Wendling method.
  * Also, it is set to not take into account voxels with dose below 10% of max reference dose -
  * in this case, NaN value will be set.
  * - After that, it prints gamma index passing rate and other info.
@@ -53,7 +52,7 @@ std::string gammaParametersToString(const yagit::GammaParameters& gammaParams){
 int main(int argc, char** argv){
     if(argc <= 2){
         std::cerr << "too few arguments\n";
-        std::cerr << "Usage: gamma3DInterp refImgPath evalImgPath\n";
+        std::cerr << "Usage: gamma3DWendling refImgPath evalImgPath\n";
     }
 
     const std::string refImgPath{argv[1]};
@@ -67,10 +66,6 @@ int main(int argc, char** argv){
         yagit::ImageData evalImg = yagit::DataReader::readRTDoseDicom(evalImgPath, true);
         std::cout << "------------------------------\n";
 
-        // interpolate eval image to have values on the same grid as ref image
-        std::cout << "Interpolating evaluated image\n";
-        evalImg = yagit::Interpolation::trilinear(evalImg, refImg);
-
         float refMaxDose = refImg.max();
         yagit::GammaParameters gammaParams;
         gammaParams.ddThreshold = 3.0;   // [%]
@@ -78,9 +73,12 @@ int main(int argc, char** argv){
         gammaParams.normalization = yagit::GammaNormalization::Global;
         gammaParams.globalNormDose = refMaxDose;
         gammaParams.doseCutoff = 0.1 * refMaxDose;  // 10% * ref_max
+        // two parameters below are exclusively used by Wendling method
+        gammaParams.maxSearchDistance = 10;  // [mm]
+        gammaParams.stepSize = gammaParams.dtaThreshold / 10;
 
         std::cout << "Calculating 3D gamma index with parameters: " << gammaParametersToString(gammaParams) << "\n";
-        const yagit::GammaResult gammaRes = yagit::gammaIndex3D(refImg, evalImg, gammaParams);
+        const yagit::GammaResult gammaRes = yagit::gammaIndex3DWendling(refImg, evalImg, gammaParams);
 
         std::cout << "GIPR: " << gammaRes.passingRate() * 100 << "%\n"
                   << "Gamma mean: " << gammaRes.meanGamma() << "\n"

@@ -7,6 +7,13 @@ set(CMAKE_CXX_STANDARD 17)
 
 find_package(GDCM REQUIRED)
 
+if(MSVC)
+    # line below is commented, because msvc compiler shows also warnings from external dependencies, but it should not
+    # target_compile_options(yagit PRIVATE /W4) # /WX
+else()
+    target_compile_options(yagit PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
 add_library(yagit
     src/ImageData.cpp
     src/GammaResult.cpp
@@ -21,26 +28,11 @@ target_link_libraries(yagit PRIVATE
     gdcmCommon gdcmDSED
 )
 
-# add_executable(test src/test.cpp)
-# target_link_libraries(test
-#     yagit
-# )
-add_executable(testWendling src/testWendling.cpp)
-target_link_libraries(testWendling
-    yagit
-)
-add_executable(testWendlingTime src/testWendlingTime.cpp)
-target_link_libraries(testWendlingTime
-    yagit
-)
-
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
-if(MSVC)
-    # line below is commented, because msvc compiler shows also warnings from external dependencies, but it should not
-    # target_compile_options(yagit PRIVATE /W4) # /WX
-else()
-    target_compile_options(yagit PRIVATE -Wall -Wextra -Wpedantic -Werror)
-endif()
+# add_executable(test src/test.cpp)
+# target_link_libraries(test
+#     yagit
+# )

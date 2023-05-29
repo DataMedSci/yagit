@@ -33,6 +33,11 @@ using reference = ImageData::reference;
 using const_reference = ImageData::const_reference;
 using pointer = ImageData::pointer;
 using const_pointer = ImageData::const_pointer;
+
+bool floatsEqual(value_type val1, value_type val2){
+    return std::abs(val1 - val2) <= std::max(std::abs(val1), std::abs(val2)) *
+                                    2 * std::numeric_limits<value_type>::epsilon();
+}
 }
 
 ImageData::ImageData(std::vector<value_type>&& data, const DataSize& size, const DataOffset& offset, const DataSpacing& spacing) noexcept
@@ -63,8 +68,7 @@ bool ImageData::operator==(const ImageData& other) const{
         return false;
     }
     for(size_t i = 0; i < m_data.size(); i++){
-        if(std::abs(m_data[i] - other.m_data[i]) > std::max(std::abs(m_data[i]), std::abs(other.m_data[i])) *
-                                                   2 * std::numeric_limits<value_type>::epsilon()){
+        if(!floatsEqual(m_data[i], other.m_data[i])){
             return false;
         }
     }
@@ -269,15 +273,15 @@ double ImageData::nanvar() const{
 }
 
 ImageData::size_type ImageData::nansize() const{
-    return std::count_if(m_data.begin(), m_data.end(), [](const auto& el) { return !std::isnan(el); });
+    return std::count_if(m_data.begin(), m_data.end(), [](value_type el) { return !std::isnan(el); });
 }
 
 bool ImageData::containsNan() const{
-    return std::find_if(m_data.begin(), m_data.end(), [](const auto& el) { return std::isnan(el); }) != m_data.end();
+    return std::find_if(m_data.begin(), m_data.end(), [](value_type el) { return std::isnan(el); }) != m_data.end();
 }
 
 bool ImageData::containsInf() const{
-    return std::find_if(m_data.begin(), m_data.end(), [](const auto& el) { return std::isinf(el); }) != m_data.end();
+    return std::find_if(m_data.begin(), m_data.end(), [](value_type el) { return std::isinf(el); }) != m_data.end();
 }
 
 }

@@ -24,6 +24,7 @@
  * This file provides a simple example of using yagit - 2D gamma index.
  * - First, it reads reference image and evaluated image from DICOM files.
  * - Next, it takes 2D frames from the middle of images in coronal plane.
+ * - After that, it interpolates eval image to be on the same grid as ref image.
  * - Then it calculates 2%L/2mm 2D gamma index of those 2D images using classic method.
  * Also, it is set to not take into account voxels with dose below 1% of max reference dose -
  * in this case, NaN value will be set.
@@ -53,6 +54,9 @@ int main(int argc, char** argv){
         uint32_t yframe = refImg.getSize().rows / 2;
         refImg = refImg.getImageData2D(yframe, yagit::ImagePlane::Coronal);
         evalImg = evalImg.getImageData2D(yframe, yagit::ImagePlane::Coronal);
+
+        // interpolate eval image to have values on the same grid as ref image
+        evalImg = yagit::Interpolation::bilinearOnPlane(evalImg, refImg, yagit::ImagePlane::Axial);
 
         float refMaxDose = refImg.max();
         yagit::GammaParameters gammaParams;
