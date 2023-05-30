@@ -18,6 +18,8 @@
  ********************************************************************************************/
 #pragma once
 
+#include <optional>
+
 #include "ImageData.hpp"
 #include "Image.hpp"
 
@@ -143,5 +145,27 @@ ImageData bilinearOnPlane(const ImageData& evalImg, const ImageData& refImg, Ima
  * @return Image interpolated on the grid of @a refImg
  */
 ImageData trilinear(const ImageData& evalImg, const ImageData& refImg);
+
+/**
+ * @brief Bilinear interpolation at point inside image
+ * 
+ * @param img Image on which interpolation is performed
+ * @param frame Axial frame where interpolation is performed
+ * @param y Y coordinate of the point where interpolation is performed
+ * @param x X coordinate of the point where interpolation is performed
+ * @return If the point is inside the image, then an interpolated value is returned
+ */
+std::optional<float> bilinearAtPoint(const ImageData& img, uint32_t frame, float y, float x);
+
+/**
+ * @brief Trilinear interpolation at point inside image
+ * 
+ * @param img Image on which interpolation is performed
+ * @param z Z coordinate of the point where interpolation is performed
+ * @param y Y coordinate of the point where interpolation is performed
+ * @param x X coordinate of the point where interpolation is performed
+ * @return If the point is inside the image, then an interpolated value is returned
+ */
+std::optional<float> trilinearAtPoint(const ImageData& img, float z, float y, float x);
 
 }

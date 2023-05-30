@@ -348,4 +348,87 @@ ImageData trilinear(const ImageData& evalImg, const ImageData& refImg){
     return trilinear(evalImg, refImg.getOffset(), refImg.getSpacing());
 }
 
+std::optional<float> bilinearAtPoint(const ImageData& img, uint32_t frame, float y, float x){
+    const int32_t indy1 = std::floor((y - img.getOffset().rows) / img.getSpacing().rows);
+    const int32_t indx1 = std::floor((x - img.getOffset().columns) / img.getSpacing().columns);
+    int32_t indy2 = indy1 + 1;
+    int32_t indx2 = indx1 + 1;
+    if(indy1 >= 0 && indy2 <= static_cast<int32_t>(img.getSize().rows) &&
+       indx1 >= 0 && indx2 <= static_cast<int32_t>(img.getSize().columns)){
+
+        if(indy2 == static_cast<int32_t>(img.getSize().rows)){
+            indy2 = indy1;
+        }
+        if(indx2 == static_cast<int32_t>(img.getSize().columns)){
+            indx2 = indx1;
+        }
+
+        float y1 = img.getOffset().rows + indy1 * img.getSpacing().rows;
+        float x1 = img.getOffset().columns + indx1 * img.getSpacing().columns;
+        float y2 = y1 + (indy2 - indy1) * img.getSpacing().rows;
+        float x2 = x1 + (indx2 - indx1) * img.getSpacing().columns;
+
+        float interpFactor = 1 / (img.getSpacing().rows * img.getSpacing().columns);
+
+        return interpFactor * (
+            img.get(frame, indy1, indx1) * (x2 - x) * (y2 - y) +
+            img.get(frame, indy1, indx2) * (x - x1) * (y2 - y) +
+            img.get(frame, indy2, indx1) * (x2 - x) * (y - y1) +
+            img.get(frame, indy2, indx2) * (x - x1) * (y - y1));
+    }
+    return std::nullopt;
+}
+
+std::optional<float> trilinearAtPoint(const ImageData& img, float z, float y, float x){
+    const int32_t indz0 = std::floor((z - img.getOffset().frames) / img.getSpacing().frames);
+    const int32_t indy0 = std::floor((y - img.getOffset().rows) / img.getSpacing().rows);
+    const int32_t indx0 = std::floor((x - img.getOffset().columns) / img.getSpacing().columns);
+    int32_t indz1 = indz0 + 1;
+    int32_t indy1 = indy0 + 1;
+    int32_t indx1 = indx0 + 1;
+
+    if(indz0 >= 0 && indz1 <= static_cast<int32_t>(img.getSize().frames) &&
+       indy0 >= 0 && indy1 <= static_cast<int32_t>(img.getSize().rows) &&
+       indx0 >= 0 && indx1 <= static_cast<int32_t>(img.getSize().columns)){
+
+        if(indz1 == static_cast<int32_t>(img.getSize().frames)){
+            indz1 = indz0;
+        }
+        if(indy1 == static_cast<int32_t>(img.getSize().rows)){
+            indy1 = indy0;
+        }
+        if(indx1 == static_cast<int32_t>(img.getSize().columns)){
+            indx1 = indx0;
+        }
+
+        float z0 = img.getOffset().frames + indz0 * img.getSpacing().frames;
+        float y0 = img.getOffset().rows + indy0 * img.getSpacing().rows;
+        float x0 = img.getOffset().columns + indx0 * img.getSpacing().columns;
+
+        float c000 = img.get(indz0, indy0, indx0);
+        float c001 = img.get(indz1, indy0, indx0);
+        float c010 = img.get(indz0, indy1, indx0);
+        float c011 = img.get(indz1, indy1, indx0);
+        float c100 = img.get(indz0, indy0, indx1);
+        float c101 = img.get(indz1, indy0, indx1);
+        float c110 = img.get(indz0, indy1, indx1);
+        float c111 = img.get(indz1, indy1, indx1);
+
+        float zd = (z - z0) / img.getSpacing().frames;
+        float yd = (y - y0) / img.getSpacing().rows;
+        float xd = (x - x0) / img.getSpacing().columns;
+
+        float c00 = c000*(1 - xd) + c100*xd;
+        float c01 = c001*(1 - xd) + c101*xd;
+        float c10 = c010*(1 - xd) + c110*xd;
+        float c11 = c011*(1 - xd) + c111*xd;
+
+        float c0 = c00*(1 - yd) + c10*yd;
+        float c1 = c01*(1 - yd) + c11*yd;
+
+        return c0*(1 - zd) + c1*zd;
+    }
+    return std::nullopt;
+}
+
 }

@@ -33,6 +33,11 @@ using reference = ImageData::reference;
 using const_reference = ImageData::const_reference;
 using pointer = ImageData::pointer;
 using const_pointer = ImageData::const_pointer;
+
+bool floatsEqual(value_type val1, value_type val2){
+    return std::abs(val1 - val2) <= std::max(std::abs(val1), std::abs(val2)) *
+                                    2 * std::numeric_limits<value_type>::epsilon();
+}
 }
 
 ImageData::ImageData(std::vector<value_type>&& data, const DataSize& size, const DataOffset& offset, const DataSpacing& spacing) noexcept
@@ -59,19 +64,15 @@ ImageData& ImageData::operator=(ImageData&& other) noexcept{
 }
 
 bool ImageData::operator==(const ImageData& other) const{
-    return m_data == other.m_data && m_size == other.m_size && m_offset == other.m_offset && m_spacing == other.m_spacing;
-}
-
-DataSize ImageData::getSize() const{
-    return m_size;
-}
-
-DataOffset ImageData::getOffset() const{
-    return m_offset;
-}
-
-DataSpacing ImageData::getSpacing() const{
-    return m_spacing;
+    if(m_size != other.m_size || m_offset != other.m_offset || m_spacing != other.m_spacing){
+        return false;
+    }
+    for(size_t i = 0; i < m_data.size(); i++){
+        if(!floatsEqual(m_data[i], other.m_data[i])){
+            return false;
+        }
+    }
+    return true;
 }
 
 void ImageData::setSize(const DataSize& size){
@@ -89,10 +90,6 @@ void ImageData::setSpacing(const DataSpacing& spacing){
     m_spacing = spacing;
 }
 
-ImageData::size_type ImageData::size() const{
-    return m_data.size();
-}
-
 reference ImageData::at(uint32_t z, uint32_t y, uint32_t x){
     return const_cast<reference>(const_cast<const ImageData*>(this)->at(z, y, x));
 }
@@ -102,30 +99,6 @@ const_reference ImageData::at(uint32_t z, uint32_t y, uint32_t x) const{
         throw std::out_of_range("data index out of range");
     }
     return get(z, y, x);
-}
-
-reference ImageData::get(uint32_t z, uint32_t y, uint32_t x){
-    return const_cast<reference>(const_cast<const ImageData*>(this)->get(z, y, x));
-}
-
-const_reference ImageData::get(uint32_t z, uint32_t y, uint32_t x) const{
-    return m_data[(z * m_size.rows + y) * m_size.columns + x];
-}
-
-reference ImageData::get(uint32_t index){
-    return const_cast<reference>(const_cast<const ImageData*>(this)->get(index));
-}
-
-const_reference ImageData::get(uint32_t index) const{
-    return m_data[index];
-}
-
-pointer ImageData::data(){
-    return const_cast<pointer>(const_cast<const ImageData*>(this)->data());
-}
-
-const_pointer ImageData::data() const{
-    return m_data.data();
 }
 
 std::vector<value_type> ImageData::getData() const{
@@ -300,15 +273,15 @@ double ImageData::nanvar() const{
 }
 
 ImageData::size_type ImageData::nansize() const{
-    return std::count_if(m_data.begin(), m_data.end(), [](const auto& el) { return !std::isnan(el); });
+    return std::count_if(m_data.begin(), m_data.end(), [](value_type el) { return !std::isnan(el); });
 }
 
 bool ImageData::containsNan() const{
-    return std::find_if(m_data.begin(), m_data.end(), [](const auto& el) { return std::isnan(el); }) != m_data.end();
+    return std::find_if(m_data.begin(), m_data.end(), [](value_type el) { return std::isnan(el); }) != m_data.end();
 }
 
 bool ImageData::containsInf() const{
-    return std::find_if(m_data.begin(), m_data.end(), [](const auto& el) { return std::isinf(el); }) != m_data.end();
+    return std::find_if(m_data.begin(), m_data.end(), [](value_type el) { return std::isinf(el); }) != m_data.end();
 }
 
 }

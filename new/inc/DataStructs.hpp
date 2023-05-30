@@ -33,6 +33,9 @@ struct DataSize{
     bool operator==(const DataSize& other) const{
         return frames == other.frames && rows == other.rows && columns == other.columns;
     }
+    bool operator!=(const DataSize& other) const{
+        return !operator==(other);
+    }
 };
 
 /**
@@ -47,6 +50,9 @@ struct DataOffset{
     bool operator==(const DataOffset& other) const{
         return frames == other.frames && rows == other.rows && columns == other.columns;
     }
+    bool operator!=(const DataOffset& other) const{
+        return !operator==(other);
+    }
 };
 
 /**
@@ -60,6 +66,9 @@ struct DataSpacing{
 
     bool operator==(const DataSpacing& other) const{
         return frames == other.frames && rows == other.rows && columns == other.columns;
+    }
+    bool operator!=(const DataSpacing& other) const{
+        return !operator==(other);
     }
 };
 

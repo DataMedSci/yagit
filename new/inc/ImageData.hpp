@@ -66,9 +66,15 @@ public:
 
     bool operator==(const ImageData& other) const;
 
-    DataSize getSize() const;
-    DataOffset getOffset() const;
-    DataSpacing getSpacing() const;
+    DataSize getSize() const{
+        return m_size;
+    }
+    DataOffset getOffset() const{
+        return m_offset;
+    }
+    DataSpacing getSpacing() const{
+        return m_spacing;
+    }
 
     /**
      * @brief Set the size of image (frames, rows, columns)
@@ -79,7 +85,9 @@ public:
     void setSpacing(const DataSpacing& spacing);
 
     /// @brief Number of elements of image (frames*rows*columns)
-    size_type size() const;
+    size_type size() const{
+        return m_data.size();
+    }
 
     /// @brief Check that the position (@a frame, @a row, @a column) is within the valid range
     /// and get image element at that position
@@ -89,17 +97,29 @@ public:
     const_reference at(uint32_t frame, uint32_t row, uint32_t column) const;
 
     /// @brief Get image element at position (@a frame, @a row, @a column)
-    reference get(uint32_t frame, uint32_t row, uint32_t column);
+    reference get(uint32_t frame, uint32_t row, uint32_t column){
+        return const_cast<reference>(const_cast<const ImageData*>(this)->get(frame, row, column));
+    }
     /// @brief Get image element at position (@a frame, @a row, @a column)
-    const_reference get(uint32_t frame, uint32_t row, uint32_t column) const;
+    const_reference get(uint32_t frame, uint32_t row, uint32_t column) const{
+        return m_data[(frame * m_size.rows + row) * m_size.columns + column];
+    }
 
     /// @brief Get element at @a index of flattened image
-    reference get(uint32_t index);
+    reference get(uint32_t index){
+        return const_cast<reference>(const_cast<const ImageData*>(this)->get(index));
+    }
     /// @brief Get element at @a index of flattened image
-    const_reference get(uint32_t index) const;
+    const_reference get(uint32_t index) const{
+        return m_data[index];
+    }
 
-    pointer data();
-    const_pointer data() const;
+    pointer data(){
+        return const_cast<pointer>(const_cast<const ImageData*>(this)->data());
+    }
+    const_pointer data() const{
+        return m_data.data();
+    }
 
     /// @brief Returns copy of flattened image
     std::vector<value_type> getData() const;

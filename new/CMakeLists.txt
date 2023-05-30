@@ -21,18 +21,18 @@ target_link_libraries(yagit PRIVATE
     gdcmCommon gdcmDSED
 )
 
-# add_executable(test src/test.cpp)
-# target_link_libraries(test
-#     yagit
-# )
+if(MSVC)
+    # line below is commented, because msvc compiler shows also warnings from external dependencies, but it should not
+    # target_compile_options(yagit PRIVATE /W4) # /WX
+else()
+    target_compile_options(yagit PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
 
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
-if(MSVC)
-    # line below is commented, because msvc compiler shows also warnings from external dependencies, but it should not
-    # target_compile_options(yagit PRIVATE /W4) # /WX
-else()
-    target_compile_options(yagit PRIVATE -Wall -Wextra -Wpedantic) # -Werror
-endif()
+# add_executable(test src/test.cpp)
+# target_link_libraries(test
+#     yagit
+# )

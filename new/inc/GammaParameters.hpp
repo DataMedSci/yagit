@@ -42,6 +42,12 @@ struct GammaParameters{
     float globalNormDose;
     /// Value of dose below which gamma index will not be calculated
     float doseCutoff;
+    /// @brief Maximum search distance in milimeters [mm]. Radius of a circle in which searching will be performed.
+    /// Used only for Wendling method.
+    float maxSearchDistance;
+    /// @brief Step size in milimeters [mm] that is used when searching within the circle.
+    /// Used only for Wendling method.
+    float stepSize;
 };
 
 }
