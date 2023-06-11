@@ -47,7 +47,7 @@ public:
     using pointer = std::vector<value_type>::pointer;
     using const_pointer = std::vector<value_type>::const_pointer;
 
-    ImageData() = delete;
+    ImageData();
 
     template <typename U>
     ImageData(const std::vector<U>& data, const DataSize& size, const DataOffset& offset, const DataSpacing& spacing);
