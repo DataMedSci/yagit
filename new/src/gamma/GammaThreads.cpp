@@ -675,7 +675,7 @@ GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& eva
     validateGammaParameters(gammaParams);
     validateWendlingGammaParameters(gammaParams);
 
-    const auto sortedPoints = sortedPointsInQuarterCircle(gammaParams.maxSearchDistance, gammaParams.stepSize);
+    const auto sortedPoints = sortedPointsInCircle(gammaParams.maxSearchDistance, gammaParams.stepSize);
 
     std::vector<float> gammaVals =
         multithreadedGammaIndex(refImg2D, gammaParams, gammaIndex2DWendlingInternal,
@@ -690,7 +690,7 @@ GammaResult gammaIndex2_5DWendling(const ImageData& refImg3D, const ImageData& e
     validateWendlingGammaParameters(gammaParams);
 
     const ImageData evalImgInterpolatedZ = Interpolation::linearAlongAxis(evalImg3D, refImg3D, ImageAxis::Z);
-    const auto sortedPoints = sortedPointsInQuarterCircle(gammaParams.maxSearchDistance, gammaParams.stepSize);
+    const auto sortedPoints = sortedPointsInCircle(gammaParams.maxSearchDistance, gammaParams.stepSize);
 
     std::vector<float> gammaVals =
         multithreadedGammaIndex(refImg3D, gammaParams, gammaIndex2_5DWendlingInternal,
@@ -704,7 +704,7 @@ GammaResult gammaIndex3DWendling(const ImageData& refImg3D, const ImageData& eva
     validateGammaParameters(gammaParams);
     validateWendlingGammaParameters(gammaParams);
 
-    const auto sortedPoints = sortedPointsInEighthOfSphere(gammaParams.maxSearchDistance, gammaParams.stepSize);
+    const auto sortedPoints = sortedPointsInSphere(gammaParams.maxSearchDistance, gammaParams.stepSize);
 
     std::vector<float> gammaVals =
         multithreadedGammaIndex(refImg3D, gammaParams, gammaIndex3DWendlingInternal,

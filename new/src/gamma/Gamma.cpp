@@ -242,7 +242,7 @@ GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& eva
 
     const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
 
-    const auto sortedPoints = sortedPointsInQuarterCircle(gammaParams.maxSearchDistance, gammaParams.stepSize);
+    const auto sortedPoints = sortedPointsInCircle(gammaParams.maxSearchDistance, gammaParams.stepSize);
 
     // iterate over each row and column of reference image
     size_t indRef = 0;
@@ -347,7 +347,7 @@ GammaResult gammaIndex2_5DWendling(const ImageData& refImg3D, const ImageData& e
     const ImageData evalImgInterpolatedZ = Interpolation::linearAlongAxis(evalImg3D, refImg3D, ImageAxis::Z);
     const int kDiff = static_cast<int>((evalImgInterpolatedZ.getOffset().frames - refImg3D.getOffset().frames) / evalImgInterpolatedZ.getSpacing().frames);
 
-    const auto sortedPoints = sortedPointsInQuarterCircle(gammaParams.maxSearchDistance, gammaParams.stepSize);
+    const auto sortedPoints = sortedPointsInCircle(gammaParams.maxSearchDistance, gammaParams.stepSize);
 
     // iterate over each frame, row and column of reference image
     size_t indRef = 0;
@@ -457,7 +457,7 @@ GammaResult gammaIndex3DWendling(const ImageData& refImg3D, const ImageData& eva
     // and precalculating interpolation factors (for on-the-fly interpolation) will be much faster.
     // note that result will be less accurate due to interpolating twice
 
-    const auto sortedPoints = sortedPointsInEighthOfSphere(gammaParams.maxSearchDistance, gammaParams.stepSize);
+    const auto sortedPoints = sortedPointsInSphere(gammaParams.maxSearchDistance, gammaParams.stepSize);
 
     // iterate over each frame, row and column of reference image
     size_t indRef = 0;
