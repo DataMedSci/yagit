@@ -6,6 +6,8 @@ if(NOT GAMMA_VERSION IN_LIST GAMMA_VERSION_STRINGS)
   message(FATAL_ERROR "Wrong value of the parameter GAMMA_VERSION")
 endif()
 
+find_package(GDCM REQUIRED)
+
 set(YAGIT_SOURCE_FILES
     ImageData.cpp
     GammaResult.cpp
@@ -13,16 +15,23 @@ set(YAGIT_SOURCE_FILES
     DataWriter.cpp
     Interpolation.cpp
 )
+set(YAGIT_DEPS
+    gdcmCommon gdcmDSED
+)
+
 if(GAMMA_VERSION STREQUAL "SEQUENTIAL")
     list(APPEND YAGIT_SOURCE_FILES gamma/Gamma.cpp)
 elseif(GAMMA_VERSION STREQUAL "THREADED")
+    find_package(Threads REQUIRED)
+    list(APPEND YAGIT_DEPS Threads::Threads)
+
     list(APPEND YAGIT_SOURCE_FILES gamma/GammaThreads.cpp)
 endif()
 
 add_library(yagit ${YAGIT_SOURCE_FILES})
 target_include_directories(yagit PUBLIC ../inc)
 target_link_libraries(yagit PRIVATE
-    gdcmCommon gdcmDSED
+    ${YAGIT_DEPS}
 )
 
 if(MSVC)
