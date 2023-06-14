@@ -21,6 +21,7 @@
 #include <vector>
 #include <algorithm>
 #include <numeric>
+#include <cmath>
 #include <functional>
 #include <fstream>
 #include <iostream>
@@ -164,7 +165,7 @@ int main(int argc, char** argv){
 
     const std::string refImgPath{argv[1]};
     const std::string evalImgPath{argv[2]};
-    const std::string outputCsvPath = (argc >= 3 ? argv[3] : "output.csv");
+    const std::string outputCsvPath = (argc > 3 ? argv[3] : "output.csv");
 
     try{
         const yagit::ImageData refImg3D = yagit::DataReader::readRTDoseDicom(refImgPath);
