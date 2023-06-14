@@ -19,6 +19,12 @@ jobs:
     name: Build yagit
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        gamma-version:
+          - "SEQUENTIAL"
+          - "THREADED"
+
     steps:
     - uses: actions/checkout@v2
 
@@ -37,7 +43,7 @@ jobs:
       working-directory: ${{github.workspace}}/new
       run: |
         mkdir build && cd build
-        cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_EXAMPLES=ON
+        cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DGAMMA_VERSION=${{matrix.gamma-version}} -DBUILD_EXAMPLES=ON
         cmake --build .
 
     - name: Run example

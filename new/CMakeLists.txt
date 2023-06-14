@@ -8,6 +8,8 @@ option(BUILD_TESTING "Build unit tests" OFF)
 option(BUILD_PERFORMANCE_TESTING "Build performance tests" OFF)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(GDCM REQUIRED)
 

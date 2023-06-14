@@ -18,11 +18,12 @@
  ********************************************************************************************/
 
 #include "Gamma.hpp"
-#include "GammaCommon.hpp"
-#include "Interpolation.hpp"
 
 #include <cmath>
 #include <limits>
+
+#include "GammaCommon.hpp"
+#include "Interpolation.hpp"
 
 namespace yagit{
 

@@ -105,17 +105,18 @@ std::string configToCsv(const Config& config){
     return ss.str();
 }
 
-std::string timeStatsToCsv(const std::vector<long long>& timesMs){
-	double mean = std::accumulate(timesMs.begin(), timesMs.end(), 0.0) / timesMs.size();
-	double var = 0;
-	for(const auto& e : timesMs){
-		var += (e - mean) * (e - mean);
-	}
-	var /= timesMs.size();
-	double sd = std::sqrt(var);
+std::string timeStatsToCsv(const std::vector<double>& timesMs){
+    double mean = std::accumulate(timesMs.begin(), timesMs.end(), 0.0) / timesMs.size();
+    double var = 0;
+    for(const auto& e : timesMs){
+        var += (e - mean) * (e - mean);
+    }
+    var /= timesMs.size();
+    double sd = std::sqrt(var);
     auto [min, max] = std::minmax_element(timesMs.begin(), timesMs.end());
     std::stringstream ss;
     ss << mean << "," << sd << "," << *min << "," << *max;
+    std::cout << " - mean time: " << mean << " ms";
     return ss.str();
 }
 
@@ -129,16 +130,16 @@ std::string gammaResultToCsv(const yagit::GammaResult& gammaRes){
 
 void measureGamma(GammaFunc gammaFunc , const yagit::ImageData& refImg, const yagit::ImageData& evalImg,
                   const yagit::GammaParameters& gammaParams, uint32_t nrOfTests, std::ofstream& csvFile){
-    std::vector<long long> timesMs;
+    std::vector<double> timesMs;
     yagit::GammaResult gammaRes;
 
-    for(uint32_t i = 0; i < nrOfTests; i++){
+    for(uint32_t i = 0; i < 1; i++){
         auto begin = std::chrono::steady_clock::now();
 
         gammaRes = gammaFunc(refImg, evalImg, gammaParams);
     
         auto end = std::chrono::steady_clock::now();
-        auto timeMs = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+        auto timeMs = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1000.0;
         timesMs.push_back(timeMs);
     }
 
@@ -174,10 +175,10 @@ int main(int argc, char** argv){
         }
         csvFile << csvHeader() << "\n";
 
-        std::cout << "0/" << configs.size() << "\n";
         for(size_t i = 0; i < configs.size(); i++){
-            auto [method, dims, gammaParams, nrOfTests] = configs[i];
+            std::cout << i+1 << "/" << configs.size();
 
+            auto [method, dims, gammaParams, nrOfTests] = configs[i];
             if(gammaParams.normalization == GLOBAL){
                 gammaParams.globalNormDose = (dims == "2D" ? refMaxDose2D : refMaxDose3D);
             }
@@ -207,7 +208,7 @@ int main(int argc, char** argv){
                 }
             }
 
-            std::cout << i+1 << "/" << configs.size() << "\n";
+            std::cout << "\n";
         }
 
         csvFile.close();
