@@ -21,8 +21,7 @@ echo RUNNING...
 set REF_IMG=original_dose_beam_4.dcm
 set EVAL_IMG=logfile_dose_beam_4.dcm
 
-build\tests\performance\Release\perfTest.exe %REF_IMG% %EVAL_IMG% gammaTimesThreads.csv
-@REM build\src\Release\testThreads.exe %REF_IMG% %EVAL_IMG%
+build\tests\performance\Release\perfTest.exe %REF_IMG% %EVAL_IMG% gammaTimes.csv
 
 @REM RUN EXAMPLES
 @REM build\examples\Release\gamma2DInterp.exe %REF_IMG% %EVAL_IMG%

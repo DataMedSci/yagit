@@ -94,16 +94,28 @@ using ZYXPosWithDistSq = std::pair<ZYXPos, float>;
 std::vector<YXPosWithDistSq> sortedPointsInQuarterCircle(float radius, float stepSize){
     std::vector<YXPosWithDistSq> result;
     const uint32_t elements = static_cast<uint32_t>(radius / stepSize);
-    result.reserve(elements * elements);
+    // reserve a little more than pi * e^2
+    result.reserve(static_cast<size_t>(3.5 * elements * elements));
+
     float rSq = radius * radius;
     for(float y = 0; y <= radius; y += stepSize){
         for(float x = 0; x <= radius; x += stepSize){
             float distSq = y*y + x*x;
             if(distSq <= rSq){
                 result.emplace_back(YXPos{y, x}, distSq);
+                if(y != 0 && x != 0){
+                    result.emplace_back(YXPos{-y, -x}, distSq);
+                }
+                if(y != 0){
+                    result.emplace_back(YXPos{-y, x}, distSq);
+                }
+                if(x != 0){
+                    result.emplace_back(YXPos{y, -x}, distSq);
+                }
             }
         }
     }
+
     // sort by squared distance ascending
     std::sort(result.begin(), result.end(), [](const auto& lhs, const auto& rhs){
         return lhs.second < rhs.second;
@@ -114,68 +126,46 @@ std::vector<YXPosWithDistSq> sortedPointsInQuarterCircle(float radius, float ste
 std::vector<ZYXPosWithDistSq> sortedPointsInEighthOfSphere(float radius, float stepSize){
     std::vector<ZYXPosWithDistSq> result;
     const uint32_t elements = static_cast<uint32_t>(radius / stepSize);
-    result.reserve(elements * elements * elements);
+    // reserve a little more than 4/3 * pi * e^3
+    result.reserve(static_cast<size_t>(4.5 * elements * elements * elements));
+
     float rSq = radius * radius;
     for(float z = 0; z <= radius; z += stepSize){
         for(float y = 0; y <= radius; y += stepSize){
             for(float x = 0; x <= radius; x += stepSize){
                 float distSq = z*z + y*y + x*x;
                 if(distSq <= rSq){
-                    result.emplace_back(ZYXPos{z,y,x}, distSq);
+                    result.emplace_back(ZYXPos{z, y, x}, distSq);
+                    if(z != 0 && y != 0 && x != 0){
+                        result.emplace_back(ZYXPos{-z, -y, -x}, distSq);
+                    }
+                    if(z != 0 && y != 0){
+                        result.emplace_back(ZYXPos{-z, -y, x}, distSq);
+                    }
+                    if(z != 0 && x != 0){
+                        result.emplace_back(ZYXPos{-z, y, -x}, distSq);
+                    }
+                    if(y != 0 && x != 0){
+                        result.emplace_back(ZYXPos{z, -y, -x}, distSq);
+                    }
+                    if(z != 0){
+                        result.emplace_back(ZYXPos{-z, y, x}, distSq);
+                    }
+                    if(y != 0){
+                        result.emplace_back(ZYXPos{z, -y, x}, distSq);
+                    }
+                    if(x != 0){
+                        result.emplace_back(ZYXPos{z, y, -x}, distSq);
+                    }
                 }
             }
         }
     }
+
     // sort by squared distance ascending
     std::sort(result.begin(), result.end(), [](const auto& lhs, const auto& rhs){
         return lhs.second < rhs.second;
     });
-    return result;
-}
-
-std::vector<YXPos> pointVariants(const YXPos& point){
-    std::vector<YXPos> result;
-    result.reserve(4);
-    auto [y, x] = point;
-    result.emplace_back(y, x);
-    if(y != 0 && x != 0){
-        result.emplace_back(-y, -x);
-    }
-    if(y != 0){
-        result.emplace_back(-y, x);
-    }
-    if(x != 0){
-        result.emplace_back(y, -x);
-    }
-    return result;
-}
-
-std::vector<ZYXPos> pointVariants(const ZYXPos& point){
-    std::vector<ZYXPos> result;
-    result.reserve(8);
-    auto [z, y, x] = point;
-    result.emplace_back(z, y, x);
-    if(z != 0 && y != 0 && x != 0){
-        result.emplace_back(-z, -y, -x);
-    }
-    if(z != 0 && y != 0){
-        result.emplace_back(-z, -y, x);
-    }
-    if(z != 0 && x != 0){
-        result.emplace_back(-z, y, -x);
-    }
-    if(y != 0 && x != 0){
-        result.emplace_back(z, -y, -x);
-    }
-    if(z != 0){
-        result.emplace_back(-z, y, x);
-    }
-    if(y != 0){
-        result.emplace_back(z, -y, x);
-    }
-    if(x != 0){
-        result.emplace_back(z, y, -x);
-    }
     return result;
 }
 }

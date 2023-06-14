@@ -27,6 +27,15 @@ mkdir build && cd build
 cmake --build . --config Release
 ```
 
+## Gamma versions
+
+There are 2 implementations of gamma index: sequential and multithreaded.
+To select the version you want, set the `GAMMA_VERSION` option to one of the values: `SEQUENTIAL`, `THREADED`.
+```
+cmake .. -DGAMMA_VERSION=THREADED
+```
+The default value of this parameter is `THREADED`.
+
 ## Examples
 
 Example usage of the library is located in `examples` directory.  

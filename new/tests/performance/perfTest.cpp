@@ -114,9 +114,17 @@ std::string timeStatsToCsv(const std::vector<double>& timesMs){
     var /= timesMs.size();
     double sd = std::sqrt(var);
     auto [min, max] = std::minmax_element(timesMs.begin(), timesMs.end());
+
     std::stringstream ss;
-    ss << mean << "," << sd << "," << *min << "," << *max;
+    std::streamsize ssPrec = ss.precision();
+    ss << std::fixed << std::setprecision(6)
+       << mean << "," << sd << ","
+       << std::fixed << std::setprecision(3)
+       << *min << "," << *max
+       << std::defaultfloat << std::setprecision(ssPrec);
+
     std::cout << " - mean time: " << mean << " ms";
+
     return ss.str();
 }
 
@@ -133,11 +141,11 @@ void measureGamma(GammaFunc gammaFunc , const yagit::ImageData& refImg, const ya
     std::vector<double> timesMs;
     yagit::GammaResult gammaRes;
 
-    for(uint32_t i = 0; i < 1; i++){
+    for(uint32_t i = 0; i < nrOfTests; i++){
         auto begin = std::chrono::steady_clock::now();
 
         gammaRes = gammaFunc(refImg, evalImg, gammaParams);
-    
+
         auto end = std::chrono::steady_clock::now();
         auto timeMs = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1000.0;
         timesMs.push_back(timeMs);
