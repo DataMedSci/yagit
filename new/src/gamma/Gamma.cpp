@@ -18,70 +18,14 @@
  ********************************************************************************************/
 
 #include "Gamma.hpp"
-#include "Interpolation.hpp"
 
-#include <string>
-#include <tuple>
-#include <algorithm>
 #include <cmath>
 #include <limits>
 
+#include "GammaCommon.hpp"
+#include "Interpolation.hpp"
+
 namespace yagit{
-
-namespace{
-const float Nan{std::numeric_limits<float>::quiet_NaN()};
-const float Inf{std::numeric_limits<float>::infinity()};
-}
-
-namespace{
-// calculate squared 1D Euclidean distance
-constexpr float distSq1D(float x1, float x2){
-    return (x2 - x1) * (x2 - x1);
-}
-
-// calculate squared 2D Euclidean distance
-constexpr float distSq2D(float x1, float y1, float x2, float y2){
-    return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
-}
-
-// calculate squared 3D Euclidean distance
-constexpr float distSq3D(float x1, float y1, float z1, float x2, float y2, float z2){
-    return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1);
-}
-
-void validateImages2D(const ImageData& refImg, const ImageData& evalImg){
-    if(refImg.getSize().frames > 1){
-        throw std::invalid_argument("reference image is not 2D (frames=" + std::to_string(refImg.getSize().frames) + " > 1)");
-    }
-    if(evalImg.getSize().frames > 1){
-        throw std::invalid_argument("evaluated image is not 2D (frames=" + std::to_string(evalImg.getSize().frames) + " > 1)");
-    }
-}
-
-void validateGammaParameters(const GammaParameters& gammaParams){
-    if(gammaParams.ddThreshold <= 0){
-        throw std::invalid_argument("DD threshold is not positive (ddThreshold <= 0)");
-    }
-    if(gammaParams.dtaThreshold <= 0){
-        throw std::invalid_argument("DTA threshold is not positive (dtaThreshold <= 0)");
-    }
-    if(gammaParams.normalization == GammaNormalization::Global && gammaParams.globalNormDose <= 0){
-        throw std::invalid_argument("global normalization dose is not positive (globalNormDose <= 0)");
-    }
-}
-
-void validateWendlingGammaParameters(const GammaParameters& gammaParams){
-    if(gammaParams.maxSearchDistance <= 0){
-        throw std::invalid_argument("Maximum search distance is not positive (maxSearchDistance <= 0)");
-    }
-    if(gammaParams.stepSize <= 0){
-        throw std::invalid_argument("Step size is not positive (stepSize <= 0)");
-    }
-    if(gammaParams.stepSize > gammaParams.maxSearchDistance){
-        throw std::invalid_argument("Step size is greater than maximum search distance (stepSize > maxSearchDistance)");
-    }
-}
-}
 
 GammaResult gammaIndex2D(const ImageData& refImg2D, const ImageData& evalImg2D, const GammaParameters& gammaParams){
     validateImages2D(refImg2D, evalImg2D);
@@ -92,8 +36,9 @@ GammaResult gammaIndex2D(const ImageData& refImg2D, const ImageData& evalImg2D, 
 
     const float ddInvSq = (100 * 100) / (gammaParams.ddThreshold * gammaParams.ddThreshold);
     const float dtaInvSq = 1 / (gammaParams.dtaThreshold * gammaParams.dtaThreshold);
-
     const float globalNormDoseInvSq = 1 / (gammaParams.globalNormDose * gammaParams.globalNormDose);
+
+    const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
 
     // iterate over each row and column of reference image
     size_t indRef = 0;
@@ -104,16 +49,14 @@ GammaResult gammaIndex2D(const ImageData& refImg2D, const ImageData& evalImg2D, 
             float doseRef = refImg2D.get(indRef);
 
             bool doseBelowCutoff = doseRef < gammaParams.doseCutoff;
-            bool divisionByZero = gammaParams.normalization == GammaNormalization::Local && doseRef == 0;
+            bool divisionByZero = !isGlobal && doseRef == 0;
             if(doseBelowCutoff || divisionByZero){
                 gammaVals.emplace_back(Nan);
             }
             else{
                 float minGammaValSq = Inf;
                 // set squared inversed normalized dd based on the type of normalization, whether it is global or local
-                float ddNormInvSq = ddInvSq * (
-                    gammaParams.normalization == GammaNormalization::Global ? globalNormDoseInvSq
-                                                                            : (1 / (doseRef * doseRef)));
+                float ddNormInvSq = ddInvSq * (isGlobal ? globalNormDoseInvSq : (1 / (doseRef * doseRef)));
 
                 // iterate over each row and column of evaluated image
                 size_t indEval = 0;
@@ -155,10 +98,11 @@ GammaResult gammaIndex2_5D(const ImageData& refImg3D, const ImageData& evalImg3D
     std::vector<float> gammaVals;
     gammaVals.reserve(refImg3D.size());
 
-    float ddInvSq = (100 * 100) / (gammaParams.ddThreshold * gammaParams.ddThreshold);
-    float dtaInvSq = 1 / (gammaParams.dtaThreshold * gammaParams.dtaThreshold);
+    const float ddInvSq = (100 * 100) / (gammaParams.ddThreshold * gammaParams.ddThreshold);
+    const float dtaInvSq = 1 / (gammaParams.dtaThreshold * gammaParams.dtaThreshold);
+    const float globalNormDoseInvSq = 1 / (gammaParams.globalNormDose * gammaParams.globalNormDose);
 
-    float globalNormDoseInvSq = 1 / (gammaParams.globalNormDose * gammaParams.globalNormDose);
+    const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
 
     // iterate over each frame, row and column of reference image
     size_t indRef = 0;
@@ -171,15 +115,13 @@ GammaResult gammaIndex2_5D(const ImageData& refImg3D, const ImageData& evalImg3D
                 float doseRef = refImg3D.get(indRef);
 
                 bool doseBelowCutoff = doseRef < gammaParams.doseCutoff;
-                bool divisionByZero = gammaParams.normalization == GammaNormalization::Local && doseRef == 0;
+                bool divisionByZero = !isGlobal && doseRef == 0;
                 if(doseBelowCutoff || divisionByZero){
                     gammaVals.emplace_back(Nan);
                 }
                 else{
                     // set squared inversed normalized dd based on the type of normalization, whether it is global or local
-                    float ddNormInvSq = ddInvSq * (
-                        gammaParams.normalization == GammaNormalization::Global ? globalNormDoseInvSq
-                                                                                : (1 / (doseRef * doseRef)));
+                    float ddNormInvSq = ddInvSq * (isGlobal ? globalNormDoseInvSq : (1 / (doseRef * doseRef)));
                     float minGammaValSq = Inf;
 
                     // iterate over each row and column of evaluated image
@@ -222,10 +164,11 @@ GammaResult gammaIndex3D(const ImageData& refImg3D, const ImageData& evalImg3D, 
     std::vector<float> gammaVals;
     gammaVals.reserve(refImg3D.size());
 
-    float ddInvSq = (100 * 100) / (gammaParams.ddThreshold * gammaParams.ddThreshold);
-    float dtaInvSq = 1 / (gammaParams.dtaThreshold * gammaParams.dtaThreshold);
+    const float ddInvSq = (100 * 100) / (gammaParams.ddThreshold * gammaParams.ddThreshold);
+    const float dtaInvSq = 1 / (gammaParams.dtaThreshold * gammaParams.dtaThreshold);
+    const float globalNormDoseInvSq = 1 / (gammaParams.globalNormDose * gammaParams.globalNormDose);
 
-    float globalNormDoseInvSq = 1 / (gammaParams.globalNormDose * gammaParams.globalNormDose);
+    const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
 
     // iterate over each frame, row and column of reference image
     size_t indRef = 0;
@@ -238,15 +181,13 @@ GammaResult gammaIndex3D(const ImageData& refImg3D, const ImageData& evalImg3D, 
                 float doseRef = refImg3D.get(indRef);
 
                 bool doseBelowCutoff = doseRef < gammaParams.doseCutoff;
-                bool divisionByZero = gammaParams.normalization == GammaNormalization::Local && doseRef == 0;
+                bool divisionByZero = !isGlobal && doseRef == 0;
                 if(doseBelowCutoff || divisionByZero){
                     gammaVals.emplace_back(Nan);
                 }
                 else{
                     // set squared inversed normalized dd based on the type of normalization, whether it is global or local
-                    float ddNormInvSq = ddInvSq * (
-                        gammaParams.normalization == GammaNormalization::Global ? globalNormDoseInvSq
-                                                                                : (1 / (doseRef * doseRef)));
+                    float ddNormInvSq = ddInvSq * (isGlobal ? globalNormDoseInvSq : (1 / (doseRef * doseRef)));
                     float minGammaValSq = Inf;
 
                     // iterate over each frame, row and column of evaluated image
@@ -286,102 +227,6 @@ GammaResult gammaIndex3D(const ImageData& refImg3D, const ImageData& evalImg3D, 
     return GammaResult(std::move(gammaVals), refImg3D.getSize(), refImg3D.getOffset(), refImg3D.getSpacing());
 }
 
-namespace{
-using YXPos = std::pair<float, float>;
-using YXPosWithDistSq = std::pair<YXPos, float>;
-
-using ZYXPos = std::tuple<float, float, float>;
-using ZYXPosWithDistSq = std::pair<ZYXPos, float>;
-
-std::vector<YXPosWithDistSq> sortedPointsInQuarterCircle(float radius, float stepSize){
-    std::vector<YXPosWithDistSq> result;
-    result.reserve(static_cast<int>(radius / stepSize) * static_cast<int>(radius / stepSize));
-    float rSq = radius * radius;
-    for(float y = 0; y <= radius; y += stepSize){
-        for(float x = 0; x <= radius; x += stepSize){
-            float distSq = y*y + x*x;
-            if(distSq <= rSq){
-                result.emplace_back(YXPos{y, x}, distSq);
-            }
-        }
-    }
-    // sort by squared distance ascending
-    std::sort(result.begin(), result.end(), [](const auto& lhs, const auto& rhs){
-        return lhs.second < rhs.second;
-    });
-    return result;
-}
-
-std::vector<ZYXPosWithDistSq> sortedPointsInEighthOfSphere(float radius, float stepSize){
-    std::vector<ZYXPosWithDistSq> result;
-    result.reserve(static_cast<int>(radius / stepSize) *
-                   static_cast<int>(radius / stepSize) *
-                   static_cast<int>(radius / stepSize));
-    float rSq = radius * radius;
-    for(float z = 0; z <= radius; z += stepSize){
-        for(float y = 0; y <= radius; y += stepSize){
-            for(float x = 0; x <= radius; x += stepSize){
-                float distSq = z*z + y*y + x*x;
-                if(distSq <= rSq){
-                    result.emplace_back(ZYXPos{z,y,x}, distSq);
-                }
-            }
-        }
-    }
-    // sort by squared distance ascending
-    std::sort(result.begin(), result.end(), [](const auto& lhs, const auto& rhs){
-        return lhs.second < rhs.second;
-    });
-    return result;
-}
-
-std::vector<YXPos> pointVariants(const YXPos& point){
-    std::vector<YXPos> result;
-    result.reserve(4);
-    auto [y, x] = point;
-    result.emplace_back(y, x);
-    if(y != 0 && x != 0){
-        result.emplace_back(-y, -x);
-    }
-    if(y != 0){
-        result.emplace_back(-y, x);
-    }
-    if(x != 0){
-        result.emplace_back(y, -x);
-    }
-    return result;
-}
-
-std::vector<ZYXPos> pointVariants(const ZYXPos& point){
-    std::vector<ZYXPos> result;
-    result.reserve(8);
-    auto [z, y, x] = point;
-    result.emplace_back(z, y, x);
-    if(z != 0 && y != 0 && x != 0){
-        result.emplace_back(-z, -y, -x);
-    }
-    if(z != 0 && y != 0){
-        result.emplace_back(-z, -y, x);
-    }
-    if(z != 0 && x != 0){
-        result.emplace_back(-z, y, -x);
-    }
-    if(y != 0 && x != 0){
-        result.emplace_back(z, -y, -x);
-    }
-    if(z != 0){
-        result.emplace_back(-z, y, x);
-    }
-    if(y != 0){
-        result.emplace_back(z, -y, x);
-    }
-    if(x != 0){
-        result.emplace_back(z, y, -x);
-    }
-    return result;
-}
-}
-
 GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& evalImg2D, const GammaParameters& gammaParams){
     validateImages2D(refImg2D, evalImg2D);
     validateGammaParameters(gammaParams);
@@ -395,7 +240,9 @@ GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& eva
     const float globalNormDoseInvSq = 1 / (gammaParams.globalNormDose * gammaParams.globalNormDose);
     const float interpFactor = 1 / (refImg2D.getSpacing().rows * refImg2D.getSpacing().columns);
 
-    const auto sortedPoints = sortedPointsInQuarterCircle(gammaParams.maxSearchDistance, gammaParams.stepSize);
+    const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
+
+    const auto sortedPoints = sortedPointsInCircle(gammaParams.maxSearchDistance, gammaParams.stepSize);
 
     // iterate over each row and column of reference image
     size_t indRef = 0;
@@ -406,16 +253,14 @@ GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& eva
             float doseRef = refImg2D.get(indRef);
 
             bool doseBelowCutoff = doseRef < gammaParams.doseCutoff;
-            bool divisionByZero = gammaParams.normalization == GammaNormalization::Local && doseRef == 0;
+            bool divisionByZero = !isGlobal && doseRef == 0;
             if(doseBelowCutoff || divisionByZero){
                 gammaVals.emplace_back(Nan);
             }
             else{
                 float minGammaValSq = Inf;
                 // set squared inversed normalized dd based on the type of normalization, whether it is global or local
-                float ddNormInvSq = ddInvSq * (
-                    gammaParams.normalization == GammaNormalization::Global ? globalNormDoseInvSq
-                                                                            : (1 / (doseRef * doseRef)));
+                float ddNormInvSq = ddInvSq * (isGlobal ? globalNormDoseInvSq : (1 / (doseRef * doseRef)));
 
                 bool atLeastOneInRange = false;
                 for(const auto& point : sortedPoints){
@@ -424,47 +269,45 @@ GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& eva
                         break;
                     }
 
-                    for(const auto& pointVariant : pointVariants(point.first)){
-                        auto [dy, dx] = pointVariant;
-                        float ye = yr + dy;
-                        float xe = xr + dx;
+                    auto [dy, dx] = point.first;
+                    float ye = yr + dy;
+                    float xe = xr + dx;
 
-                        // instead of calling Interpolate::bilinearAtPoint function,
-                        // here is an inlined, optimized version. It gives 5-10% speedup
+                    // instead of calling Interpolate::bilinearAtPoint function,
+                    // here is an inlined, optimized version. It gives 5-10% speedup
 
-                        const int32_t indy1 = std::floor((ye - evalImg2D.getOffset().rows) / evalImg2D.getSpacing().rows);
-                        const int32_t indx1 = std::floor((xe - evalImg2D.getOffset().columns) / evalImg2D.getSpacing().columns);
-                        int32_t indy2 = indy1 + 1;
-                        int32_t indx2 = indx1 + 1;
+                    const int32_t indy1 = std::floor((ye - evalImg2D.getOffset().rows) / evalImg2D.getSpacing().rows);
+                    const int32_t indx1 = std::floor((xe - evalImg2D.getOffset().columns) / evalImg2D.getSpacing().columns);
+                    int32_t indy2 = indy1 + 1;
+                    int32_t indx2 = indx1 + 1;
 
-                        if(indy1 >= 0 && indy2 <= static_cast<int32_t>(evalImg2D.getSize().rows) &&
-                           indx1 >= 0 && indx2 <= static_cast<int32_t>(evalImg2D.getSize().columns)){
-                            atLeastOneInRange = true;
+                    if(indy1 >= 0 && indy2 <= static_cast<int32_t>(evalImg2D.getSize().rows) &&
+                        indx1 >= 0 && indx2 <= static_cast<int32_t>(evalImg2D.getSize().columns)){
+                        atLeastOneInRange = true;
 
-                            if(indy2 == static_cast<int32_t>(evalImg2D.getSize().rows)){
-                                indy2 = indy1;
-                            }
-                            if(indx2 == static_cast<int32_t>(evalImg2D.getSize().columns)){
-                                indx2 = indx1;
-                            }
+                        if(indy2 == static_cast<int32_t>(evalImg2D.getSize().rows)){
+                            indy2 = indy1;
+                        }
+                        if(indx2 == static_cast<int32_t>(evalImg2D.getSize().columns)){
+                            indx2 = indx1;
+                        }
 
-                            float y1 = evalImg2D.getOffset().rows + indy1 * evalImg2D.getSpacing().rows;
-                            float x1 = evalImg2D.getOffset().columns + indx1 * evalImg2D.getSpacing().columns;
-                            float y2 = y1 + (indy2 - indy1) * evalImg2D.getSpacing().rows;
-                            float x2 = x1 + (indx2 - indx1) * evalImg2D.getSpacing().columns;
+                        float y1 = evalImg2D.getOffset().rows + indy1 * evalImg2D.getSpacing().rows;
+                        float x1 = evalImg2D.getOffset().columns + indx1 * evalImg2D.getSpacing().columns;
+                        float y2 = y1 + (indy2 - indy1) * evalImg2D.getSpacing().rows;
+                        float x2 = x1 + (indx2 - indx1) * evalImg2D.getSpacing().columns;
 
-                            // bilinear interpolation on the fly
-                            float doseEval = interpFactor * (
-                                evalImg2D.get(0, indy1, indx1) * (x2 - xe) * (y2 - ye) +
-                                evalImg2D.get(0, indy1, indx2) * (xe - x1) * (y2 - ye) +
-                                evalImg2D.get(0, indy2, indx1) * (x2 - xe) * (ye - y1) +
-                                evalImg2D.get(0, indy2, indx2) * (xe - x1) * (ye - y1));
+                        // bilinear interpolation on the fly
+                        float doseEval = interpFactor * (
+                            evalImg2D.get(0, indy1, indx1) * (x2 - xe) * (y2 - ye) +
+                            evalImg2D.get(0, indy1, indx2) * (xe - x1) * (y2 - ye) +
+                            evalImg2D.get(0, indy2, indx1) * (x2 - xe) * (ye - y1) +
+                            evalImg2D.get(0, indy2, indx2) * (xe - x1) * (ye - y1));
 
-                            // calculate squared gamma
-                            float gammaValSq = distSq1D(doseEval, doseRef) * ddNormInvSq + normalizedDistSq;
-                            if(gammaValSq < minGammaValSq){
-                                minGammaValSq = gammaValSq;
-                            }
+                        // calculate squared gamma
+                        float gammaValSq = distSq1D(doseEval, doseRef) * ddNormInvSq + normalizedDistSq;
+                        if(gammaValSq < minGammaValSq){
+                            minGammaValSq = gammaValSq;
                         }
                     }
                 }
@@ -499,10 +342,12 @@ GammaResult gammaIndex2_5DWendling(const ImageData& refImg3D, const ImageData& e
     const float rowsSpInv = 1 / evalImg3D.getSpacing().rows;
     const float columnsSpInv = 1 / evalImg3D.getSpacing().columns;
 
+    const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
+
     const ImageData evalImgInterpolatedZ = Interpolation::linearAlongAxis(evalImg3D, refImg3D, ImageAxis::Z);
     const int kDiff = static_cast<int>((evalImgInterpolatedZ.getOffset().frames - refImg3D.getOffset().frames) / evalImgInterpolatedZ.getSpacing().frames);
 
-    const auto sortedPoints = sortedPointsInQuarterCircle(gammaParams.maxSearchDistance, gammaParams.stepSize);
+    const auto sortedPoints = sortedPointsInCircle(gammaParams.maxSearchDistance, gammaParams.stepSize);
 
     // iterate over each frame, row and column of reference image
     size_t indRef = 0;
@@ -516,65 +361,61 @@ GammaResult gammaIndex2_5DWendling(const ImageData& refImg3D, const ImageData& e
 
                 bool evalFrameOutsideImage = ke < 0 || ke >= static_cast<int>(evalImgInterpolatedZ.getSize().frames);
                 bool doseBelowCutoff = doseRef < gammaParams.doseCutoff;
-                bool divisionByZero = gammaParams.normalization == GammaNormalization::Local && doseRef == 0;
+                bool divisionByZero = !isGlobal && doseRef == 0;
                 if(evalFrameOutsideImage || doseBelowCutoff || divisionByZero){
                     gammaVals.emplace_back(Nan);
                 }
                 else{
                     float minGammaValSq = Inf;
                     // set squared inversed normalized dd based on the type of normalization, whether it is global or local
-                    float ddNormInvSq = ddInvSq * (
-                        gammaParams.normalization == GammaNormalization::Global ? globalNormDoseInvSq
-                                                                                : (1 / (doseRef * doseRef)));
-            
+                    float ddNormInvSq = ddInvSq * (isGlobal ? globalNormDoseInvSq : (1 / (doseRef * doseRef)));
+
                     bool atLeastOneInRange = false;
                     for(const auto& point : sortedPoints){
                         const float normalizedDistSq = point.second * dtaInvSq;
                         if(normalizedDistSq >= minGammaValSq){
                             break;
                         }
-                        
-                        for(const auto& pointVariant : pointVariants(point.first)){
-                            auto [dy, dx] = pointVariant;
-                            float ye = yr + dy;
-                            float xe = xr + dx;
 
-                            // instead of calling Interpolate::bilinearAtPoint function,
-                            // here is an inlined, optimized version. It gives 5-10% speedup
+                        auto [dy, dx] = point.first;
+                        float ye = yr + dy;
+                        float xe = xr + dx;
 
-                            const int32_t indy1 = std::floor((ye - evalImgInterpolatedZ.getOffset().rows) * rowsSpInv);
-                            const int32_t indx1 = std::floor((xe - evalImgInterpolatedZ.getOffset().columns) * columnsSpInv);
-                            int32_t indy2 = indy1 + 1;
-                            int32_t indx2 = indx1 + 1;
+                        // instead of calling Interpolate::bilinearAtPoint function,
+                        // here is an inlined, optimized version. It gives 5-10% speedup
 
-                            if(indy1 >= 0 && indy2 <= static_cast<int32_t>(evalImgInterpolatedZ.getSize().rows) &&
-                               indx1 >= 0 && indx2 <= static_cast<int32_t>(evalImgInterpolatedZ.getSize().columns)){
-                                atLeastOneInRange = true;
+                        const int32_t indy1 = std::floor((ye - evalImgInterpolatedZ.getOffset().rows) * rowsSpInv);
+                        const int32_t indx1 = std::floor((xe - evalImgInterpolatedZ.getOffset().columns) * columnsSpInv);
+                        int32_t indy2 = indy1 + 1;
+                        int32_t indx2 = indx1 + 1;
 
-                                if(indy2 == static_cast<int32_t>(evalImgInterpolatedZ.getSize().rows)){
-                                    indy2 = indy1;
-                                }
-                                if(indx2 == static_cast<int32_t>(evalImgInterpolatedZ.getSize().columns)){
-                                    indx2 = indx1;
-                                }
+                        if(indy1 >= 0 && indy2 <= static_cast<int32_t>(evalImgInterpolatedZ.getSize().rows) &&
+                            indx1 >= 0 && indx2 <= static_cast<int32_t>(evalImgInterpolatedZ.getSize().columns)){
+                            atLeastOneInRange = true;
 
-                                float y1 = evalImgInterpolatedZ.getOffset().rows + indy1 * evalImgInterpolatedZ.getSpacing().rows;
-                                float x1 = evalImgInterpolatedZ.getOffset().columns + indx1 * evalImgInterpolatedZ.getSpacing().columns;
-                                float y2 = y1 + (indy2 - indy1) * evalImgInterpolatedZ.getSpacing().rows;
-                                float x2 = x1 + (indx2 - indx1) * evalImgInterpolatedZ.getSpacing().columns;
+                            if(indy2 == static_cast<int32_t>(evalImgInterpolatedZ.getSize().rows)){
+                                indy2 = indy1;
+                            }
+                            if(indx2 == static_cast<int32_t>(evalImgInterpolatedZ.getSize().columns)){
+                                indx2 = indx1;
+                            }
 
-                                // bilinear interpolation on the fly
-                                float doseEval = interpFactor * (
-                                    evalImgInterpolatedZ.get(ke, indy1, indx1) * (x2 - xe) * (y2 - ye) +
-                                    evalImgInterpolatedZ.get(ke, indy1, indx2) * (xe - x1) * (y2 - ye) +
-                                    evalImgInterpolatedZ.get(ke, indy2, indx1) * (x2 - xe) * (ye - y1) +
-                                    evalImgInterpolatedZ.get(ke, indy2, indx2) * (xe - x1) * (ye - y1));
+                            float y1 = evalImgInterpolatedZ.getOffset().rows + indy1 * evalImgInterpolatedZ.getSpacing().rows;
+                            float x1 = evalImgInterpolatedZ.getOffset().columns + indx1 * evalImgInterpolatedZ.getSpacing().columns;
+                            float y2 = y1 + (indy2 - indy1) * evalImgInterpolatedZ.getSpacing().rows;
+                            float x2 = x1 + (indx2 - indx1) * evalImgInterpolatedZ.getSpacing().columns;
 
-                                // calculate squared gamma
-                                float gammaValSq = distSq1D(doseEval, doseRef) * ddNormInvSq + normalizedDistSq;
-                                if(gammaValSq < minGammaValSq){
-                                    minGammaValSq = gammaValSq;
-                                }
+                            // bilinear interpolation on the fly
+                            float doseEval = interpFactor * (
+                                evalImgInterpolatedZ.get(ke, indy1, indx1) * (x2 - xe) * (y2 - ye) +
+                                evalImgInterpolatedZ.get(ke, indy1, indx2) * (xe - x1) * (y2 - ye) +
+                                evalImgInterpolatedZ.get(ke, indy2, indx1) * (x2 - xe) * (ye - y1) +
+                                evalImgInterpolatedZ.get(ke, indy2, indx2) * (xe - x1) * (ye - y1));
+
+                            // calculate squared gamma
+                            float gammaValSq = distSq1D(doseEval, doseRef) * ddNormInvSq + normalizedDistSq;
+                            if(gammaValSq < minGammaValSq){
+                                minGammaValSq = gammaValSq;
                             }
                         }
                     }
@@ -610,11 +451,13 @@ GammaResult gammaIndex3DWendling(const ImageData& refImg3D, const ImageData& eva
     const float rowsSpInv = 1 / evalImg3D.getSpacing().rows;
     const float columnsSpInv = 1 / evalImg3D.getSpacing().columns;
 
+    const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
+
     // TODO: check if interpolating evalImg on the grid of refImg
     // and precalculating interpolation factors (for on-the-fly interpolation) will be much faster.
     // note that result will be less accurate due to interpolating twice
 
-    const auto sortedPoints = sortedPointsInEighthOfSphere(gammaParams.maxSearchDistance, gammaParams.stepSize);
+    const auto sortedPoints = sortedPointsInSphere(gammaParams.maxSearchDistance, gammaParams.stepSize);
 
     // iterate over each frame, row and column of reference image
     size_t indRef = 0;
@@ -627,88 +470,84 @@ GammaResult gammaIndex3DWendling(const ImageData& refImg3D, const ImageData& eva
                 float doseRef = refImg3D.get(indRef);
                 
                 bool doseBelowCutoff = doseRef < gammaParams.doseCutoff;
-                bool divisionByZero = gammaParams.normalization == GammaNormalization::Local && doseRef == 0;
+                bool divisionByZero = !isGlobal && doseRef == 0;
                 if(doseBelowCutoff || divisionByZero){
                     gammaVals.emplace_back(Nan);
                 }
                 else{
                     float minGammaValSq = Inf;
                     // set squared inversed normalized dd based on the type of normalization, whether it is global or local
-                    float ddNormInvSq = ddInvSq * (
-                        gammaParams.normalization == GammaNormalization::Global ? globalNormDoseInvSq
-                                                                                : (1 / (doseRef * doseRef)));
-            
+                    float ddNormInvSq = ddInvSq * (isGlobal ? globalNormDoseInvSq : (1 / (doseRef * doseRef)));
+
                     bool atLeastOneInRange = false;
                     for(const auto& point : sortedPoints){
                         const float normalizedDistSq = point.second * dtaInvSq;
                         if(normalizedDistSq >= minGammaValSq){
                             break;
                         }
-        
-                        for(const auto& pointVariant : pointVariants(point.first)){
-                            auto [dz, dy, dx] = pointVariant;
-                            float ze = zr + dz;
-                            float ye = yr + dy;
-                            float xe = xr + dx;
 
-                            // instead of calling Interpolate::trilinearAtPoint function,
-                            // here is an inlined, optimized version. It gives 5-10% speedup
+                        auto [dz, dy, dx] = point.first;
+                        float ze = zr + dz;
+                        float ye = yr + dy;
+                        float xe = xr + dx;
 
-                            const int32_t indz0 = std::floor((ze - evalImg3D.getOffset().frames) * framesSpInv);
-                            const int32_t indy0 = std::floor((ye - evalImg3D.getOffset().rows) * rowsSpInv);
-                            const int32_t indx0 = std::floor((xe - evalImg3D.getOffset().columns) * columnsSpInv);
-                            int32_t indz1 = indz0 + 1;
-                            int32_t indy1 = indy0 + 1;
-                            int32_t indx1 = indx0 + 1;
+                        // instead of calling Interpolate::trilinearAtPoint function,
+                        // here is an inlined, optimized version. It gives 5-10% speedup
 
-                            if(indz0 >= 0 && indz1 <= static_cast<int32_t>(evalImg3D.getSize().frames) &&
-                               indy0 >= 0 && indy1 <= static_cast<int32_t>(evalImg3D.getSize().rows) &&
-                               indx0 >= 0 && indx1 <= static_cast<int32_t>(evalImg3D.getSize().columns)){
-                                atLeastOneInRange = true;
+                        const int32_t indz0 = std::floor((ze - evalImg3D.getOffset().frames) * framesSpInv);
+                        const int32_t indy0 = std::floor((ye - evalImg3D.getOffset().rows) * rowsSpInv);
+                        const int32_t indx0 = std::floor((xe - evalImg3D.getOffset().columns) * columnsSpInv);
+                        int32_t indz1 = indz0 + 1;
+                        int32_t indy1 = indy0 + 1;
+                        int32_t indx1 = indx0 + 1;
 
-                                if(indz1 == static_cast<int32_t>(evalImg3D.getSize().frames)){
-                                    indz1 = indz0;
-                                }
-                                if(indy1 == static_cast<int32_t>(evalImg3D.getSize().rows)){
-                                    indy1 = indy0;
-                                }
-                                if(indx1 == static_cast<int32_t>(evalImg3D.getSize().columns)){
-                                    indx1 = indx0;
-                                }
+                        if(indz0 >= 0 && indz1 <= static_cast<int32_t>(evalImg3D.getSize().frames) &&
+                            indy0 >= 0 && indy1 <= static_cast<int32_t>(evalImg3D.getSize().rows) &&
+                            indx0 >= 0 && indx1 <= static_cast<int32_t>(evalImg3D.getSize().columns)){
+                            atLeastOneInRange = true;
 
-                                float z0 = evalImg3D.getOffset().frames + indz0 * evalImg3D.getSpacing().frames;
-                                float y0 = evalImg3D.getOffset().rows + indy0 * evalImg3D.getSpacing().rows;
-                                float x0 = evalImg3D.getOffset().columns + indx0 * evalImg3D.getSpacing().columns;
+                            if(indz1 == static_cast<int32_t>(evalImg3D.getSize().frames)){
+                                indz1 = indz0;
+                            }
+                            if(indy1 == static_cast<int32_t>(evalImg3D.getSize().rows)){
+                                indy1 = indy0;
+                            }
+                            if(indx1 == static_cast<int32_t>(evalImg3D.getSize().columns)){
+                                indx1 = indx0;
+                            }
 
-                                float c000 = evalImg3D.get(indz0, indy0, indx0);
-                                float c001 = evalImg3D.get(indz1, indy0, indx0);
-                                float c010 = evalImg3D.get(indz0, indy1, indx0);
-                                float c011 = evalImg3D.get(indz1, indy1, indx0);
-                                float c100 = evalImg3D.get(indz0, indy0, indx1);
-                                float c101 = evalImg3D.get(indz1, indy0, indx1);
-                                float c110 = evalImg3D.get(indz0, indy1, indx1);
-                                float c111 = evalImg3D.get(indz1, indy1, indx1);
+                            float z0 = evalImg3D.getOffset().frames + indz0 * evalImg3D.getSpacing().frames;
+                            float y0 = evalImg3D.getOffset().rows + indy0 * evalImg3D.getSpacing().rows;
+                            float x0 = evalImg3D.getOffset().columns + indx0 * evalImg3D.getSpacing().columns;
 
-                                float zd = (ze - z0) * framesSpInv;
-                                float yd = (ye - y0) * rowsSpInv;
-                                float xd = (xe - x0) * columnsSpInv;
+                            float c000 = evalImg3D.get(indz0, indy0, indx0);
+                            float c001 = evalImg3D.get(indz1, indy0, indx0);
+                            float c010 = evalImg3D.get(indz0, indy1, indx0);
+                            float c011 = evalImg3D.get(indz1, indy1, indx0);
+                            float c100 = evalImg3D.get(indz0, indy0, indx1);
+                            float c101 = evalImg3D.get(indz1, indy0, indx1);
+                            float c110 = evalImg3D.get(indz0, indy1, indx1);
+                            float c111 = evalImg3D.get(indz1, indy1, indx1);
 
-                                float c00 = c000*(1 - xd) + c100*xd;
-                                float c01 = c001*(1 - xd) + c101*xd;
-                                float c10 = c010*(1 - xd) + c110*xd;
-                                float c11 = c011*(1 - xd) + c111*xd;
+                            float zd = (ze - z0) * framesSpInv;
+                            float yd = (ye - y0) * rowsSpInv;
+                            float xd = (xe - x0) * columnsSpInv;
 
-                                float c0 = c00*(1 - yd) + c10*yd;
-                                float c1 = c01*(1 - yd) + c11*yd;
+                            float c00 = c000*(1 - xd) + c100*xd;
+                            float c01 = c001*(1 - xd) + c101*xd;
+                            float c10 = c010*(1 - xd) + c110*xd;
+                            float c11 = c011*(1 - xd) + c111*xd;
 
-                                // trilinear interpolation on the fly
-                                float doseEval = c0*(1 - zd) + c1*zd;
+                            float c0 = c00*(1 - yd) + c10*yd;
+                            float c1 = c01*(1 - yd) + c11*yd;
 
-                                // calculate squared gamma
-                                float gammaValSq = distSq1D(doseEval, doseRef) * ddNormInvSq + normalizedDistSq;
-                                if(gammaValSq < minGammaValSq){
-                                    minGammaValSq = gammaValSq;
-                                }
+                            // trilinear interpolation on the fly
+                            float doseEval = c0*(1 - zd) + c1*zd;
+
+                            // calculate squared gamma
+                            float gammaValSq = distSq1D(doseEval, doseRef) * ddNormInvSq + normalizedDistSq;
+                            if(gammaValSq < minGammaValSq){
+                                minGammaValSq = gammaValSq;
                             }
                         }
                     }

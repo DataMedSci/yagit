@@ -90,3 +90,6 @@ docs/html/
 *.mha
 *.mhd
 *.raw
+
+# CSV files
+*.csv

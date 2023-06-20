@@ -14,7 +14,7 @@ mkdir build && cd build
     * Using Conan package manager
     ```
     conan install ..
-    cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
     ```
     * Using apt package manager
     ```
@@ -24,8 +24,17 @@ mkdir build && cd build
 
 3. Building the library
 ```
-cmake --build . --config=Release
+cmake --build . --config Release
 ```
+
+## Gamma versions
+
+There are 2 implementations of gamma index: sequential and multithreaded.
+To select the version you want, set the `GAMMA_VERSION` option to one of the values: `SEQUENTIAL`, `THREADED`.
+```
+cmake .. -DGAMMA_VERSION=THREADED
+```
+The default value of this parameter is `THREADED`.
 
 ## Examples
 

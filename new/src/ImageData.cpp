@@ -40,6 +40,9 @@ bool floatsEqual(value_type val1, value_type val2){
 }
 }
 
+ImageData::ImageData()
+    : m_data{}, m_size{0, 0, 0}, m_offset{0, 0, 0}, m_spacing{0, 0, 0} {}
+
 ImageData::ImageData(std::vector<value_type>&& data, const DataSize& size, const DataOffset& offset, const DataSpacing& spacing) noexcept
     : m_data(std::move(data)), m_size(size), m_offset(offset), m_spacing(spacing) {}
 
