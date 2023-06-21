@@ -1,23 +1,54 @@
-# yet Another Gamma Index Tool
+# Yet Another Gamma Index Tool
 
-Application and library for performing efficient comparisons of 2D, 3D DICOM images using gamma index concept.
+Library written in C++ for performing efficient comparisons of DICOM images using 2D, 2.5D and 3D gamma index concept.
 
-## Used libraries
-* [simdpp](https://github.com/p12tic/libsimdpp) - code vectorization
-* [VexCL](https://github.com/ddemidov/vexcl) - OpenCL/CUDA GPU offloading
-* [GDCM](http://gdcm.sourceforge.net/) - interacting with DICOM files
-* [boost](https://www.boost.org/) - unit testing
-* [Qt5](https://www.qt.io/) - GUI
+## Installation
 
-## Building
+Build steps:
+1. Creating a directory where the library will be built
+```
+mkdir build && cd build
+```
 
-Building project requires CMake.
-To generate project compiler with C++20 support is required.
-CMake environment requires Qt5, boost and GDCM libraries to be installed
-the project does not pull them automatically.
+2. Installing packages and running cmake
+    * Using Conan package manager
+    ```
+    conan install ..
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
+    ```
+    * Using apt package manager
+    ```
+    sudo apt-get install libgdcm-dev
+    cmake .. -DCMAKE_BUILD_TYPE=Release
+    ```
 
-## C++ standard
-Project is written under C++20
+3. Building the library
+```
+cmake --build . --config Release
+```
 
-## Documentation
-[Documentation](http://gi-yagit.readthedocs.io/en/latest/)
+## Gamma versions
+
+There are 2 implementations of gamma index: sequential and multithreaded.
+To select the version you want, set the `GAMMA_VERSION` option to one of the values: `SEQUENTIAL`, `THREADED`.
+```
+cmake .. -DGAMMA_VERSION=THREADED
+```
+The default value of this parameter is `THREADED`.
+
+## Examples
+
+Example usage of the library is located in `examples` directory.  
+To build examples, enable `BUILD_EXAMPLES` option during installation.
+```
+cmake .. -DBUILD_EXAMPLES=ON
+```
+And to start `gammaImage` example, run
+* on Linux
+```
+./examples/gammaImage
+```
+* on Windows
+```
+examples\Release\gammaImage.exe
+```

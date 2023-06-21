@@ -19,14 +19,6 @@ labels:
 
 
 workflows:
-  - name: summarize
-    description: Summarize the pull request
-    run:
-      - if: $state() == "open" && $isDraft() == false &&
-            ($eventType() == "opened" || $eventType() == "synchronize" || $eventType() == "ready_for_review")
-        then: $summarize()
-
-
   - name: praise-contributors-on-milestones
     description: Praise contributors based on their contributions
     run:

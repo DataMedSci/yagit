@@ -1,8 +1,21 @@
-cmake_minimum_required(VERSION 3.15)
-project(giyagit)
+cmake_minimum_required(VERSION 3.16)
+project(giyagit
+    LANGUAGES CXX
+)
 
-add_subdirectory(gi_core)
-add_subdirectory(gi_tests)
-add_subdirectory(gi_additions)
-add_subdirectory(gi_wrapper_cpp)
-add_subdirectory(gi_gui_qt)
+option(BUILD_EXAMPLES "Build examples" OFF)
+option(BUILD_TESTING "Build unit tests" OFF)
+option(BUILD_PERFORMANCE_TESTING "Build performance tests" OFF)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+add_subdirectory(src)
+
+if(BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
+if(BUILD_PERFORMANCE_TESTING)
+    add_subdirectory(tests/performance)
+endif()
