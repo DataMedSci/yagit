@@ -25,6 +25,59 @@
 namespace yagit{
 
 /**
+ * @brief Enum with methods of calculating gamma index
+ */
+enum class GammaMethod{
+    Classic,  ///< Classic method. Based on https://doi.org/10.1118/1.598248
+    Wendling  ///< Wendling method. Based on https://doi.org/10.1118/1.2721657
+};
+
+/**
+ * @brief Calculate 2D gamma index using classic or Wendling method.
+ * 
+ * It takes into account y and x coordinates of images.
+ * It doesn't take into account the z coordinates
+ * (different z-offsets of @a refImg and @a evalImg have no impact on the result).
+ * 
+ * @param refImg2D 2D reference image
+ * @param evalImg2D 2D evaluated image
+ * @param gammaParams Parameters of gamma index
+ * @param method Method that will be used to calculate gamma index
+ * @return 2D image containing gamma index values 
+ */
+GammaResult gammaIndex2D(const ImageData& refImg2D, const ImageData& evalImg2D,
+                         const GammaParameters& gammaParams, GammaMethod method = GammaMethod::Wendling);
+
+/**
+ * @brief Calculate 2.5D gamma index using classic or Wendling method.
+ * 
+ * It calculates gamma index slice by slice going along axial plane.
+ * On each slice, it takes into account y and x coordinates of images.
+ * 
+ * @param refImg3D 3D reference image
+ * @param evalImg3D 3D evaluated image
+ * @param gammaParams Parameters of gamma index
+ * @param method Method that will be used to calculate gamma index
+ * @return 3D image containing gamma index values
+ */
+GammaResult gammaIndex2_5D(const ImageData& refImg3D, const ImageData& evalImg3D,
+                           const GammaParameters& gammaParams, GammaMethod method = GammaMethod::Wendling);
+
+/**
+ * @brief Calculate 3D gamma index using classic or Wendling method.
+ * 
+ * It takes into account z, y and x coordinates of images.
+ * 
+ * @param refImg3D 3D reference image
+ * @param evalImg3D 3D evaluated image
+ * @param gammaParams Parameters of gamma index
+ * @param method Method that will be used to calculate gamma index
+ * @return 3D image containing gamma index values
+ */
+GammaResult gammaIndex3D(const ImageData& refImg3D, const ImageData& evalImg3D,
+                         const GammaParameters& gammaParams, GammaMethod method = GammaMethod::Wendling);
+
+/**
  * @brief Calculate 2D gamma index using classic method.
  * 
  * It takes into account y and x coordinates of images.
@@ -38,7 +91,8 @@ namespace yagit{
  * @param gammaParams Parameters of gamma index
  * @return 2D image containing gamma index values
  */
-GammaResult gammaIndex2D(const ImageData& refImg2D, const ImageData& evalImg2D, const GammaParameters& gammaParams);
+GammaResult gammaIndex2DClassic(const ImageData& refImg2D, const ImageData& evalImg2D,
+                                const GammaParameters& gammaParams);
 
 /**
  * @brief Calculate 2.5D gamma index using classic method.
@@ -54,7 +108,8 @@ GammaResult gammaIndex2D(const ImageData& refImg2D, const ImageData& evalImg2D, 
  * @param gammaParams Parameters of gamma index
  * @return 3D image containing gamma index values
  */
-GammaResult gammaIndex2_5D(const ImageData& refImg3D, const ImageData& evalImg3D, const GammaParameters& gammaParams);
+GammaResult gammaIndex2_5DClassic(const ImageData& refImg3D, const ImageData& evalImg3D,
+                                  const GammaParameters& gammaParams);
 
 /**
  * @brief Calculate 3D gamma index using classic method.
@@ -68,7 +123,8 @@ GammaResult gammaIndex2_5D(const ImageData& refImg3D, const ImageData& evalImg3D
  * @param gammaParams Parameters of gamma index
  * @return 3D image containing gamma index values 
  */
-GammaResult gammaIndex3D(const ImageData& refImg3D, const ImageData& evalImg3D, const GammaParameters& gammaParams);
+GammaResult gammaIndex3DClassic(const ImageData& refImg3D, const ImageData& evalImg3D,
+                                const GammaParameters& gammaParams);
 
 /**
  * @brief Calculate 2D gamma index using Wendling method.
@@ -85,7 +141,8 @@ GammaResult gammaIndex3D(const ImageData& refImg3D, const ImageData& evalImg3D, 
  * @param gammaParams Parameters of gamma index
  * @return 2D image containing gamma index values
  */
-GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& evalImg2D, const GammaParameters& gammaParams);
+GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& evalImg2D,
+                                 const GammaParameters& gammaParams);
 
 /**
  * @brief Calculate 2.5D gamma index using Wendling method.
@@ -103,7 +160,8 @@ GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& eva
  * @param gammaParams Parameters of gamma index
  * @return 3D image containing gamma index values 
  */
-GammaResult gammaIndex2_5DWendling(const ImageData& refImg3D, const ImageData& evalImg3D, const GammaParameters& gammaParams);
+GammaResult gammaIndex2_5DWendling(const ImageData& refImg3D, const ImageData& evalImg3D,
+                                   const GammaParameters& gammaParams);
 
 /**
  * @brief Calculate 3D gamma index using Wendling method.
@@ -118,6 +176,7 @@ GammaResult gammaIndex2_5DWendling(const ImageData& refImg3D, const ImageData& e
  * @param gammaParams Parameters of gamma index
  * @return 3D image containing gamma index values 
  */
-GammaResult gammaIndex3DWendling(const ImageData& refImg3D, const ImageData& evalImg3D, const GammaParameters& gammaParams);
+GammaResult gammaIndex3DWendling(const ImageData& refImg3D, const ImageData& evalImg3D,
+                                 const GammaParameters& gammaParams);
 
 }

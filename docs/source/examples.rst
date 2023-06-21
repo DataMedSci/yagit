@@ -10,8 +10,8 @@ Gamma index 2D using classic method with interpolation
     :lines: 19-
 
 
-Gamma index 2.5D using classic method
--------------------------------------
+Gamma index 2.5D using Wendling method
+--------------------------------------
 
 .. literalinclude:: ../../examples/gamma25D.cpp
     :language: cpp
@@ -22,7 +22,7 @@ Gamma index 2.5D using classic method
 Gamma index 3D using Wendling method
 ------------------------------------
 
-.. literalinclude:: ../../examples/gamma3DWendling.cpp
+.. literalinclude:: ../../examples/gamma3D.cpp
     :language: cpp
     :linenos:
     :lines: 19-

@@ -20,7 +20,7 @@
 
 namespace yagit{
 
-/** @enum GammaNormalization
+/**
  *  @brief Enum with types of calculating absolute dose difference criterion
 */
 enum class GammaNormalization{
@@ -28,7 +28,7 @@ enum class GammaNormalization{
     Local    ///< Using local reference value (value at current voxel)
 };
 
-/** @struct GammaParameters
+/**
  *  @brief Structure with parameters of gamma index
  */
 struct GammaParameters{

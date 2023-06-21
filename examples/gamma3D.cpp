@@ -18,10 +18,10 @@
  ********************************************************************************************/
 /**
  * @file
- * @brief This file provides a simple example of using yagit - 3D gamma index with interpolation of eval img.
+ * @brief This file provides a simple example of using yagit - 3D gamma index.
  * 
  * @example{lineno}
- * This file provides a simple example of using yagit - 3D gamma index with interpolation of eval img.
+ * This file provides a simple example of using yagit - 3D gamma index.
  * - First, it reads reference image and evaluated image from DICOM files.
  * - Then it calculates 3%G/3mm 3D gamma index of those images using Wendling method.
  * Also, it is set to not take into account voxels with dose below 10% of max reference dose -
@@ -52,7 +52,8 @@ std::string gammaParametersToString(const yagit::GammaParameters& gammaParams){
 int main(int argc, char** argv){
     if(argc <= 2){
         std::cerr << "too few arguments\n";
-        std::cerr << "Usage: gamma3DWendling refImgPath evalImgPath\n";
+        std::cerr << "Usage: gamma3D refImgPath evalImgPath\n";
+        return 1;
     }
 
     const std::string refImgPath{argv[1]};
@@ -78,7 +79,7 @@ int main(int argc, char** argv){
         gammaParams.stepSize = gammaParams.dtaThreshold / 10;
 
         std::cout << "Calculating 3D gamma index with parameters: " << gammaParametersToString(gammaParams) << "\n";
-        const yagit::GammaResult gammaRes = yagit::gammaIndex3DWendling(refImg, evalImg, gammaParams);
+        const yagit::GammaResult gammaRes = yagit::gammaIndex3D(refImg, evalImg, gammaParams);
 
         std::cout << "GIPR: " << gammaRes.passingRate() * 100 << "%\n"
                   << "Gamma mean: " << gammaRes.meanGamma() << "\n"

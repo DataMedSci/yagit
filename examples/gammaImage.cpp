@@ -93,7 +93,7 @@ int main(){
     gammaParams.globalNormDose = refMaxDose;
     gammaParams.doseCutoff = 0;
 
-    yagit::GammaResult gammaRes = yagit::gammaIndex2D(refImgDose, evalImgDose, gammaParams);
+    yagit::GammaResult gammaRes = yagit::gammaIndex2DClassic(refImgDose, evalImgDose, gammaParams);
 
     std::cout << "Gamma index image:\n";
     // expected:

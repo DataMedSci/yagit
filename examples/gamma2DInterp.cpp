@@ -18,10 +18,10 @@
  ********************************************************************************************/
 /**
  * @file
- * @brief This file provides a simple example of using yagit - 2D gamma index.
+ * @brief This file provides a simple example of using yagit - 2D gamma index with interpolation of eval img.
  * 
  * @example{lineno}
- * This file provides a simple example of using yagit - 2D gamma index.
+ * This file provides a simple example of using yagit - 2D gamma index with interpolation of eval img.
  * - First, it reads reference image and evaluated image from DICOM files.
  * - Next, it takes 2D frames from the middle of images in coronal plane.
  * - After that, it interpolates eval image to be on the same grid as ref image.
@@ -40,7 +40,8 @@
 int main(int argc, char** argv){
     if(argc <= 2){
         std::cerr << "too few arguments\n";
-        std::cerr << "Usage: gamma2D refImgPath evalImgPath\n";
+        std::cerr << "Usage: gamma2DInterp refImgPath evalImgPath\n";
+        return 1;
     }
 
     const std::string refImgPath{argv[1]};
@@ -65,7 +66,8 @@ int main(int argc, char** argv){
         gammaParams.normalization = yagit::GammaNormalization::Local;
         gammaParams.doseCutoff = 0.01 * refMaxDose;  // 1% * ref_max
 
-        const yagit::GammaResult gammaRes = yagit::gammaIndex2D(refImg, evalImg, gammaParams);
+        const yagit::GammaResult gammaRes = yagit::gammaIndex2D(refImg, evalImg, gammaParams,
+                                                                yagit::GammaMethod::Classic);
 
         std::cout << "GIPR: " << gammaRes.passingRate() * 100 << "%\n"
                   << "Gamma mean: " << gammaRes.meanGamma() << "\n"

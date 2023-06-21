@@ -161,6 +161,7 @@ int main(int argc, char** argv){
     if(argc <= 2){
         std::cerr << "too few arguments\n";
         std::cerr << "Usage: perfTest refImgPath evalImgPath [outputCsvPath]\n";
+        return 1;
     }
 
     const std::string refImgPath{argv[1]};
@@ -196,13 +197,13 @@ int main(int argc, char** argv){
 
             if(method == "classic"){
                 if(dims == "2D"){
-                    measureGamma(yagit::gammaIndex2D, refImg2D, evalImg2D, gammaParams, nrOfTests, csvFile);
+                    measureGamma(yagit::gammaIndex2DClassic, refImg2D, evalImg2D, gammaParams, nrOfTests, csvFile);
                 }
                 else if(dims == "2.5D"){
-                    measureGamma(yagit::gammaIndex2_5D, refImg3D, evalImg3D, gammaParams, nrOfTests, csvFile);
+                    measureGamma(yagit::gammaIndex2_5DClassic, refImg3D, evalImg3D, gammaParams, nrOfTests, csvFile);
                 }
                 else if(dims == "3D"){
-                    measureGamma(yagit::gammaIndex3D, refImg3D, evalImg3D, gammaParams, nrOfTests, csvFile);
+                    measureGamma(yagit::gammaIndex3DClassic, refImg3D, evalImg3D, gammaParams, nrOfTests, csvFile);
                 }
             }
             else if(method == "wendling"){

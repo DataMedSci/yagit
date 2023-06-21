@@ -26,8 +26,48 @@
 
 #include "ImageData.hpp"
 #include "GammaParameters.hpp"
+#include "Gamma.hpp"
 
 namespace yagit{
+
+GammaResult gammaIndex2D(const ImageData& refImg2D, const ImageData& evalImg2D,
+                         const GammaParameters& gammaParams, GammaMethod method){
+    if(method == GammaMethod::Wendling){
+        return gammaIndex2DWendling(refImg2D, evalImg2D, gammaParams);
+    }
+    else if(method == GammaMethod::Classic){
+        return gammaIndex2DClassic(refImg2D, evalImg2D, gammaParams);
+    }
+    else{
+        throw std::invalid_argument("invalid method");
+    }
+}
+
+GammaResult gammaIndex2_5D(const ImageData& refImg3D, const ImageData& evalImg3D,
+                           const GammaParameters& gammaParams, GammaMethod method){
+    if(method == GammaMethod::Wendling){
+        return gammaIndex2_5DWendling(refImg3D, evalImg3D, gammaParams);
+    }
+    else if(method == GammaMethod::Classic){
+        return gammaIndex2_5DClassic(refImg3D, evalImg3D, gammaParams);
+    }
+    else{
+        throw std::invalid_argument("invalid method");
+    }
+}
+
+GammaResult gammaIndex3D(const ImageData& refImg3D, const ImageData& evalImg3D,
+                         const GammaParameters& gammaParams, GammaMethod method){
+    if(method == GammaMethod::Wendling){
+        return gammaIndex3DWendling(refImg3D, evalImg3D, gammaParams);
+    }
+    else if(method == GammaMethod::Classic){
+        return gammaIndex3DClassic(refImg3D, evalImg3D, gammaParams);
+    }
+    else{
+        throw std::invalid_argument("invalid method");
+    }
+}
 
 namespace{
 const float Nan{std::numeric_limits<float>::quiet_NaN()};
@@ -66,6 +106,10 @@ void validateGammaParameters(const GammaParameters& gammaParams){
     if(gammaParams.dtaThreshold <= 0){
         throw std::invalid_argument("DTA threshold is not positive (dtaThreshold <= 0)");
     }
+    if(gammaParams.normalization != GammaNormalization::Global &&
+       gammaParams.normalization != GammaNormalization::Local){
+        throw std::invalid_argument("global normalization is not global nor local");
+    }
     if(gammaParams.normalization == GammaNormalization::Global && gammaParams.globalNormDose <= 0){
         throw std::invalid_argument("global normalization dose is not positive (globalNormDose <= 0)");
     }
@@ -73,13 +117,13 @@ void validateGammaParameters(const GammaParameters& gammaParams){
 
 void validateWendlingGammaParameters(const GammaParameters& gammaParams){
     if(gammaParams.maxSearchDistance <= 0){
-        throw std::invalid_argument("Maximum search distance is not positive (maxSearchDistance <= 0)");
+        throw std::invalid_argument("maximum search distance is not positive (maxSearchDistance <= 0)");
     }
     if(gammaParams.stepSize <= 0){
-        throw std::invalid_argument("Step size is not positive (stepSize <= 0)");
+        throw std::invalid_argument("step size is not positive (stepSize <= 0)");
     }
     if(gammaParams.stepSize > gammaParams.maxSearchDistance){
-        throw std::invalid_argument("Step size is greater than maximum search distance (stepSize > maxSearchDistance)");
+        throw std::invalid_argument("step size is greater than maximum search distance (stepSize > maxSearchDistance)");
     }
 }
 }

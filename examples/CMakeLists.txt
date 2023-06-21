@@ -1,7 +1,7 @@
 set(EXAMPLES_SRCS
     gamma2DInterp
     gamma25D
-    gamma3DWendling
+    gamma3D
     gammaImage
 )
 

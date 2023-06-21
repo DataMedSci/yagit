@@ -125,7 +125,10 @@ ImageData readRTDoseDicom(const std::string& filepath, bool displayInfo){
 
     auto frames = getValue(ds, NumberOfFramesAttr);
     if(frames == std::nullopt){
-        throw std::runtime_error("DICOM file doesn't have attribute Number of Frames (0028,0008)");
+        if(displayInfo){
+            std::cerr << "DICOM file doesn't have attribute Number of Frames (0028,0008). Assuming it has one frame.\n";
+        }
+        frames = 1;
     }
     auto rows = getValue(ds, RowsAttr);
     if(rows == std::nullopt){

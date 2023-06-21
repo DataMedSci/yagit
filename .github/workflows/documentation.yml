@@ -1,13 +1,8 @@
 name: documentation
 
-# on:
-#   release:
-#     types: [ published ]
-
-# TEMPORARY FOR TESTING
 on:
-  pull_request:
-    branches: [ master ]
+  release:
+    types: [ published ]
 
 jobs:
   documenation:
@@ -37,15 +32,8 @@ jobs:
           ( cat Doxyfile ; echo "PROJECT_NUMBER=${{ github.event.release.tag_name }}" ) | doxygen -
           make html SPHINXOPTS=-Drelease=${{ github.event.release.tag_name }}
 
-      # - name: Deploy documentation
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_dir: docs/build/html
-
-      # TEMPORARY FOR TESTING
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
+      - name: Deploy documentation
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          name: html-docs
-          path: docs/build/html
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/build/html

@@ -23,7 +23,7 @@
  * @example{lineno}
  * This file provides a simple example of using yagit - 2.5D gamma index.
  * - First, it reads reference image and evaluated image from DICOM files.
- * - Then it calculates 3%G/3mm 2.5D gamma index of those 2 images using classic method.
+ * - Then it calculates 3%G/3mm 2.5D gamma index of those 2 images using Wendling method.
  * Global normalization dose is set to maximum value of reference image.
  * Also, it is set to not take into account voxels with dose below 5% of max reference dose - 
  * in this case, NaN value will be set.
@@ -40,6 +40,7 @@ int main(int argc, char** argv){
     if(argc <= 2){
         std::cerr << "too few arguments\n";
         std::cerr << "Usage: gamma25D refImgPath evalImgPath\n";
+        return 1;
     }
 
     const std::string refImgPath{argv[1]};
@@ -56,8 +57,11 @@ int main(int argc, char** argv){
         gammaParams.normalization = yagit::GammaNormalization::Global;
         gammaParams.globalNormDose = refMaxDose;
         gammaParams.doseCutoff = 0.05 * refMaxDose;  // 5% * ref_max
+        // two parameters below are exclusively used by Wendling method
+        gammaParams.maxSearchDistance = 10;  // [mm]
+        gammaParams.stepSize = gammaParams.dtaThreshold / 10;
 
-        const yagit::GammaResult gammaRes = yagit::gammaIndex2_5D(refImg, evalImg, gammaParams);
+        const yagit::GammaResult gammaRes = yagit::gammaIndex2_5DWendling(refImg, evalImg, gammaParams);
 
         std::cout << "GIPR: " << gammaRes.passingRate() * 100 << "%\n"
                   << "Gamma mean: " << gammaRes.meanGamma() << "\n"
