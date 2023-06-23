@@ -18,30 +18,17 @@
  ********************************************************************************************/
 #pragma once
 
-#include "ImageData.hpp"
+#include <string>
 
-namespace yagit{
+#include "yagit/ImageData.hpp"
+
+namespace yagit::DataWriter{
 
 /**
- * @brief Container storing gamma index values
+ * @brief Write image to MetaImage file (.mha)
+ * @param img Image to save
+ * @param filepath File path where image will be saved
  */
-class GammaResult : public ImageData{
-public:
-    using ImageData::ImageData;
-
-    /// @brief The percentage of elements that are less than or equal to 1. It ignores NaN values.
-    value_type passingRate() const;
-
-    /// @brief Minimum value of gamma index. It ignores NaN values.
-    value_type minGamma() const;
-    /// @brief Maximum value of gamma index. It ignores NaN values.
-    value_type maxGamma() const;
-    /// @brief Sum of values of gamma index. It ignores NaN values.
-    double sumGamma() const;
-    /// @brief Mean of values of gamma index. It ignores NaN values.
-    double meanGamma() const;
-    /// @brief Variance of values of gamma index. It ignores NaN values.
-    double varGamma() const;
-};
+void writeToMetaImage(const ImageData& img, const std::string& filepath);
 
 }

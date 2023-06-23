@@ -17,7 +17,7 @@
  * along with 'yet Another Gamma Index Tool'.  If not, see <http://www.gnu.org/licenses/>.
  ********************************************************************************************/
 
-#include "DataReader.hpp"
+#include "yagit/DataReader.hpp"
 
 #include <fstream>
 #include <optional>

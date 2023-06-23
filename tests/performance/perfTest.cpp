@@ -28,7 +28,7 @@
 #include <sstream>
 #include <iomanip>
 
-#include <yagit.hpp>
+#include "yagit/yagit.hpp"
 
 const auto GLOBAL = yagit::GammaNormalization::Global;
 const auto LOCAL = yagit::GammaNormalization::Local;

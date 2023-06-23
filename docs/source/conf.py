@@ -5,14 +5,14 @@
 
 # -- Project information -----------------------------------------------------
 project = "Yet Another Gamma Index Tool"
-copyright = "2023, DataMedSci"
-author = "DataMedSci"
+author = f"'{project}' Developers"
+copyright = f"2023, {author}"
 
 
 # -- General configuration ---------------------------------------------------
 extensions = ["breathe"]
 
-templates_path = ["_templates"]
+templates_path = []
 exclude_patterns = []
 
 

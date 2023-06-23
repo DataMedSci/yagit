@@ -18,9 +18,9 @@
  ********************************************************************************************/
 #pragma once
 
-#include "ImageData.hpp"
-#include "GammaParameters.hpp"
-#include "GammaResult.hpp"
+#include "yagit/ImageData.hpp"
+#include "yagit/GammaParameters.hpp"
+#include "yagit/GammaResult.hpp"
 
 namespace yagit{
 

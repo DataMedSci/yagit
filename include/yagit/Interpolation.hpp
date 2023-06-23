@@ -20,8 +20,8 @@
 
 #include <optional>
 
-#include "ImageData.hpp"
-#include "Image.hpp"
+#include "yagit/ImageData.hpp"
+#include "yagit/Image.hpp"
 
 namespace yagit::Interpolation{
 

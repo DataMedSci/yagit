@@ -34,7 +34,7 @@
 #include <iostream>
 #include <sstream>
 
-#include <yagit.hpp>
+#include "yagit/yagit.hpp"
 
 std::string floatToString(float d){
     std::ostringstream oss;

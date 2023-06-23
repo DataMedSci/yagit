@@ -17,12 +17,12 @@
  * along with 'yet Another Gamma Index Tool'.  If not, see <http://www.gnu.org/licenses/>.
  ********************************************************************************************/
 
-#include "Gamma.hpp"
+#include "yagit/Gamma.hpp"
 
 #include <cmath>
 #include <limits>
 
-#include "Interpolation.hpp"
+#include "yagit/Interpolation.hpp"
 #include "GammaCommon.hpp"
 
 namespace yagit{

@@ -18,15 +18,15 @@
  ********************************************************************************************/
 #pragma once
 
-#include "DataStructs.hpp"
-#include "Image.hpp"
-#include "ImageData.hpp"
-#include "GammaResult.hpp"
+#include "yagit/DataStructs.hpp"
+#include "yagit/Image.hpp"
+#include "yagit/ImageData.hpp"
+#include "yagit/GammaResult.hpp"
 
-#include "GammaParameters.hpp"
-#include "Gamma.hpp"
+#include "yagit/GammaParameters.hpp"
+#include "yagit/Gamma.hpp"
 
-#include "Interpolation.hpp"
+#include "yagit/Interpolation.hpp"
 
-#include "DataReader.hpp"
-#include "DataWriter.hpp"
+#include "yagit/DataReader.hpp"
+#include "yagit/DataWriter.hpp"

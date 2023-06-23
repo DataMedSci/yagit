@@ -29,10 +29,11 @@ elseif(GAMMA_VERSION STREQUAL "THREADED")
 endif()
 
 add_library(yagit ${YAGIT_SOURCE_FILES})
-target_include_directories(yagit PUBLIC ../inc)
-target_link_libraries(yagit PRIVATE
-    ${YAGIT_DEPS}
+target_include_directories(yagit PUBLIC
+                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+                           $<INSTALL_INTERFACE:include>
 )
+target_link_libraries(yagit PRIVATE ${YAGIT_DEPS})
 
 if(MSVC)
     # line below is commented, because msvc compiler shows also warnings from external dependencies, but it should not

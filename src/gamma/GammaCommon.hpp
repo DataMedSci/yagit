@@ -24,9 +24,9 @@
 #include <stdexcept>
 #include <limits>
 
-#include "ImageData.hpp"
-#include "GammaParameters.hpp"
-#include "Gamma.hpp"
+#include "yagit/ImageData.hpp"
+#include "yagit/GammaParameters.hpp"
+#include "yagit/Gamma.hpp"
 
 namespace yagit{
 

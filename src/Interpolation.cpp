@@ -17,7 +17,7 @@
  * along with 'yet Another Gamma Index Tool'.  If not, see <http://www.gnu.org/licenses/>.
  ********************************************************************************************/
 
-#include "Interpolation.hpp"
+#include "yagit/Interpolation.hpp"
 
 #include <cmath>
 #include <stdexcept>

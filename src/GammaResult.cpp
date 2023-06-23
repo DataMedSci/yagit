@@ -17,7 +17,7 @@
  * along with 'yet Another Gamma Index Tool'.  If not, see <http://www.gnu.org/licenses/>.
  ********************************************************************************************/
 
-#include "GammaResult.hpp"
+#include "yagit/GammaResult.hpp"
 
 #include <algorithm>
 #include <cmath>

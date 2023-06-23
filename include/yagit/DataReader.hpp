@@ -20,7 +20,7 @@
 
 #include <string>
 
-#include "ImageData.hpp"
+#include "yagit/ImageData.hpp"
 
 namespace yagit::DataReader{
 

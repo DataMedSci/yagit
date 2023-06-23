@@ -124,7 +124,7 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = ../inc \
+INPUT                  = ../include/yagit \
                          ../examples \
                          ../README.md
 INPUT_ENCODING         = UTF-8

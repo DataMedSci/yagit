@@ -21,8 +21,8 @@
 #include <vector>
 #include <stdexcept>
 
-#include "DataStructs.hpp"
-#include "Image.hpp"
+#include "yagit/DataStructs.hpp"
+#include "yagit/Image.hpp"
 
 namespace yagit{
 

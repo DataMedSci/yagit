@@ -31,7 +31,7 @@
 #include <string>
 #include <iostream>
 
-#include <yagit.hpp>
+#include "yagit/yagit.hpp"
 
 void printImage2D(const yagit::Image2D<float>& img){
     std::cout << "[";
