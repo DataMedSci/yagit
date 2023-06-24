@@ -10,6 +10,7 @@ project(yagit
 option(BUILD_EXAMPLES "Build examples" OFF)
 option(BUILD_TESTING "Build unit tests" OFF)
 option(BUILD_PERFORMANCE_TESTING "Build performance tests" OFF)
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 
 # Build
@@ -18,6 +19,10 @@ option(BUILD_PERFORMANCE_TESTING "Build performance tests" OFF)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+if(WIN32 AND BUILD_SHARED_LIBS)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
 
 add_subdirectory(src)
 
