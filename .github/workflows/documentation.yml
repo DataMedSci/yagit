@@ -18,7 +18,7 @@ jobs:
           python-version: '3.9'
 
       - name: Install tools and dependencies
-        working-directory: ${{github.workspace}}/docs
+        working-directory: ${{ github.workspace }}/docs
         run: |
           sudo apt update
           sudo apt install doxygen
@@ -27,7 +27,7 @@ jobs:
           python -m pip install -r requirements.txt
 
       - name: Run doxygen and sphinx
-        working-directory: ${{github.workspace}}/docs
+        working-directory: ${{ github.workspace }}/docs
         run: |
           ( cat Doxyfile ; echo "PROJECT_NUMBER=${{ github.event.release.tag_name }}" ) | doxygen -
           make html SPHINXOPTS=-Drelease=${{ github.event.release.tag_name }}

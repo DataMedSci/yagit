@@ -1,20 +1,20 @@
 /********************************************************************************************
- * Copyright (C) 2023 'yet Another Gamma Index Tool' Developers.
+ * Copyright (C) 2023 'Yet Another Gamma Index Tool' Developers.
  * 
- * This file is part of 'yet Another Gamma Index Tool'.
+ * This file is part of 'Yet Another Gamma Index Tool'.
  * 
- * 'yet Another Gamma Index Tool' is free software: you can redistribute it and/or modify
+ * 'Yet Another Gamma Index Tool' is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * 'yet Another Gamma Index Tool' is distributed in the hope that it will be useful,
+ * 'Yet Another Gamma Index Tool' is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with 'yet Another Gamma Index Tool'.  If not, see <http://www.gnu.org/licenses/>.
+ * along with 'Yet Another Gamma Index Tool'.  If not, see <http://www.gnu.org/licenses/>.
  ********************************************************************************************/
 
 #include "yagit/Gamma.hpp"
