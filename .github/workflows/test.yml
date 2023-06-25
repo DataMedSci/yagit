@@ -100,4 +100,4 @@ jobs:
       - name: Run example
         working-directory: ${{ github.workspace }}/build
         run: |
-          ./examples/${{ env.BUILD_TYPE }}/gammaImage
+          examples\${{ env.BUILD_TYPE }}\gammaImage.exe
