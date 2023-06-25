@@ -31,7 +31,7 @@ endif()
 add_library(yagit ${YAGIT_SOURCE_FILES})
 target_include_directories(yagit PUBLIC
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
-                           $<INSTALL_INTERFACE:include>
+                           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_link_libraries(yagit PRIVATE ${YAGIT_DEPS})
 

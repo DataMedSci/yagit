@@ -12,6 +12,7 @@ option(BUILD_TESTING "Build unit tests" OFF)
 option(BUILD_PERFORMANCE_TESTING "Build performance tests" OFF)
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
+include(GNUInstallDirs)
 
 # Build
 # =====
@@ -37,15 +38,14 @@ endif()
 # Installation
 # ============
 
-include(GNUInstallDirs)
-include(CMakePackageConfigHelpers)
-
 set(PACKAGE_NAME ${PROJECT_NAME})
 set(TARGETS_EXPORT_NAME "${PACKAGE_NAME}Targets")
 set(CONFIG_FILE "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}Config.cmake")
 set(VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME}ConfigVersion.cmake")
 set(CONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PACKAGE_NAME}")
 
+
+include(CMakePackageConfigHelpers)
 
 configure_package_config_file(
     cmake/Config.cmake.in

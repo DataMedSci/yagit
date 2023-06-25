@@ -12,6 +12,7 @@ set BUILD_PERFORMANCE_TESTING=OFF
 set REF_IMG=original_dose_beam_4.dcm
 set EVAL_IMG=logfile_dose_beam_4.dcm
 
+set INSTALL=ON
 set INSTALL_DIR=./yagit
 
 
@@ -70,13 +71,15 @@ if %BUILD_PERFORMANCE_TESTING% == ON (
 
 
 @REM ============================================================
-echo:
-echo INSTALLING...
-IF "%INSTALL_DIR%" NEQ "" (
-    echo INSTALLING TO %INSTALL_DIR%
-    cmake --install build --prefix %INSTALL_DIR%
-) else (
-    echo INSTALLING TO SYSTEM DIRECTORY
-    echo MAKE SURE YOU RUN THIS AS ADMINISTRATOR
-    cmake --install build
+if %INSTALL% == ON (
+    echo:
+    echo INSTALLING...
+    IF "%INSTALL_DIR%" NEQ "" (
+        echo INSTALLING TO %INSTALL_DIR%
+        cmake --install build --prefix %INSTALL_DIR%
+    ) else (
+        echo INSTALLING TO SYSTEM DIRECTORY
+        echo MAKE SURE YOU RUN THIS AS ADMINISTRATOR
+        cmake --install build
+    )
 )
