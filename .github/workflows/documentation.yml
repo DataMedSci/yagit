@@ -1,0 +1,39 @@
+name: documentation
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  documenation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install tools and dependencies
+        working-directory: ${{ github.workspace }}/docs
+        run: |
+          sudo apt update
+          sudo apt install doxygen
+          doxygen --version
+          python -m pip install -U pip
+          python -m pip install -r requirements.txt
+
+      - name: Run doxygen and sphinx
+        working-directory: ${{ github.workspace }}/docs
+        run: |
+          ( cat Doxyfile ; echo "PROJECT_NUMBER=${{ github.event.release.tag_name }}" ) | doxygen -
+          make html SPHINXOPTS=-Drelease=${{ github.event.release.tag_name }}
+
+      - name: Deploy documentation
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/build/html
