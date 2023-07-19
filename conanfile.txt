@@ -1,5 +1,6 @@
 [requires]
 gdcm/3.0.20
+gtest/1.13.0
 
 [generators]
 CMakeDeps

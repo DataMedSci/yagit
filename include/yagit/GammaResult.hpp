@@ -30,7 +30,7 @@ public:
     using ImageData::ImageData;
 
     /// @brief The percentage of elements that are less than or equal to 1. It ignores NaN values.
-    value_type passingRate() const;
+    double passingRate() const;
 
     /// @brief Minimum value of gamma index. It ignores NaN values.
     value_type minGamma() const;

@@ -65,6 +65,7 @@ public:
     ImageData& operator=(ImageData&& other) noexcept;
 
     bool operator==(const ImageData& other) const;
+    bool operator!=(const ImageData& other) const;
 
     DataSize getSize() const{
         return m_size;

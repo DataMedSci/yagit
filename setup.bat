@@ -1,4 +1,5 @@
 @echo off
+setlocal
 
 set BUILD_TYPE=Release
 set BUILD_SHARED_LIBS=OFF
@@ -7,12 +8,15 @@ set BUILD_SHARED_LIBS=OFF
 set GAMMA_VERSION=THREADED
 
 set BUILD_EXAMPLES=ON
+set BUILD_TESTING=OFF
 set BUILD_PERFORMANCE_TESTING=OFF
 
 set REF_IMG=original_dose_beam_4.dcm
 set EVAL_IMG=logfile_dose_beam_4.dcm
 
-set INSTALL=ON
+set UNIT_TESTS_LIST=DataReaderTest.exe DataWriterTest.exe GammaTest.exe GammaResultTest.exe ImageDataTest.exe InterpolationTest.exe
+
+set INSTALL=OFF
 set INSTALL_DIR=./yagit
 
 
@@ -35,6 +39,7 @@ cmake .. -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ^
          -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS% ^
          -DGAMMA_VERSION=%GAMMA_VERSION% ^
          -DBUILD_EXAMPLES=%BUILD_EXAMPLES% ^
+         -DBUILD_TESTING=%BUILD_TESTING% ^
          -DBUILD_PERFORMANCE_TESTING=%BUILD_PERFORMANCE_TESTING%
 
 
@@ -61,6 +66,18 @@ if %BUILD_EXAMPLES% == ON (
     build\examples\%BUILD_TYPE%\gamma3D.exe %REF_IMG% %EVAL_IMG%
     echo:
     build\examples\%BUILD_TYPE%\gammaImage.exe
+)
+
+if %BUILD_TESTING% == ON (
+    echo:
+    echo RUNNING UNIT TESTS...
+    cd build\tests\unit\%BUILD_TYPE%
+    for %%f in (%UNIT_TESTS_LIST%) do (
+        echo:
+        echo %%f
+        .\%%f
+    )
+    cd ..\..\..\..
 )
 
 if %BUILD_PERFORMANCE_TESTING% == ON (

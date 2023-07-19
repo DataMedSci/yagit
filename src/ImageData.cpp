@@ -35,8 +35,12 @@ using pointer = ImageData::pointer;
 using const_pointer = ImageData::const_pointer;
 
 bool floatsEqual(value_type val1, value_type val2){
-    return std::abs(val1 - val2) <= std::max(std::abs(val1), std::abs(val2)) *
-                                    2 * std::numeric_limits<value_type>::epsilon();
+    return val1 == val2 || std::abs(val1 - val2) <= std::max(std::abs(val1), std::abs(val2)) *
+                                                    2 * std::numeric_limits<value_type>::epsilon();
+}
+
+bool nanSensitiveFloatsEqual(value_type val1, value_type val2){
+    return floatsEqual(val1, val2) || (std::isnan(val1) && std::isnan(val2));
 }
 }
 
@@ -71,11 +75,15 @@ bool ImageData::operator==(const ImageData& other) const{
         return false;
     }
     for(size_t i = 0; i < m_data.size(); i++){
-        if(!floatsEqual(m_data[i], other.m_data[i])){
+        if(!nanSensitiveFloatsEqual(m_data[i], other.m_data[i])){
             return false;
         }
     }
     return true;
+}
+
+bool ImageData::operator!=(const ImageData& other) const{
+    return !operator==(other);
 }
 
 void ImageData::setSize(const DataSize& size){

@@ -17,37 +17,6 @@
  * along with 'Yet Another Gamma Index Tool'.  If not, see <http://www.gnu.org/licenses/>.
  ********************************************************************************************/
 
-#include "yagit/GammaResult.hpp"
+#include "yagit/Interpolation.hpp"
 
-#include <algorithm>
-#include <cmath>
-
-namespace yagit{
-
-double GammaResult::passingRate() const{
-    return static_cast<value_type>(std::count_if(m_data.begin(), m_data.end(), [](value_type el) {
-        return !std::isnan(el) && el <= 1;
-    })) / nansize();
-}
-
-GammaResult::value_type GammaResult::minGamma() const{
-    return nanmin();
-}
-
-GammaResult::value_type GammaResult::maxGamma() const{
-    return nanmax();
-}
-
-double GammaResult::sumGamma() const{
-    return nansum();
-}
-
-double GammaResult::meanGamma() const{
-    return nanmean();
-}
-
-double GammaResult::varGamma() const{
-    return nanvar();
-}
-
-}
+#include <gtest/gtest.h>
