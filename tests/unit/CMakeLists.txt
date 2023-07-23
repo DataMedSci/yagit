@@ -18,9 +18,7 @@ foreach(test ${TESTS_SRCS})
 endforeach()
 
 include(../../cmake/Common.cmake)
-copy_directory(${CMAKE_CURRENT_SOURCE_DIR}/../data ImageDataTest data)
+copy_directory(${CMAKE_CURRENT_SOURCE_DIR}/data ImageDataTest data)
 
 
 copy_dll_to_exec(yagit ImageDataTest)
-
-

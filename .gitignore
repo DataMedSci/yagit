@@ -105,5 +105,5 @@ docs/build
 *.csv
 
 # tests data files
-!tests/data/*.dcm
-!tests/data/*.mha
+!tests/unit/data/*.dcm
+!tests/unit/data/*.mha
