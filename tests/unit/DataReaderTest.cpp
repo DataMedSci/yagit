@@ -31,17 +31,11 @@ const yagit::Image3D<float> IMAGE_3D = {
     {{0.2, 1.0}, {-1.0, -0.1}},
     {{123432.12, 999.99}, {-543213.3, -443.9}}
 };
-const yagit::Image3D<float> IMAGE_3D_INT = {
-    {{1, 6}, {13, 2}},
-    {{0, -1}, {-10, 0}},
-    {{123432, 999}, {-543213, -443}}
-};
 
 const yagit::DataOffset DATA_OFFSET{2.1, -3.2, 0.0};
 const yagit::DataSpacing DATA_SPACING{1.0, 2.5, 0.5};
 
 const yagit::ImageData IMAGE_DATA(IMAGE_3D, DATA_OFFSET, DATA_SPACING);
-const yagit::ImageData IMAGE_DATA_INT(IMAGE_3D_INT, DATA_OFFSET, DATA_SPACING);
 
 const std::string DATA_DIR = "data/";
 const std::string DICOM_RTDOSE_FILE = DATA_DIR + "test_dicom_rtdose.dcm";
@@ -136,9 +130,16 @@ TEST(DataReaderTest, readMetaImageBigEndian){
 }
 
 TEST(DataReaderTest, readMetaImageWithIntTypeData){
+    const yagit::Image3D<float> image3DInt = {
+        {{1, 6}, {13, 2}},
+        {{0, -1}, {-10, 0}},
+        {{123432, 999}, {-543213, -443}}
+    };
+    const yagit::ImageData imageDataInt(image3DInt, DATA_OFFSET, DATA_SPACING);
+
     yagit::ImageData imageData;
     ASSERT_NO_THROW(imageData = yagit::DataReader::readMetaImage(METAIMAGE_FILE_INT, true));
-    EXPECT_THAT(imageData, matchImageData(IMAGE_DATA_INT));
+    EXPECT_THAT(imageData, matchImageData(imageDataInt));
 }
 
 TEST(DataReaderTest, readMetaImageForNonexistentFileShouldThrow){

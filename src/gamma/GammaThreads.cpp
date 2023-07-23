@@ -104,7 +104,7 @@ std::vector<float> multithreadedGammaIndex(const ImageData& refImg, const GammaP
         }
     }
     else{  // single-threaded
-        func(args..., 0, refImg.size(), gammaVals);
+        func(std::forward<Args>(args)..., 0, refImg.size(), gammaVals);
     }
 
     return gammaVals;

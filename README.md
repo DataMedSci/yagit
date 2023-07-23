@@ -27,6 +27,11 @@ mkdir build && cd build
 cmake --build . --config Release
 ```
 
+4. Installing the library
+```
+cmake --install .
+```
+
 ## Gamma versions
 
 There are 2 implementations of gamma index: sequential and multithreaded.

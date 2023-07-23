@@ -23,7 +23,7 @@
 #include <gmock/gmock.h>
 
 using testing::Matcher, testing::AllOf, testing::Field, testing::Property, testing::Pointwise,
-      testing::NanSensitiveFloatEq, testing::NanSensitiveFloatNear;
+      testing::FloatEq, testing::NanSensitiveFloatEq, testing::NanSensitiveFloatNear;
 
 Matcher<yagit::DataSize> matchDataSize(const yagit::DataSize& expectedDataSize){
     return AllOf(Field("frames", &yagit::DataSize::frames, expectedDataSize.frames),
@@ -32,15 +32,15 @@ Matcher<yagit::DataSize> matchDataSize(const yagit::DataSize& expectedDataSize){
 }
 
 Matcher<yagit::DataOffset> matchDataOffset(const yagit::DataOffset& expectedDataOffset){
-    return AllOf(Field("frames", &yagit::DataOffset::frames, expectedDataOffset.frames),
-                 Field("rows", &yagit::DataOffset::rows, expectedDataOffset.rows),
-                 Field("columns", &yagit::DataOffset::columns, expectedDataOffset.columns));
+    return AllOf(Field("frames", &yagit::DataOffset::frames, FloatEq(expectedDataOffset.frames)),
+                 Field("rows", &yagit::DataOffset::rows, FloatEq(expectedDataOffset.rows)),
+                 Field("columns", &yagit::DataOffset::columns, FloatEq(expectedDataOffset.columns)));
 }
 
 Matcher<yagit::DataSpacing> matchDataSpacing(const yagit::DataSpacing& expectedDataSpacing){
-    return AllOf(Field("frames", &yagit::DataSpacing::frames, expectedDataSpacing.frames),
-                 Field("rows", &yagit::DataSpacing::rows, expectedDataSpacing.rows),
-                 Field("columns", &yagit::DataSpacing::columns, expectedDataSpacing.columns));
+    return AllOf(Field("frames", &yagit::DataSpacing::frames, FloatEq(expectedDataSpacing.frames)),
+                 Field("rows", &yagit::DataSpacing::rows, FloatEq(expectedDataSpacing.rows)),
+                 Field("columns", &yagit::DataSpacing::columns, FloatEq(expectedDataSpacing.columns)));
 }
 
 Matcher<yagit::ImageData> matchImageData(const yagit::ImageData& expectedImageData, float maxAbsError = -1){

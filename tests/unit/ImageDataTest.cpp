@@ -26,7 +26,7 @@
 #include <gmock/gmock.h>
 #include "TestUtils.hpp"
 
-using testing::IsNan;
+using testing::IsNan, testing::ThrowsMessage, testing::HasSubstr;
 
 namespace{
 const float NaN = std::numeric_limits<float>::quiet_NaN();
@@ -72,6 +72,7 @@ const yagit::ImageData IMAGE_DATA_SMALL_WITH_NANS(DATA_SMALL_WITH_NANS, {1, 2, 3
 const yagit::ImageData IMAGE_DATA_SMALL_WITH_INFS(DATA_SMALL_WITH_INFS, {1, 2, 3}, DATA_OFFSET, DATA_SPACING);
 const yagit::ImageData IMAGE_DATA_SMALL_WITH_INFS2(DATA_SMALL_WITH_INFS2, {1, 2, 3}, DATA_OFFSET, DATA_SPACING);
 const yagit::ImageData EMPTY_IMAGE_DATA(std::vector<float>{}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0});
+const yagit::ImageData EMPTY_IMAGE_DATA2(std::vector<float>{}, {0, 0, 0}, DATA_OFFSET, DATA_SPACING);
 }
 
 TEST(ImageDataTest, defaultConstructor){
@@ -85,7 +86,8 @@ TEST(ImageDataTest, dataConstructor){
 }
 
 TEST(ImageDataTest, dataConstructorForInconsistentSizeShouldThrow){
-    EXPECT_THROW(yagit::ImageData(DATA, yagit::DataSize{10, 10, 10}, DATA_OFFSET, DATA_SPACING), std::invalid_argument);
+    const auto dataConstructor = [](){ yagit::ImageData(DATA, yagit::DataSize{10, 10, 10}, DATA_OFFSET, DATA_SPACING); };
+    EXPECT_THAT(dataConstructor, ThrowsMessage<std::invalid_argument>("size is inconsistent with data size information"));
 }
 
 TEST(ImageDataTest, image2DConstructor){
@@ -98,7 +100,19 @@ TEST(ImageDataTest, image2DConstructorForInconsistentSizeShouldThrow){
         {1, 2, 3},
         {1, 2}
     };
-    EXPECT_THROW(yagit::ImageData(inconsistentImage2D, DATA_OFFSET, DATA_SPACING), std::invalid_argument);
+    const auto image2DConstructor = [&inconsistentImage2D](){ yagit::ImageData(inconsistentImage2D, DATA_OFFSET, DATA_SPACING); };
+    EXPECT_THAT(image2DConstructor, ThrowsMessage<std::invalid_argument>("inner vectors don't have the same size"));
+}
+
+TEST(ImageDataTest, image2DConstructorForEmptyImages){
+    EXPECT_THAT(yagit::ImageData(yagit::Image2D<float>{}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+    EXPECT_THAT(yagit::ImageData(yagit::Image2D<float>{{}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+    EXPECT_THAT(yagit::ImageData(yagit::Image2D<float>{{}, {}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+}
+
+TEST(ImageDataTest, image2DConstructorForEmptyAndInconsistentSizeShouldThrow){
+    const auto image2DConstructor = [](){ yagit::ImageData(yagit::Image2D<float>{{}, {1}}, DATA_OFFSET, DATA_SPACING); };
+    EXPECT_THAT(image2DConstructor, ThrowsMessage<std::invalid_argument>("inner vectors don't have the same size"));
 }
 
 TEST(ImageDataTest, image3DConstructor){
@@ -116,7 +130,8 @@ TEST(ImageDataTest, image3DConstructorForInconsistentRowsShouldThrow){
             {1, 2}
         }
     };
-    EXPECT_THROW(yagit::ImageData(inconsistentImage3D, DATA_OFFSET, DATA_SPACING), std::invalid_argument);
+    const auto image3DConstructor = [&inconsistentImage3D](){ yagit::ImageData(inconsistentImage3D, DATA_OFFSET, DATA_SPACING); };
+    EXPECT_THAT(image3DConstructor, ThrowsMessage<std::invalid_argument>("singly nested vectors don't have the same size"));
 }
 
 TEST(ImageDataTest, image3DConstructorForInconsistentColumnsShouldThrow){
@@ -130,7 +145,25 @@ TEST(ImageDataTest, image3DConstructorForInconsistentColumnsShouldThrow){
             {1, 2, 3}
         }
     };
-    EXPECT_THROW(yagit::ImageData(inconsistentImage3D, DATA_OFFSET, DATA_SPACING), std::invalid_argument);
+    const auto image3DConstructor = [&inconsistentImage3D](){ yagit::ImageData(inconsistentImage3D, DATA_OFFSET, DATA_SPACING); };
+    EXPECT_THAT(image3DConstructor, ThrowsMessage<std::invalid_argument>("double nested vectors don't have the same size"));
+}
+
+TEST(ImageDataTest, image3DConstructorForEmptyImages){
+    EXPECT_THAT(yagit::ImageData(yagit::Image3D<float>{}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+    EXPECT_THAT(yagit::ImageData(yagit::Image3D<float>{{}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+    EXPECT_THAT(yagit::ImageData(yagit::Image3D<float>{{}, {}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+    EXPECT_THAT(yagit::ImageData(yagit::Image3D<float>{{{}}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+    EXPECT_THAT(yagit::ImageData(yagit::Image3D<float>{{{}, {}}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+    EXPECT_THAT(yagit::ImageData(yagit::Image3D<float>{{{}}, {{}}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+}
+
+TEST(ImageDataTest, image3DConstructorForEmptyAndInconsistentSizeShouldThrow){
+    const auto image3DConstructor2 = [](){ yagit::ImageData(yagit::Image3D<float>{{}, {{1}}}, DATA_OFFSET, DATA_SPACING); };
+    EXPECT_THAT(image3DConstructor2, ThrowsMessage<std::invalid_argument>("singly nested vectors don't have the same size"));
+
+    const auto image3DConstructor1 = [](){ yagit::ImageData(yagit::Image3D<float>{{{}, {1}}}, DATA_OFFSET, DATA_SPACING); };
+    EXPECT_THAT(image3DConstructor1, ThrowsMessage<std::invalid_argument>("double nested vectors don't have the same size"));
 }
 
 TEST(ImageDataTest, moveDataConstructor){
@@ -212,7 +245,9 @@ TEST(ImageDataTest, setAndGetSize){
 
 TEST(ImageDataTest, setSizeForInconsistentSizeShouldThrow){
     yagit::ImageData imageData(IMAGE_DATA);
-    EXPECT_THROW(imageData.setSize({10, 10, 10}), std::invalid_argument);
+    const auto setSize = [&imageData](){ imageData.setSize({10, 10, 10}); };
+    EXPECT_THAT(setSize, ThrowsMessage<std::invalid_argument>(
+        "the total number of elements in the new size does not match the total number of elements in the old size"));
 }
 
 TEST(ImageDataTest, setAndGetOffset){
