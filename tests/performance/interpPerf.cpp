@@ -17,11 +17,12 @@
  * along with 'Yet Another Gamma Index Tool'.  If not, see <http://www.gnu.org/licenses/>.
  ********************************************************************************************/
 
-#include <iostream>
-#include <vector>
-#include <numeric>
-#include <algorithm>
 #include <chrono>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+#include <numeric>
+#include <iostream>
 
 #include <yagit/yagit.hpp>
 
@@ -118,6 +119,7 @@ int main(int argc, char** argv){
         const float gridOffsetX = -261.2;
         const float newSpacing = 0.4;
 
+
         std::cout << "\n====================================\n";
         std::cout << "LINEAR INTERPOLATION WITH SPACING:\n";
         yagit::ImageData (&linearAlongAxisPtr)(const yagit::ImageData&, float, yagit::ImageAxis) = yagit::Interpolation::linearAlongAxis;
@@ -140,14 +142,14 @@ int main(int argc, char** argv){
 
         std::cout << "\n====================================\n";
         std::cout << "TRILINEAR INTERPOLATION WITH SPACING:\n";
-        // zmien 5 na 10
         yagit::ImageData (&trilinearPtr)(const yagit::ImageData&, const yagit::DataSpacing&) = yagit::Interpolation::trilinear;
-        measureInterp(5, trilinearPtr, img3D, yagit::DataSpacing{newSpacing, newSpacing, newSpacing});
+        measureInterp(10, trilinearPtr, img3D, yagit::DataSpacing{newSpacing, newSpacing, newSpacing});
 
         std::cout << "\n====================================\n";
         std::cout << "TRILINEAR INTERPOLATION WITH OFFSET AND SPACING:\n";
         yagit::ImageData (&trilinear2Ptr)(const yagit::ImageData&, const yagit::DataOffset&, const yagit::DataSpacing&) = yagit::Interpolation::trilinear;
-        measureInterp(5, trilinear2Ptr, img3D, yagit::DataOffset{gridOffsetZ, gridOffsetY, gridOffsetX}, yagit::DataSpacing{newSpacing, newSpacing, newSpacing});
+        measureInterp(10, trilinear2Ptr, img3D, yagit::DataOffset{gridOffsetZ, gridOffsetY, gridOffsetX}, yagit::DataSpacing{newSpacing, newSpacing, newSpacing});
+
 
         std::cout << "\n####################################\n";
         std::cout << "BILINEAR INTERPOLATION AT POINT (x10000):\n";

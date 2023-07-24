@@ -20,13 +20,13 @@
 #include <chrono>
 #include <vector>
 #include <algorithm>
-#include <numeric>
 #include <cmath>
+#include <numeric>
 #include <functional>
 #include <fstream>
 #include <iostream>
-#include <sstream>
 #include <iomanip>
+#include <sstream>
 
 #include <yagit/yagit.hpp>
 
