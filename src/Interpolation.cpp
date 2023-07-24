@@ -53,7 +53,7 @@ ImageData linearAlongAxis(const ImageData& img, float gridOffset, float spacing,
 
         // number of interpolated points that lie on edges or in the middle of original range
         uint32_t newSize = static_cast<uint32_t>((oldSpacing * (img.getSize().frames - 1) - zOffsetRel) / static_cast<double>(spacing) + 1);
-        Image3D<float> newImg(newSize, Image2D<float>(img.getSize().rows, std::vector<float>(img.getSize().columns, 0.0f)));
+        Image3D newImg(newSize, Image2D(img.getSize().rows, std::vector<float>(img.getSize().columns, 0.0f)));
 
         if(newSize > 0){
             if(2.0 * spacing < oldSpacing){  // this version is faster for small spacing
@@ -127,7 +127,7 @@ ImageData linearAlongAxis(const ImageData& img, float gridOffset, float spacing,
 
         // number of interpolated points that lie on edges or in the middle of original range
         uint32_t newSize = static_cast<uint32_t>((oldSpacing * (img.getSize().rows - 1) - yOffsetRel) / static_cast<double>(spacing) + 1);
-        Image3D<float> newImg(img.getSize().frames, Image2D<float>(newSize, std::vector<float>(img.getSize().columns, 0.0f)));
+        Image3D newImg(img.getSize().frames, Image2D(newSize, std::vector<float>(img.getSize().columns, 0.0f)));
 
         if(newSize > 0){
             if(2.0 * spacing < oldSpacing){  // this version is faster for small spacing
@@ -201,7 +201,7 @@ ImageData linearAlongAxis(const ImageData& img, float gridOffset, float spacing,
 
         // number of interpolated points that lie on edges or in the middle of original range
         uint32_t newSize = static_cast<uint32_t>((oldSpacing * (img.getSize().columns - 1) - xOffsetRel) / static_cast<double>(spacing) + 1);
-        Image3D<float> newImg(img.getSize().frames, Image2D<float>(img.getSize().rows, std::vector<float>(newSize, 0.0f)));
+        Image3D newImg(img.getSize().frames, Image2D(img.getSize().rows, std::vector<float>(newSize, 0.0f)));
 
         if(newSize > 0){
             if(2.0 * spacing < oldSpacing){  // this version is faster for small spacing

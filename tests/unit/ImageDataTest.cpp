@@ -33,12 +33,12 @@ const float NaN = std::numeric_limits<float>::quiet_NaN();
 const float INF = std::numeric_limits<float>::infinity();
 
 const std::vector<float>& DATA{1.5, 2.3, 4.4, 0.1, -0.3, 0.0, -2.5, 153.0, -200.4, 12.9, 9.0, 0.0};
-const yagit::Image2D<float> IMAGE_2D = {
+const yagit::Image2D IMAGE_2D = {
     {DATA[0], DATA[1], DATA[2], DATA[3]},
     {DATA[4], DATA[5], DATA[6], DATA[7]},
     {DATA[8], DATA[9], DATA[10], DATA[11]}
 };
-const yagit::Image3D<float> IMAGE_3D = {
+const yagit::Image3D IMAGE_3D = {
     {
         {DATA[0], DATA[1], DATA[2]},
         {DATA[3], DATA[4], DATA[5]}
@@ -96,7 +96,7 @@ TEST(ImageDataTest, image2DConstructor){
 }
 
 TEST(ImageDataTest, image2DConstructorForInconsistentSizeShouldThrow){
-    const yagit::Image2D<float> inconsistentImage2D = {
+    const yagit::Image2D inconsistentImage2D = {
         {1, 2, 3},
         {1, 2}
     };
@@ -105,13 +105,13 @@ TEST(ImageDataTest, image2DConstructorForInconsistentSizeShouldThrow){
 }
 
 TEST(ImageDataTest, image2DConstructorForEmptyImages){
-    EXPECT_THAT(yagit::ImageData(yagit::Image2D<float>{}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
-    EXPECT_THAT(yagit::ImageData(yagit::Image2D<float>{{}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
-    EXPECT_THAT(yagit::ImageData(yagit::Image2D<float>{{}, {}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+    EXPECT_THAT(yagit::ImageData(yagit::Image2D{}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+    EXPECT_THAT(yagit::ImageData(yagit::Image2D{{}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+    EXPECT_THAT(yagit::ImageData(yagit::Image2D{{}, {}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
 }
 
 TEST(ImageDataTest, image2DConstructorForEmptyAndInconsistentSizeShouldThrow){
-    const auto image2DConstructor = [](){ yagit::ImageData(yagit::Image2D<float>{{}, {1}}, DATA_OFFSET, DATA_SPACING); };
+    const auto image2DConstructor = [](){ yagit::ImageData(yagit::Image2D{{}, {1}}, DATA_OFFSET, DATA_SPACING); };
     EXPECT_THAT(image2DConstructor, ThrowsMessage<std::invalid_argument>("inner vectors don't have the same size"));
 }
 
@@ -121,7 +121,7 @@ TEST(ImageDataTest, image3DConstructor){
 }
 
 TEST(ImageDataTest, image3DConstructorForInconsistentRowsShouldThrow){
-    const yagit::Image3D<float> inconsistentImage3D = {
+    const yagit::Image3D inconsistentImage3D = {
         {
             {1, 2}
         },
@@ -135,7 +135,7 @@ TEST(ImageDataTest, image3DConstructorForInconsistentRowsShouldThrow){
 }
 
 TEST(ImageDataTest, image3DConstructorForInconsistentColumnsShouldThrow){
-    const yagit::Image3D<float> inconsistentImage3D = {
+    const yagit::Image3D inconsistentImage3D = {
         {
             {1, 2, 3},
             {1, 2}
@@ -150,19 +150,19 @@ TEST(ImageDataTest, image3DConstructorForInconsistentColumnsShouldThrow){
 }
 
 TEST(ImageDataTest, image3DConstructorForEmptyImages){
-    EXPECT_THAT(yagit::ImageData(yagit::Image3D<float>{}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
-    EXPECT_THAT(yagit::ImageData(yagit::Image3D<float>{{}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
-    EXPECT_THAT(yagit::ImageData(yagit::Image3D<float>{{}, {}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
-    EXPECT_THAT(yagit::ImageData(yagit::Image3D<float>{{{}}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
-    EXPECT_THAT(yagit::ImageData(yagit::Image3D<float>{{{}, {}}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
-    EXPECT_THAT(yagit::ImageData(yagit::Image3D<float>{{{}}, {{}}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+    EXPECT_THAT(yagit::ImageData(yagit::Image3D{}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+    EXPECT_THAT(yagit::ImageData(yagit::Image3D{{}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+    EXPECT_THAT(yagit::ImageData(yagit::Image3D{{}, {}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+    EXPECT_THAT(yagit::ImageData(yagit::Image3D{{{}}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+    EXPECT_THAT(yagit::ImageData(yagit::Image3D{{{}, {}}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+    EXPECT_THAT(yagit::ImageData(yagit::Image3D{{{}}, {{}}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
 }
 
 TEST(ImageDataTest, image3DConstructorForEmptyAndInconsistentSizeShouldThrow){
-    const auto image3DConstructor2 = [](){ yagit::ImageData(yagit::Image3D<float>{{}, {{1}}}, DATA_OFFSET, DATA_SPACING); };
+    const auto image3DConstructor2 = [](){ yagit::ImageData(yagit::Image3D{{}, {{1}}}, DATA_OFFSET, DATA_SPACING); };
     EXPECT_THAT(image3DConstructor2, ThrowsMessage<std::invalid_argument>("singly nested vectors don't have the same size"));
 
-    const auto image3DConstructor1 = [](){ yagit::ImageData(yagit::Image3D<float>{{{}, {1}}}, DATA_OFFSET, DATA_SPACING); };
+    const auto image3DConstructor1 = [](){ yagit::ImageData(yagit::Image3D{{{}, {1}}}, DATA_OFFSET, DATA_SPACING); };
     EXPECT_THAT(image3DConstructor1, ThrowsMessage<std::invalid_argument>("double nested vectors don't have the same size"));
 }
 
@@ -342,13 +342,13 @@ TEST(ImageDataTest, getImage2DAxial){
 }
 
 TEST(ImageDataTest, getImage2DCoronal){
-    yagit::Image2D<float> expectedCoronalImg0 = {
+    yagit::Image2D expectedCoronalImg0 = {
         {DATA[0], DATA[1], DATA[2]},
         {DATA[6], DATA[7], DATA[8]}
     };
     EXPECT_EQ(expectedCoronalImg0, IMAGE_3D_DATA.getImage2D(0, yagit::ImagePlane::Coronal));
 
-    yagit::Image2D<float> expectedCoronalImg1 = {
+    yagit::Image2D expectedCoronalImg1 = {
         {DATA[3], DATA[4], DATA[5]},
         {DATA[9], DATA[10], DATA[11]}
     };
@@ -356,13 +356,13 @@ TEST(ImageDataTest, getImage2DCoronal){
 }
 
 TEST(ImageDataTest, getImage2DSagittal){
-    yagit::Image2D<float> expectedSagittalImg0 = {
+    yagit::Image2D expectedSagittalImg0 = {
         {DATA[0], DATA[3]},
         {DATA[6], DATA[9]}
     };
     EXPECT_EQ(expectedSagittalImg0, IMAGE_3D_DATA.getImage2D(0, yagit::ImagePlane::Sagittal));
 
-    yagit::Image2D<float> expectedSagittalImg1 = {
+    yagit::Image2D expectedSagittalImg1 = {
         {DATA[1], DATA[4]},
         {DATA[7], DATA[10]}
     };
@@ -374,7 +374,7 @@ TEST(ImageDataTest, getImage3DAxial){
 }
 
 TEST(ImageDataTest, getImage3DCoronal){
-    yagit::Image3D<float> expectedCoronalImg = {
+    yagit::Image3D expectedCoronalImg = {
         {
             {DATA[0], DATA[1], DATA[2]},
             {DATA[6], DATA[7], DATA[8]}
@@ -388,7 +388,7 @@ TEST(ImageDataTest, getImage3DCoronal){
 }
 
 TEST(ImageDataTest, getImage3DSagittal){
-    yagit::Image3D<float> expectedSagittalImg = {
+    yagit::Image3D expectedSagittalImg = {
         {
             {DATA[0], DATA[3]},
             {DATA[6], DATA[9]}

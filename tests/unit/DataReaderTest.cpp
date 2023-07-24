@@ -26,7 +26,7 @@
 using testing::ThrowsMessage, testing::HasSubstr;
 
 namespace{
-const yagit::Image3D<float> IMAGE_3D = {
+const yagit::Image3D IMAGE_3D = {
     {{1.0, 2.0}, {0.0, 1.0}},
     {{0.2, 1.0}, {-1.0, -0.1}},
     {{123432.12, 999.99}, {-543213.3, -443.9}}
@@ -130,7 +130,7 @@ TEST(DataReaderTest, readMetaImageBigEndian){
 }
 
 TEST(DataReaderTest, readMetaImageWithIntTypeData){
-    const yagit::Image3D<float> image3DInt = {
+    const yagit::Image3D image3DInt = {
         {{1, 6}, {13, 2}},
         {{0, -1}, {-10, 0}},
         {{123432, 999}, {-543213, -443}}

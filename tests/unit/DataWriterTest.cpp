@@ -55,7 +55,7 @@ std::string floatToString(float number){
 }
 
 namespace{
-const yagit::Image3D<float> IMAGE_3D = {
+const yagit::Image3D IMAGE_3D = {
     {{1.0, 2.0}, {0.0, 1.0}},
     {{0.2, 1.0}, {-1.0, -0.1}},
     {{123432.12, 999.99}, {-543213.3, -443.9}}

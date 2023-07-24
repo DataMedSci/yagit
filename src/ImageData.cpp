@@ -47,6 +47,73 @@ bool nanSensitiveFloatsEqual(value_type val1, value_type val2){
 ImageData::ImageData()
     : m_data{}, m_size{0, 0, 0}, m_offset{0, 0, 0}, m_spacing{0, 0, 0} {}
 
+ImageData::ImageData(const Image2D& image2d, const DataOffset& offset, const DataSpacing& spacing)
+    : m_offset(offset), m_spacing(spacing) {
+    const uint32_t rows = image2d.size();
+    if(rows == 0){
+        m_size = DataSize{0, 0, 0};
+        return;
+    }
+
+    const uint32_t columns = image2d.at(0).size();
+    for(const auto& v : image2d){
+        if(v.size() != columns){
+            throw std::invalid_argument("inner vectors don't have the same size");
+        }
+    }
+    if(columns == 0){
+        m_size = DataSize{0, 0, 0};
+        return;
+    }
+
+    m_data.reserve(rows * columns);
+    for(const auto& v : image2d){
+        m_data.insert(m_data.end(), v.begin(), v.end());
+    }
+    m_size = DataSize{1, rows, columns};
+}
+
+ImageData::ImageData(const Image3D& image3d, const DataOffset& offset, const DataSpacing& spacing)
+    : m_offset(offset), m_spacing(spacing) {
+    const uint32_t frames = image3d.size();
+    if(frames == 0){
+        m_size = DataSize{0, 0, 0};
+        return;
+    }
+
+    const uint32_t rows = image3d.at(0).size();
+    for(const auto& v : image3d){
+        if(v.size() != rows){
+            throw std::invalid_argument("singly nested vectors don't have the same size");
+        }
+    }
+    if(rows == 0){
+        m_size = DataSize{0, 0, 0};
+        return;
+    }
+
+    const uint32_t columns = image3d.at(0).at(0).size();
+    for(const auto& v : image3d){
+        for(const auto& v2 : v){
+            if(v2.size() != columns){
+                throw std::invalid_argument("double nested vectors don't have the same size");
+            }
+        }
+    }
+    if(columns == 0){
+        m_size = DataSize{0, 0, 0};
+        return;
+    }
+
+    m_data.reserve(frames * rows * columns);
+    for(const auto& v : image3d){
+        for(const auto& v2 : v){
+            m_data.insert(m_data.end(), v2.begin(), v2.end());
+        }
+    }
+    m_size = DataSize{frames, rows, columns};
+}
+
 ImageData::ImageData(std::vector<value_type>&& data, const DataSize& size, const DataOffset& offset, const DataSpacing& spacing) noexcept
     : m_data(std::move(data)), m_size(size), m_offset(offset), m_spacing(spacing) {}
 
@@ -116,8 +183,8 @@ std::vector<value_type> ImageData::getData() const{
     return m_data;
 }
 
-Image2D<value_type> ImageData::getImage2D(uint32_t frame, ImagePlane imgPlane) const{
-    Image2D<value_type> img2d;
+Image2D ImageData::getImage2D(uint32_t frame, ImagePlane imgPlane) const{
+    Image2D img2d;
     if(imgPlane == ImagePlane::Axial){  // YX
         if(frame >= m_size.frames){
             throw std::out_of_range("frame out of range (frame >= nr of frames)");
@@ -159,8 +226,8 @@ Image2D<value_type> ImageData::getImage2D(uint32_t frame, ImagePlane imgPlane) c
     return img2d;
 }
 
-Image3D<value_type> ImageData::getImage3D(ImagePlane imgPlane) const{
-    Image3D<value_type> img3d;
+Image3D ImageData::getImage3D(ImagePlane imgPlane) const{
+    Image3D img3d;
     if(imgPlane == ImagePlane::Axial){  // ZYX
         img3d.reserve(m_size.frames);
         for(uint32_t z = 0; z < m_size.frames; z++){

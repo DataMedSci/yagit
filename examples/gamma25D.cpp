@@ -34,7 +34,7 @@
 #include <string>
 #include <iostream>
 
-#include "yagit/yagit.hpp"
+#include <yagit/yagit.hpp>
 
 int main(int argc, char** argv){
     if(argc <= 2){

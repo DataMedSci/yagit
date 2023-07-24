@@ -27,7 +27,7 @@
 namespace{
 const yagit::DataOffset DATA_OFFSET{0, 0, 0};
 
-const yagit::Image3D<float> IMAGE_3D = {
+const yagit::Image3D IMAGE_3D = {
     {{1, 2},
      {4, 5}},
     {{7, 8},
@@ -106,19 +106,19 @@ TEST(InterpolationTest, linearAlongAxisWithSpacingForEmptyImage){
 }
 
 TEST(InterpolationTest, linearAlongAxisWithSpacingForMultiframeImage){
-    const yagit::Image3D<float> image3Dz = {
+    const yagit::Image3D image3Dz = {
         {{1, 2},
          {4, 5}},
         {{5.8, 6.8},
          {8.8, 9.8}}
     };
-    const yagit::Image3D<float> image3Dy = {
+    const yagit::Image3D image3Dy = {
         {{1, 2},
          {3.4, 4.4}},
         {{7, 8},
          {9.4, 10.4}}
     };
-    const yagit::Image3D<float> image3Dx = {
+    const yagit::Image3D image3Dx = {
         {{1, 1.8},
          {4, 4.8}},
         {{7, 7.8},
@@ -243,19 +243,19 @@ TEST(InterpolationTest, linearAlongAxisWithOffsetAndSpacingForOffsetOutsideImage
 }
 
 TEST(InterpolationTest, linearAlongAxisWithOffsetAndSpacingForMultiframeImage){
-    const yagit::Image3D<float> image3Dz = {
+    const yagit::Image3D image3Dz = {
         {{2.2, 3.2},
          {5.2, 6.2}},
         {{6.4, 7.4},
          {9.4, 10.4}}
     };
-    const yagit::Image3D<float> image3Dy = {
+    const yagit::Image3D image3Dy = {
         {{1.6, 2.6},
          {3.7, 4.7}},
         {{7.6, 8.6},
          {9.7, 10.7}}
     };
-    const yagit::Image3D<float> image3Dx = {
+    const yagit::Image3D image3Dx = {
         {{1.2, 1.9},
          {4.2, 4.9}},
         {{7.2, 7.9},
@@ -315,19 +315,19 @@ TEST(InterpolationTest, linearAlongAxisInDifferentOrder){
 }
 
 TEST(InterpolationTest, bilinearOnPlaneWithSpacing){
-    const yagit::Image3D<float> image3Dyx = {
+    const yagit::Image3D image3Dyx = {
         {{1, 1.8},
          {3.1, 3.9}},
         {{7, 7.8},
          {9.1, 9.9}}
     };
-    const yagit::Image3D<float> image3Dzx = {
+    const yagit::Image3D image3Dzx = {
         {{1, 1.8},
          {4, 4.8}},
         {{5.2, 6},
          {8.2, 9}}
     };
-    const yagit::Image3D<float> image3Dzy = {
+    const yagit::Image3D image3Dzy = {
         {{1, 2},
          {3.4, 4.4}},
         {{5.2, 6.2},
@@ -348,19 +348,19 @@ TEST(InterpolationTest, bilinearOnPlaneWithSpacing){
 }
 
 TEST(InterpolationTest, bilinearOnPlaneWithOffsetAndSpacing){
-    const yagit::Image3D<float> image3Dyx = {
+    const yagit::Image3D image3Dyx = {
         {{1.7, 2.5},
          {3.8, 4.6}},
         {{7.7, 8.5},
          {9.8, 10.6}}
     };
-    const yagit::Image3D<float> image3Dzx = {
+    const yagit::Image3D image3Dzx = {
         {{2.3, 3.1},
          {5.3, 6.1}},
         {{6.5, 7.3},
          {9.5, 10.3}}
     };
-    const yagit::Image3D<float> image3Dzy = {
+    const yagit::Image3D image3Dzy = {
         {{2.5, 3.5},
          {4.9, 5.9}},
         {{6.7, 7.7},
@@ -404,7 +404,7 @@ TEST(InterpolationTest, bilinearOnPlaneWithRefImg){
 }
 
 TEST(InterpolationTest, trilinearWithSpacing){
-    const yagit::Image3D<float> image3D = {
+    const yagit::Image3D image3D = {
         {{1, 1.8},
          {3.1, 3.9}},
         {{4.6, 5.4},
@@ -418,7 +418,7 @@ TEST(InterpolationTest, trilinearWithSpacing){
 }
 
 TEST(InterpolationTest, trilinearWithOffsetAndSpacing){
-    const yagit::Image3D<float> image3D = {
+    const yagit::Image3D image3D = {
         {{3.5, 4.3},
          {5.6, 6.4}},
         {{7.1, 7.9},
@@ -442,7 +442,7 @@ TEST(InterpolationTest, trilinearWithRefImg){
 }
 
 TEST(InterpolationTest, bilinearAtPoint){
-    const yagit::Image3D<float> image3D = {
+    const yagit::Image3D image3D = {
         {{3, 6.8},
          {5, -2}},
         {{2, 8},
@@ -481,7 +481,7 @@ TEST(InterpolationTest, bilinearAtPointForPointOutsideImage){
 }
 
 TEST(InterpolationTest, trilinearAtPoint){
-    const yagit::Image3D<float> image3D = {
+    const yagit::Image3D image3D = {
         {{3, 6.8},
          {5, -2}},
         {{2, 8},
