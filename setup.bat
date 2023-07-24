@@ -83,7 +83,9 @@ if %BUILD_TESTING% == ON (
 if %BUILD_PERFORMANCE_TESTING% == ON (
     echo:
     echo RUNNING PERFORMANCE TEST...
-    build\tests\performance\%BUILD_TYPE%\perfTest.exe %REF_IMG% %EVAL_IMG% gammaTimes.csv
+    build\tests\performance\%BUILD_TYPE%\gammaPerf.exe %REF_IMG% %EVAL_IMG% gammaTimes.csv
+    echo:
+    build\tests\performance\%BUILD_TYPE%\interpPerf.exe %EVAL_IMG%
 )
 
 

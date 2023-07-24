@@ -56,56 +56,56 @@ ImageData linearAlongAxis(const ImageData& img, float gridOffset, float spacing,
         Image3D<float> newImg(newSize, Image2D<float>(img.getSize().rows, std::vector<float>(img.getSize().columns, 0.0f)));
 
         if(newSize > 0){
-            // const uint32_t indStart = static_cast<uint32_t>(zOffsetRel / oldSpacing);
+            if(2.0 * spacing < oldSpacing){  // this version is faster for small spacing
+                const uint32_t indStart = static_cast<uint32_t>(zOffsetRel / oldSpacing);
 
-            // for(uint32_t j = 0; j < img.getSize().rows; j++){
-            //     for(uint32_t i = 0; i < img.getSize().columns; i++){
-            //         float z = zOffsetRel;
-            //         float oldZ = indStart * oldSpacing;
-            //         uint32_t ind1 = indStart;
-            //         uint32_t ind2 = indStart + 1;
+                for(uint32_t j = 0; j < img.getSize().rows; j++){
+                    for(uint32_t i = 0; i < img.getSize().columns; i++){
+                        float z = zOffsetRel;
+                        float oldZ = indStart * oldSpacing;
+                        uint32_t ind1 = indStart;
+                        uint32_t ind2 = indStart + 1;
 
-            //         for(uint32_t k = 0; k < newSize;){
-            //             const float val1 = img.get(ind1, j, i);
-            //             if(ind2 < img.getSize().frames){
-            //                 const float val2 = img.get(ind2, j, i);
-            //                 const float slope = (val2 - val1) / oldSpacing;
-            //                 const float slopeDiff = spacing * slope;
-            //                 float newValue = val1 + (z - oldZ) * slope;
-            //                 while(z < oldZ + oldSpacing){
-            //                     newImg[k][j][i] = newValue;
-            //                     z += spacing;
-            //                     newValue += slopeDiff;
-            //                     k++;
-            //                 }
-            //             }
-            //             else{
-            //                 newImg[k][j][i] = val1;
-            //                 k++;
-            //             }
-            //             oldZ += oldSpacing;
-            //             ind1 += 1;
-            //             ind2 += 1;
-            //         }
-            //     }
-            // }
-
-            for(uint32_t j = 0; j < img.getSize().rows; j++){
-                for(uint32_t i = 0; i < img.getSize().columns; i++){
-                    float z = zOffsetRel;
-                    for(uint32_t k = 0; k < newSize; k++){
-                        float temp = z / oldSpacing;
-                        const uint32_t ind1 = static_cast<uint32_t>(temp);
-                        const uint32_t ind2 = ind1 + 1;
-                        const float val1 = img.get(ind1, j, i);
-                        if(ind2 < img.getSize().frames){
-                            const float val2 = img.get(ind2, j, i);
-                            newImg[k][j][i] = val1 + (temp - ind1) * (val2 - val1);
+                        for(uint32_t k = 0; k < newSize;){
+                            const float val1 = img.get(ind1, j, i);
+                            if(ind2 < img.getSize().frames){
+                                const float val2 = img.get(ind2, j, i);
+                                const float slope = (val2 - val1) / oldSpacing;
+                                while(z < oldZ + oldSpacing && k < newSize){
+                                    newImg[k][j][i] = val1 + (z - oldZ) * slope;
+                                    z += spacing;
+                                    k++;
+                                }
+                            }
+                            else{
+                                newImg[k][j][i] = val1;
+                                k++;
+                            }
+                            oldZ += oldSpacing;
+                            ind1 += 1;
+                            ind2 += 1;
                         }
-                        else{
-                            newImg[k][j][i] = val1;
+                    }
+                }
+            }
+            else{
+                for(uint32_t j = 0; j < img.getSize().rows; j++){
+                    for(uint32_t i = 0; i < img.getSize().columns; i++){
+                        float z = zOffsetRel;
+                        for(uint32_t k = 0; k < newSize; k++){
+                            float temp = z / oldSpacing;
+                            const uint32_t ind1 = static_cast<uint32_t>(temp);
+                            const uint32_t ind2 = ind1 + 1;
+                            const float val1 = img.get(ind1, j, i);
+                            if(ind2 < img.getSize().frames){
+                                const float val2 = img.get(ind2, j, i);
+                                newImg[k][j][i] = val1 + (temp - ind1) * (val2 - val1);
+                            }
+                            else{
+                                newImg[k][j][i] = val1;
+                            }
+                            z += spacing;
                         }
-                        z += spacing;
                     }
                 }
             }
@@ -130,56 +130,56 @@ ImageData linearAlongAxis(const ImageData& img, float gridOffset, float spacing,
         Image3D<float> newImg(img.getSize().frames, Image2D<float>(newSize, std::vector<float>(img.getSize().columns, 0.0f)));
 
         if(newSize > 0){
-            // const uint32_t indStart = static_cast<uint32_t>(yOffsetRel / oldSpacing);
+            if(2.0 * spacing < oldSpacing){  // this version is faster for small spacing
+                const uint32_t indStart = static_cast<uint32_t>(yOffsetRel / oldSpacing);
 
-            // for(uint32_t k = 0; k < img.getSize().frames; k++){
-            //     for(uint32_t i = 0; i < img.getSize().columns; i++){
-            //         float y = yOffsetRel;
-            //         float oldY = indStart * oldSpacing;
-            //         uint32_t ind1 = indStart;
-            //         uint32_t ind2 = indStart + 1;
+                for(uint32_t k = 0; k < img.getSize().frames; k++){
+                    for(uint32_t i = 0; i < img.getSize().columns; i++){
+                        float y = yOffsetRel;
+                        float oldY = indStart * oldSpacing;
+                        uint32_t ind1 = indStart;
+                        uint32_t ind2 = indStart + 1;
 
-            //         for(uint32_t j = 0; j < newSize;){
-            //             const float val1 = img.get(k, ind1, i);
-            //             if(ind2 < img.getSize().rows){
-            //                 const float val2 = img.get(k, ind2, i);
-            //                 const float slope = (val2 - val1) / oldSpacing;
-            //                 const float slopeDiff = spacing * slope;
-            //                 float newValue = val1 + (y - oldY) * slope;
-            //                 while(y < oldY + oldSpacing){
-            //                     newImg[k][j][i] = newValue;
-            //                     y += spacing;
-            //                     newValue += slopeDiff;
-            //                     j++;
-            //                 }
-            //             }
-            //             else{
-            //                 newImg[k][j][i] = val1;
-            //                 j++;
-            //             }
-            //             oldY += oldSpacing;
-            //             ind1++;
-            //             ind2++;
-            //         }
-            //     }
-            // }
-
-            for(uint32_t k = 0; k < img.getSize().frames; k++){
-                for(uint32_t i = 0; i < img.getSize().columns; i++){
-                    float y = yOffsetRel;
-                    for(uint32_t j = 0; j < newSize; j++){
-                        float temp = y / oldSpacing;
-                        const uint32_t ind1 = static_cast<uint32_t>(temp);
-                        const uint32_t ind2 = ind1 + 1;
-                        const float val1 = img.get(k, ind1, i);
-                        if(ind2 < img.getSize().rows){
-                            const float val2 = img.get(k, ind2, i);
-                            newImg[k][j][i] = val1 + (temp - ind1) * (val2 - val1);
+                        for(uint32_t j = 0; j < newSize;){
+                            const float val1 = img.get(k, ind1, i);
+                            if(ind2 < img.getSize().rows){
+                                const float val2 = img.get(k, ind2, i);
+                                const float slope = (val2 - val1) / oldSpacing;
+                                while(y < oldY + oldSpacing && j < newSize){
+                                    newImg[k][j][i] = val1 + (y - oldY) * slope;
+                                    y += spacing;
+                                    j++;
+                                }
+                            }
+                            else{
+                                newImg[k][j][i] = val1;
+                                j++;
+                            }
+                            oldY += oldSpacing;
+                            ind1++;
+                            ind2++;
                         }
-                        else{
-                            newImg[k][j][i] = val1;
+                    }
+                }
+            }
+            else{
+                for(uint32_t k = 0; k < img.getSize().frames; k++){
+                    for(uint32_t i = 0; i < img.getSize().columns; i++){
+                        float y = yOffsetRel;
+                        for(uint32_t j = 0; j < newSize; j++){
+                            float temp = y / oldSpacing;
+                            const uint32_t ind1 = static_cast<uint32_t>(temp);
+                            const uint32_t ind2 = ind1 + 1;
+                            const float val1 = img.get(k, ind1, i);
+                            if(ind2 < img.getSize().rows){
+                                const float val2 = img.get(k, ind2, i);
+                                newImg[k][j][i] = val1 + (temp - ind1) * (val2 - val1);
+                            }
+                            else{
+                                newImg[k][j][i] = val1;
+                            }
+                            y += spacing;
                         }
-                        y += spacing;
                     }
                 }
             }
@@ -204,56 +204,56 @@ ImageData linearAlongAxis(const ImageData& img, float gridOffset, float spacing,
         Image3D<float> newImg(img.getSize().frames, Image2D<float>(img.getSize().rows, std::vector<float>(newSize, 0.0f)));
 
         if(newSize > 0){
-            // const uint32_t indStart = static_cast<uint32_t>(xOffsetRel / oldSpacing);
+            if(2.0 * spacing < oldSpacing){  // this version is faster for small spacing
+                const uint32_t indStart = static_cast<uint32_t>(xOffsetRel / oldSpacing);
 
-            // for(uint32_t k = 0; k < img.getSize().frames; k++){
-            //     for(uint32_t j = 0; j < img.getSize().rows; j++){
-            //         float x = xOffsetRel;
-            //         float oldX = indStart * oldSpacing;
-            //         uint32_t ind1 = indStart;
-            //         uint32_t ind2 = indStart + 1;
+                for(uint32_t k = 0; k < img.getSize().frames; k++){
+                    for(uint32_t j = 0; j < img.getSize().rows; j++){
+                        float x = xOffsetRel;
+                        float oldX = indStart * oldSpacing;
+                        uint32_t ind1 = indStart;
+                        uint32_t ind2 = indStart + 1;
 
-            //         for(uint32_t i = 0; i < newSize;){
-            //             const float val1 = img.get(k, j, ind1);
-            //             if(ind2 < img.getSize().columns){
-            //                 const float val2 = img.get(k, j, ind2);
-            //                 const float slope = (val2 - val1) / oldSpacing;
-            //                 const float slopeDiff = spacing * slope;
-            //                 float newValue = val1 + (x - oldX) * slope;
-            //                 while(x < oldX + oldSpacing){
-            //                     newImg[k][j][i] = newValue;
-            //                     x += spacing;
-            //                     newValue += slopeDiff;
-            //                     i++;
-            //                 }
-            //             }
-            //             else{
-            //                 newImg[k][j][i] = val1;
-            //                 i++;
-            //             }
-            //             oldX += oldSpacing;
-            //             ind1++;
-            //             ind2++;
-            //         }
-            //     }
-            // }
-
-            for(uint32_t k = 0; k < img.getSize().frames; k++){
-                for(uint32_t j = 0; j < img.getSize().rows; j++){
-                    float x = xOffsetRel;
-                    for(uint32_t i = 0; i < newSize; i++){
-                        float temp = x / oldSpacing;
-                        const uint32_t ind1 = static_cast<uint32_t>(temp);
-                        const uint32_t ind2 = ind1 + 1;
-                        const float val1 = img.get(k, j, ind1);
-                        if(ind2 < img.getSize().columns){
-                            const float val2 = img.get(k, j, ind2);
-                            newImg[k][j][i] = val1 + (temp - ind1) * (val2 - val1);
+                        for(uint32_t i = 0; i < newSize;){
+                            const float val1 = img.get(k, j, ind1);
+                            if(ind2 < img.getSize().columns){
+                                const float val2 = img.get(k, j, ind2);
+                                const float slope = (val2 - val1) / oldSpacing;
+                                while(x < oldX + oldSpacing && i < newSize){
+                                    newImg[k][j][i] = val1 + (x - oldX) * slope;
+                                    x += spacing;
+                                    i++;
+                                }
+                            }
+                            else{
+                                newImg[k][j][i] = val1;
+                                i++;
+                            }
+                            oldX += oldSpacing;
+                            ind1++;
+                            ind2++;
                         }
-                        else{
-                            newImg[k][j][i] = val1;
+                    }
+                }
+            }
+            else{
+                for(uint32_t k = 0; k < img.getSize().frames; k++){
+                    for(uint32_t j = 0; j < img.getSize().rows; j++){
+                        float x = xOffsetRel;
+                        for(uint32_t i = 0; i < newSize; i++){
+                            float temp = x / oldSpacing;
+                            const uint32_t ind1 = static_cast<uint32_t>(temp);
+                            const uint32_t ind2 = ind1 + 1;
+                            const float val1 = img.get(k, j, ind1);
+                            if(ind2 < img.getSize().columns){
+                                const float val2 = img.get(k, j, ind2);
+                                newImg[k][j][i] = val1 + (temp - ind1) * (val2 - val1);
+                            }
+                            else{
+                                newImg[k][j][i] = val1;
+                            }
+                            x += spacing;
                         }
-                        x += spacing;
                     }
                 }
             }

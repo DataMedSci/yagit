@@ -28,7 +28,7 @@
 #include <sstream>
 #include <iomanip>
 
-#include "yagit/yagit.hpp"
+#include <yagit/yagit.hpp>
 
 const auto GLOBAL = yagit::GammaNormalization::Global;
 const auto LOCAL = yagit::GammaNormalization::Local;
@@ -137,7 +137,7 @@ std::string gammaResultToCsv(const yagit::GammaResult& gammaRes){
     return ss.str();
 }
 
-void measureGamma(GammaFunc gammaFunc , const yagit::ImageData& refImg, const yagit::ImageData& evalImg,
+void measureGamma(GammaFunc gammaFunc, const yagit::ImageData& refImg, const yagit::ImageData& evalImg,
                   const yagit::GammaParameters& gammaParams, uint32_t nrOfTests, std::ofstream& csvFile){
     std::vector<double> timesMs;
     yagit::GammaResult gammaRes;
@@ -160,7 +160,7 @@ void measureGamma(GammaFunc gammaFunc , const yagit::ImageData& refImg, const ya
 int main(int argc, char** argv){
     if(argc <= 2){
         std::cerr << "too few arguments\n";
-        std::cerr << "Usage: perfTest refImgPath evalImgPath [outputCsvPath]\n";
+        std::cerr << "Usage: gammaPerf refImgPath evalImgPath [outputCsvPath]\n";
         return 1;
     }
 
