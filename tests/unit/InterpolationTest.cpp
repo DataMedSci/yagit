@@ -22,7 +22,10 @@
 #include <tuple>
 
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include "TestUtils.hpp"
+
+using testing::ThrowsMessage, testing::HasSubstr;
 
 namespace{
 const yagit::DataOffset DATA_OFFSET{0, 0, 0};
@@ -44,8 +47,9 @@ using LinearAlongAxisWithSpacingType = std::tuple<std::vector<float>, float,
 class LinearAlongAxisWithSpacingTest : public ::testing::TestWithParam<LinearAlongAxisWithSpacingType> {};
 
 const LinearAlongAxisWithSpacingType linearAlongAxisWithSpacingValues[] = {
-    // original image             interpolated image
+    // ORIGINAL IMAGE             INTERPOLATED IMAGE
     {{0, 2, 4}, 2.0,              {0, 1, 2, 3, 4}, 1.0},
+    {{1, 2}, 1.0,                 {1, 1.2, 1.4, 1.6, 1.8, 2.0}, 0.2},
     {{0, 3, 6, 9, 12, 15}, 3.0,   {0, 1.4, 2.8, 4.2, 5.6, 7, 8.4, 9.8, 11.2, 12.6, 14}, 1.4},
     {{2, 4, 7, -5, 3.5}, 1.2,     {2, 3.16666666, 4.5, 6.25, 3, -4, -0.75}, 0.7},
     {{4, 2, 6, 7}, 1.0,           {4, 6}, 2.0},
@@ -134,6 +138,13 @@ TEST(InterpolationTest, linearAlongAxisWithSpacingForMultiframeImage){
     EXPECT_THAT(yagit::Interpolation::linearAlongAxis(IMAGE_DATA, newSpacing, yagit::ImageAxis::X), matchImageData(expectedX));
 }
 
+TEST(InterpolationTest, linearAlongAxisWithSpacingForIncorrectSpacingShouldThrow){
+    const auto linearAlongAxis = [](){ yagit::Interpolation::linearAlongAxis(IMAGE_DATA, 0, yagit::ImageAxis::Z); };
+    EXPECT_THAT(linearAlongAxis, ThrowsMessage<std::invalid_argument>(HasSubstr("spacing")));
+    const auto linearAlongAxis2 = [](){ yagit::Interpolation::linearAlongAxis(IMAGE_DATA, -1, yagit::ImageAxis::Z); };
+    EXPECT_THAT(linearAlongAxis2, ThrowsMessage<std::invalid_argument>(HasSubstr("spacing")));
+}
+
 using LinearAlongAxisWithOffsetAndSpacingType = std::tuple<std::vector<float>, float, float,
                                                            std::vector<float>, float, float,
                                                            float>;
@@ -141,13 +152,15 @@ using LinearAlongAxisWithOffsetAndSpacingType = std::tuple<std::vector<float>, f
 class LinearAlongAxisWithOffsetAndSpacingTest : public ::testing::TestWithParam<LinearAlongAxisWithOffsetAndSpacingType>{};
 
 const LinearAlongAxisWithOffsetAndSpacingType linearAlongAxisWithOffsetAndSpacingValues[] = {
-    // original image                  interpolated image                                                 grid offset
+    // ORIGINAL IMAGE                  INTERPOLATED IMAGE                                                 GRID OFFSET
     {{0, 2, 4}, 1.0, 2.0,              {0.2, 1.2, 2.2, 3.2}, 1.2, 1.0,                                    1.2},
     {{0, 3, 6, 9, 12, 15}, 2.0, 3.0,   {1, 2.4, 3.8, 5.2, 6.6, 8, 9.4, 10.8, 12.2, 13.6, 15}, 3.0, 1.4,   3.0},
     {{3, 5, 2}, 1.6, 2.0,              {3, 5, 2}, 1.6, 2.0,                                               1.6},
     {{4, 2, 6, 7}, 0.5, 1.0,           {3.8, 6.1}, 0.6, 2.0,                                              0.6},
     {{0, 1, 2, 3, 4}, 0.0, 1.0,        {1.9, 3.9}, 1.9, 2.0,                                             -0.1},
+    {{0, 0.7, 1.4}, 4.5, 0.7,          {0.2, 0.5, 0.8, 1.1, 1.4}, 4.7, 0.3,                               4.4},
 
+    // testing calculation of new offset
     {{3, 5}, 3, 2,                     {3.7, 4.8}, 3.7, 1.1,                                              0.4},
     {{3, 5}, 3, 2,                     {4}, 4, 1.1,                                                      -0.4},
     {{-3, -1}, -3, 2,                  {-2.9, -1.8}, -2.9, 1.1,                                           0.4},
@@ -171,7 +184,7 @@ TEST_P(LinearAlongAxisWithOffsetAndSpacingTest, ZAxis){
     const yagit::ImageData imageData(original, oldSize, oldOffset, oldSpacing);
     const yagit::ImageData expected(interpolated, newSize, newOffset, newSpacing);
     EXPECT_THAT(yagit::Interpolation::linearAlongAxis(imageData, gridOffset, newSpacingVal, yagit::ImageAxis::Z),
-                matchImageData(expected));
+                matchImageData(expected, 2e-6));
 }
 
 TEST_P(LinearAlongAxisWithOffsetAndSpacingTest, YAxis){
@@ -188,7 +201,7 @@ TEST_P(LinearAlongAxisWithOffsetAndSpacingTest, YAxis){
     const yagit::ImageData imageData(original, oldSize, oldOffset, oldSpacing);
     const yagit::ImageData expected(interpolated, newSize, newOffset, newSpacing);
     EXPECT_THAT(yagit::Interpolation::linearAlongAxis(imageData, gridOffset, newSpacingVal, yagit::ImageAxis::Y),
-                matchImageData(expected));
+                matchImageData(expected, 2e-6));
 }
 
 TEST_P(LinearAlongAxisWithOffsetAndSpacingTest, XAxis){
@@ -205,7 +218,7 @@ TEST_P(LinearAlongAxisWithOffsetAndSpacingTest, XAxis){
     const yagit::ImageData imageData(original, oldSize, oldOffset, oldSpacing);
     const yagit::ImageData expected(interpolated, newSize, newOffset, newSpacing);
     EXPECT_THAT(yagit::Interpolation::linearAlongAxis(imageData, gridOffset, newSpacingVal, yagit::ImageAxis::X),
-                matchImageData(expected));
+                matchImageData(expected, 2e-6));
 }
 
 TEST(InterpolationTest, linearAlongAxisWithOffsetAndSpacingForEmptyImage){
@@ -273,6 +286,13 @@ TEST(InterpolationTest, linearAlongAxisWithOffsetAndSpacingForMultiframeImage){
                 matchImageData(expectedY));
     EXPECT_THAT(yagit::Interpolation::linearAlongAxis(IMAGE_DATA2, newOffset, newSpacing, yagit::ImageAxis::X),
                 matchImageData(expectedX));
+}
+
+TEST(InterpolationTest, linearAlongAxisWithOffsetAndSpacingForIncorrectSpacingShouldThrow){
+    const auto linearAlongAxis = [](){ yagit::Interpolation::linearAlongAxis(IMAGE_DATA, 2, 0, yagit::ImageAxis::Z); };
+    EXPECT_THAT(linearAlongAxis, ThrowsMessage<std::invalid_argument>(HasSubstr("spacing")));
+    const auto linearAlongAxis2 = [](){ yagit::Interpolation::linearAlongAxis(IMAGE_DATA, 2, -1, yagit::ImageAxis::Z); };
+    EXPECT_THAT(linearAlongAxis2, ThrowsMessage<std::invalid_argument>(HasSubstr("spacing")));
 }
 
 TEST(InterpolationTest, linearAlongAxisWithRefImg){

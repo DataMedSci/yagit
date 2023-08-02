@@ -93,6 +93,9 @@ if df1.shape != df2.shape:
     print("ERROR: dataframes have different shapes")
     exit(1)
 
+df1 = df1.reset_index(drop=True)
+df2 = df2.reset_index(drop=True)
+
 # check if columns containing test config are equal
 for col in ["method", "dims", "dd[%]", "dta[mm]", "norm", "normDose", "dco", "maxSearchDist[mm]", "stepSize[mm]"]:
     if (df1[col] != df2[col]).any():

@@ -138,7 +138,7 @@ using ZYXPosWithDistSq = std::pair<ZYXPos, float>;
 std::vector<YXPosWithDistSq> sortedPointsInCircle(float radius, float stepSize){
     std::vector<YXPosWithDistSq> result;
     const uint32_t elements = static_cast<uint32_t>(radius / stepSize);
-    // reserve a little more than pi * e^2
+    // reserve a little more than pi * elements^2
     result.reserve(static_cast<size_t>(3.5 * elements * elements));
 
     float rSq = radius * radius;
@@ -170,7 +170,7 @@ std::vector<YXPosWithDistSq> sortedPointsInCircle(float radius, float stepSize){
 std::vector<ZYXPosWithDistSq> sortedPointsInSphere(float radius, float stepSize){
     std::vector<ZYXPosWithDistSq> result;
     const uint32_t elements = static_cast<uint32_t>(radius / stepSize);
-    // reserve a little more than 4/3 * pi * e^3
+    // reserve a little more than 4/3 * pi * elements^3
     result.reserve(static_cast<size_t>(4.5 * elements * elements * elements));
 
     float rSq = radius * radius;
