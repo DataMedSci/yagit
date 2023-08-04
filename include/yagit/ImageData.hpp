@@ -190,6 +190,9 @@ protected:
 template <typename U>
 ImageData::ImageData(const std::vector<U>& data, const DataSize& size, const DataOffset& offset, const DataSpacing& spacing)
     : m_data(data.begin(), data.end()), m_size(size), m_offset(offset), m_spacing(spacing) {
+    if(spacing.frames <= 0 || spacing.rows <= 0 || spacing.columns <= 0){
+        throw std::invalid_argument("spacing should be greater than 0");
+    }
     if(data.size() != size.frames * size.rows * size.columns){
         throw std::invalid_argument("size is inconsistent with data size information");
     }

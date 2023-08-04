@@ -72,6 +72,8 @@ GammaResult gammaIndex3D(const ImageData& refImg3D, const ImageData& evalImg3D,
 namespace{
 const float Nan{std::numeric_limits<float>::quiet_NaN()};
 const float Inf{std::numeric_limits<float>::infinity()};
+
+const float Tolerance{1e-6};
 }
 
 namespace{

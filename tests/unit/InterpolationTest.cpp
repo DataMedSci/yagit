@@ -28,6 +28,8 @@
 using testing::ThrowsMessage, testing::HasSubstr;
 
 namespace{
+const float MAX_ABS_ERROR{2e-6};
+
 const yagit::DataOffset DATA_OFFSET{0, 0, 0};
 
 const yagit::Image3D IMAGE_3D = {
@@ -48,11 +50,16 @@ class LinearAlongAxisWithSpacingTest : public ::testing::TestWithParam<LinearAlo
 
 const LinearAlongAxisWithSpacingType linearAlongAxisWithSpacingValues[] = {
     // ORIGINAL IMAGE             INTERPOLATED IMAGE
+    // smaller new spacing
     {{0, 2, 4}, 2.0,              {0, 1, 2, 3, 4}, 1.0},
     {{1, 2}, 1.0,                 {1, 1.2, 1.4, 1.6, 1.8, 2.0}, 0.2},
     {{0, 3, 6, 9, 12, 15}, 3.0,   {0, 1.4, 2.8, 4.2, 5.6, 7, 8.4, 9.8, 11.2, 12.6, 14}, 1.4},
     {{2, 4, 7, -5, 3.5}, 1.2,     {2, 3.16666666, 4.5, 6.25, 3, -4, -0.75}, 0.7},
+
+    // bigger new spacing
     {{4, 2, 6, 7}, 1.0,           {4, 6}, 2.0},
+
+    // one element image
     {{5}, 2.0,                    {5}, 1.2}
 };
 
@@ -69,7 +76,7 @@ TEST_P(LinearAlongAxisWithSpacingTest, ZAxis){
     const yagit::ImageData imageData(original, oldSize, DATA_OFFSET, oldSpacing);
     const yagit::ImageData expected(interpolated, newSize, DATA_OFFSET, newSpacing);
     EXPECT_THAT(yagit::Interpolation::linearAlongAxis(imageData, newSpacingVal, yagit::ImageAxis::Z),
-                matchImageData(expected, 1e-5));
+                matchImageData(expected, MAX_ABS_ERROR));
 }
 
 TEST_P(LinearAlongAxisWithSpacingTest, YAxis){
@@ -82,7 +89,7 @@ TEST_P(LinearAlongAxisWithSpacingTest, YAxis){
     const yagit::ImageData imageData(original, oldSize, DATA_OFFSET, oldSpacing);
     const yagit::ImageData expected(interpolated, newSize, DATA_OFFSET, newSpacing);
     EXPECT_THAT(yagit::Interpolation::linearAlongAxis(imageData, newSpacingVal, yagit::ImageAxis::Y),
-                matchImageData(expected, 1e-5));
+                matchImageData(expected, MAX_ABS_ERROR));
 }
 
 TEST_P(LinearAlongAxisWithSpacingTest, XAxis){
@@ -95,7 +102,7 @@ TEST_P(LinearAlongAxisWithSpacingTest, XAxis){
     const yagit::ImageData imageData(original, oldSize, DATA_OFFSET, oldSpacing);
     const yagit::ImageData expected(interpolated, newSize, DATA_OFFSET, newSpacing);
     EXPECT_THAT(yagit::Interpolation::linearAlongAxis(imageData, newSpacingVal, yagit::ImageAxis::X),
-                matchImageData(expected, 1e-5));
+                matchImageData(expected, MAX_ABS_ERROR));
 }
 
 TEST(InterpolationTest, linearAlongAxisWithSpacingForEmptyImage){
@@ -153,11 +160,20 @@ class LinearAlongAxisWithOffsetAndSpacingTest : public ::testing::TestWithParam<
 
 const LinearAlongAxisWithOffsetAndSpacingType linearAlongAxisWithOffsetAndSpacingValues[] = {
     // ORIGINAL IMAGE                  INTERPOLATED IMAGE                                                 GRID OFFSET
+    // smaller new spacing
     {{0, 2, 4}, 1.0, 2.0,              {0.2, 1.2, 2.2, 3.2}, 1.2, 1.0,                                    1.2},
     {{0, 3, 6, 9, 12, 15}, 2.0, 3.0,   {1, 2.4, 3.8, 5.2, 6.6, 8, 9.4, 10.8, 12.2, 13.6, 15}, 3.0, 1.4,   3.0},
-    {{3, 5, 2}, 1.6, 2.0,              {3, 5, 2}, 1.6, 2.0,                                               1.6},
+
+    // bigger new spacing
     {{4, 2, 6, 7}, 0.5, 1.0,           {3.8, 6.1}, 0.6, 2.0,                                              0.6},
     {{0, 1, 2, 3, 4}, 0.0, 1.0,        {1.9, 3.9}, 1.9, 2.0,                                             -0.1},
+
+    // the same old offset and new offset
+    {{3, 5, 2}, 1.6, 2.0,              {3, 5, 2}, 1.6, 2.0,                                               1.6},
+    {{0, 1.5}, 0, 1.5,                 {0, 0.3, 0.6, 0.9, 1.2, 1.5}, 0, 0.3,                              1.5},
+    {{0, 0.3}, 4.5, 0.3,               {0, 0.1, 0.2, 0.3}, 4.5, 0.1,                                      5.1},
+
+    // corner case for calculating correct size
     {{0, 0.7, 1.4}, 4.5, 0.7,          {0.2, 0.5, 0.8, 1.1, 1.4}, 4.7, 0.3,                               4.4},
 
     // testing calculation of new offset
@@ -184,7 +200,7 @@ TEST_P(LinearAlongAxisWithOffsetAndSpacingTest, ZAxis){
     const yagit::ImageData imageData(original, oldSize, oldOffset, oldSpacing);
     const yagit::ImageData expected(interpolated, newSize, newOffset, newSpacing);
     EXPECT_THAT(yagit::Interpolation::linearAlongAxis(imageData, gridOffset, newSpacingVal, yagit::ImageAxis::Z),
-                matchImageData(expected, 2e-6));
+                matchImageData(expected, MAX_ABS_ERROR));
 }
 
 TEST_P(LinearAlongAxisWithOffsetAndSpacingTest, YAxis){
@@ -201,7 +217,7 @@ TEST_P(LinearAlongAxisWithOffsetAndSpacingTest, YAxis){
     const yagit::ImageData imageData(original, oldSize, oldOffset, oldSpacing);
     const yagit::ImageData expected(interpolated, newSize, newOffset, newSpacing);
     EXPECT_THAT(yagit::Interpolation::linearAlongAxis(imageData, gridOffset, newSpacingVal, yagit::ImageAxis::Y),
-                matchImageData(expected, 2e-6));
+                matchImageData(expected, MAX_ABS_ERROR));
 }
 
 TEST_P(LinearAlongAxisWithOffsetAndSpacingTest, XAxis){
@@ -218,7 +234,7 @@ TEST_P(LinearAlongAxisWithOffsetAndSpacingTest, XAxis){
     const yagit::ImageData imageData(original, oldSize, oldOffset, oldSpacing);
     const yagit::ImageData expected(interpolated, newSize, newOffset, newSpacing);
     EXPECT_THAT(yagit::Interpolation::linearAlongAxis(imageData, gridOffset, newSpacingVal, yagit::ImageAxis::X),
-                matchImageData(expected, 2e-6));
+                matchImageData(expected, MAX_ABS_ERROR));
 }
 
 TEST(InterpolationTest, linearAlongAxisWithOffsetAndSpacingForEmptyImage){
@@ -547,4 +563,55 @@ TEST(InterpolationTest, trilinearAtPointForPointOutsideImage){
 
     EXPECT_EQ(std::nullopt, yagit::Interpolation::trilinearAtPoint(imageData, 3.1, 4.1, 5.6));
     EXPECT_EQ(std::nullopt, yagit::Interpolation::trilinearAtPoint(imageData, 0.9, 1.9, 2.9));
+}
+
+TEST(InterpolationTest, bilinearOnPlaneAndBilinearAtPointShouldReturnTheSameNumbers){
+    const yagit::Image3D image = {
+        {{0.24, 0.68, 0.20},
+         {0.67, 0.90, 0.60}},
+        {{1.00, 0.80, 0.34},
+         {0.80, 0.99, 0.83}}
+    };
+    const yagit::ImageData imageData(image, {0, 0, 0}, {1, 2, 1.2});
+
+    const float spacing = 0.3;
+    const auto interpImage = yagit::Interpolation::bilinearOnPlane(imageData, spacing, spacing, yagit::ImagePlane::Axial);
+
+    for(int k = 0; k < interpImage.getSize().frames; k++){
+        for(int j = 0; j < interpImage.getSize().rows; j++){
+            for(int i = 0; i < interpImage.getSize().columns; i++){
+                float y = interpImage.getOffset().rows + j * spacing;
+                float x = interpImage.getOffset().columns + i * spacing;
+                float interpValue = *yagit::Interpolation::bilinearAtPoint(imageData, k, y, x);
+
+                EXPECT_NEAR(interpValue, interpImage.get(k, j, i), 1e-6);
+            }
+        }
+    }
+}
+
+TEST(InterpolationTest, trilinearAndTrilinearAtPointShouldReturnTheSameNumbers){
+    const yagit::Image3D image = {
+        {{0.24, 0.68, 0.20},
+         {0.67, 0.90, 0.60}},
+        {{1.00, 0.80, 0.34},
+         {0.80, 0.99, 0.83}}
+    };
+    const yagit::ImageData imageData(image, {0, 0, 0}, {1, 2, 1.2});
+    
+    const float spacing = 0.3;
+    const auto interpImage = yagit::Interpolation::trilinear(imageData, {spacing, spacing, spacing});
+
+    for(int k = 0; k < interpImage.getSize().frames; k++){
+        for(int j = 0; j < interpImage.getSize().rows; j++){
+            for(int i = 0; i < interpImage.getSize().columns; i++){
+                float z = interpImage.getOffset().frames + k * spacing;
+                float y = interpImage.getOffset().rows + j * spacing;
+                float x = interpImage.getOffset().columns + i * spacing;
+                float interpValue = *yagit::Interpolation::trilinearAtPoint(imageData, z, y, x);
+
+                EXPECT_NEAR(interpValue, interpImage.get(k, j, i), 1e-6);
+            }
+        }
+    }
 }

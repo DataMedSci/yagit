@@ -28,6 +28,7 @@
 namespace{
 const float NaN = std::numeric_limits<float>::quiet_NaN();
 const float MAX_ABS_ERROR = 2e-6;
+const float MAX_ABS_ERROR2 = 1e-5;
 
 const yagit::Image2D REF_IMAGE_2D = {
     {0.93, 0.95},
@@ -133,6 +134,21 @@ TEST_P(GammaIndex2DClassicTest, gammaIndex2DClassic){
     EXPECT_THAT(gammaRes, matchImageData(expectedGammaRes, MAX_ABS_ERROR));
 }
 
+TEST(GammaTest, gammaIndex2DClassicForImagesWithDifferentSpacings){
+    const yagit::ImageData refImg(REF_IMAGE_2D, {0, 0, 0}, {1, 2, 3});
+    const yagit::ImageData evalImg(EVAL_IMAGE_2D, {0, 0, 0}, {4, 5, 6});
+
+    const auto gammaRes = yagit::gammaIndex2DClassic(refImg, evalImg, GAMMA_PARAMS_2D);
+
+    const yagit::Image2D expected = {
+        {0.666666, 1},
+        {0.942809, 1.414213}
+    };
+    const yagit::GammaResult expectedGammaRes(expected, refImg.getOffset(), refImg.getSpacing());
+
+    EXPECT_THAT(gammaRes, matchImageData(expectedGammaRes, MAX_ABS_ERROR2));
+}
+
 
 const GammaParametric3D gammaIndex2_5DClassicTestValues[] = {
     // GAMMA PARAMETERS                                            EXPECTED GAMMA
@@ -178,6 +194,23 @@ TEST_P(GammaIndex2_5DClassicTest, gammaIndex2_5DClassic){
 
     yagit::GammaResult expectedGammaRes(expectedGamma, REF_3D.getOffset(), REF_3D.getSpacing());
     EXPECT_THAT(gammaRes, matchImageData(expectedGammaRes, MAX_ABS_ERROR));
+}
+
+TEST(GammaTest, gammaIndex2_5DClassicForImagesWithDifferentSpacings){
+    const yagit::ImageData refImg(REF_IMAGE_3D, {0, 0, 0}, {1, 2, 3});
+    const yagit::ImageData evalImg(EVAL_IMAGE_3D, {0, 0, 0}, {4, 5, 6});
+
+    const auto gammaRes = yagit::gammaIndex2_5DClassic(refImg, evalImg, GAMMA_PARAMS_3D);
+
+    const yagit::Image3D expected = {
+        {{0.952381, 1.380952, 2.457807},
+         {4.169319, 4.680737, 2.018059}},
+        {{4.363578, 2.769284, 2.653454},
+         {9.599343, 1.563472, 2.567457}}
+    };
+    const yagit::GammaResult expectedGammaRes(expected, refImg.getOffset(), refImg.getSpacing());
+
+    EXPECT_THAT(gammaRes, matchImageData(expectedGammaRes, MAX_ABS_ERROR2));
 }
 
 
@@ -227,17 +260,34 @@ TEST_P(GammaIndex3DClassicTest, gammaIndex3DClassic){
     EXPECT_THAT(gammaRes, matchImageData(expectedGammaRes, MAX_ABS_ERROR));
 }
 
+TEST(GammaTest, gammaIndex3DClassicForImagesWithDifferentSpacings){
+    const yagit::ImageData refImg(REF_IMAGE_3D, {0, 0, 0}, {1, 2, 3});
+    const yagit::ImageData evalImg(EVAL_IMAGE_3D, {0, 0, 0}, {4, 5, 6});
+
+    const auto gammaRes = yagit::gammaIndex3DClassic(refImg, evalImg, GAMMA_PARAMS_3D);
+
+    const yagit::Image3D expected = {
+        {{0.952381, 1.380952, 2.457807},
+         {4.169319, 3.976689, 2.018059}},
+        {{3.824079, 1.156663, 2.240121},
+         {9.599343, 1.563472, 1.054093}}
+    };
+    const yagit::GammaResult expectedGammaRes(expected, refImg.getOffset(), refImg.getSpacing());
+
+    EXPECT_THAT(gammaRes, matchImageData(expectedGammaRes, MAX_ABS_ERROR2));
+}
+
 
 const GammaParametric2D gammaIndex2DWendlingTestValues[] = {
     // GAMMA PARAMETERS                                                     EXPECTED GAMMA
     {{3, 3, yagit::GammaNormalization::Global, REF_2D_MAX, 0, 5, 0.3},      {{1.0942476, 0.3431877},
                                                                              {0.7218803, 0.4157456}}},
-    {{2, 1, yagit::GammaNormalization::Global, REF_2D_MAX, 0, 5, 0.1},      {{1.8364368, 0.9340771},
-                                                                             {1.7916473, 1.0}}},
+    {{2, 1, yagit::GammaNormalization::Global, REF_2D_MAX, 0, 5, 0.1},      {{1.7320504, 0.9340771},
+                                                                             {1.7916474, 1.0}}},
     {{3, 3, yagit::GammaNormalization::Local, 0, 0, 5, 0.3},                {{1.1598970, 0.3475323},
                                                                              {0.7266982, 0.4157456}}},
-    {{2, 1, yagit::GammaNormalization::Local, 0, 0, 5, 0.1},                {{1.9017274, 0.9376844},
-                                                                             {1.7960242, 1}}},
+    {{2, 1, yagit::GammaNormalization::Local, 0, 0, 5, 0.1},                {{1.7765701, 0.9376845},
+                                                                             {1.7960243, 1}}},
 
     // dco > 0
     {{3, 3, yagit::GammaNormalization::Global, REF_2D_MAX, 0.95, 5, 0.3},   {{NaN, 0.3431877},
@@ -246,9 +296,9 @@ const GammaParametric2D gammaIndex2DWendlingTestValues[] = {
                                                                              {0.7266982, 0.4157456}}},
 
     // small max search distance
-    {{2, 1, yagit::GammaNormalization::Global, REF_2D_MAX, 0, 1.2, 0.1},    {{2.3151674, 0.9340771},
+    {{2, 1, yagit::GammaNormalization::Global, REF_2D_MAX, 0, 1.2, 0.1},    {{2.3151658, 0.9340771},
                                                                              {NaN, 1}}},
-    {{2, 1, yagit::GammaNormalization::Local, 0, 0, 1.2, 0.1},              {{2.4463876, 0.9376844},
+    {{2, 1, yagit::GammaNormalization::Local, 0, 0, 1.2, 0.1},              {{2.4463859, 0.9376844},
                                                                              {NaN, 1}}}
 };
 
@@ -262,6 +312,21 @@ TEST_P(GammaIndex2DWendlingTest, gammaIndex2DWendling){
 
     yagit::GammaResult expectedGammaRes(expectedGamma, REF_2D.getOffset(), REF_2D.getSpacing());
     EXPECT_THAT(gammaRes, matchImageData(expectedGammaRes, MAX_ABS_ERROR));
+}
+
+TEST(GammaTest, gammaIndex2DWendlingForImagesWithDifferentSpacings){
+    const yagit::ImageData refImg(REF_IMAGE_2D, {0, 0, 0}, {1, 2, 3});
+    const yagit::ImageData evalImg(EVAL_IMAGE_2D, {0, 0, 0}, {4, 5, 6});
+
+    const auto gammaRes = yagit::gammaIndex2DWendling(refImg, evalImg, GAMMA_PARAMS_2D);
+
+    const yagit::Image2D expected = {
+        {0.666666, 0.316228},
+        {0.000002, 0.389267}
+    };
+    const yagit::GammaResult expectedGammaRes(expected, refImg.getOffset(), refImg.getSpacing());
+
+    EXPECT_THAT(gammaRes, matchImageData(expectedGammaRes, MAX_ABS_ERROR2));
 }
 
 
@@ -322,6 +387,87 @@ TEST_P(GammaIndex2_5DWendlingTest, gammaIndex2_5DWendling){
     EXPECT_THAT(gammaRes, matchImageData(expectedGammaRes, MAX_ABS_ERROR));
 }
 
+TEST(GammaTest, gammaIndex2_5DWendlingForImagesWithDifferentSpacings){
+    const yagit::ImageData refImg(REF_IMAGE_3D, {0, 0, 0}, {1, 2, 3});
+    const yagit::ImageData evalImg(EVAL_IMAGE_3D, {0, 0, 0}, {4, 5, 6});
+
+    const auto gammaRes = yagit::gammaIndex2_5DWendling(refImg, evalImg, GAMMA_PARAMS_3D);
+
+    const yagit::Image3D expected = {
+        {{0.952381, 0.649612, 1.573772},
+         {0.293681, 0.565945, 0.642857}},
+        {{0.714286, 0.650642, 1.800984},
+         {11.586858, 0.707332, 0.794118}}
+    };
+    const yagit::GammaResult expectedGammaRes(expected, refImg.getOffset(), refImg.getSpacing());
+
+    EXPECT_THAT(gammaRes, matchImageData(expectedGammaRes, MAX_ABS_ERROR2));
+}
+
+TEST(GammaTest, gammaIndex2_5DWendlingForEvalImageShiftedOneFrameUpFromRefImg){
+    const yagit::ImageData refImg(REF_IMAGE_3D, {0, 0, 0}, {2, 2, 2});
+    const yagit::ImageData evalImg(EVAL_IMAGE_3D, {-2, 0, 0}, {2, 2, 2});
+
+    const auto res = yagit::gammaIndex2_5DWendling(refImg, evalImg, GAMMA_PARAMS_3D);
+
+    const yagit::Image3D expected = {
+        {{4.0928965, 0.3189612, 0.9523808},
+         {1.4590440, 0.8498633, 0.3757150}},
+        {{NaN, NaN, NaN},
+         {NaN, NaN, NaN}}
+    };
+    yagit::GammaResult expectedGammaRes(expected, refImg.getOffset(), refImg.getSpacing());
+    EXPECT_THAT(res , matchImageData(expectedGammaRes, MAX_ABS_ERROR2));
+}
+
+TEST(GammaTest, gammaIndex2_5DWendlingForEvalImageShiftedOneFrameDownFromRefImg){
+    const yagit::ImageData refImg(REF_IMAGE_3D, {0, 0, 0}, {2, 2, 2});
+    const yagit::ImageData evalImg(EVAL_IMAGE_3D, {2, 0, 0}, {2, 2, 2});
+
+    const auto res = yagit::gammaIndex2_5DWendling(refImg, evalImg, GAMMA_PARAMS_3D);
+
+    const yagit::Image3D expected = {
+        {{NaN, NaN, NaN},
+         {NaN, NaN, NaN}},
+        {{0.648127, 0.325277, 0.215131},
+         {12.281868, 0.300943, 0.751645}}
+    };
+    yagit::GammaResult expectedGammaRes(expected, refImg.getOffset(), refImg.getSpacing());
+    EXPECT_THAT(res , matchImageData(expectedGammaRes, MAX_ABS_ERROR2));
+}
+
+TEST(GammaTest, gammaIndex2_5DWendlingForEvalImageShiftedTwoFramesUpFromRefImg){
+    const yagit::ImageData refImg(REF_IMAGE_3D, {0, 0, 0}, {2, 2, 2});
+    const yagit::ImageData evalImg(EVAL_IMAGE_3D, {-4, 0, 0}, {2, 2, 2});
+
+    const auto res = yagit::gammaIndex2_5DWendling(refImg, evalImg, GAMMA_PARAMS_3D);
+
+    const yagit::Image3D expected = {
+        {{NaN, NaN, NaN},
+         {NaN, NaN, NaN}},
+        {{NaN, NaN, NaN},
+         {NaN, NaN, NaN}}
+    };
+    yagit::GammaResult expectedGammaRes(expected, refImg.getOffset(), refImg.getSpacing());
+    EXPECT_THAT(res , matchImageData(expectedGammaRes, MAX_ABS_ERROR2));
+}
+
+TEST(GammaTest, gammaIndex2_5DWendlingForEvalImageShiftedTwoFramesDownFromRefImg){
+    const yagit::ImageData refImg(REF_IMAGE_3D, {0, 0, 0}, {2, 2, 2});
+    const yagit::ImageData evalImg(EVAL_IMAGE_3D, {4, 0, 0}, {2, 2, 2});
+
+    const auto res = yagit::gammaIndex2_5DWendling(refImg, evalImg, GAMMA_PARAMS_3D);
+
+    const yagit::Image3D expected = {
+        {{NaN, NaN, NaN},
+         {NaN, NaN, NaN}},
+        {{NaN, NaN, NaN},
+         {NaN, NaN, NaN}},
+    };
+    yagit::GammaResult expectedGammaRes(expected, refImg.getOffset(), refImg.getSpacing());
+    EXPECT_THAT(res , matchImageData(expectedGammaRes, MAX_ABS_ERROR2));
+}
+
 
 const GammaParametric3D gammaIndex3DWendlingTestValues[] = {
     // GAMMA PARAMETERS                                                      EXPECTED GAMMA
@@ -378,6 +524,23 @@ TEST_P(GammaIndex3DWendlingTest, gammaIndex3DWendling){
 
     yagit::GammaResult expectedGammaRes(expectedGamma, REF_3D.getOffset(), REF_3D.getSpacing());
     EXPECT_THAT(gammaRes, matchImageData(expectedGammaRes, MAX_ABS_ERROR));
+}
+
+TEST(GammaTest, gammaIndex3DWendlingForImagesWithDifferentSpacings){
+    const yagit::ImageData refImg(REF_IMAGE_3D, {0, 0, 0}, {1, 2, 3});
+    const yagit::ImageData evalImg(EVAL_IMAGE_3D, {0, 0, 0}, {4, 5, 6});
+
+    const auto gammaRes = yagit::gammaIndex3DWendling(refImg, evalImg, GAMMA_PARAMS_3D);
+
+    const yagit::Image3D expected = {
+        {{0.952381, 0.497177, 1.573772},
+         {0.234738, 0.565945, 0.642857}},
+        {{0.233715, 0.383647, 1.692145},
+         {9.784037, 0.528611, 0.689143}}
+    };
+    const yagit::GammaResult expectedGammaRes(expected, refImg.getOffset(), refImg.getSpacing());
+
+    EXPECT_THAT(gammaRes, matchImageData(expectedGammaRes, MAX_ABS_ERROR2));
 }
 
 
@@ -471,6 +634,48 @@ TEST(GammaTest, gammaIndex3DForTheSameImagesShouldReturnImageFilledWithZeros){
     const yagit::ImageData zeroImage = generateImageData(0, REF_3D.getSize(), REF_3D.getOffset(), REF_3D.getSpacing());
     EXPECT_THAT(yagit::gammaIndex3DClassic(REF_3D, REF_3D, GAMMA_PARAMS_3D), matchImageData(zeroImage, MAX_ABS_ERROR));
     EXPECT_THAT(yagit::gammaIndex3DWendling(REF_3D, REF_3D, GAMMA_PARAMS_3D), matchImageData(zeroImage, MAX_ABS_ERROR));
+}
+
+TEST(GammaTest, gammaIndex2DClassicAndWendlingForCorrespondingParametersShouldReturnTheSameImage){
+    const float spacing = 2;
+    const yagit::DataSpacing dataSpacing{spacing, spacing, spacing};
+
+    const yagit::ImageData refImg(REF_IMAGE_2D, {0, 0, 0}, dataSpacing);
+    const yagit::ImageData evalImg(EVAL_IMAGE_2D, {0, 0, 0}, dataSpacing);
+    const yagit::GammaParameters gammaParams{3, 3, yagit::GammaNormalization::Global, refImg.max(), 0, 10, spacing};
+
+    const auto classicRes = yagit::gammaIndex2DClassic(refImg, evalImg, gammaParams);
+    const auto wendlingRes = yagit::gammaIndex2DWendling(refImg, evalImg, gammaParams);
+
+    EXPECT_THAT(classicRes, matchImageData(wendlingRes));
+}
+
+TEST(GammaTest, gammaIndex2_5DClassicAndWendlingForCorrespondingParametersShouldReturnTheSameImage){
+    const float spacing = 2;
+    const yagit::DataSpacing dataSpacing{spacing, spacing, spacing};
+
+    const yagit::ImageData refImg(REF_IMAGE_3D, {0, 0, 0}, dataSpacing);
+    const yagit::ImageData evalImg(EVAL_IMAGE_3D, {0, 0, 0}, dataSpacing);
+    const yagit::GammaParameters gammaParams{3, 3, yagit::GammaNormalization::Global, refImg.max(), 0, 10, spacing};
+
+    const auto classicRes = yagit::gammaIndex2_5DClassic(refImg, evalImg, gammaParams);
+    const auto wendlingRes = yagit::gammaIndex2_5DWendling(refImg, evalImg, gammaParams);
+
+    EXPECT_THAT(classicRes, matchImageData(wendlingRes));
+}
+
+TEST(GammaTest, gammaIndex3DClassicAndWendlingForCorrespondingParametersShouldReturnTheSameImage){
+    const float spacing = 2;
+    const yagit::DataSpacing dataSpacing{spacing, spacing, spacing};
+
+    const yagit::ImageData refImg(REF_IMAGE_3D, {0, 0, 0}, dataSpacing);
+    const yagit::ImageData evalImg(EVAL_IMAGE_3D, {0, 0, 0}, dataSpacing);
+    const yagit::GammaParameters gammaParams{3, 3, yagit::GammaNormalization::Global, refImg.max(), 0, 10, spacing};
+
+    const auto classicRes = yagit::gammaIndex3DClassic(refImg, evalImg, gammaParams);
+    const auto wendlingRes = yagit::gammaIndex3DWendling(refImg, evalImg, gammaParams);
+
+    EXPECT_THAT(classicRes, matchImageData(wendlingRes));
 }
 
 TEST(GammaTest, gammaIndex2DClassicFor3DImageShouldThrow){

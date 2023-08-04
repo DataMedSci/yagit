@@ -34,11 +34,6 @@ void writeToMetaImage(const ImageData& img, const std::string& filepath){
     DataSize size = img.getSize();
     DataOffset offset = img.getOffset();
     DataSpacing spacing = img.getSpacing();
-    // image with spacing equal to 0 is problematic to show in MetaImage viewer programs
-    // in yagit, 2D images have frames spacing equal to 0
-    if(spacing.frames == 0){
-        spacing.frames = 1;
-    }
 
     std::string isBigEndian = (gdcm::ByteSwap<uint16_t>::SystemIsBigEndian() ? "True" : "False");
 

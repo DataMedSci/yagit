@@ -368,8 +368,10 @@ void gammaIndex2DWendlingInternal(const ImageData& refImg2D, const ImageData& ev
 
     const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
 
-    const float yeMax = evalImg2D.getOffset().rows + (evalImg2D.getSize().rows - 1) * evalImg2D.getSpacing().rows;
-    const float xeMax = evalImg2D.getOffset().columns + (evalImg2D.getSize().columns - 1) * evalImg2D.getSpacing().columns;
+    const float yeMin = evalImg2D.getOffset().rows - Tolerance;
+    const float xeMin = evalImg2D.getOffset().columns - Tolerance;
+    const float yeMax = evalImg2D.getOffset().rows + (evalImg2D.getSize().rows - 1) * evalImg2D.getSpacing().rows + Tolerance;
+    const float xeMax = evalImg2D.getOffset().columns + (evalImg2D.getSize().columns - 1) * evalImg2D.getSpacing().columns + Tolerance;
 
     const auto [jStart, iStart] = indexTo2Dindex(startIndex, refImg2D.getSize());
 
@@ -402,8 +404,8 @@ void gammaIndex2DWendlingInternal(const ImageData& refImg2D, const ImageData& ev
                     // instead of calling Interpolate::bilinearAtPoint function,
                     // here is an inlined, optimized version. It gives 5-10% speedup
 
-                    if(ye < evalImg2D.getOffset().rows || ye > yeMax ||
-                       xe < evalImg2D.getOffset().columns || xe > xeMax){
+                    if(ye < yeMin || ye > yeMax ||
+                       xe < xeMin || xe > xeMax){
                         continue;
                     }
 
@@ -470,17 +472,19 @@ void gammaIndex2_5DWendlingInternal(const ImageData& refImg3D, const ImageData& 
 
     const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
 
-    const float yeMax = evalImg3D.getOffset().rows + (evalImg3D.getSize().rows - 1) * evalImg3D.getSpacing().rows;
-    const float xeMax = evalImg3D.getOffset().columns + (evalImg3D.getSize().columns - 1) * evalImg3D.getSpacing().columns;
+    const float yeMin = evalImg3D.getOffset().rows - Tolerance;
+    const float xeMin = evalImg3D.getOffset().columns - Tolerance;
+    const float yeMax = evalImg3D.getOffset().rows + (evalImg3D.getSize().rows - 1) * evalImg3D.getSpacing().rows + Tolerance;
+    const float xeMax = evalImg3D.getOffset().columns + (evalImg3D.getSize().columns - 1) * evalImg3D.getSpacing().columns + Tolerance;
 
-    const int kDiff = static_cast<int>((evalImg3D.getOffset().frames - refImg3D.getOffset().frames) / evalImg3D.getSpacing().frames);
+    const int kDiff = static_cast<int>((refImg3D.getOffset().frames - evalImg3D.getOffset().frames) / refImg3D.getSpacing().frames);
 
     const auto [kStart, jStart, iStart] = indexTo3Dindex(startIndex, refImg3D.getSize());
 
     // iterate over each frame, row and column of reference image
     size_t indRef = startIndex;
+    int ke = kStart + kDiff;
     for(uint32_t kr = kStart; kr < refImg3D.getSize().frames && indRef < endIndex; kr++){
-
         const uint32_t jStart2 = (kr != kStart ? 0 : jStart);
         float yr = refImg3D.getOffset().rows + jStart2 * refImg3D.getSpacing().rows;
 
@@ -491,7 +495,6 @@ void gammaIndex2_5DWendlingInternal(const ImageData& refImg3D, const ImageData& 
 
             for(uint32_t ir = iStart2; ir < refImg3D.getSize().columns && indRef < endIndex; ir++){
                 if(gammaVals[indRef] == Inf){
-                    const int ke = static_cast<int>(kr) + kDiff;
                     bool evalFrameOutsideImage = ke < 0 || ke >= static_cast<int>(evalImg3D.getSize().frames);
                     if(evalFrameOutsideImage){
                         gammaVals[indRef] = Nan;
@@ -517,8 +520,8 @@ void gammaIndex2_5DWendlingInternal(const ImageData& refImg3D, const ImageData& 
                             // instead of calling Interpolate::bilinearAtPoint function,
                             // here is an inlined, optimized version. It gives 5-10% speedup
 
-                            if(ye < evalImg3D.getOffset().rows || ye > yeMax ||
-                               xe < evalImg3D.getOffset().columns || xe > xeMax){
+                            if(ye < yeMin || ye > yeMax ||
+                               xe < xeMin || xe > xeMax){
                                 continue;
                             }
 
@@ -572,6 +575,7 @@ void gammaIndex2_5DWendlingInternal(const ImageData& refImg3D, const ImageData& 
             }
             yr += refImg3D.getSpacing().rows;
         }
+        ke++;
     }
 }
 
@@ -588,9 +592,12 @@ void gammaIndex3DWendlingInternal(const ImageData& refImg3D, const ImageData& ev
 
     const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
 
-    const float zeMax = evalImg3D.getOffset().frames + (evalImg3D.getSize().frames - 1) * evalImg3D.getSpacing().frames;
-    const float yeMax = evalImg3D.getOffset().rows + (evalImg3D.getSize().rows - 1) * evalImg3D.getSpacing().rows;
-    const float xeMax = evalImg3D.getOffset().columns + (evalImg3D.getSize().columns - 1) * evalImg3D.getSpacing().columns;
+    const float zeMin = evalImg3D.getOffset().frames - Tolerance;
+    const float yeMin = evalImg3D.getOffset().rows - Tolerance;
+    const float xeMin = evalImg3D.getOffset().columns - Tolerance;
+    const float zeMax = evalImg3D.getOffset().frames + (evalImg3D.getSize().frames - 1) * evalImg3D.getSpacing().frames + Tolerance;
+    const float yeMax = evalImg3D.getOffset().rows + (evalImg3D.getSize().rows - 1) * evalImg3D.getSpacing().rows + Tolerance;
+    const float xeMax = evalImg3D.getOffset().columns + (evalImg3D.getSize().columns - 1) * evalImg3D.getSpacing().columns + Tolerance;
 
     const auto [kStart, jStart, iStart] = indexTo3Dindex(startIndex, refImg3D.getSize());
 
@@ -630,9 +637,9 @@ void gammaIndex3DWendlingInternal(const ImageData& refImg3D, const ImageData& ev
                         // instead of calling Interpolate::trilinearAtPoint function,
                         // here is an inlined, optimized version. It gives 5-10% speedup
 
-                        if(ze < evalImg3D.getOffset().frames || ze > zeMax ||
-                           ye < evalImg3D.getOffset().rows || ye > yeMax ||
-                           xe < evalImg3D.getOffset().columns || xe > xeMax){
+                        if(ze < zeMin || ze > zeMax ||
+                           ye < yeMin || ye > yeMax ||
+                           xe < xeMin || xe > xeMax){
                             continue;
                         }
 

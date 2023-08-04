@@ -182,7 +182,7 @@ ImageData readRTDoseDicom(const std::string& filepath, bool displayInfo){
         throw std::runtime_error("DICOM file doesn't have attribute Pixel Spacing (0028,0030) containig 2 elements");
     }
 
-    double sliceThicknessVal{0};
+    double sliceThicknessVal{1};
     if(*frames > 1){
         auto sliceThickness = getValue(ds, SliceThicknessAttr);
         if(sliceThickness == std::nullopt || *sliceThickness == 0){

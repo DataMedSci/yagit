@@ -25,7 +25,19 @@
 namespace yagit::Interpolation{
 
 namespace{
-const double Tolerance{1e-5};
+const double Tolerance{3e-6};
+
+float calcNewOffset(float oldOffset, float gridOffset, float spacing){
+    // calculate closest point to oldOffset that is greater than or equal to oldOffset and also lies on grid
+    int n = std::ceil((oldOffset - gridOffset) / static_cast<double>(spacing) - Tolerance);
+    float newOffset = gridOffset + n * spacing;
+    return newOffset;
+}
+
+constexpr uint32_t calcNewSize(uint32_t oldSize, float oldSpacing, float offsetRel, float newSpacing){
+    // calculate number of interpolated points that lie on edges or in the middle of original image
+    return static_cast<uint32_t>((oldSpacing * (oldSize - 1) - offsetRel) / newSpacing + 1 + Tolerance);
+}
 }
 
 ImageData linearAlongAxis(const ImageData& img, float spacing, ImageAxis axis){
@@ -49,9 +61,8 @@ ImageData linearAlongAxis(const ImageData& img, float gridOffset, float spacing,
     }
 
     if(axis == ImageAxis::Z){
-        // closest point greater than img_offset which is one of points (offset +/- n*spacing)
-        float zOffset = gridOffset + std::ceil((img.getOffset().frames - gridOffset) / static_cast<double>(spacing) - Tolerance) * spacing;
-        // then this point is reduced by img_offset to be relative to point 0
+        float zOffset = calcNewOffset(img.getOffset().frames, gridOffset, spacing);
+        // get relative point by reducing new offset by old offset
         float zOffsetRel = zOffset - img.getOffset().frames;
 
         float oldSpacing = img.getSpacing().frames;
@@ -59,8 +70,7 @@ ImageData linearAlongAxis(const ImageData& img, float gridOffset, float spacing,
             return img;
         }
 
-        // number of interpolated points that lie on edges or in the middle of original range
-        uint32_t newSize = static_cast<uint32_t>((oldSpacing * (img.getSize().frames - 1) - zOffsetRel) / spacing + 1 + Tolerance);
+        uint32_t newSize = calcNewSize(img.getSize().frames, oldSpacing, zOffsetRel, spacing);
         Image3D newImg(newSize, Image2D(img.getSize().rows, std::vector<float>(img.getSize().columns, 0.0f)));
 
         if(newSize > 0){
@@ -123,9 +133,8 @@ ImageData linearAlongAxis(const ImageData& img, float gridOffset, float spacing,
         return ImageData(newImg, newOffset, newSpacing);
     }
     else if(axis == ImageAxis::Y){
-        // closest point greater than img_offset which is one of points (offset +/- n*spacing)
-        float yOffset = gridOffset + std::ceil((img.getOffset().rows - gridOffset) / static_cast<double>(spacing) - Tolerance) * spacing;
-        // then this point is reduced by img_offset to be relative to point 0
+        float yOffset = calcNewOffset(img.getOffset().rows, gridOffset, spacing);
+        // get relative point by reducing new offset by old offset
         float yOffsetRel = yOffset - img.getOffset().rows;
 
         float oldSpacing = img.getSpacing().rows;
@@ -133,8 +142,7 @@ ImageData linearAlongAxis(const ImageData& img, float gridOffset, float spacing,
             return img;
         }
 
-        // number of interpolated points that lie on edges or in the middle of original range
-        uint32_t newSize = static_cast<uint32_t>((oldSpacing * (img.getSize().rows - 1) - yOffsetRel) / spacing + 1 + Tolerance);
+        uint32_t newSize = calcNewSize(img.getSize().rows, oldSpacing, yOffsetRel, spacing);
         Image3D newImg(img.getSize().frames, Image2D(newSize, std::vector<float>(img.getSize().columns, 0.0f)));
 
         if(newSize > 0){
@@ -197,9 +205,8 @@ ImageData linearAlongAxis(const ImageData& img, float gridOffset, float spacing,
         return ImageData(newImg, newOffset, newSpacing);
     }
     else if(axis == ImageAxis::X){
-        // closest point greater than img_offset which is one of points (offset +/- n*spacing)
-        float xOffset = gridOffset + std::ceil((img.getOffset().columns - gridOffset) / static_cast<double>(spacing) - Tolerance) * spacing;
-        // then this point is reduced by img_offset to be relative to point 0
+        float xOffset = calcNewOffset(img.getOffset().columns, gridOffset, spacing);
+        // get relative point by reducing new offset by old offset
         float xOffsetRel = xOffset - img.getOffset().columns;
 
         float oldSpacing = img.getSpacing().columns;
@@ -207,8 +214,7 @@ ImageData linearAlongAxis(const ImageData& img, float gridOffset, float spacing,
             return img;
         }
 
-        // number of interpolated points that lie on edges or in the middle of original range
-        uint32_t newSize = static_cast<uint32_t>((oldSpacing * (img.getSize().columns - 1) - xOffsetRel) / spacing + 1 + Tolerance);
+        uint32_t newSize = calcNewSize(img.getSize().columns, oldSpacing, xOffsetRel, spacing);
         Image3D newImg(img.getSize().frames, Image2D(img.getSize().rows, std::vector<float>(newSize, 0.0f)));
 
         if(newSize > 0){

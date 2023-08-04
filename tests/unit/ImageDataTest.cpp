@@ -71,18 +71,32 @@ const yagit::ImageData IMAGE_DATA_SMALL(DATA_SMALL, {1, 2, 2}, DATA_OFFSET, DATA
 const yagit::ImageData IMAGE_DATA_SMALL_WITH_NANS(DATA_SMALL_WITH_NANS, {1, 2, 3}, DATA_OFFSET, DATA_SPACING);
 const yagit::ImageData IMAGE_DATA_SMALL_WITH_INFS(DATA_SMALL_WITH_INFS, {1, 2, 3}, DATA_OFFSET, DATA_SPACING);
 const yagit::ImageData IMAGE_DATA_SMALL_WITH_INFS2(DATA_SMALL_WITH_INFS2, {1, 2, 3}, DATA_OFFSET, DATA_SPACING);
-const yagit::ImageData EMPTY_IMAGE_DATA(std::vector<float>{}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0});
+const yagit::ImageData EMPTY_IMAGE_DATA(std::vector<float>{}, {0, 0, 0}, {0, 0, 0}, {1, 1, 1});
 const yagit::ImageData EMPTY_IMAGE_DATA2(std::vector<float>{}, {0, 0, 0}, DATA_OFFSET, DATA_SPACING);
 }
 
 TEST(ImageDataTest, defaultConstructor){
     yagit::ImageData imageData;
-    EXPECT_THAT(imageData, matchImageData(std::vector<float>{}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}));
+    EXPECT_THAT(imageData, matchImageData(std::vector<float>{}, {0, 0, 0}, {0, 0, 0}, {1, 1, 1}));
 }
 
 TEST(ImageDataTest, dataConstructor){
     yagit::ImageData imageData(DATA, DATA_SIZE, DATA_OFFSET, DATA_SPACING);
     EXPECT_THAT(imageData, matchImageData(DATA, DATA_SIZE, DATA_OFFSET, DATA_SPACING));
+}
+
+TEST(ImageDataTest, dataConstructorForIncorrectSpacingShouldThrow){
+    const auto dataConstructor0 = [](){ yagit::ImageData(DATA, DATA_SIZE, DATA_OFFSET, {0, 0, 0}); };
+    EXPECT_THAT(dataConstructor0, ThrowsMessage<std::invalid_argument>(HasSubstr("spacing")));
+
+    const auto dataConstructor1 = [](){ yagit::ImageData(DATA, DATA_SIZE, DATA_OFFSET, {-1, 2, 2}); };
+    EXPECT_THAT(dataConstructor1, ThrowsMessage<std::invalid_argument>(HasSubstr("spacing")));
+
+    const auto dataConstructor2 = [](){ yagit::ImageData(DATA, DATA_SIZE, DATA_OFFSET, {2, -1, 2}); };
+    EXPECT_THAT(dataConstructor2, ThrowsMessage<std::invalid_argument>(HasSubstr("spacing")));
+
+    const auto dataConstructor3 = [](){ yagit::ImageData(DATA, DATA_SIZE, DATA_OFFSET, {2, 2, -1}); };
+    EXPECT_THAT(dataConstructor3, ThrowsMessage<std::invalid_argument>(HasSubstr("spacing")));
 }
 
 TEST(ImageDataTest, dataConstructorForInconsistentSizeShouldThrow){
@@ -108,6 +122,20 @@ TEST(ImageDataTest, image2DConstructorForEmptyImages){
     EXPECT_THAT(yagit::ImageData(yagit::Image2D{}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
     EXPECT_THAT(yagit::ImageData(yagit::Image2D{{}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
     EXPECT_THAT(yagit::ImageData(yagit::Image2D{{}, {}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
+}
+
+TEST(ImageDataTest, image2DConstructorForIncorrectSpacingShouldThrow){
+    const auto image2DConstructor0 = [](){ yagit::ImageData(IMAGE_2D, DATA_OFFSET, {0, 0, 0}); };
+    EXPECT_THAT(image2DConstructor0, ThrowsMessage<std::invalid_argument>(HasSubstr("spacing")));
+
+    const auto image2DConstructor1 = [](){ yagit::ImageData(IMAGE_2D, DATA_OFFSET, {-1, 2, 2}); };
+    EXPECT_THAT(image2DConstructor1, ThrowsMessage<std::invalid_argument>(HasSubstr("spacing")));
+
+    const auto image2DConstructor2 = [](){ yagit::ImageData(IMAGE_2D, DATA_OFFSET, {2, -1, 2}); };
+    EXPECT_THAT(image2DConstructor2, ThrowsMessage<std::invalid_argument>(HasSubstr("spacing")));
+
+    const auto image2DConstructor3 = [](){ yagit::ImageData(IMAGE_2D, DATA_OFFSET, {2, 2, -1}); };
+    EXPECT_THAT(image2DConstructor3, ThrowsMessage<std::invalid_argument>(HasSubstr("spacing")));
 }
 
 TEST(ImageDataTest, image2DConstructorForEmptyAndInconsistentSizeShouldThrow){
@@ -158,12 +186,26 @@ TEST(ImageDataTest, image3DConstructorForEmptyImages){
     EXPECT_THAT(yagit::ImageData(yagit::Image3D{{{}}, {{}}}, DATA_OFFSET, DATA_SPACING), matchImageData(EMPTY_IMAGE_DATA2));
 }
 
-TEST(ImageDataTest, image3DConstructorForEmptyAndInconsistentSizeShouldThrow){
-    const auto image3DConstructor2 = [](){ yagit::ImageData(yagit::Image3D{{}, {{1}}}, DATA_OFFSET, DATA_SPACING); };
-    EXPECT_THAT(image3DConstructor2, ThrowsMessage<std::invalid_argument>("singly nested vectors don't have the same size"));
+TEST(ImageDataTest, image3DConstructorForIncorrectSpacingShouldThrow){
+    const auto image3DConstructor0 = [](){ yagit::ImageData(IMAGE_3D, DATA_OFFSET, {0, 0, 0}); };
+    EXPECT_THAT(image3DConstructor0, ThrowsMessage<std::invalid_argument>(HasSubstr("spacing")));
 
-    const auto image3DConstructor1 = [](){ yagit::ImageData(yagit::Image3D{{{}, {1}}}, DATA_OFFSET, DATA_SPACING); };
-    EXPECT_THAT(image3DConstructor1, ThrowsMessage<std::invalid_argument>("double nested vectors don't have the same size"));
+    const auto image3DConstructor1 = [](){ yagit::ImageData(IMAGE_3D, DATA_OFFSET, {-1, 2, 2}); };
+    EXPECT_THAT(image3DConstructor1, ThrowsMessage<std::invalid_argument>(HasSubstr("spacing")));
+
+    const auto image3DConstructor2 = [](){ yagit::ImageData(IMAGE_3D, DATA_OFFSET, {2, -1, 2}); };
+    EXPECT_THAT(image3DConstructor2, ThrowsMessage<std::invalid_argument>(HasSubstr("spacing")));
+
+    const auto image3DConstructor3 = [](){ yagit::ImageData(IMAGE_3D, DATA_OFFSET, {2, 2, -1}); };
+    EXPECT_THAT(image3DConstructor3, ThrowsMessage<std::invalid_argument>(HasSubstr("spacing")));
+}
+
+TEST(ImageDataTest, image3DConstructorForEmptyAndInconsistentSizeShouldThrow){
+    const auto image3DConstructor1 = [](){ yagit::ImageData(yagit::Image3D{{}, {{1}}}, DATA_OFFSET, DATA_SPACING); };
+    EXPECT_THAT(image3DConstructor1, ThrowsMessage<std::invalid_argument>("singly nested vectors don't have the same size"));
+
+    const auto image3DConstructor2 = [](){ yagit::ImageData(yagit::Image3D{{{}, {1}}}, DATA_OFFSET, DATA_SPACING); };
+    EXPECT_THAT(image3DConstructor2, ThrowsMessage<std::invalid_argument>("double nested vectors don't have the same size"));
 }
 
 TEST(ImageDataTest, moveDataConstructor){
@@ -410,7 +452,7 @@ TEST(ImageDataTest, getImageData2DAxial){
 
     yagit::DataSize newSize{1, DATA_SIZE_3D.rows, DATA_SIZE_3D.columns};
     yagit::DataOffset newOffset{DATA_OFFSET.frames + DATA_SPACING.frames, DATA_OFFSET.rows, DATA_OFFSET.columns};
-    yagit::DataSpacing newSpacing{0, DATA_SPACING.rows, DATA_SPACING.columns};
+    yagit::DataSpacing newSpacing{1, DATA_SPACING.rows, DATA_SPACING.columns};
 
     EXPECT_THAT(imageData2D.getSize(), matchDataSize(newSize));
     EXPECT_THAT(imageData2D.getOffset(), matchDataOffset(newOffset));
@@ -422,7 +464,7 @@ TEST(ImageDataTest, getImageData2DCoronal){
 
     yagit::DataSize newSize{1, DATA_SIZE_3D.frames, DATA_SIZE_3D.columns};
     yagit::DataOffset newOffset{DATA_OFFSET.rows + DATA_SPACING.rows, DATA_OFFSET.frames, DATA_OFFSET.columns};
-    yagit::DataSpacing newSpacing{0, DATA_SPACING.frames, DATA_SPACING.columns};
+    yagit::DataSpacing newSpacing{1, DATA_SPACING.frames, DATA_SPACING.columns};
 
     EXPECT_THAT(imageData2D.getSize(), matchDataSize(newSize));
     EXPECT_THAT(imageData2D.getOffset(), matchDataOffset(newOffset));
@@ -434,7 +476,7 @@ TEST(ImageDataTest, getImageData2DSagittal){
 
     yagit::DataSize newSize{1, DATA_SIZE_3D.frames, DATA_SIZE_3D.rows};
     yagit::DataOffset newOffset{DATA_OFFSET.columns + DATA_SPACING.columns, DATA_OFFSET.frames, DATA_OFFSET.rows};
-    yagit::DataSpacing newSpacing{0, DATA_SPACING.frames, DATA_SPACING.rows};
+    yagit::DataSpacing newSpacing{1, DATA_SPACING.frames, DATA_SPACING.rows};
 
     EXPECT_THAT(imageData2D.getSize(), matchDataSize(newSize));
     EXPECT_THAT(imageData2D.getOffset(), matchDataOffset(newOffset));
