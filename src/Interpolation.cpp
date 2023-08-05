@@ -25,7 +25,7 @@
 namespace yagit::Interpolation{
 
 namespace{
-const double Tolerance{3e-6};
+constexpr double Tolerance{3e-6};
 
 float calcNewOffset(float oldOffset, float gridOffset, float spacing){
     // calculate closest point to oldOffset that is greater than or equal to oldOffset and also lies on grid

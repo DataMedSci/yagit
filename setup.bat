@@ -14,7 +14,7 @@ set BUILD_PERFORMANCE_TESTING=OFF
 set REF_IMG=original_dose_beam_4.dcm
 set EVAL_IMG=logfile_dose_beam_4.dcm
 
-set UNIT_TESTS_LIST=DataReaderTest.exe DataWriterTest.exe GammaTest.exe GammaResultTest.exe ImageDataTest.exe InterpolationTest.exe
+set UNIT_TESTS_LIST=DataReaderTest.exe DataWriterTest.exe GammaTest.exe GammaCommonTest.exe GammaResultTest.exe ImageDataTest.exe InterpolationTest.exe
 
 set INSTALL=OFF
 set INSTALL_DIR=./yagit

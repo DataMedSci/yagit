@@ -4,6 +4,7 @@ set(TESTS_SRCS
     DataReaderTest
     DataWriterTest
     GammaTest
+    GammaCommonTest
     GammaResultTest
     ImageDataTest
     InterpolationTest

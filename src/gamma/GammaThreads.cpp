@@ -29,6 +29,45 @@
 
 namespace yagit{
 
+GammaResult gammaIndex2D(const ImageData& refImg2D, const ImageData& evalImg2D,
+                         const GammaParameters& gammaParams, GammaMethod method){
+    if(method == GammaMethod::Wendling){
+        return gammaIndex2DWendling(refImg2D, evalImg2D, gammaParams);
+    }
+    else if(method == GammaMethod::Classic){
+        return gammaIndex2DClassic(refImg2D, evalImg2D, gammaParams);
+    }
+    else{
+        throw std::invalid_argument("invalid method");
+    }
+}
+
+GammaResult gammaIndex2_5D(const ImageData& refImg3D, const ImageData& evalImg3D,
+                           const GammaParameters& gammaParams, GammaMethod method){
+    if(method == GammaMethod::Wendling){
+        return gammaIndex2_5DWendling(refImg3D, evalImg3D, gammaParams);
+    }
+    else if(method == GammaMethod::Classic){
+        return gammaIndex2_5DClassic(refImg3D, evalImg3D, gammaParams);
+    }
+    else{
+        throw std::invalid_argument("invalid method");
+    }
+}
+
+GammaResult gammaIndex3D(const ImageData& refImg3D, const ImageData& evalImg3D,
+                         const GammaParameters& gammaParams, GammaMethod method){
+    if(method == GammaMethod::Wendling){
+        return gammaIndex3DWendling(refImg3D, evalImg3D, gammaParams);
+    }
+    else if(method == GammaMethod::Classic){
+        return gammaIndex3DClassic(refImg3D, evalImg3D, gammaParams);
+    }
+    else{
+        throw std::invalid_argument("invalid method");
+    }
+}
+
 namespace{
 std::vector<std::pair<size_t, size_t>> calculationsRanges(uint32_t nrOfRanges, size_t nrOfCalcs,
                                                           const std::vector<float>& gammaVals){
