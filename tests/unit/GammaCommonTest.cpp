@@ -86,29 +86,6 @@ TEST(GammaCommonTest, distSq3DWithFloatingPointNumbers){
     EXPECT_FLOAT_EQ(186.46, yagit::distSq3D(-5.1, 4.8, -8.8, 0.3, -2.9, 1.1));
 }
 
-// TEST(GammaCommonTest, sortedPointsInCircle){
-//     const auto sortedPoints = yagit::sortedPointsInCircle(3, 1);
-
-//     #pragma warning(push)
-//     #pragma warning(disable : 4244)
-//     const std::vector<yagit::YXPosWithDistSq> expected = {
-//         {{0, 0}, 0},
-//         {{0, 1}, 1}, {{0, -1}, 1},
-//         {{1, 0}, 1}, {{-1, 0}, 1},
-//         {{1, 1}, 2}, {{-1, -1}, 2}, {{-1, 1}, 2}, {{1, -1}, 2},
-//         {{0, 2}, 4}, {{0, -2}, 4},
-//         {{2, 0}, 4}, {{-2, 0}, 4},
-//         {{1, 2}, 5}, {{-1, -2}, 5}, {{-1, 2}, 5}, {{1, -2}, 5},
-//         {{2, 1}, 5}, {{-2, -1}, 5}, {{-2, 1}, 5}, {{2, -1}, 5},
-//         {{2, 2}, 8}, {{-2, -2}, 8}, {{-2, 2}, 8}, {{2, -2}, 8},
-//         {{0, 3}, 9}, {{0, -3}, 9},
-//         {{3, 0}, 9}, {{-3, 0}, 9}
-//     };
-//     #pragma warning(pop)
-
-//     EXPECT_EQ(expected, sortedPoints);
-// }
-
 TEST(GammaCommonTest, sortedPointsInCircle){
     const auto sortedPoints = yagit::sortedPointsInCircle(3, 1);
 
@@ -144,32 +121,6 @@ TEST(GammaCommonTest, sortedPointsInCircleShouldContainPointsOnEdge){
     EXPECT_THAT(sortedPoints, Contains(matchYXPosWithDistSq({{0, 1}, 1})));
     #pragma warning(pop)
 }
-
-// TEST(GammaCommonTest, sortedPointsInSphere){
-//     const auto sortedPoints = yagit::sortedPointsInSphere(2, 1);
-
-//     #pragma warning(push)
-//     #pragma warning(disable : 4244)
-//     const std::vector<yagit::ZYXPosWithDistSq> expected = {
-//         {{0, 0, 0}, 0},
-//         {{0, 0, 1}, 1}, {{0, 0, -1}, 1},
-//         {{1, 0, 0}, 1}, {{-1, 0, 0}, 1},
-//         {{0, 1, 0}, 1}, {{0, -1, 0}, 1},
-//         {{1, 1, 0}, 2}, {{-1, -1, 0}, 2},
-//         {{0, 1, 1}, 2}, {{0, -1, -1}, 2},
-//         {{0, -1, 1}, 2}, {{0, 1, -1}, 2},
-//         {{-1, 1, 0}, 2}, {{1, -1, 0}, 2},
-//         {{1, 0, 1}, 2}, {{-1, 0, -1}, 2}, {{-1, 0, 1}, 2}, {{1, 0, -1}, 2},
-//         {{1, 1, 1}, 3}, {{-1, -1, -1}, 3}, {{-1, -1, 1}, 3}, {{-1, 1, -1}, 3}, {{1, -1, -1}, 3},
-//             {{-1, 1, 1}, 3}, {{1, -1, 1}, 3}, {{1, 1, -1}, 3},
-//         {{0, 0, 2}, 4}, {{0, 0, -2}, 4},
-//         {{0, 2, 0}, 4}, {{0, -2, 0}, 4},
-//         {{2, 0, 0}, 4}, {{-2, 0, 0}, 4}
-//     };
-//     #pragma warning(pop)
-
-//     EXPECT_EQ(expected, sortedPoints);
-// }
 
 TEST(GammaCommonTest, sortedPointsInSphere){
     const auto sortedPoints = yagit::sortedPointsInSphere(2, 1);

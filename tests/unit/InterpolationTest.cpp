@@ -29,6 +29,7 @@ using testing::ThrowsMessage, testing::HasSubstr;
 
 namespace{
 const float MAX_ABS_ERROR{2e-6};
+const float MAX_ABS_ERROR2{2e-7};
 
 const yagit::DataOffset DATA_OFFSET{0, 0, 0};
 
@@ -584,7 +585,7 @@ TEST(InterpolationTest, bilinearOnPlaneAndBilinearAtPointShouldReturnTheSameNumb
                 float x = interpImage.getOffset().columns + i * spacing;
                 float interpValue = *yagit::Interpolation::bilinearAtPoint(imageData, k, y, x);
 
-                EXPECT_NEAR(interpValue, interpImage.get(k, j, i), 1e-6);
+                EXPECT_NEAR(interpValue, interpImage.get(k, j, i), MAX_ABS_ERROR2);
             }
         }
     }
@@ -610,7 +611,7 @@ TEST(InterpolationTest, trilinearAndTrilinearAtPointShouldReturnTheSameNumbers){
                 float x = interpImage.getOffset().columns + i * spacing;
                 float interpValue = *yagit::Interpolation::trilinearAtPoint(imageData, z, y, x);
 
-                EXPECT_NEAR(interpValue, interpImage.get(k, j, i), 1e-6);
+                EXPECT_NEAR(interpValue, interpImage.get(k, j, i), MAX_ABS_ERROR2);
             }
         }
     }

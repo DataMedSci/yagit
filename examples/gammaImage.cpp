@@ -72,8 +72,8 @@ int main(){
 
     yagit::DataOffset refOffset{0, 0, -1};
     yagit::DataOffset evalOffset{0, -1, 0};
-    yagit::DataSpacing refSpacing{0, 1, 1};
-    yagit::DataSpacing evalSpacing{0, 1, 1};
+    yagit::DataSpacing refSpacing{1, 1, 1};
+    yagit::DataSpacing evalSpacing{1, 1, 1};
 
     yagit::ImageData refImgDose(refImg, refOffset, refSpacing);
     yagit::ImageData evalImgDose(evalImg, evalOffset, evalSpacing);

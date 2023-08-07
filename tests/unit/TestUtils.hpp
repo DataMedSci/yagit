@@ -18,6 +18,7 @@
  ********************************************************************************************/
 
 #include "yagit/ImageData.hpp"
+#include "yagit/GammaParameters.hpp"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -63,4 +64,25 @@ Matcher<yagit::ImageData> matchImageData(const std::vector<float>& expectedData,
                  Property("size", &yagit::ImageData::getSize, matchDataSize(expectedDataSize)),
                  Property("offset", &yagit::ImageData::getOffset, matchDataOffset(expectedDataOffset)),
                  Property("spacing", &yagit::ImageData::getSpacing, matchDataSpacing(expectedDataSpacing)));
+}
+
+
+yagit::ImageData generateImageData(float value, const yagit::DataSize& size,
+                                   const yagit::DataOffset& offset, const yagit::DataSpacing& spacing){
+    size_t count = size.frames * size.rows * size.columns;
+    return yagit::ImageData(std::vector<float>(count, value), size, offset, spacing);
+}
+
+
+namespace yagit{
+std::ostream& operator<<(std::ostream& os, const yagit::GammaParameters& gammaParams){
+    std::string norm = (gammaParams.normalization == yagit::GammaNormalization::Global ? "global" : (
+        gammaParams.normalization == yagit::GammaNormalization::Local ? "local" : "?"
+    ));
+    return os << "{dd=" << gammaParams.ddThreshold << ", dta=" << gammaParams.dtaThreshold
+              << ", norm=" << norm << ", global norm dose=" << gammaParams.globalNormDose
+              << ", dco=" << gammaParams.doseCutoff
+              << ", max search dist=" << gammaParams.maxSearchDistance
+              << ", step size=" << gammaParams.stepSize << "}";
+}
 }
