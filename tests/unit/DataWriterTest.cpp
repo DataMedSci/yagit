@@ -21,6 +21,7 @@
 
 #include <fstream>
 #include <cstdio>
+#include <cstring>
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
