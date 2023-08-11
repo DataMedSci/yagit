@@ -1,5 +1,8 @@
 find_package(GTest REQUIRED)
 
+add_library(TestUtils TestUtils.cpp)
+target_link_libraries(TestUtils yagit GTest::GTest)
+
 set(TESTS_SRCS
     DataReaderTest
     DataWriterTest
@@ -15,6 +18,7 @@ foreach(test ${TESTS_SRCS})
     target_link_libraries(${test}
         yagit
         GTest::GTest GTest::Main
+        TestUtils
     )
 
     include(GoogleTest)

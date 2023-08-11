@@ -23,7 +23,7 @@
 #include <gmock/gmock.h>
 #include "TestUtils.hpp"
 
-using testing::ThrowsMessage, testing::HasSubstr;
+using ::testing::ThrowsMessage, ::testing::HasSubstr;
 
 namespace{
 const yagit::Image3D IMAGE_3D = {

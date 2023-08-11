@@ -25,7 +25,7 @@
 #include <gmock/gmock.h>
 #include "TestUtils.hpp"
 
-using testing::ThrowsMessage, testing::HasSubstr;
+using ::testing::ThrowsMessage, ::testing::HasSubstr;
 
 namespace{
 const float MAX_ABS_ERROR{2e-6};

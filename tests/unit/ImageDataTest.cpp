@@ -26,7 +26,7 @@
 #include <gmock/gmock.h>
 #include "TestUtils.hpp"
 
-using testing::IsNan, testing::ThrowsMessage, testing::HasSubstr;
+using ::testing::IsNan, ::testing::ThrowsMessage, ::testing::HasSubstr;
 
 namespace{
 const float NaN = std::numeric_limits<float>::quiet_NaN();

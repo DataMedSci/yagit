@@ -26,7 +26,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-using testing::ThrowsMessage, testing::HasSubstr;
+using ::testing::ThrowsMessage, ::testing::HasSubstr;
 
 namespace{
 bool isBigEndian(){
