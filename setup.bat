@@ -14,8 +14,6 @@ set BUILD_PERFORMANCE_TESTING=OFF
 set REF_IMG=original_dose_beam_4.dcm
 set EVAL_IMG=logfile_dose_beam_4.dcm
 
-set UNIT_TESTS_LIST=DataReaderTest.exe DataWriterTest.exe GammaTest.exe GammaCommonTest.exe GammaResultTest.exe ImageDataTest.exe InterpolationTest.exe
-
 set INSTALL=OFF
 set INSTALL_DIR=./yagit
 
@@ -46,7 +44,7 @@ cmake .. -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ^
 @REM ============================================================
 echo:
 echo COMPILING...
-cmake --build . --config %BUILD_TYPE%
+cmake --build . --config %BUILD_TYPE% -j 4
 set COMPILE_RESULT=%ERRORLEVEL%
 cd ..
 
@@ -71,13 +69,7 @@ if %BUILD_EXAMPLES% == ON (
 if %BUILD_TESTING% == ON (
     echo:
     echo RUNNING UNIT TESTS...
-    cd build\tests\unit\%BUILD_TYPE%
-    for %%f in (%UNIT_TESTS_LIST%) do (
-        echo:
-        echo %%f
-        .\%%f
-    )
-    cd ..\..\..\..
+    ctest -C %BUILD_TYPE% --test-dir build --output-on-failure
 )
 
 if %BUILD_PERFORMANCE_TESTING% == ON (

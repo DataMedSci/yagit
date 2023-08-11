@@ -22,6 +22,7 @@
 #include <thread>
 #include <tuple>
 #include <cmath>
+#include <algorithm>
 #include <functional>
 
 #include "yagit/Interpolation.hpp"
@@ -129,7 +130,8 @@ std::vector<float> multithreadedGammaIndex(const ImageData& refImg, const GammaP
         }
     }
 
-    uint32_t nrOfThreads = std::thread::hardware_concurrency();
+    const uint32_t nrOfThreads = static_cast<uint32_t>(
+        std::min(static_cast<size_t>(std::thread::hardware_concurrency()), refImg.size()));
     if(nrOfThreads > 1){  // multi-threaded
         std::vector<std::thread> threads;
         threads.reserve(nrOfThreads);
