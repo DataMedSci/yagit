@@ -38,7 +38,17 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install libgdcm-dev libgtest-dev libgmock-dev
+          sudo apt install libgdcm-dev
+
+      # install from source, because apt has old version
+      - name: Install GoogleTest and GoogleMock
+        run: |
+          git clone https://github.com/google/googletest.git -b v1.13.0
+          cd googletest
+          mkdir build && cd build
+          cmake ..
+          make
+          sudo make install
 
       - name: Configure and build with CMake
         run: |
