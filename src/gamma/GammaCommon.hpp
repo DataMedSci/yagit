@@ -100,6 +100,13 @@ using YXPosWithDistSq = std::pair<YXPos, float>;
 using ZYXPos = std::tuple<float, float, float>;
 using ZYXPosWithDistSq = std::pair<ZYXPos, float>;
 
+template <typename T>
+void sortByDistanceAsc(std::vector<std::pair<T, float>>& points){
+    std::sort(points.begin(), points.end(), [](const auto& lhs, const auto& rhs){
+        return lhs.second < rhs.second;
+    });
+}
+
 void addPointAndVariants(float y, float x, float distSq, std::vector<YXPosWithDistSq>& result){
     result.emplace_back(YXPos{y, x}, distSq);
     if(y != 0 && x != 0){
@@ -136,10 +143,7 @@ std::vector<YXPosWithDistSq> sortedPointsInCircle(float radius, float stepSize){
         }
     }
 
-    // sort by squared distance ascending
-    std::sort(result.begin(), result.end(), [](const auto& lhs, const auto& rhs){
-        return lhs.second < rhs.second;
-    });
+    sortByDistanceAsc(result);
     return result;
 }
 
@@ -204,10 +208,7 @@ std::vector<ZYXPosWithDistSq> sortedPointsInSphere(float radius, float stepSize)
         }
     }
 
-    // sort by squared distance ascending
-    std::sort(result.begin(), result.end(), [](const auto& lhs, const auto& rhs){
-        return lhs.second < rhs.second;
-    });
+    sortByDistanceAsc(result);
     return result;
 }
 }

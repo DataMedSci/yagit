@@ -86,12 +86,44 @@ TEST(GammaCommonTest, distSq3DWithFloatingPointNumbers){
     EXPECT_FLOAT_EQ(186.46, yagit::distSq3D(-5.1, 4.8, -8.8, 0.3, -2.9, 1.1));
 }
 
+TEST(GammaCommonTest, sortByDistanceAscYXPos){
+    #pragma warning(push)
+    #pragma warning(disable : 4244)
+    std::vector<yagit::YXPosWithDistSq> points{
+        {{-2, -1}, 5}, {{3, 0}, 9}, {{0, 0}, 0}, {{2, 0}, 4}, {{-1, 1}, 2}
+    };
+    yagit::sortByDistanceAsc(points);
+
+    const std::vector<yagit::YXPosWithDistSq> expected{
+        {{0, 0}, 0}, {{-1, 1}, 2}, {{2, 0}, 4}, {{-2, -1}, 5}, {{3, 0}, 9}
+    };
+    #pragma warning(pop)
+
+    EXPECT_EQ(expected, points);
+}
+
+TEST(GammaCommonTest, sortByDistanceAscZYXPos){
+    #pragma warning(push)
+    #pragma warning(disable : 4244)
+    std::vector<yagit::ZYXPosWithDistSq> points{
+        {{0, 0, -1}, 1}, {{1, -2, 3}, 14}, {{2, 0, 0}, 4}, {{0, 0, 0}, 0}, {{-1, 1, 0}, 2}
+    };
+    yagit::sortByDistanceAsc(points);
+
+    const std::vector<yagit::ZYXPosWithDistSq> expected{
+        {{0, 0, 0}, 0}, {{0, 0, -1}, 1}, {{-1, 1, 0}, 2}, {{2, 0, 0}, 4}, {{1, -2, 3}, 14}
+    };
+    #pragma warning(pop)
+
+    EXPECT_EQ(expected, points);
+}
+
 TEST(GammaCommonTest, sortedPointsInCircle){
     const auto sortedPoints = yagit::sortedPointsInCircle(3, 1);
 
     #pragma warning(push)
     #pragma warning(disable : 4244)
-    const std::vector<yagit::YXPosWithDistSq> expected = {
+    std::vector<yagit::YXPosWithDistSq> expected{
         {{0, 0}, 0},
         {{1, 0}, 1}, {{-1, 0}, 1},
         {{0, 1}, 1}, {{0, -1}, 1},
@@ -105,6 +137,10 @@ TEST(GammaCommonTest, sortedPointsInCircle){
         {{0, 3}, 9}, {{0, -3}, 9}
     };
     #pragma warning(pop)
+
+    // expected vector is sorted, but some compilers sort points with the same distance in a different way,
+    // so we sort it here again
+    yagit::sortByDistanceAsc(expected);
 
     EXPECT_EQ(expected, sortedPoints);
 }
@@ -127,7 +163,7 @@ TEST(GammaCommonTest, sortedPointsInSphere){
 
     #pragma warning(push)
     #pragma warning(disable : 4244)
-    const std::vector<yagit::ZYXPosWithDistSq> expected = {
+    std::vector<yagit::ZYXPosWithDistSq> expected{
         {{0, 0, 0}, 0},
         {{1, 0, 0}, 1}, {{-1, 0, 0}, 1},
         {{0, 1, 0}, 1}, {{0, -1, 0}, 1},
@@ -142,6 +178,10 @@ TEST(GammaCommonTest, sortedPointsInSphere){
         {{0, 0, 2}, 4}, {{0, 0, -2}, 4}
     };
     #pragma warning(pop)
+
+    // expected vector is sorted, but some compilers sort points with the same distance in a different way,
+    // so we sort it here again
+    yagit::sortByDistanceAsc(expected);
 
     EXPECT_EQ(expected, sortedPoints);
 }
