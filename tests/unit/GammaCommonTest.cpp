@@ -25,16 +25,17 @@
 using ::testing::Contains, ::testing::FloatEq;
 using ::testing::Matcher, ::testing::AllOf, ::testing::Field, ::testing::FieldsAre;
 
-Matcher<yagit::YXPosWithDistSq> matchYXPosWithDistSq(const yagit::YXPosWithDistSq& expectedPoint){
-    auto [y, x] = expectedPoint.first;
-    return AllOf(Field("pos", &yagit::YXPosWithDistSq::first, FieldsAre(FloatEq(y), FloatEq(x))),
-                 Field("distSq", &yagit::YXPosWithDistSq::second, FloatEq(expectedPoint.second)));
+Matcher<yagit::Point2D> matchPoint2D(const yagit::Point2D& expectedPoint){
+    return AllOf(Field("y", &yagit::Point2D::y, FloatEq(expectedPoint.y)),
+                 Field("x", &yagit::Point2D::x, FloatEq(expectedPoint.x)),
+                 Field("distSq", &yagit::Point2D::distSq, FloatEq(expectedPoint.distSq)));
 }
 
-Matcher<yagit::ZYXPosWithDistSq> matchZYXPosWithDistSq(const yagit::ZYXPosWithDistSq& expectedPoint){
-    auto [z, y, x] = expectedPoint.first;
-    return AllOf(Field("pos", &yagit::ZYXPosWithDistSq::first, FieldsAre(FloatEq(z), FloatEq(y), FloatEq(x))),
-                 Field("distSq", &yagit::ZYXPosWithDistSq::second, FloatEq(expectedPoint.second)));
+Matcher<yagit::Point3D> matchPoint3D(const yagit::Point3D& expectedPoint){
+    return AllOf(Field("z", &yagit::Point3D::z, FloatEq(expectedPoint.z)),
+                 Field("y", &yagit::Point3D::y, FloatEq(expectedPoint.y)),
+                 Field("x", &yagit::Point3D::x, FloatEq(expectedPoint.x)),
+                 Field("distSq", &yagit::Point3D::distSq, FloatEq(expectedPoint.distSq)));
 }
 
 TEST(GammaCommonTest, distSq1D){
@@ -89,13 +90,13 @@ TEST(GammaCommonTest, distSq3DWithFloatingPointNumbers){
 TEST(GammaCommonTest, sortByDistanceAscYXPos){
     #pragma warning(push)
     #pragma warning(disable : 4244)
-    std::vector<yagit::YXPosWithDistSq> points{
-        {{-2, -1}, 5}, {{3, 0}, 9}, {{0, 0}, 0}, {{2, 0}, 4}, {{-1, 1}, 2}
+    std::vector<yagit::Point2D> points{
+        {-2, -1, 5}, {3, 0, 9}, {0, 0, 0}, {2, 0, 4}, {-1, 1, 2}
     };
     yagit::sortByDistanceAsc(points);
 
-    const std::vector<yagit::YXPosWithDistSq> expected{
-        {{0, 0}, 0}, {{-1, 1}, 2}, {{2, 0}, 4}, {{-2, -1}, 5}, {{3, 0}, 9}
+    const std::vector<yagit::Point2D> expected{
+        {0, 0, 0}, {-1, 1, 2}, {2, 0, 4}, {-2, -1, 5}, {3, 0, 9}
     };
     #pragma warning(pop)
 
@@ -105,13 +106,13 @@ TEST(GammaCommonTest, sortByDistanceAscYXPos){
 TEST(GammaCommonTest, sortByDistanceAscZYXPos){
     #pragma warning(push)
     #pragma warning(disable : 4244)
-    std::vector<yagit::ZYXPosWithDistSq> points{
-        {{0, 0, -1}, 1}, {{1, -2, 3}, 14}, {{2, 0, 0}, 4}, {{0, 0, 0}, 0}, {{-1, 1, 0}, 2}
+    std::vector<yagit::Point3D> points{
+        {0, 0, -1, 1}, {1, -2, 3, 14}, {2, 0, 0, 4}, {0, 0, 0, 0}, {-1, 1, 0, 2}
     };
     yagit::sortByDistanceAsc(points);
 
-    const std::vector<yagit::ZYXPosWithDistSq> expected{
-        {{0, 0, 0}, 0}, {{0, 0, -1}, 1}, {{-1, 1, 0}, 2}, {{2, 0, 0}, 4}, {{1, -2, 3}, 14}
+    const std::vector<yagit::Point3D> expected{
+        {0, 0, 0, 0}, {0, 0, -1, 1}, {-1, 1, 0, 2}, {2, 0, 0, 4}, {1, -2, 3, 14}
     };
     #pragma warning(pop)
 
@@ -123,18 +124,18 @@ TEST(GammaCommonTest, sortedPointsInCircle){
 
     #pragma warning(push)
     #pragma warning(disable : 4244)
-    std::vector<yagit::YXPosWithDistSq> expected{
-        {{0, 0}, 0},
-        {{1, 0}, 1}, {{-1, 0}, 1},
-        {{0, 1}, 1}, {{0, -1}, 1},
-        {{1, 1}, 2}, {{-1, -1}, 2}, {{-1, 1}, 2}, {{1, -1}, 2},
-        {{2, 0}, 4}, {{-2, 0}, 4},
-        {{0, 2}, 4}, {{0, -2}, 4},
-        {{2, 1}, 5}, {{-2, -1}, 5}, {{-2, 1}, 5}, {{2, -1}, 5},
-        {{1, 2}, 5}, {{-1, -2}, 5}, {{-1, 2}, 5}, {{1, -2}, 5},
-        {{2, 2}, 8}, {{-2, -2}, 8}, {{-2, 2}, 8}, {{2, -2}, 8},
-        {{3, 0}, 9}, {{-3, 0}, 9},
-        {{0, 3}, 9}, {{0, -3}, 9}
+    std::vector<yagit::Point2D> expected{
+        {0, 0, 0},
+        {1, 0, 1}, {-1, 0, 1},
+        {0, 1, 1}, {0, -1, 1},
+        {1, 1, 2}, {-1, -1, 2}, {-1, 1, 2}, {1, -1, 2},
+        {2, 0, 4}, {-2, 0, 4},
+        {0, 2, 4}, {0, -2, 4},
+        {2, 1, 5}, {-2, -1, 5}, {-2, 1, 5}, {2, -1, 5},
+        {1, 2, 5}, {-1, -2, 5}, {-1, 2, 5}, {1, -2, 5},
+        {2, 2, 8}, {-2, -2, 8}, {-2, 2, 8}, {2, -2, 8},
+        {3, 0, 9}, {-3, 0, 9},
+        {0, 3, 9}, {0, -3, 9}
     };
     #pragma warning(pop)
 
@@ -152,9 +153,9 @@ TEST(GammaCommonTest, sortedPointsInCircleShouldContainPointsOnEdge){
 
     #pragma warning(push)
     #pragma warning(disable : 4244)
-    EXPECT_THAT(sortedPoints, Contains(matchYXPosWithDistSq({{0.6f, 0.8f}, 1})));
-    EXPECT_THAT(sortedPoints, Contains(matchYXPosWithDistSq({{1, 0}, 1})));
-    EXPECT_THAT(sortedPoints, Contains(matchYXPosWithDistSq({{0, 1}, 1})));
+    EXPECT_THAT(sortedPoints, Contains(matchPoint2D({0.6f, 0.8f, 1})));
+    EXPECT_THAT(sortedPoints, Contains(matchPoint2D({1, 0, 1})));
+    EXPECT_THAT(sortedPoints, Contains(matchPoint2D({0, 1, 1})));
     #pragma warning(pop)
 }
 
@@ -163,19 +164,19 @@ TEST(GammaCommonTest, sortedPointsInSphere){
 
     #pragma warning(push)
     #pragma warning(disable : 4244)
-    std::vector<yagit::ZYXPosWithDistSq> expected{
-        {{0, 0, 0}, 0},
-        {{1, 0, 0}, 1}, {{-1, 0, 0}, 1},
-        {{0, 1, 0}, 1}, {{0, -1, 0}, 1},
-        {{0, 0, 1}, 1}, {{0, 0, -1}, 1},
-        {{1, 1, 0}, 2}, {{-1, -1, 0}, 2}, {{-1, 1, 0}, 2}, {{1, -1, 0}, 2},
-        {{1, 0, 1}, 2}, {{-1, 0, -1}, 2}, {{-1, 0, 1}, 2}, {{1, 0, -1}, 2},
-        {{0, 1, 1}, 2}, {{0, -1, -1}, 2}, {{0, -1, 1}, 2}, {{0, 1, -1}, 2},
-        {{1, 1, 1}, 3}, {{-1, -1, -1}, 3}, {{-1, -1, 1}, 3}, {{-1, 1, -1}, 3}, {{1, -1, -1}, 3},
-            {{-1, 1, 1}, 3}, {{1, -1, 1}, 3}, {{1, 1, -1}, 3},
-        {{2, 0, 0}, 4}, {{-2, 0, 0}, 4},
-        {{0, 2, 0}, 4}, {{0, -2, 0}, 4},
-        {{0, 0, 2}, 4}, {{0, 0, -2}, 4}
+    std::vector<yagit::Point3D> expected{
+        {0, 0, 0, 0},
+        {1, 0, 0, 1}, {-1, 0, 0, 1},
+        {0, 1, 0, 1}, {0, -1, 0, 1},
+        {0, 0, 1, 1}, {0, 0, -1, 1},
+        {1, 1, 0, 2}, {-1, -1, 0, 2}, {-1, 1, 0, 2}, {1, -1, 0, 2},
+        {1, 0, 1, 2}, {-1, 0, -1, 2}, {-1, 0, 1, 2}, {1, 0, -1, 2},
+        {0, 1, 1, 2}, {0, -1, -1, 2}, {0, -1, 1, 2}, {0, 1, -1, 2},
+        {1, 1, 1, 3}, {-1, -1, -1, 3}, {-1, -1, 1, 3}, {-1, 1, -1, 3}, {1, -1, -1, 3},
+            {-1, 1, 1, 3}, {1, -1, 1, 3}, {1, 1, -1, 3},
+        {2, 0, 0, 4}, {-2, 0, 0, 4},
+        {0, 2, 0, 4}, {0, -2, 0, 4},
+        {0, 0, 2, 4}, {0, 0, -2, 4}
     };
     #pragma warning(pop)
 
@@ -193,9 +194,9 @@ TEST(GammaCommonTest, sortedPointsInSphereShouldContainPointsOnEdge){
 
     #pragma warning(push)
     #pragma warning(disable : 4244)
-    EXPECT_THAT(sortedPoints, Contains(matchZYXPosWithDistSq({{0.6f, 0.8f, 0.0f}, 1})));
-    EXPECT_THAT(sortedPoints, Contains(matchZYXPosWithDistSq({{1, 0, 0}, 1})));
-    EXPECT_THAT(sortedPoints, Contains(matchZYXPosWithDistSq({{0, 1, 0}, 1})));
-    EXPECT_THAT(sortedPoints, Contains(matchZYXPosWithDistSq({{0, 0, 1}, 1})));
+    EXPECT_THAT(sortedPoints, Contains(matchPoint3D({0.6f, 0.8f, 0.0f, 1})));
+    EXPECT_THAT(sortedPoints, Contains(matchPoint3D({1, 0, 0, 1})));
+    EXPECT_THAT(sortedPoints, Contains(matchPoint3D({0, 1, 0, 1})));
+    EXPECT_THAT(sortedPoints, Contains(matchPoint3D({0, 0, 1, 1})));
     #pragma warning(pop)
 }

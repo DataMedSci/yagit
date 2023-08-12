@@ -316,14 +316,13 @@ GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& eva
 
                 bool atLeastOneInRange = false;
                 for(const auto& point : sortedPoints){
-                    const float normalizedDistSq = point.second * dtaInvSq;
+                    const float normalizedDistSq = point.distSq * dtaInvSq;
                     if(normalizedDistSq >= minGammaValSq){
                         break;
                     }
 
-                    auto [dy, dx] = point.first;
-                    float ye = yr + dy;
-                    float xe = xr + dx;
+                    float ye = yr + point.y;
+                    float xe = xr + point.x;
 
                     // instead of calling Interpolate::bilinearAtPoint function,
                     // here is an inlined, optimized version. It gives 5-10% speedup
@@ -439,14 +438,13 @@ GammaResult gammaIndex2_5DWendling(const ImageData& refImg3D, const ImageData& e
 
                     bool atLeastOneInRange = false;
                     for(const auto& point : sortedPoints){
-                        const float normalizedDistSq = point.second * dtaInvSq;
+                        const float normalizedDistSq = point.distSq * dtaInvSq;
                         if(normalizedDistSq >= minGammaValSq){
                             break;
                         }
 
-                        auto [dy, dx] = point.first;
-                        float ye = yr + dy;
-                        float xe = xr + dx;
+                        float ye = yr + point.y;
+                        float xe = xr + point.x;
 
                         // instead of calling Interpolate::bilinearAtPoint function,
                         // here is an inlined, optimized version. It gives 5-10% speedup
@@ -563,15 +561,14 @@ GammaResult gammaIndex3DWendling(const ImageData& refImg3D, const ImageData& eva
 
                     bool atLeastOneInRange = false;
                     for(const auto& point : sortedPoints){
-                        const float normalizedDistSq = point.second * dtaInvSq;
+                        const float normalizedDistSq = point.distSq * dtaInvSq;
                         if(normalizedDistSq >= minGammaValSq){
                             break;
                         }
 
-                        auto [dz, dy, dx] = point.first;
-                        float ze = zr + dz;
-                        float ye = yr + dy;
-                        float xe = xr + dx;
+                        float ze = zr + point.z;
+                        float ye = yr + point.y;
+                        float xe = xr + point.x;
 
                         // instead of calling Interpolate::trilinearAtPoint function,
                         // here is an inlined, optimized version. It gives 5-10% speedup

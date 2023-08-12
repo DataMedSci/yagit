@@ -94,34 +94,60 @@ constexpr float distSq3D(float x1, float y1, float z1, float x2, float y2, float
 }
 
 namespace{
-using YXPos = std::pair<float, float>;
-using YXPosWithDistSq = std::pair<YXPos, float>;
+struct Point2D{
+    float y;
+    float x;
+    float distSq;
 
-using ZYXPos = std::tuple<float, float, float>;
-using ZYXPosWithDistSq = std::pair<ZYXPos, float>;
+    Point2D(float y, float x, float distSq)
+        : y(y), x(x), distSq(distSq) {}
+    
+    bool operator==(const Point2D& other) const{
+        return y == other.y && x == other.x && distSq == other.distSq;
+    }
+};
 
-template <typename T>
-void sortByDistanceAsc(std::vector<std::pair<T, float>>& points){
+struct Point3D{
+    float z;
+    float y;
+    float x;
+    float distSq;
+
+    Point3D(float z, float y, float x, float distSq)
+        : z(z), y(y), x(x), distSq(distSq) {}
+    
+    bool operator==(const Point3D& other) const{
+        return z == other.z && y == other.y && x == other.x && distSq == other.distSq;
+    }
+};
+
+void sortByDistanceAsc(std::vector<Point2D>& points){
     std::sort(points.begin(), points.end(), [](const auto& lhs, const auto& rhs){
-        return lhs.second < rhs.second;
+        return lhs.distSq < rhs.distSq;
     });
 }
 
-void addPointAndVariants(float y, float x, float distSq, std::vector<YXPosWithDistSq>& result){
-    result.emplace_back(YXPos{y, x}, distSq);
+void sortByDistanceAsc(std::vector<Point3D>& points){
+    std::sort(points.begin(), points.end(), [](const auto& lhs, const auto& rhs){
+        return lhs.distSq < rhs.distSq;
+    });
+}
+
+void addPointAndVariants(float y, float x, float distSq, std::vector<Point2D>& result){
+    result.emplace_back(y, x, distSq);
     if(y != 0 && x != 0){
-        result.emplace_back(YXPos{-y, -x}, distSq);
+        result.emplace_back(-y, -x, distSq);
     }
     if(y != 0){
-        result.emplace_back(YXPos{-y, x}, distSq);
+        result.emplace_back(-y, x, distSq);
     }
     if(x != 0){
-        result.emplace_back(YXPos{y, -x}, distSq);
+        result.emplace_back(y, -x, distSq);
     }
 }
 
-std::vector<YXPosWithDistSq> sortedPointsInCircle(float radius, float stepSize){
-    std::vector<YXPosWithDistSq> result;
+std::vector<Point2D> sortedPointsInCircle(float radius, float stepSize){
+    std::vector<Point2D> result;
     const uint32_t elements = static_cast<uint32_t>(radius / stepSize);
     // reserve a little more than pi * elements^2
     result.reserve(static_cast<size_t>(3.5 * elements * elements));
@@ -147,33 +173,33 @@ std::vector<YXPosWithDistSq> sortedPointsInCircle(float radius, float stepSize){
     return result;
 }
 
-void addPointAndVariants(float z, float y, float x, float distSq, std::vector<ZYXPosWithDistSq>& result){
-    result.emplace_back(ZYXPos{z, y, x}, distSq);
+void addPointAndVariants(float z, float y, float x, float distSq, std::vector<Point3D>& result){
+    result.emplace_back(z, y, x, distSq);
     if(z != 0 && y != 0 && x != 0){
-        result.emplace_back(ZYXPos{-z, -y, -x}, distSq);
+        result.emplace_back(-z, -y, -x, distSq);
     }
     if(z != 0 && y != 0){
-        result.emplace_back(ZYXPos{-z, -y, x}, distSq);
+        result.emplace_back(-z, -y, x, distSq);
     }
     if(z != 0 && x != 0){
-        result.emplace_back(ZYXPos{-z, y, -x}, distSq);
+        result.emplace_back(-z, y, -x, distSq);
     }
     if(y != 0 && x != 0){
-        result.emplace_back(ZYXPos{z, -y, -x}, distSq);
+        result.emplace_back(z, -y, -x, distSq);
     }
     if(z != 0){
-        result.emplace_back(ZYXPos{-z, y, x}, distSq);
+        result.emplace_back(-z, y, x, distSq);
     }
     if(y != 0){
-        result.emplace_back(ZYXPos{z, -y, x}, distSq);
+        result.emplace_back(z, -y, x, distSq);
     }
     if(x != 0){
-        result.emplace_back(ZYXPos{z, y, -x}, distSq);
+        result.emplace_back(z, y, -x, distSq);
     }
 }
 
-std::vector<ZYXPosWithDistSq> sortedPointsInSphere(float radius, float stepSize){
-    std::vector<ZYXPosWithDistSq> result;
+std::vector<Point3D> sortedPointsInSphere(float radius, float stepSize){
+    std::vector<Point3D> result;
     const uint32_t elements = static_cast<uint32_t>(radius / stepSize);
     // reserve a little more than 4/3 * pi * elements^3
     result.reserve(static_cast<size_t>(4.5 * elements * elements * elements));

@@ -399,7 +399,7 @@ GammaResult gammaIndex3DClassic(const ImageData& refImg3D, const ImageData& eval
 namespace{
 void gammaIndex2DWendlingInternal(const ImageData& refImg2D, const ImageData& evalImg2D,
                                   const GammaParameters& gammaParams,
-                                  const std::vector<YXPosWithDistSq>& sortedPoints,
+                                  const std::vector<Point2D>& sortedPoints,
                                   size_t startIndex, size_t endIndex, std::vector<float>& gammaVals){
     const float ddInvSq = (100 * 100) / (gammaParams.ddThreshold * gammaParams.ddThreshold);
     const float dtaInvSq = 1 / (gammaParams.dtaThreshold * gammaParams.dtaThreshold);
@@ -433,14 +433,13 @@ void gammaIndex2DWendlingInternal(const ImageData& refImg2D, const ImageData& ev
 
                 bool atLeastOneInRange = false;
                 for(const auto& point : sortedPoints){
-                    const float normalizedDistSq = point.second * dtaInvSq;
+                    const float normalizedDistSq = point.distSq * dtaInvSq;
                     if(normalizedDistSq >= minGammaValSq){
                         break;
                     }
 
-                    auto [dy, dx] = point.first;
-                    float ye = yr + dy;
-                    float xe = xr + dx;
+                    float ye = yr + point.y;
+                    float xe = xr + point.x;
 
                     // instead of calling Interpolate::bilinearAtPoint function,
                     // here is an inlined, optimized version. It gives 5-10% speedup
@@ -503,7 +502,7 @@ void gammaIndex2DWendlingInternal(const ImageData& refImg2D, const ImageData& ev
 
 void gammaIndex2_5DWendlingInternal(const ImageData& refImg3D, const ImageData& evalImg3D,
                                     const GammaParameters& gammaParams,
-                                    const std::vector<YXPosWithDistSq>& sortedPoints,
+                                    const std::vector<Point2D>& sortedPoints,
                                     size_t startIndex, size_t endIndex, std::vector<float>& gammaVals){
     const float ddInvSq = (100 * 100) / (gammaParams.ddThreshold * gammaParams.ddThreshold);
     const float dtaInvSq = 1 / (gammaParams.dtaThreshold * gammaParams.dtaThreshold);
@@ -549,14 +548,13 @@ void gammaIndex2_5DWendlingInternal(const ImageData& refImg3D, const ImageData& 
 
                         bool atLeastOneInRange = false;
                         for(const auto& point : sortedPoints){
-                            const float normalizedDistSq = point.second * dtaInvSq;
+                            const float normalizedDistSq = point.distSq * dtaInvSq;
                             if(normalizedDistSq >= minGammaValSq){
                                 break;
                             }
 
-                            auto [dy, dx] = point.first;
-                            float ye = yr + dy;
-                            float xe = xr + dx;
+                            float ye = yr + point.y;
+                            float xe = xr + point.x;
 
                             // instead of calling Interpolate::bilinearAtPoint function,
                             // here is an inlined, optimized version. It gives 5-10% speedup
@@ -622,7 +620,7 @@ void gammaIndex2_5DWendlingInternal(const ImageData& refImg3D, const ImageData& 
 
 void gammaIndex3DWendlingInternal(const ImageData& refImg3D, const ImageData& evalImg3D,
                                   const GammaParameters& gammaParams,
-                                  const std::vector<ZYXPosWithDistSq>& sortedPoints,
+                                  const std::vector<Point3D>& sortedPoints,
                                   size_t startIndex, size_t endIndex, std::vector<float>& gammaVals){
     const float ddInvSq = (100 * 100) / (gammaParams.ddThreshold * gammaParams.ddThreshold);
     const float dtaInvSq = 1 / (gammaParams.dtaThreshold * gammaParams.dtaThreshold);
@@ -665,15 +663,14 @@ void gammaIndex3DWendlingInternal(const ImageData& refImg3D, const ImageData& ev
 
                     bool atLeastOneInRange = false;
                     for(const auto& point : sortedPoints){
-                        const float normalizedDistSq = point.second * dtaInvSq;
+                        const float normalizedDistSq = point.distSq * dtaInvSq;
                         if(normalizedDistSq >= minGammaValSq){
                             break;
                         }
 
-                        auto [dz, dy, dx] = point.first;
-                        float ze = zr + dz;
-                        float ye = yr + dy;
-                        float xe = xr + dx;
+                        float ze = zr + point.z;
+                        float ye = yr + point.y;
+                        float xe = xr + point.x;
 
                         // instead of calling Interpolate::trilinearAtPoint function,
                         // here is an inlined, optimized version. It gives 5-10% speedup
