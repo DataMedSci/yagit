@@ -68,6 +68,10 @@ jobs:
         run: |
           ./build/examples/gammaImage
 
+      - name: Install yagit
+        run: |
+          cmake --install build --prefix ./yagit_install_dir
+
   build-windows:
     if: >
       github.repository == 'DataMedSci/yagit' &&
@@ -123,3 +127,7 @@ jobs:
       - name: Run example
         run: |
           build\examples\${{ env.BUILD_TYPE }}\gammaImage.exe
+
+      - name: Install yagit
+        run: |
+          cmake --install build --prefix ./yagit_install_dir
