@@ -24,17 +24,13 @@ namespace yagit{
 
 /**
  * @brief Type for storing 2D image
- * @tparam T type of pixel value
  */
-template <typename T>
-using Image2D = std::vector<std::vector<T>>;
+using Image2D = std::vector<std::vector<float>>;
 
 /**
  * @brief Type for storing 3D image
- * @tparam T type of voxel value
  */
-template <typename T>
-using Image3D = std::vector<Image2D<T>>;
+using Image3D = std::vector<Image2D>;
 
 /**
  * @brief Axis of image (Z, Y, X)

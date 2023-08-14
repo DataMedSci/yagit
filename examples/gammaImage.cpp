@@ -31,9 +31,9 @@
 #include <string>
 #include <iostream>
 
-#include "yagit/yagit.hpp"
+#include <yagit/yagit.hpp>
 
-void printImage2D(const yagit::Image2D<float>& img){
+void printImage2D(const yagit::Image2D& img){
     std::cout << "[";
     for(size_t i = 0; i < img.size(); i++){
         std::cout << (i == 0 ? "[" : " [");
@@ -61,19 +61,19 @@ void printImageData(const yagit::ImageData& imageData){
 
 int main(){
 
-    yagit::Image2D<float> refImg = {
+    yagit::Image2D refImg = {
         {0.93, 0.95},
         {0.97, 1.00}
     };
-    yagit::Image2D<float> evalImg = {
+    yagit::Image2D evalImg = {
         {0.95, 0.97},
         {1.00, 1.03}
     };
 
     yagit::DataOffset refOffset{0, 0, -1};
     yagit::DataOffset evalOffset{0, -1, 0};
-    yagit::DataSpacing refSpacing{0, 1, 1};
-    yagit::DataSpacing evalSpacing{0, 1, 1};
+    yagit::DataSpacing refSpacing{1, 1, 1};
+    yagit::DataSpacing evalSpacing{1, 1, 1};
 
     yagit::ImageData refImgDose(refImg, refOffset, refSpacing);
     yagit::ImageData evalImgDose(evalImg, evalOffset, evalSpacing);

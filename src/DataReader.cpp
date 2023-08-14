@@ -31,6 +31,7 @@ namespace yagit::DataReader{
 
 namespace{
 const gdcm::Keywords::TransferSyntaxUID TransferSyntaxUIDAttr{};                   // (0x0002, 0x0010)  UI
+const gdcm::Keywords::SOPClassUID SOPClassUIDAttr{};                               // (0x0008, 0x0016)  UI
 const gdcm::Keywords::Modality ModalityAttr{};                                     // (0x0008, 0x0060)  CS
 const gdcm::Keywords::SliceThickness SliceThicknessAttr{};                         // (0x0018, 0x0050)  DS
 const gdcm::Keywords::ImagePositionPatient ImagePositionPatientAttr{};             // (0x0020, 0x0032)  DS
@@ -55,8 +56,11 @@ const gdcm::UIComp ExplicitVRLittleEndian{"1.2.840.10008.1.2.1"};
 const gdcm::UIComp DeflatedExplicitVRLittleEndian{"1.2.840.10008.1.2.1.99"};
 const gdcm::UIComp ExplicitVRBigEndian{"1.2.840.10008.1.2.2"};
 
+const gdcm::UIComp RTDoseSOPClassUID{"1.2.840.10008.5.1.4.1.1.481.2"};
 const gdcm::CSComp RTDoseModality{"RTDOSE"};
 const gdcm::CSComp Monochrome2{"MONOCHROME2"};
+
+const std::vector<double> OrientationHFS{1, 0, 0, 0, 1, 0};
 }
 
 namespace{
@@ -107,6 +111,10 @@ gdcm::SwapCode getDataEndianness(const std::optional<gdcm::UIComp>& transferSynt
         return gdcm::SwapCode::Unknown;
     }
 }
+
+double roundTo5DecimalPlaces(double number){
+    return std::round(number * 1e5) / 1e5;
+}
 }
 
 ImageData readRTDoseDicom(const std::string& filepath, bool displayInfo){
@@ -115,8 +123,19 @@ ImageData readRTDoseDicom(const std::string& filepath, bool displayInfo){
     if(!reader.Read()) {
         throw std::runtime_error("cannot read " + filepath + " file");
     }
-    
+
+    const gdcm::DataSet& header = reader.GetFile().GetHeader();
     const gdcm::DataSet& ds = reader.GetFile().GetDataSet();
+
+    auto sopClassUID = getValue(ds, SOPClassUIDAttr);
+    if(sopClassUID == std::nullopt || *sopClassUID != RTDoseSOPClassUID){
+        std::string RTDoseSOPClassUIDStr = RTDoseSOPClassUID;
+        // in some cases, UIComp adds \0 char to the end of the string, so we remove it to correctly create exception message
+        if(RTDoseSOPClassUIDStr.back() == '\0'){
+            RTDoseSOPClassUIDStr.pop_back();
+        }
+        throw std::runtime_error("DICOM file doesn't have attribute SOP Class UID (0008,0016) equal to '" + RTDoseSOPClassUIDStr + "'");
+    }
 
     auto modality = getValue(ds, ModalityAttr);
     if(modality == std::nullopt || *modality != RTDoseModality){
@@ -126,7 +145,7 @@ ImageData readRTDoseDicom(const std::string& filepath, bool displayInfo){
     auto frames = getValue(ds, NumberOfFramesAttr);
     if(frames == std::nullopt){
         if(displayInfo){
-            std::cerr << "DICOM file doesn't have attribute Number of Frames (0028,0008). Assuming it has one frame.\n";
+            std::cerr << "DICOM file doesn't have attribute Number Of Frames (0028,0008). Assuming it has one frame.\n";
         }
         frames = 1;
     }
@@ -150,23 +169,27 @@ ImageData readRTDoseDicom(const std::string& filepath, bool displayInfo){
     }
     // direction cosines sometimes have innacurate values (e.g. -2.05203471e-10 instead of 0), so we round them
     for(auto& el : imageOrientationPatient){
-        el = static_cast<int>(el * 1e5 + 0.5) / 1e5;  // round number to 5 decimal places
+        el = roundTo5DecimalPlaces(el);
     }
-    // TODO: check if abs_orient is [1,0,0,0,1,0] or [0,1,0,1,0,0] - other are not supported
-    // TODO: add convertion of spacing depending on orientation??
+    if(imageOrientationPatient != OrientationHFS){
+        throw std::runtime_error("orientations different than HFS (1 0 0 0 1 0) not supported");
+        // TODO: support for other standard orientations
+        // check if abs_orient is [1,0,0,0,1,0] or [0,1,0,1,0,0] and then convert image, size, offset and spacing to HFS
+    }
 
     auto pixelSpacing = getMultipleValues(ds, PixelSpacingAttr);  // row and column spacing
     if(pixelSpacing.size() != 2){
         throw std::runtime_error("DICOM file doesn't have attribute Pixel Spacing (0028,0030) containig 2 elements");
     }
 
-    double sliceThicknessVal{0};
+    double sliceThicknessVal{1};
     if(*frames > 1){
         auto sliceThickness = getValue(ds, SliceThicknessAttr);
         if(sliceThickness == std::nullopt || *sliceThickness == 0){
             auto gridFrameOffsetVector = getMultipleValues(ds, GridFrameOffsetVectorAttr);
             if(gridFrameOffsetVector.size() != static_cast<size_t>(*frames)){
-                throw std::runtime_error("DICOM file doesn't have attribute Slice Thickness (0018,0050) and Grid Frame Offset Vector (3004,000C) with " + std::to_string(*frames) + " elements");
+                throw std::runtime_error("DICOM file doesn't have attribute Slice Thickness (0018,0050) and "
+                                         "Grid Frame Offset Vector (3004,000C) with " + std::to_string(*frames) + " elements");
             }
             sliceThicknessVal = gridFrameOffsetVector[1] - gridFrameOffsetVector[0];
             for(size_t i=2; i < gridFrameOffsetVector.size(); i++){
@@ -211,26 +234,20 @@ ImageData readRTDoseDicom(const std::string& filepath, bool displayInfo){
     }
 
     std::vector<char> pixelData = getPixelData(ds);
-    uint32_t correctDataSize = frames.value() * rows.value() * columns.value() * bitsAllocated.value() / 8; // expected number of bytes of data
-    if(pixelData.size() != correctDataSize){
-        throw std::runtime_error("DICOM file doesn't have attribute Pixel Data (7FE0,0010) containing " + std::to_string(correctDataSize) + " bytes of data");
+    uint32_t correctDataSizeBytes = frames.value() * rows.value() * columns.value() * bitsAllocated.value() / 8;
+    if(pixelData.size() != correctDataSizeBytes){
+        throw std::runtime_error("DICOM file doesn't have attribute Pixel Data (7FE0,0010) containing " +
+                                 std::to_string(correctDataSizeBytes) + " bytes of data");
     }
 
-    auto transferSyntaxUID = getValue(ds, TransferSyntaxUIDAttr);
+    auto transferSyntaxUID = getValue(header, TransferSyntaxUIDAttr);
     gdcm::SwapCode dataEndianness = getDataEndianness(transferSyntaxUID);
-    if(dataEndianness != gdcm::SwapCode::Unknown){
-        if(*bitsAllocated == 32){
-            swapBytesToSystemEndianness<uint32_t>(pixelData, dataEndianness);
-        }
-        else if(*bitsAllocated == 16){
-            swapBytesToSystemEndianness<uint16_t>(pixelData, dataEndianness);
-        }
-    }
-    else{
+    if(dataEndianness == gdcm::SwapCode::Unknown){
         throw std::runtime_error("compression Transfer Syntax UIDs not supported");
     }
 
     if(displayInfo){
+        std::cout << "SOPClassUID: " << *sopClassUID << "\n";
         std::cout << "Modality: " << *modality << "\n";
         std::cout << "TransferSyntaxUID: " << (transferSyntaxUID.has_value() ? std::string(*transferSyntaxUID)
                                                                              : std::string("")) << "\n";
@@ -354,7 +371,7 @@ std::string trim(std::string str){
     return ltrim(rtrim(str));
 }
 
-inline void swapBytes64(uint64_t& value){
+void swapBytes64(uint64_t& value){
     value = (((value & 0xff00000000000000ull) >> 56) |
              ((value & 0x00ff000000000000ull) >> 40) |
              ((value & 0x0000ff0000000000ull) >> 24) |
@@ -367,7 +384,7 @@ inline void swapBytes64(uint64_t& value){
 
 void swapBytes64(std::vector<char>& data){
     uint64_t* dataPtr = reinterpret_cast<uint64_t*>(data.data());
-    for(size_t i = 0; i < data.size() / sizeof(uint64_t); i++, dataPtr++){
+    for(size_t i = 0; i < data.size() * sizeof(char) / sizeof(uint64_t); i++, dataPtr++){
         swapBytes64(*dataPtr);
     }
 }

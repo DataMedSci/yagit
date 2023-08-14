@@ -40,18 +40,37 @@ jobs:
           sudo apt update
           sudo apt install libgdcm-dev
 
+      # install from source, because apt has old version
+      - name: Install GoogleTest and GoogleMock
+        run: |
+          git clone https://github.com/google/googletest.git -b v1.13.0
+          cd googletest
+          mkdir build && cd build
+          cmake ..
+          make
+          sudo make install
+
       - name: Configure and build with CMake
         run: |
           mkdir build && cd build
           cmake .. -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
                    -DGAMMA_VERSION=${{ matrix.gamma-version }} \
                    -DBUILD_EXAMPLES=ON \
+                   -DBUILD_TESTING=ON \
                    -DBUILD_PERFORMANCE_TESTING=ON
           cmake --build .
+      
+      - name: Run unit tests
+        run: |
+          ctest --test-dir build --output-on-failure
 
       - name: Run example
         run: |
           ./build/examples/gammaImage
+
+      - name: Install yagit
+        run: |
+          cmake --install build --prefix ./yagit_install_dir
 
   build-windows:
     if: >
@@ -97,9 +116,18 @@ jobs:
                    -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ^
                    -DGAMMA_VERSION=${{ matrix.gamma-version }} ^
                    -DBUILD_EXAMPLES=ON ^
+                   -DBUILD_TESTING=ON ^
                    -DBUILD_PERFORMANCE_TESTING=ON
           cmake --build . --config ${{ env.BUILD_TYPE }}
+
+      - name: Run unit tests
+        run: |
+          ctest -C ${{ env.BUILD_TYPE }} --test-dir build --output-on-failure
 
       - name: Run example
         run: |
           build\examples\${{ env.BUILD_TYPE }}\gammaImage.exe
+
+      - name: Install yagit
+        run: |
+          cmake --install build --prefix ./yagit_install_dir

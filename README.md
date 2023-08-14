@@ -24,8 +24,18 @@ mkdir build && cd build
 
 3. Building the library
 ```
-cmake --build . --config Release
+cmake --build . --config Release -j
 ```
+
+4. Installing the library
+    * system-wide (you need administrator privileges)
+    ```
+    sudo cmake --install .
+    ```
+    * in specific location
+    ```
+    cmake --install . --prefix <path where you want to install>
+    ```
 
 ## Gamma versions
 

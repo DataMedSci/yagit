@@ -103,3 +103,7 @@ docs/build
 
 # CSV files
 *.csv
+
+# tests data files
+!tests/unit/data/*.dcm
+!tests/unit/data/*.mha

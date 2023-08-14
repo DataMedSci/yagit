@@ -35,13 +35,92 @@ using pointer = ImageData::pointer;
 using const_pointer = ImageData::const_pointer;
 
 bool floatsEqual(value_type val1, value_type val2){
-    return std::abs(val1 - val2) <= std::max(std::abs(val1), std::abs(val2)) *
-                                    2 * std::numeric_limits<value_type>::epsilon();
+    return val1 == val2 || std::abs(val1 - val2) <= std::max(std::abs(val1), std::abs(val2)) *
+                                                    2 * std::numeric_limits<value_type>::epsilon();
+}
+
+bool nanSensitiveFloatsEqual(value_type val1, value_type val2){
+    return floatsEqual(val1, val2) || (std::isnan(val1) && std::isnan(val2));
 }
 }
 
 ImageData::ImageData()
-    : m_data{}, m_size{0, 0, 0}, m_offset{0, 0, 0}, m_spacing{0, 0, 0} {}
+    : m_data{}, m_size{0, 0, 0}, m_offset{0, 0, 0}, m_spacing{1, 1, 1} {}
+
+ImageData::ImageData(const Image2D& image2d, const DataOffset& offset, const DataSpacing& spacing)
+    : m_offset(offset), m_spacing(spacing) {
+    if(spacing.frames <= 0 || spacing.rows <= 0 || spacing.columns <= 0){
+        throw std::invalid_argument("spacing should be greater than 0");
+    }
+
+    const uint32_t rows = image2d.size();
+    if(rows == 0){
+        m_size = DataSize{0, 0, 0};
+        return;
+    }
+
+    const uint32_t columns = image2d.at(0).size();
+    for(const auto& v : image2d){
+        if(v.size() != columns){
+            throw std::invalid_argument("inner vectors don't have the same size");
+        }
+    }
+    if(columns == 0){
+        m_size = DataSize{0, 0, 0};
+        return;
+    }
+
+    m_data.reserve(rows * columns);
+    for(const auto& v : image2d){
+        m_data.insert(m_data.end(), v.begin(), v.end());
+    }
+    m_size = DataSize{1, rows, columns};
+}
+
+ImageData::ImageData(const Image3D& image3d, const DataOffset& offset, const DataSpacing& spacing)
+    : m_offset(offset), m_spacing(spacing) {
+    if(spacing.frames <= 0 || spacing.rows <= 0 || spacing.columns <= 0){
+        throw std::invalid_argument("spacing should be greater than 0");
+    }
+
+    const uint32_t frames = image3d.size();
+    if(frames == 0){
+        m_size = DataSize{0, 0, 0};
+        return;
+    }
+
+    const uint32_t rows = image3d.at(0).size();
+    for(const auto& v : image3d){
+        if(v.size() != rows){
+            throw std::invalid_argument("singly nested vectors don't have the same size");
+        }
+    }
+    if(rows == 0){
+        m_size = DataSize{0, 0, 0};
+        return;
+    }
+
+    const uint32_t columns = image3d.at(0).at(0).size();
+    for(const auto& v : image3d){
+        for(const auto& v2 : v){
+            if(v2.size() != columns){
+                throw std::invalid_argument("double nested vectors don't have the same size");
+            }
+        }
+    }
+    if(columns == 0){
+        m_size = DataSize{0, 0, 0};
+        return;
+    }
+
+    m_data.reserve(frames * rows * columns);
+    for(const auto& v : image3d){
+        for(const auto& v2 : v){
+            m_data.insert(m_data.end(), v2.begin(), v2.end());
+        }
+    }
+    m_size = DataSize{frames, rows, columns};
+}
 
 ImageData::ImageData(std::vector<value_type>&& data, const DataSize& size, const DataOffset& offset, const DataSpacing& spacing) noexcept
     : m_data(std::move(data)), m_size(size), m_offset(offset), m_spacing(spacing) {}
@@ -50,7 +129,7 @@ ImageData::ImageData(ImageData&& other) noexcept
     : m_data(std::move(other.m_data)), m_size(other.m_size), m_offset(other.m_offset), m_spacing(other.m_spacing){
     other.m_size = {0, 0, 0};
     other.m_offset = {0, 0, 0};
-    other.m_spacing = {0, 0, 0};
+    other.m_spacing = {1, 1, 1};
 }
 
 ImageData& ImageData::operator=(ImageData&& other) noexcept{
@@ -61,7 +140,7 @@ ImageData& ImageData::operator=(ImageData&& other) noexcept{
         m_spacing = other.m_spacing;
         other.m_size = {0, 0, 0};
         other.m_offset = {0, 0, 0};
-        other.m_spacing = {0, 0, 0};
+        other.m_spacing = {1, 1, 1};
     }
     return *this;
 }
@@ -71,11 +150,15 @@ bool ImageData::operator==(const ImageData& other) const{
         return false;
     }
     for(size_t i = 0; i < m_data.size(); i++){
-        if(!floatsEqual(m_data[i], other.m_data[i])){
+        if(!nanSensitiveFloatsEqual(m_data[i], other.m_data[i])){
             return false;
         }
     }
     return true;
+}
+
+bool ImageData::operator!=(const ImageData& other) const{
+    return !operator==(other);
 }
 
 void ImageData::setSize(const DataSize& size){
@@ -90,6 +173,9 @@ void ImageData::setOffset(const DataOffset& offset){
 }
 
 void ImageData::setSpacing(const DataSpacing& spacing){
+    if(spacing.frames <= 0 || spacing.rows <= 0 || spacing.columns <= 0){
+        throw std::invalid_argument("spacing should be greater than 0");
+    }
     m_spacing = spacing;
 }
 
@@ -108,8 +194,8 @@ std::vector<value_type> ImageData::getData() const{
     return m_data;
 }
 
-Image2D<value_type> ImageData::getImage2D(uint32_t frame, ImagePlane imgPlane) const{
-    Image2D<value_type> img2d;
+Image2D ImageData::getImage2D(uint32_t frame, ImagePlane imgPlane) const{
+    Image2D img2d;
     if(imgPlane == ImagePlane::Axial){  // YX
         if(frame >= m_size.frames){
             throw std::out_of_range("frame out of range (frame >= nr of frames)");
@@ -151,8 +237,8 @@ Image2D<value_type> ImageData::getImage2D(uint32_t frame, ImagePlane imgPlane) c
     return img2d;
 }
 
-Image3D<value_type> ImageData::getImage3D(ImagePlane imgPlane) const{
-    Image3D<value_type> img3d;
+Image3D ImageData::getImage3D(ImagePlane imgPlane) const{
+    Image3D img3d;
     if(imgPlane == ImagePlane::Axial){  // ZYX
         img3d.reserve(m_size.frames);
         for(uint32_t z = 0; z < m_size.frames; z++){
@@ -180,15 +266,15 @@ ImageData ImageData::getImageData2D(uint32_t frame, ImagePlane imgPlane) const{
 
     if(imgPlane == ImagePlane::Axial){
         offset = {m_offset.frames + frame * m_spacing.frames, m_offset.rows, m_offset.columns};
-        spacing = {0, m_spacing.rows, m_spacing.columns};
+        spacing = {1, m_spacing.rows, m_spacing.columns};
     }
     else if(imgPlane == ImagePlane::Coronal){
         offset = {m_offset.rows + frame * m_spacing.rows, m_offset.frames, m_offset.columns};
-        spacing = {0, m_spacing.frames, m_spacing.columns};
+        spacing = {1, m_spacing.frames, m_spacing.columns};
     }
     else if(imgPlane == ImagePlane::Sagittal){
         offset = {m_offset.columns + frame * m_spacing.columns, m_offset.frames, m_offset.rows};
-        spacing = {0, m_spacing.frames, m_spacing.rows};
+        spacing = {1, m_spacing.frames, m_spacing.rows};
     }
 
     return ImageData(getImage2D(frame, imgPlane), offset, spacing);

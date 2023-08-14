@@ -51,10 +51,9 @@ public:
 
     template <typename U>
     ImageData(const std::vector<U>& data, const DataSize& size, const DataOffset& offset, const DataSpacing& spacing);
-    template <typename U>
-    ImageData(const Image2D<U>& image2d, const DataOffset& offset, const DataSpacing& spacing);
-    template <typename U>
-    ImageData(const Image3D<U>& image3d, const DataOffset& offset, const DataSpacing& spacing);
+
+    ImageData(const Image2D& image2d, const DataOffset& offset, const DataSpacing& spacing);
+    ImageData(const Image3D& image3d, const DataOffset& offset, const DataSpacing& spacing);
 
     ImageData(std::vector<value_type>&& data, const DataSize& size, const DataOffset& offset, const DataSpacing& spacing) noexcept;
 
@@ -65,6 +64,7 @@ public:
     ImageData& operator=(ImageData&& other) noexcept;
 
     bool operator==(const ImageData& other) const;
+    bool operator!=(const ImageData& other) const;
 
     DataSize getSize() const{
         return m_size;
@@ -124,9 +124,9 @@ public:
     /// @brief Returns copy of flattened image
     std::vector<value_type> getData() const;
     /// @brief Returns copy of 2D fragment of image
-    Image2D<value_type> getImage2D(uint32_t frame, ImagePlane plane = ImagePlane::Axial) const;
+    Image2D getImage2D(uint32_t frame, ImagePlane plane = ImagePlane::Axial) const;
     /// @brief Returns copy of 3D image
-    Image3D<value_type> getImage3D(ImagePlane plane = ImagePlane::Axial) const;
+    Image3D getImage3D(ImagePlane plane = ImagePlane::Axial) const;
 
     /**
      * @brief Get the ImageData containing a 2D fragment of current image
@@ -190,45 +190,12 @@ protected:
 template <typename U>
 ImageData::ImageData(const std::vector<U>& data, const DataSize& size, const DataOffset& offset, const DataSpacing& spacing)
     : m_data(data.begin(), data.end()), m_size(size), m_offset(offset), m_spacing(spacing) {
+    if(spacing.frames <= 0 || spacing.rows <= 0 || spacing.columns <= 0){
+        throw std::invalid_argument("spacing should be greater than 0");
+    }
     if(data.size() != size.frames * size.rows * size.columns){
         throw std::invalid_argument("size is inconsistent with data size information");
     }
-}
-
-template <typename U>
-ImageData::ImageData(const Image2D<U>& image2d, const DataOffset& offset, const DataSpacing& spacing)
-    : m_offset(offset), m_spacing(spacing) {
-    const uint32_t rows = image2d.size();
-    const uint32_t columns = image2d.at(0).size();
-    for(const auto& v : image2d){
-        if(v.size() != columns){
-            throw std::invalid_argument("inner vectors don't have the same size");
-        }
-        m_data.insert(m_data.end(), v.begin(), v.end());
-    }
-
-    m_size = DataSize{1, rows, columns};
-}
-
-template <typename U>
-ImageData::ImageData(const Image3D<U>& image3d, const DataOffset& offset, const DataSpacing& spacing)
-    : m_offset(offset), m_spacing(spacing) {
-    const uint32_t frames = image3d.size();
-    const uint32_t rows = image3d.at(0).size();
-    const uint32_t columns = image3d.at(0).at(0).size();
-    for(const auto& v : image3d){
-        if(v.size() != rows){
-            throw std::invalid_argument("firstly nested vectors don't have the same size");
-        }
-        for(const auto& v2 : v){
-            if(v2.size() != columns){
-                throw std::invalid_argument("double nested vectors don't have the same size");
-            }
-            m_data.insert(m_data.end(), v2.begin(), v2.end());
-        }
-    }
-
-    m_size = DataSize{frames, rows, columns};
 }
 
 }
