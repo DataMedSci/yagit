@@ -76,7 +76,7 @@ GammaResult gammaIndex2DClassic(const ImageData& refImg2D, const ImageData& eval
 
     const float ddInvSq = (100 * 100) / (gammaParams.ddThreshold * gammaParams.ddThreshold);
     const float dtaInvSq = 1 / (gammaParams.dtaThreshold * gammaParams.dtaThreshold);
-    const float globalNormDoseInvSq = 1 / (gammaParams.globalNormDose * gammaParams.globalNormDose);
+    const float ddGlobalNormInvSq = ddInvSq / (gammaParams.globalNormDose * gammaParams.globalNormDose);
 
     const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
 
@@ -96,7 +96,7 @@ GammaResult gammaIndex2DClassic(const ImageData& refImg2D, const ImageData& eval
             else{
                 float minGammaValSq = Inf;
                 // set squared inversed normalized dd based on the type of normalization (global or local)
-                float ddNormInvSq = ddInvSq * (isGlobal ? globalNormDoseInvSq : (1 / (doseRef * doseRef)));
+                float ddNormInvSq = (isGlobal ? ddGlobalNormInvSq : (ddInvSq / (doseRef * doseRef)));
 
                 // iterate over each row and column of evaluated image
                 size_t indEval = 0;
@@ -142,7 +142,7 @@ GammaResult gammaIndex2_5DClassic(const ImageData& refImg3D, const ImageData& ev
 
     const float ddInvSq = (100 * 100) / (gammaParams.ddThreshold * gammaParams.ddThreshold);
     const float dtaInvSq = 1 / (gammaParams.dtaThreshold * gammaParams.dtaThreshold);
-    const float globalNormDoseInvSq = 1 / (gammaParams.globalNormDose * gammaParams.globalNormDose);
+    const float ddGlobalNormInvSq = ddInvSq / (gammaParams.globalNormDose * gammaParams.globalNormDose);
 
     const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
 
@@ -163,7 +163,7 @@ GammaResult gammaIndex2_5DClassic(const ImageData& refImg3D, const ImageData& ev
                 }
                 else{
                     // set squared inversed normalized dd based on the type of normalization (global or local)
-                    float ddNormInvSq = ddInvSq * (isGlobal ? globalNormDoseInvSq : (1 / (doseRef * doseRef)));
+                    float ddNormInvSq = (isGlobal ? ddGlobalNormInvSq : (ddInvSq / (doseRef * doseRef)));
                     float minGammaValSq = Inf;
 
                     // iterate over each row and column of evaluated image
@@ -210,7 +210,7 @@ GammaResult gammaIndex3DClassic(const ImageData& refImg3D, const ImageData& eval
 
     const float ddInvSq = (100 * 100) / (gammaParams.ddThreshold * gammaParams.ddThreshold);
     const float dtaInvSq = 1 / (gammaParams.dtaThreshold * gammaParams.dtaThreshold);
-    const float globalNormDoseInvSq = 1 / (gammaParams.globalNormDose * gammaParams.globalNormDose);
+    const float ddGlobalNormInvSq = ddInvSq / (gammaParams.globalNormDose * gammaParams.globalNormDose);
 
     const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
 
@@ -231,7 +231,7 @@ GammaResult gammaIndex3DClassic(const ImageData& refImg3D, const ImageData& eval
                 }
                 else{
                     // set squared inversed normalized dd based on the type of normalization (global or local)
-                    float ddNormInvSq = ddInvSq * (isGlobal ? globalNormDoseInvSq : (1 / (doseRef * doseRef)));
+                    float ddNormInvSq = (isGlobal ? ddGlobalNormInvSq : (ddInvSq / (doseRef * doseRef)));
                     float minGammaValSq = Inf;
 
                     // iterate over each frame, row and column of evaluated image
@@ -283,11 +283,12 @@ GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& eva
 
     const float ddInvSq = (100 * 100) / (gammaParams.ddThreshold * gammaParams.ddThreshold);
     const float dtaInvSq = 1 / (gammaParams.dtaThreshold * gammaParams.dtaThreshold);
-    const float globalNormDoseInvSq = 1 / (gammaParams.globalNormDose * gammaParams.globalNormDose);
-    const float rowsSpInv = 1 / evalImg2D.getSpacing().rows;
-    const float columnsSpInv = 1 / evalImg2D.getSpacing().columns;
+    const float ddGlobalNormInvSq = ddInvSq / (gammaParams.globalNormDose * gammaParams.globalNormDose);
 
     const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
+
+    const float rowsSpInv = 1 / evalImg2D.getSpacing().rows;
+    const float columnsSpInv = 1 / evalImg2D.getSpacing().columns;
 
     const float yeMin = evalImg2D.getOffset().rows - Tolerance;
     const float xeMin = evalImg2D.getOffset().columns - Tolerance;
@@ -312,7 +313,7 @@ GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& eva
             else{
                 float minGammaValSq = Inf;
                 // set squared inversed normalized dd based on the type of normalization (global or local)
-                float ddNormInvSq = ddInvSq * (isGlobal ? globalNormDoseInvSq : (1 / (doseRef * doseRef)));
+                float ddNormInvSq = (isGlobal ? ddGlobalNormInvSq : (ddInvSq / (doseRef * doseRef)));
 
                 bool atLeastOneInRange = false;
                 for(const auto& point : sortedPoints){
@@ -390,18 +391,17 @@ GammaResult gammaIndex2_5DWendling(const ImageData& refImg3D, const ImageData& e
     validateGammaParameters(gammaParams);
     validateWendlingGammaParameters(gammaParams);
 
+    const ImageData evalImgInterpolatedZ = Interpolation::linearAlongAxis(evalImg3D, refImg3D, ImageAxis::Z);
+    const int kDiff = static_cast<int>((refImg3D.getOffset().frames - evalImgInterpolatedZ.getOffset().frames) / refImg3D.getSpacing().frames);
+
     std::vector<float> gammaVals;
     gammaVals.reserve(refImg3D.size());
 
     const float ddInvSq = (100 * 100) / (gammaParams.ddThreshold * gammaParams.ddThreshold);
     const float dtaInvSq = 1 / (gammaParams.dtaThreshold * gammaParams.dtaThreshold);
-    const float globalNormDoseInvSq = 1 / (gammaParams.globalNormDose * gammaParams.globalNormDose);
+    const float ddGlobalNormInvSq = ddInvSq / (gammaParams.globalNormDose * gammaParams.globalNormDose);
 
     const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
-
-    const ImageData evalImgInterpolatedZ = Interpolation::linearAlongAxis(evalImg3D, refImg3D, ImageAxis::Z);
-
-    const int kDiff = static_cast<int>((refImg3D.getOffset().frames - evalImgInterpolatedZ.getOffset().frames) / refImg3D.getSpacing().frames);
 
     const float rowsSpInv = 1 / evalImgInterpolatedZ.getSpacing().rows;
     const float columnsSpInv = 1 / evalImgInterpolatedZ.getSpacing().columns;
@@ -434,7 +434,7 @@ GammaResult gammaIndex2_5DWendling(const ImageData& refImg3D, const ImageData& e
                 else{
                     float minGammaValSq = Inf;
                     // set squared inversed normalized dd based on the type of normalization (global or local)
-                    float ddNormInvSq = ddInvSq * (isGlobal ? globalNormDoseInvSq : (1 / (doseRef * doseRef)));
+                    float ddNormInvSq = (isGlobal ? ddGlobalNormInvSq : (ddInvSq / (doseRef * doseRef)));
 
                     bool atLeastOneInRange = false;
                     for(const auto& point : sortedPoints){
@@ -519,12 +519,13 @@ GammaResult gammaIndex3DWendling(const ImageData& refImg3D, const ImageData& eva
 
     const float ddInvSq = (100 * 100) / (gammaParams.ddThreshold * gammaParams.ddThreshold);
     const float dtaInvSq = 1 / (gammaParams.dtaThreshold * gammaParams.dtaThreshold);
-    const float globalNormDoseInvSq = 1 / (gammaParams.globalNormDose * gammaParams.globalNormDose);
+    const float ddGlobalNormInvSq = ddInvSq / (gammaParams.globalNormDose * gammaParams.globalNormDose);
+
+    const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
+
     const float framesSpInv = 1 / evalImg3D.getSpacing().frames;
     const float rowsSpInv = 1 / evalImg3D.getSpacing().rows;
     const float columnsSpInv = 1 / evalImg3D.getSpacing().columns;
-
-    const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
 
     const float zeMin = evalImg3D.getOffset().frames - Tolerance;
     const float yeMin = evalImg3D.getOffset().rows - Tolerance;
@@ -557,7 +558,7 @@ GammaResult gammaIndex3DWendling(const ImageData& refImg3D, const ImageData& eva
                 else{
                     float minGammaValSq = Inf;
                     // set squared inversed normalized dd based on the type of normalization (global or local)
-                    float ddNormInvSq = ddInvSq * (isGlobal ? globalNormDoseInvSq : (1 / (doseRef * doseRef)));
+                    float ddNormInvSq = (isGlobal ? ddGlobalNormInvSq : (ddInvSq / (doseRef * doseRef)));
 
                     bool atLeastOneInRange = false;
                     for(const auto& point : sortedPoints){

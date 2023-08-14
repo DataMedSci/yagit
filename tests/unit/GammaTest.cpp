@@ -488,12 +488,12 @@ const GammaParametric3D gammaIndex3DWendlingTestValues[] = {
     {{2, 1, yagit::GammaNormalization::Global, REF_3D_MAX, 0, 1.2, 0.1},     {{{1.449419, 0.245707, 0.152745},
                                                                                {1.012473, 10.567875, 0.244949}},
                                                                               {{3.517255, 0.663393, 0.748604},
-                                                                               {18.190107, 1.794948, 0.941339}}}},
+                                                                               {18.190109, 1.794948, 0.941339}}}},
 
     {{2, 1, yagit::GammaNormalization::Local, 0, 0, 1.2, 0.1},               {{{10.002997, 0.248556, 0.302656},
                                                                                {1.029564, 34.215370, 0.244949}},
                                                                               {{11.720528, 0.663598, 1.024796},
-                                                                               {18.190107, 2.626190, 0.985449}}}}
+                                                                               {18.190109, 2.626190, 0.985449}}}}
 };
 
 class GammaIndex3DWendlingTest : public ::testing::TestWithParam<GammaParametric3D> {};
