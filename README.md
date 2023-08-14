@@ -24,7 +24,7 @@ mkdir build && cd build
 
 3. Building the library
 ```
-cmake --build . --config Release -j 4
+cmake --build . --config Release -j
 ```
 
 4. Installing the library

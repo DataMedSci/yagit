@@ -44,7 +44,7 @@ cmake .. -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ^
 @REM ============================================================
 echo:
 echo COMPILING...
-cmake --build . --config %BUILD_TYPE% -j 4
+cmake --build . --config %BUILD_TYPE% -j
 set COMPILE_RESULT=%ERRORLEVEL%
 cd ..
 
