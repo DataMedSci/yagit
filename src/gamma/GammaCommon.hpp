@@ -70,9 +70,9 @@ void validateWendlingGammaParameters(const GammaParameters& gammaParams){
 }
 
 namespace{
-template <typename T>
-std::vector<T> generateVector(T start, T step, size_t size){
-    std::vector<T> result;
+template <typename T, typename A = std::allocator<T>>
+std::vector<T, A> generateVector(T start, T step, size_t size){
+    std::vector<T, A> result;
     result.reserve(size);
 
     T val = start;
