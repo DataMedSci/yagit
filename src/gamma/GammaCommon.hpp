@@ -70,6 +70,35 @@ void validateWendlingGammaParameters(const GammaParameters& gammaParams){
 }
 
 namespace{
+template <typename T>
+std::vector<T> generateVector(T start, T step, size_t size){
+    std::vector<T> result;
+    result.reserve(size);
+
+    T val = start;
+    for(size_t i = 0; i < size; i++){
+        result.push_back(val);
+        val += step;
+    }
+
+    return result;
+}
+
+std::vector<float> generateCoordinates(const ImageData& image, ImageAxis axis){
+    if(axis == ImageAxis::Z){
+        return generateVector(image.getOffset().frames, image.getSpacing().frames, image.getSize().frames);
+    }
+    else if(axis == ImageAxis::Y){
+        return generateVector(image.getOffset().rows, image.getSpacing().rows, image.getSize().rows);
+    }
+    else if(axis == ImageAxis::X){
+        return generateVector(image.getOffset().columns, image.getSpacing().columns, image.getSize().columns);
+    }
+    return {};
+}
+}
+
+namespace{
 const float Nan{std::numeric_limits<float>::quiet_NaN()};
 const float Inf{std::numeric_limits<float>::infinity()};
 

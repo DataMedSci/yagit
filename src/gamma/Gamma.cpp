@@ -80,11 +80,14 @@ GammaResult gammaIndex2DClassic(const ImageData& refImg2D, const ImageData& eval
 
     const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
 
+    const std::vector<float> yr = generateCoordinates(refImg2D, ImageAxis::Y);
+    const std::vector<float> xr = generateCoordinates(refImg2D, ImageAxis::X);
+    const std::vector<float> ye = generateCoordinates(evalImg2D, ImageAxis::Y);
+    const std::vector<float> xe = generateCoordinates(evalImg2D, ImageAxis::X);
+
     // iterate over each row and column of reference image
     size_t indRef = 0;
-    float yr = refImg2D.getOffset().rows;
     for(uint32_t jr = 0; jr < refImg2D.getSize().rows; jr++){
-        float xr = refImg2D.getOffset().columns;
         for(uint32_t ir = 0; ir < refImg2D.getSize().columns; ir++){
             float doseRef = refImg2D.get(indRef);
 
@@ -100,31 +103,25 @@ GammaResult gammaIndex2DClassic(const ImageData& refImg2D, const ImageData& eval
 
                 // iterate over each row and column of evaluated image
                 size_t indEval = 0;
-                float ye = evalImg2D.getOffset().rows;
                 for(uint32_t je = 0; je < evalImg2D.getSize().rows; je++){
-                    float xe = evalImg2D.getOffset().columns;
                     for(uint32_t ie = 0; ie < evalImg2D.getSize().columns; ie++){
                         float doseEval = evalImg2D.get(indEval);
                         // calculate squared gamma
                         float gammaValSq = distSq1D(doseEval, doseRef) * ddNormInvSq +
-                                           distSq2D(xe, ye, xr, yr) * dtaInvSq;
+                                           distSq2D(xe[ie], ye[je], xr[ir], yr[jr]) * dtaInvSq;
                         if(gammaValSq < minGammaValSq){
                             minGammaValSq = gammaValSq;
                         }
 
-                        xe += evalImg2D.getSpacing().columns;
                         indEval++;
                     }
-                    ye += evalImg2D.getSpacing().rows;
                 }
 
                 gammaVals.emplace_back(std::sqrt(minGammaValSq));
             }
 
-            xr += refImg2D.getSpacing().columns;
             indRef++;
         }
-        yr += refImg2D.getSpacing().rows;
     }
 
     return GammaResult(std::move(gammaVals), refImg2D.getSize(), refImg2D.getOffset(), refImg2D.getSpacing());
@@ -146,13 +143,17 @@ GammaResult gammaIndex2_5DClassic(const ImageData& refImg3D, const ImageData& ev
 
     const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
 
+    const std::vector<float> zr = generateCoordinates(refImg3D, ImageAxis::Z);
+    const std::vector<float> yr = generateCoordinates(refImg3D, ImageAxis::Y);
+    const std::vector<float> xr = generateCoordinates(refImg3D, ImageAxis::X);
+    const std::vector<float> ze = generateCoordinates(evalImg3D, ImageAxis::Z);
+    const std::vector<float> ye = generateCoordinates(evalImg3D, ImageAxis::Y);
+    const std::vector<float> xe = generateCoordinates(evalImg3D, ImageAxis::X);
+
     // iterate over each frame, row and column of reference image
     size_t indRef = 0;
-    float zr = refImg3D.getOffset().frames;
     for(uint32_t kr = 0; kr < refImg3D.getSize().frames; kr++){
-        float yr = refImg3D.getOffset().rows;
         for(uint32_t jr = 0; jr < refImg3D.getSize().rows; jr++){
-            float xr = refImg3D.getOffset().columns;
             for(uint32_t ir = 0; ir < refImg3D.getSize().columns; ir++){
                 float doseRef = refImg3D.get(indRef);
 
@@ -168,34 +169,26 @@ GammaResult gammaIndex2_5DClassic(const ImageData& refImg3D, const ImageData& ev
 
                     // iterate over each row and column of evaluated image
                     size_t indEval = kr * evalImg3D.getSize().rows * refImg3D.getSize().columns;
-                    float ze = evalImg3D.getOffset().frames + kr * evalImg3D.getSpacing().frames;
-                    float ye = evalImg3D.getOffset().rows;
                     for(uint32_t je = 0; je < evalImg3D.getSize().rows; je++){
-                        float xe = evalImg3D.getOffset().columns;
                         for(uint32_t ie = 0; ie < evalImg3D.getSize().columns; ie++){
                             float doseEval = evalImg3D.get(indEval);
                             // calculate squared gamma
                             float gammaValSq = distSq1D(doseEval, doseRef) * ddNormInvSq +
-                                               distSq3D(xe, ye, ze, xr, yr, zr) * dtaInvSq;
+                                               distSq3D(xe[ie], ye[je], ze[kr], xr[ir], yr[jr], zr[kr]) * dtaInvSq;
                             if(gammaValSq < minGammaValSq){
                                 minGammaValSq = gammaValSq;
                             }
 
-                            xe += evalImg3D.getSpacing().columns;
                             indEval++;
                         }
-                        ye += evalImg3D.getSpacing().rows;
                     }
 
                     gammaVals.emplace_back(std::sqrt(minGammaValSq));
                 }
 
-                xr += refImg3D.getSpacing().columns;
                 indRef++;
             }
-            yr += refImg3D.getSpacing().rows;
         }
-        zr += refImg3D.getSpacing().frames;
     }
 
     return GammaResult(std::move(gammaVals), refImg3D.getSize(), refImg3D.getOffset(), refImg3D.getSpacing());
@@ -214,13 +207,17 @@ GammaResult gammaIndex3DClassic(const ImageData& refImg3D, const ImageData& eval
 
     const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
 
+    const std::vector<float> zr = generateCoordinates(refImg3D, ImageAxis::Z);
+    const std::vector<float> yr = generateCoordinates(refImg3D, ImageAxis::Y);
+    const std::vector<float> xr = generateCoordinates(refImg3D, ImageAxis::X);
+    const std::vector<float> ze = generateCoordinates(evalImg3D, ImageAxis::Z);
+    const std::vector<float> ye = generateCoordinates(evalImg3D, ImageAxis::Y);
+    const std::vector<float> xe = generateCoordinates(evalImg3D, ImageAxis::X);
+
     // iterate over each frame, row and column of reference image
     size_t indRef = 0;
-    float zr = refImg3D.getOffset().frames;
     for(uint32_t kr = 0; kr < refImg3D.getSize().frames; kr++){
-        float yr = refImg3D.getOffset().rows;
         for(uint32_t jr = 0; jr < refImg3D.getSize().rows; jr++){
-            float xr = refImg3D.getOffset().columns;
             for(uint32_t ir = 0; ir < refImg3D.getSize().columns; ir++){
                 float doseRef = refImg3D.get(indRef);
 
@@ -236,37 +233,28 @@ GammaResult gammaIndex3DClassic(const ImageData& refImg3D, const ImageData& eval
 
                     // iterate over each frame, row and column of evaluated image
                     size_t indEval = 0;
-                    float ze = evalImg3D.getOffset().frames;
                     for(uint32_t ke = 0; ke < evalImg3D.getSize().frames; ke++){
-                        float ye = evalImg3D.getOffset().rows;
                         for(uint32_t je = 0; je < evalImg3D.getSize().rows; je++){
-                            float xe = evalImg3D.getOffset().columns;
                             for(uint32_t ie = 0; ie < evalImg3D.getSize().columns; ie++){
                                 float doseEval = evalImg3D.get(indEval);
                                 // calculate squared gamma
                                 float gammaValSq = distSq1D(doseEval, doseRef) * ddNormInvSq +
-                                                   distSq3D(xe, ye, ze, xr, yr, zr) * dtaInvSq;
+                                                   distSq3D(xe[ie], ye[je], ze[ke], xr[ir], yr[jr], zr[kr]) * dtaInvSq;
                                 if(gammaValSq < minGammaValSq){
                                     minGammaValSq = gammaValSq;
                                 }
 
-                                xe += evalImg3D.getSpacing().columns;
                                 indEval++;
                             }
-                            ye += evalImg3D.getSpacing().rows;
                         }
-                        ze += evalImg3D.getSpacing().frames;
                     }
 
                     gammaVals.emplace_back(std::sqrt(minGammaValSq));
                 }
 
-                xr += refImg3D.getSpacing().columns;
                 indRef++;
             }
-            yr += refImg3D.getSpacing().rows;
         }
-        zr += refImg3D.getSpacing().frames;
     }
 
     return GammaResult(std::move(gammaVals), refImg3D.getSize(), refImg3D.getOffset(), refImg3D.getSpacing());
