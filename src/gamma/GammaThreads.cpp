@@ -412,11 +412,11 @@ void gammaIndex2DWendlingInternal(const ImageData& refImg2D, const ImageData& ev
             if(gammaVals[indRef] == Inf){
                 float doseRef = refImg2D.get(indRef);
 
-                float minGammaValSq = Inf;
                 // set squared inversed normalized dd based on the type of normalization (global or local)
                 float ddNormInvSq = (isGlobal ? ddGlobalNormInvSq : (ddInvSq / (doseRef * doseRef)));
 
-                bool atLeastOneInRange = false;
+                float minGammaValSq = Inf;
+
                 for(const auto& point : sortedPoints){
                     const float normalizedDistSq = point.distSq * dtaInvSq;
                     if(normalizedDistSq >= minGammaValSq){
@@ -434,10 +434,11 @@ void gammaIndex2DWendlingInternal(const ImageData& refImg2D, const ImageData& ev
                         continue;
                     }
 
-                    atLeastOneInRange = true;
+                    float tempy = (ye - evalImg2D.getOffset().rows) * rowsSpInv;
+                    float tempx = (xe - evalImg2D.getOffset().columns) * columnsSpInv;
 
-                    const uint32_t indy0 = static_cast<uint32_t>((ye - evalImg2D.getOffset().rows) * rowsSpInv);
-                    const uint32_t indx0 = static_cast<uint32_t>((xe - evalImg2D.getOffset().columns) * columnsSpInv);
+                    const uint32_t indy0 = static_cast<uint32_t>(tempy);
+                    const uint32_t indx0 = static_cast<uint32_t>(tempx);
                     uint32_t indy1 = indy0 + 1;
                     uint32_t indx1 = indx0 + 1;
 
@@ -448,16 +449,13 @@ void gammaIndex2DWendlingInternal(const ImageData& refImg2D, const ImageData& ev
                         indx1 = indx0;
                     }
 
-                    float y0 = evalImg2D.getOffset().rows + indy0 * evalImg2D.getSpacing().rows;
-                    float x0 = evalImg2D.getOffset().columns + indx0 * evalImg2D.getSpacing().columns;
+                    float yd = tempy - static_cast<float>(indy0);
+                    float xd = tempx - static_cast<float>(indx0);
 
                     float c00 = evalImg2D.get(0, indy0, indx0);
                     float c01 = evalImg2D.get(0, indy1, indx0);
                     float c10 = evalImg2D.get(0, indy0, indx1);
                     float c11 = evalImg2D.get(0, indy1, indx1);
-
-                    float yd = (ye - y0) * rowsSpInv;
-                    float xd = (xe - x0) * columnsSpInv;
 
                     float c0 = c00*(1 - xd) + c10*xd;
                     float c1 = c01*(1 - xd) + c11*xd;
@@ -471,7 +469,7 @@ void gammaIndex2DWendlingInternal(const ImageData& refImg2D, const ImageData& ev
                     }
                 }
 
-                if(atLeastOneInRange){
+                if(minGammaValSq != Inf){
                     gammaVals[indRef] = std::sqrt(minGammaValSq);
                 }
                 else{
@@ -528,11 +526,11 @@ void gammaIndex2_5DWendlingInternal(const ImageData& refImg3D, const ImageData& 
                     else{
                         float doseRef = refImg3D.get(indRef);
 
-                        float minGammaValSq = Inf;
                         // set squared inversed normalized dd based on the type of normalization (global or local)
                         float ddNormInvSq = (isGlobal ? ddGlobalNormInvSq : (ddInvSq / (doseRef * doseRef)));
 
-                        bool atLeastOneInRange = false;
+                        float minGammaValSq = Inf;
+
                         for(const auto& point : sortedPoints){
                             const float normalizedDistSq = point.distSq * dtaInvSq;
                             if(normalizedDistSq >= minGammaValSq){
@@ -550,10 +548,11 @@ void gammaIndex2_5DWendlingInternal(const ImageData& refImg3D, const ImageData& 
                                 continue;
                             }
 
-                            atLeastOneInRange = true;
+                            float tempy = (ye - evalImg3D.getOffset().rows) * rowsSpInv;
+                            float tempx = (xe - evalImg3D.getOffset().columns) * columnsSpInv;
 
-                            const uint32_t indy0 = static_cast<uint32_t>((ye - evalImg3D.getOffset().rows) * rowsSpInv);
-                            const uint32_t indx0 = static_cast<uint32_t>((xe - evalImg3D.getOffset().columns) * columnsSpInv);
+                            const uint32_t indy0 = static_cast<uint32_t>(tempy);
+                            const uint32_t indx0 = static_cast<uint32_t>(tempx);
                             uint32_t indy1 = indy0 + 1;
                             uint32_t indx1 = indx0 + 1;
 
@@ -564,16 +563,13 @@ void gammaIndex2_5DWendlingInternal(const ImageData& refImg3D, const ImageData& 
                                 indx1 = indx0;
                             }
 
-                            float y0 = evalImg3D.getOffset().rows + indy0 * evalImg3D.getSpacing().rows;
-                            float x0 = evalImg3D.getOffset().columns + indx0 * evalImg3D.getSpacing().columns;
+                            float yd = tempy - static_cast<float>(indy0);
+                            float xd = tempx - static_cast<float>(indx0);
 
                             float c00 = evalImg3D.get(ke, indy0, indx0);
                             float c01 = evalImg3D.get(ke, indy1, indx0);
                             float c10 = evalImg3D.get(ke, indy0, indx1);
                             float c11 = evalImg3D.get(ke, indy1, indx1);
-
-                            float yd = (ye - y0) * rowsSpInv;
-                            float xd = (xe - x0) * columnsSpInv;
 
                             float c0 = c00*(1 - xd) + c10*xd;
                             float c1 = c01*(1 - xd) + c11*xd;
@@ -587,7 +583,7 @@ void gammaIndex2_5DWendlingInternal(const ImageData& refImg3D, const ImageData& 
                             }
                         }
 
-                        if(atLeastOneInRange){
+                        if(minGammaValSq != Inf){
                             gammaVals[indRef] = std::sqrt(minGammaValSq);
                         }
                         else{
@@ -644,11 +640,11 @@ void gammaIndex3DWendlingInternal(const ImageData& refImg3D, const ImageData& ev
                 if(gammaVals[indRef] == Inf){
                     float doseRef = refImg3D.get(indRef);
 
-                    float minGammaValSq = Inf;
                     // set squared inversed normalized dd based on the type of normalization (global or local)
                     float ddNormInvSq = (isGlobal ? ddGlobalNormInvSq : (ddInvSq / (doseRef * doseRef)));
 
-                    bool atLeastOneInRange = false;
+                    float minGammaValSq = Inf;
+
                     for(const auto& point : sortedPoints){
                         const float normalizedDistSq = point.distSq * dtaInvSq;
                         if(normalizedDistSq >= minGammaValSq){
@@ -668,11 +664,13 @@ void gammaIndex3DWendlingInternal(const ImageData& refImg3D, const ImageData& ev
                             continue;
                         }
 
-                        atLeastOneInRange = true;
+                        float tempz = (ze - evalImg3D.getOffset().frames) * framesSpInv;
+                        float tempy = (ye - evalImg3D.getOffset().rows) * rowsSpInv;
+                        float tempx = (xe - evalImg3D.getOffset().columns) * columnsSpInv;
 
-                        const uint32_t indz0 = static_cast<uint32_t>((ze - evalImg3D.getOffset().frames) * framesSpInv);
-                        const uint32_t indy0 = static_cast<uint32_t>((ye - evalImg3D.getOffset().rows) * rowsSpInv);
-                        const uint32_t indx0 = static_cast<uint32_t>((xe - evalImg3D.getOffset().columns) * columnsSpInv);
+                        const uint32_t indz0 = static_cast<uint32_t>(tempz);
+                        const uint32_t indy0 = static_cast<uint32_t>(tempy);
+                        const uint32_t indx0 = static_cast<uint32_t>(tempx);
                         uint32_t indz1 = indz0 + 1;
                         uint32_t indy1 = indy0 + 1;
                         uint32_t indx1 = indx0 + 1;
@@ -687,9 +685,9 @@ void gammaIndex3DWendlingInternal(const ImageData& refImg3D, const ImageData& ev
                             indx1 = indx0;
                         }
 
-                        float z0 = evalImg3D.getOffset().frames + indz0 * evalImg3D.getSpacing().frames;
-                        float y0 = evalImg3D.getOffset().rows + indy0 * evalImg3D.getSpacing().rows;
-                        float x0 = evalImg3D.getOffset().columns + indx0 * evalImg3D.getSpacing().columns;
+                        float zd = tempz - static_cast<float>(indz0);
+                        float yd = tempy - static_cast<float>(indy0);
+                        float xd = tempx - static_cast<float>(indx0);
 
                         float c000 = evalImg3D.get(indz0, indy0, indx0);
                         float c001 = evalImg3D.get(indz1, indy0, indx0);
@@ -699,10 +697,6 @@ void gammaIndex3DWendlingInternal(const ImageData& refImg3D, const ImageData& ev
                         float c101 = evalImg3D.get(indz1, indy0, indx1);
                         float c110 = evalImg3D.get(indz0, indy1, indx1);
                         float c111 = evalImg3D.get(indz1, indy1, indx1);
-
-                        float zd = (ze - z0) * framesSpInv;
-                        float yd = (ye - y0) * rowsSpInv;
-                        float xd = (xe - x0) * columnsSpInv;
 
                         float c00 = c000*(1 - xd) + c100*xd;
                         float c01 = c001*(1 - xd) + c101*xd;
@@ -721,7 +715,7 @@ void gammaIndex3DWendlingInternal(const ImageData& refImg3D, const ImageData& ev
                         }
                     }
 
-                    if(atLeastOneInRange){
+                    if(minGammaValSq != Inf){
                         gammaVals[indRef] = std::sqrt(minGammaValSq);
                     }
                     else{

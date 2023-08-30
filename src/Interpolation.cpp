@@ -401,8 +401,11 @@ std::optional<float> bilinearAtPoint(const ImageData& img, uint32_t frame, float
         return std::nullopt;
     }
 
-    const uint32_t indy0 = static_cast<uint32_t>((y - img.getOffset().rows) / img.getSpacing().rows);
-    const uint32_t indx0 = static_cast<uint32_t>((x - img.getOffset().columns) / img.getSpacing().columns);
+    float tempy = (y - img.getOffset().rows) / img.getSpacing().rows;
+    float tempx = (x - img.getOffset().columns) / img.getSpacing().columns;
+
+    const uint32_t indy0 = static_cast<uint32_t>(tempy);
+    const uint32_t indx0 = static_cast<uint32_t>(tempx);
     uint32_t indy1 = indy0 + 1;
     uint32_t indx1 = indx0 + 1;
 
@@ -413,16 +416,13 @@ std::optional<float> bilinearAtPoint(const ImageData& img, uint32_t frame, float
         indx1 = indx0;
     }
 
-    float y0 = img.getOffset().rows + indy0 * img.getSpacing().rows;
-    float x0 = img.getOffset().columns + indx0 * img.getSpacing().columns;
+    float yd = tempy - static_cast<float>(indy0);
+    float xd = tempx - static_cast<float>(indx0);
 
     float c00 = img.get(frame, indy0, indx0);
     float c01 = img.get(frame, indy1, indx0);
     float c10 = img.get(frame, indy0, indx1);
     float c11 = img.get(frame, indy1, indx1);
-
-    float yd = (y - y0) / img.getSpacing().rows;
-    float xd = (x - x0) / img.getSpacing().columns;
 
     float c0 = c00*(1 - xd) + c10*xd;
     float c1 = c01*(1 - xd) + c11*xd;
@@ -458,6 +458,10 @@ std::optional<float> trilinearAtPoint(const ImageData& img, float z, float y, fl
     float y0 = img.getOffset().rows + indy0 * img.getSpacing().rows;
     float x0 = img.getOffset().columns + indx0 * img.getSpacing().columns;
 
+    float zd = (z - z0) / img.getSpacing().frames;
+    float yd = (y - y0) / img.getSpacing().rows;
+    float xd = (x - x0) / img.getSpacing().columns;
+
     float c000 = img.get(indz0, indy0, indx0);
     float c001 = img.get(indz1, indy0, indx0);
     float c010 = img.get(indz0, indy1, indx0);
@@ -466,10 +470,6 @@ std::optional<float> trilinearAtPoint(const ImageData& img, float z, float y, fl
     float c101 = img.get(indz1, indy0, indx1);
     float c110 = img.get(indz0, indy1, indx1);
     float c111 = img.get(indz1, indy1, indx1);
-
-    float zd = (z - z0) / img.getSpacing().frames;
-    float yd = (y - y0) / img.getSpacing().rows;
-    float xd = (x - x0) / img.getSpacing().columns;
 
     float c00 = c000*(1 - xd) + c100*xd;
     float c01 = c001*(1 - xd) + c101*xd;

@@ -1,3 +1,7 @@
+
+# Options
+# =======
+
 set(GAMMA_VERSION "THREADED" CACHE STRING "Implementation of gamma index")
 set_property(CACHE GAMMA_VERSION PROPERTY STRINGS "SEQUENTIAL" "THREADED" "SIMD")
 
@@ -19,6 +23,10 @@ get_property(SIMD_EXTENSION_STRINGS CACHE SIMD_EXTENSION PROPERTY STRINGS)
 if(NOT SIMD_EXTENSION IN_LIST SIMD_EXTENSION_STRINGS)
     message(FATAL_ERROR "Wrong value of the parameter SIMD_EXTENSION")
 endif()
+
+
+# Build
+# =====
 
 find_package(GDCM REQUIRED)
 
@@ -65,6 +73,3 @@ if(MSVC)
 else()
     target_compile_options(yagit PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
-
-
-# target_compile_options(yagit PRIVATE "/FAs")
