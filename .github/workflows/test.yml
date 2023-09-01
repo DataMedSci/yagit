@@ -53,7 +53,7 @@ jobs:
 
       # install from source, because apt has old version
       - name: Install xsimd
-        if: ${{ matrix.gamma-version == "SIMD" }}
+        if: ${{ matrix.gamma-version == 'SIMD' }}
         run: |
           git clone https://github.com/xtensor-stack/xsimd.git -b 11.1.0
           cd xsimd
@@ -67,7 +67,7 @@ jobs:
           mkdir build && cd build
           cmake .. -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
                    -DGAMMA_VERSION=${{ matrix.gamma-version }} \
-                   -DSIMD_EXTENSION=${{ matrix.gamma-version == "SIMD" && AVX2_FMA || DEFAULT }} \
+                   -DSIMD_EXTENSION=${{ matrix.gamma-version == 'SIMD' && 'AVX2_FMA' || 'DEFAULT' }} \
                    -DBUILD_EXAMPLES=ON \
                    -DBUILD_TESTING=ON \
                    -DBUILD_PERFORMANCE_TESTING=ON
@@ -128,7 +128,7 @@ jobs:
           cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake ^
                    -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ^
                    -DGAMMA_VERSION=${{ matrix.gamma-version }} ^
-                   -DSIMD_EXTENSION=${{ matrix.gamma-version == "SIMD" && AVX2_FMA || DEFAULT }} ^
+                   -DSIMD_EXTENSION=${{ matrix.gamma-version == 'SIMD' && 'AVX2_FMA' || 'DEFAULT' }} ^
                    -DBUILD_EXAMPLES=ON ^
                    -DBUILD_TESTING=ON ^
                    -DBUILD_PERFORMANCE_TESTING=ON
