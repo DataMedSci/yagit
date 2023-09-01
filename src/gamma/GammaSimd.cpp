@@ -430,6 +430,16 @@ GammaResult gammaIndex3DClassic(const ImageData& refImg3D, const ImageData& eval
     return GammaResult(std::move(gammaVals), refImg3D.getSize(), refImg3D.getOffset(), refImg3D.getSpacing());
 }
 
+// Wendling method of gamma index is not vectorized, because there were two unsuccessful attempts which worked
+// worse than sequential version (in some cases it was even several times slower).
+// The first attempt was to vectorize loop that iterates over sorted points. It turned out that the problem with its
+// performance is stopping condition of loop that in vectorized version was met later than in sequential version
+// (for example sequential version met stopping condition after 1 point, but vectorized version in the same case
+// must process several points).
+// The second attempt was to vectorize only interpolation after evaluation of doses values at adjacent 4/8 points.
+// There were used two methods for calculating this optimally with vectorization (1. horizontall add,
+// 2. calculations on low and high halves of vector), but it turned out to be slower than sequential version.
+
 GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& evalImg2D,
                                  const GammaParameters& gammaParams){
     validateImages2D(refImg2D, evalImg2D);

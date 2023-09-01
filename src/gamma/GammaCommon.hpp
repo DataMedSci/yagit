@@ -102,6 +102,8 @@ namespace{
 const float Nan{std::numeric_limits<float>::quiet_NaN()};
 const float Inf{std::numeric_limits<float>::infinity()};
 
+// absolute tolerance that is useful for floating-point computations
+// currently it is absolute tolerance, but it can be changed to relative tolerance if it turns out to work better
 const float Tolerance{1e-6};
 }
 
