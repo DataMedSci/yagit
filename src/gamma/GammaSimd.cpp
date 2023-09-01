@@ -52,44 +52,6 @@ aligned_vector<float> generateCoordinatesAligned(const ImageData& image, ImageAx
     }
     return {};
 }
-
-aligned_vector<float> generateCoordinatesAlignedPadded(const ImageData& image, ImageAxis axis){
-    auto coords = generateCoordinatesAligned(image, axis);
-    const size_t sizeDiff = SimdElementCount - coords.size() % SimdElementCount;
-    coords.insert(coords.end(), sizeDiff, Nan);
-    return coords;
-}
-
-template <typename S, typename T>
-aligned_vector<float> extractMemberFromArrayOfStructsAligned(const std::vector<S>& aos, const T S::* member){
-    aligned_vector<float> result;
-    result.reserve(aos.size());
-
-    for(size_t i = 0; i < aos.size(); i++){
-        result.push_back(aos[i].*member);
-    }
-
-    return result;
-}
-}
-
-namespace{
-// calculate squared 1D Euclidean distance
-inline xsimd::batch<float> distSq1DVec(xsimd::batch<float> x1, xsimd::batch<float> x2){
-    return (x2 - x1) * (x2 - x1);
-}
-
-// calculate squared 2D Euclidean distance
-inline xsimd::batch<float> distSq2DVec(xsimd::batch<float> x1, xsimd::batch<float> y1,
-                                       xsimd::batch<float> x2, xsimd::batch<float> y2){
-    return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
-}
-
-// calculate squared 3D Euclidean distance
-inline xsimd::batch<float> distSq3DVec(xsimd::batch<float> x1, xsimd::batch<float> y1, xsimd::batch<float> z1,
-                                       xsimd::batch<float> x2, xsimd::batch<float> y2, xsimd::batch<float> z2){
-    return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1);
-}
 }
 
 GammaResult gammaIndex2D(const ImageData& refImg2D, const ImageData& evalImg2D,
