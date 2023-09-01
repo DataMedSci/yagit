@@ -191,8 +191,6 @@ GammaResult gammaIndex2DClassic(const ImageData& refImg2D, const ImageData& eval
                         // not using distSq1D and distSq2D functions, because this inlined version on simd vectors is faster
                         auto gammaValSqVec = (doseRefVec - doseEvalVec) * (doseRefVec - doseEvalVec) * ddNormInvSqVec +
                                              ((xrVec - xeVec) * (xrVec - xeVec) + (yrVec - yeVec) * (yrVec - yeVec)) * dtaInvSqVec;
-                        // auto gammaValSqVec = distSq1DVec(doseRefVec, doseEvalVec) * ddNormInvSqVec +
-                        //                      distSq2DVec(xeVec, yeVec, xrVec, yrVec) * dtaInvSqVec;
 
                         minGammaValSqVec = xsimd::min(gammaValSqVec, minGammaValSqVec);
 
