@@ -23,7 +23,7 @@ jobs:
       matrix:
         gamma-version:
           - "SEQUENTIAL"
-          - "THREADED"
+          - "THREADS"
           - "SIMD"
 
     steps:
@@ -101,7 +101,7 @@ jobs:
       matrix:
         gamma-version:
           - "SEQUENTIAL"
-          - "THREADED"
+          - "THREADS"
           - "SIMD"
 
     steps:

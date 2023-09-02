@@ -2,11 +2,11 @@
 
 include(CMakeFindDependencyMacro)
 find_dependency(GDCM REQUIRED)
-if(@GAMMA_VERSION@ STREQUAL "THREADED")
+if(@GAMMA_VERSION@ STREQUAL "THREADS")
     find_dependency(Threads REQUIRED)
 elseif(@GAMMA_VERSION@ STREQUAL "SIMD")
     find_dependency(xsimd REQUIRED)
-elseif(@GAMMA_VERSION@ STREQUAL "THREADED_SIMD")
+elseif(@GAMMA_VERSION@ STREQUAL "THREADS_SIMD")
     find_dependency(Threads REQUIRED)
     find_dependency(xsimd REQUIRED)
 endif()
