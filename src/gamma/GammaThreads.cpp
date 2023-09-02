@@ -172,17 +172,14 @@ std::tuple<uint32_t, uint32_t, uint32_t> indexTo3Dindex(size_t index, const Data
 namespace{
 void gammaIndex2DClassicInternal(const ImageData& refImg2D, const ImageData& evalImg2D,
                                  const GammaParameters& gammaParams,
+                                 const std::vector<float>& yr, const std::vector<float>& xr,
+                                 const std::vector<float>& ye, const std::vector<float>& xe,
                                  size_t startIndex, size_t endIndex, std::vector<float>& gammaVals){
     const float ddInvSq = (100 * 100) / (gammaParams.ddThreshold * gammaParams.ddThreshold);
     const float dtaInvSq = 1 / (gammaParams.dtaThreshold * gammaParams.dtaThreshold);
     const float ddGlobalNormInvSq = ddInvSq / (gammaParams.globalNormDose * gammaParams.globalNormDose);
 
     const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
-
-    const std::vector<float> yr = generateCoordinates(refImg2D, ImageAxis::Y);
-    const std::vector<float> xr = generateCoordinates(refImg2D, ImageAxis::X);
-    const std::vector<float> ye = generateCoordinates(evalImg2D, ImageAxis::Y);
-    const std::vector<float> xe = generateCoordinates(evalImg2D, ImageAxis::X);
 
     const auto [jStart, iStart] = indexTo2Dindex(startIndex, refImg2D.getSize());
 
@@ -225,19 +222,15 @@ void gammaIndex2DClassicInternal(const ImageData& refImg2D, const ImageData& eva
 
 void gammaIndex2_5DClassicInternal(const ImageData& refImg3D, const ImageData& evalImg3D,
                                    const GammaParameters& gammaParams,
+                                   const std::vector<float>& zr, const std::vector<float>& yr,
+                                   const std::vector<float>& xr, const std::vector<float>& ze,
+                                   const std::vector<float>& ye, const std::vector<float>& xe,
                                    size_t startIndex, size_t endIndex, std::vector<float>& gammaVals){
     const float ddInvSq = (100 * 100) / (gammaParams.ddThreshold * gammaParams.ddThreshold);
     const float dtaInvSq = 1 / (gammaParams.dtaThreshold * gammaParams.dtaThreshold);
     const float ddGlobalNormInvSq = ddInvSq / (gammaParams.globalNormDose * gammaParams.globalNormDose);
 
     const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
-
-    const std::vector<float> zr = generateCoordinates(refImg3D, ImageAxis::Z);
-    const std::vector<float> yr = generateCoordinates(refImg3D, ImageAxis::Y);
-    const std::vector<float> xr = generateCoordinates(refImg3D, ImageAxis::X);
-    const std::vector<float> ze = generateCoordinates(evalImg3D, ImageAxis::Z);
-    const std::vector<float> ye = generateCoordinates(evalImg3D, ImageAxis::Y);
-    const std::vector<float> xe = generateCoordinates(evalImg3D, ImageAxis::X);
 
     const auto [kStart, jStart, iStart] = indexTo3Dindex(startIndex, refImg3D.getSize());
 
@@ -283,19 +276,15 @@ void gammaIndex2_5DClassicInternal(const ImageData& refImg3D, const ImageData& e
 
 void gammaIndex3DClassicInternal(const ImageData& refImg3D, const ImageData& evalImg3D,
                                  const GammaParameters& gammaParams,
+                                 const std::vector<float>& zr, const std::vector<float>& yr,
+                                 const std::vector<float>& xr, const std::vector<float>& ze,
+                                 const std::vector<float>& ye, const std::vector<float>& xe,
                                  size_t startIndex, size_t endIndex, std::vector<float>& gammaVals){
     const float ddInvSq = (100 * 100) / (gammaParams.ddThreshold * gammaParams.ddThreshold);
     const float dtaInvSq = 1 / (gammaParams.dtaThreshold * gammaParams.dtaThreshold);
     const float ddGlobalNormInvSq = ddInvSq / (gammaParams.globalNormDose * gammaParams.globalNormDose);
 
     const bool isGlobal = gammaParams.normalization == GammaNormalization::Global;
-
-    const std::vector<float> zr = generateCoordinates(refImg3D, ImageAxis::Z);
-    const std::vector<float> yr = generateCoordinates(refImg3D, ImageAxis::Y);
-    const std::vector<float> xr = generateCoordinates(refImg3D, ImageAxis::X);
-    const std::vector<float> ze = generateCoordinates(evalImg3D, ImageAxis::Z);
-    const std::vector<float> ye = generateCoordinates(evalImg3D, ImageAxis::Y);
-    const std::vector<float> xe = generateCoordinates(evalImg3D, ImageAxis::X);
 
     const auto [kStart, jStart, iStart] = indexTo3Dindex(startIndex, refImg3D.getSize());
 
@@ -348,9 +337,16 @@ GammaResult gammaIndex2DClassic(const ImageData& refImg2D, const ImageData& eval
     validateImages2D(refImg2D, evalImg2D);
     validateGammaParameters(gammaParams);
 
+    const std::vector<float> yr = generateCoordinates(refImg2D, ImageAxis::Y);
+    const std::vector<float> xr = generateCoordinates(refImg2D, ImageAxis::X);
+    const std::vector<float> ye = generateCoordinates(evalImg2D, ImageAxis::Y);
+    const std::vector<float> xe = generateCoordinates(evalImg2D, ImageAxis::X);
+
     std::vector<float> gammaVals =
         multithreadedGammaIndex(refImg2D, gammaParams, gammaIndex2DClassicInternal,
-                                std::cref(refImg2D), std::cref(evalImg2D), std::cref(gammaParams));
+                                std::cref(refImg2D), std::cref(evalImg2D), std::cref(gammaParams),
+                                std::cref(yr), std::cref(xr),
+                                std::cref(ye), std::cref(xe));
 
     return GammaResult(std::move(gammaVals), refImg2D.getSize(), refImg2D.getOffset(), refImg2D.getSpacing());
 }
@@ -362,9 +358,18 @@ GammaResult gammaIndex2_5DClassic(const ImageData& refImg3D, const ImageData& ev
     }
     validateGammaParameters(gammaParams);
 
+    const std::vector<float> zr = generateCoordinates(refImg3D, ImageAxis::Z);
+    const std::vector<float> yr = generateCoordinates(refImg3D, ImageAxis::Y);
+    const std::vector<float> xr = generateCoordinates(refImg3D, ImageAxis::X);
+    const std::vector<float> ze = generateCoordinates(evalImg3D, ImageAxis::Z);
+    const std::vector<float> ye = generateCoordinates(evalImg3D, ImageAxis::Y);
+    const std::vector<float> xe = generateCoordinates(evalImg3D, ImageAxis::X);
+
     std::vector<float> gammaVals =
         multithreadedGammaIndex(refImg3D, gammaParams, gammaIndex2_5DClassicInternal,
-                                std::cref(refImg3D), std::cref(evalImg3D), std::cref(gammaParams));
+                                std::cref(refImg3D), std::cref(evalImg3D), std::cref(gammaParams),
+                                std::cref(zr), std::cref(yr), std::cref(xr),
+                                std::cref(ze), std::cref(ye), std::cref(xe));
 
     return GammaResult(std::move(gammaVals), refImg3D.getSize(), refImg3D.getOffset(), refImg3D.getSpacing());
 }
@@ -373,9 +378,18 @@ GammaResult gammaIndex3DClassic(const ImageData& refImg3D, const ImageData& eval
                                 const GammaParameters& gammaParams){
     validateGammaParameters(gammaParams);
 
+    const std::vector<float> zr = generateCoordinates(refImg3D, ImageAxis::Z);
+    const std::vector<float> yr = generateCoordinates(refImg3D, ImageAxis::Y);
+    const std::vector<float> xr = generateCoordinates(refImg3D, ImageAxis::X);
+    const std::vector<float> ze = generateCoordinates(evalImg3D, ImageAxis::Z);
+    const std::vector<float> ye = generateCoordinates(evalImg3D, ImageAxis::Y);
+    const std::vector<float> xe = generateCoordinates(evalImg3D, ImageAxis::X);
+
     std::vector<float> gammaVals =
         multithreadedGammaIndex(refImg3D, gammaParams, gammaIndex3DClassicInternal,
-                                std::cref(refImg3D), std::cref(evalImg3D), std::cref(gammaParams));
+                                std::cref(refImg3D), std::cref(evalImg3D), std::cref(gammaParams),
+                                std::cref(zr), std::cref(yr), std::cref(xr),
+                                std::cref(ze), std::cref(ye), std::cref(xe));
 
     return GammaResult(std::move(gammaVals), refImg3D.getSize(), refImg3D.getOffset(), refImg3D.getSpacing());
 }
