@@ -25,6 +25,7 @@ jobs:
           - "SEQUENTIAL"
           - "THREADS"
           - "SIMD"
+          - "THREADS_SIMD"
 
     steps:
       - name: Checkout repository
@@ -67,12 +68,12 @@ jobs:
           mkdir build && cd build
           cmake .. -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
                    -DGAMMA_VERSION=${{ matrix.gamma-version }} \
-                   -DSIMD_EXTENSION=${{ matrix.gamma-version == 'SIMD' && 'AVX2' || 'DEFAULT' }} \
+                   -DSIMD_EXTENSION=${{ endsWith(matrix.gamma-version, 'SIMD') && 'AVX2' || 'DEFAULT' }} \
                    -DBUILD_EXAMPLES=ON \
                    -DBUILD_TESTING=ON \
                    -DBUILD_PERFORMANCE_TESTING=ON
           cmake --build . -j
-      
+
       - name: Run unit tests
         run: |
           ctest --test-dir build --output-on-failure
@@ -129,7 +130,7 @@ jobs:
           cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake ^
                    -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ^
                    -DGAMMA_VERSION=${{ matrix.gamma-version }} ^
-                   -DSIMD_EXTENSION=${{ matrix.gamma-version == 'SIMD' && 'AVX2' || 'DEFAULT' }} ^
+                   -DSIMD_EXTENSION=${{ endsWith(matrix.gamma-version, 'SIMD') && 'AVX2' || 'DEFAULT' }} ^
                    -DBUILD_EXAMPLES=ON ^
                    -DBUILD_TESTING=ON ^
                    -DBUILD_PERFORMANCE_TESTING=ON
