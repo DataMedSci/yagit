@@ -3,7 +3,7 @@
 # =======
 
 set(GAMMA_VERSION "THREADED" CACHE STRING "Implementation of gamma index")
-set_property(CACHE GAMMA_VERSION PROPERTY STRINGS "SEQUENTIAL" "THREADED" "SIMD")
+set_property(CACHE GAMMA_VERSION PROPERTY STRINGS "SEQUENTIAL" "THREADED" "SIMD" "THREADED_SIMD")
 
 get_property(GAMMA_VERSION_STRINGS CACHE GAMMA_VERSION PROPERTY STRINGS)
 if(NOT GAMMA_VERSION IN_LIST GAMMA_VERSION_STRINGS)
@@ -56,6 +56,12 @@ elseif(GAMMA_VERSION STREQUAL "SIMD")
 
     list(APPEND YAGIT_DEPS xsimd)
     list(APPEND YAGIT_SOURCE_FILES gamma/GammaSimd.cpp)
+elseif(GAMMA_VERSION STREQUAL "THREADED_SIMD")
+    find_package(Threads REQUIRED)
+    find_package(xsimd REQUIRED)
+
+    list(APPEND YAGIT_DEPS Threads::Threads xsimd)
+    list(APPEND YAGIT_SOURCE_FILES gamma/GammaThreadsSimd.cpp)
 endif()
 
 add_library(yagit ${YAGIT_SOURCE_FILES})
