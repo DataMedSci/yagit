@@ -102,6 +102,7 @@ jobs:
         gamma-version:
           - "SEQUENTIAL"
           - "THREADED"
+          - "SIMD"
 
     steps:
       - name: Checkout repository

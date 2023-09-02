@@ -27,6 +27,7 @@ endif()
 # TODO: check if enabling FMA gives more or less accurate results
 option(ENABLE_FMA "Enable fused multiply-add (FMA) when building yagit library" OFF)
 
+
 # Build
 # =====
 
