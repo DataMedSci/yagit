@@ -14,8 +14,7 @@ set(SIMD_EXTENSION "DEFAULT" CACHE STRING "SIMD instruction set extension")
 set_property(CACHE SIMD_EXTENSION PROPERTY STRINGS
     "DEFAULT"
     "SSE2" "SSE3" "SSSE3" "SSE4.1" "SSE4.2"
-    "AVX" "AVX_FMA" "AVX2" "AVX2_FMA"
-    "AVX512"
+    "AVX" "AVX2" "AVX512"
     "NATIVE"
 )
 
@@ -24,6 +23,9 @@ if(NOT SIMD_EXTENSION IN_LIST SIMD_EXTENSION_STRINGS)
     message(FATAL_ERROR "Wrong value of the parameter SIMD_EXTENSION")
 endif()
 
+# enabling FMA gives better performance, but slightly different results
+# TODO: check if enabling FMA gives more or less accurate results
+option(ENABLE_FMA "Enable fused multiply-add (FMA) when building yagit library" OFF)
 
 # Build
 # =====
@@ -65,6 +67,14 @@ target_link_libraries(yagit PRIVATE ${YAGIT_DEPS})
 if(NOT SIMD_EXTENSION STREQUAL "DEFAULT")
     include(../cmake/Simd.cmake)
     add_simd_flags(yagit ${SIMD_EXTENSION})
+endif()
+
+if(ENABLE_FMA)
+    if(MSVC)
+        message(WARNING "There is no explicit option to enable FMA in MSVC")
+    else()
+        target_compile_options(yagit PRIVATE -mfma)
+    endif()
 endif()
 
 if(MSVC)

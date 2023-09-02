@@ -67,11 +67,11 @@ jobs:
           mkdir build && cd build
           cmake .. -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
                    -DGAMMA_VERSION=${{ matrix.gamma-version }} \
-                   -DSIMD_EXTENSION=${{ matrix.gamma-version == 'SIMD' && 'AVX2_FMA' || 'DEFAULT' }} \
+                   -DSIMD_EXTENSION=${{ matrix.gamma-version == 'SIMD' && 'AVX2' || 'DEFAULT' }} \
                    -DBUILD_EXAMPLES=ON \
                    -DBUILD_TESTING=ON \
                    -DBUILD_PERFORMANCE_TESTING=ON
-          cmake --build .
+          cmake --build . -j
       
       - name: Run unit tests
         run: |
@@ -128,11 +128,11 @@ jobs:
           cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake ^
                    -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ^
                    -DGAMMA_VERSION=${{ matrix.gamma-version }} ^
-                   -DSIMD_EXTENSION=${{ matrix.gamma-version == 'SIMD' && 'AVX2_FMA' || 'DEFAULT' }} ^
+                   -DSIMD_EXTENSION=${{ matrix.gamma-version == 'SIMD' && 'AVX2' || 'DEFAULT' }} ^
                    -DBUILD_EXAMPLES=ON ^
                    -DBUILD_TESTING=ON ^
                    -DBUILD_PERFORMANCE_TESTING=ON
-          cmake --build . --config ${{ env.BUILD_TYPE }}
+          cmake --build . --config ${{ env.BUILD_TYPE }} -j
 
       - name: Run unit tests
         run: |
