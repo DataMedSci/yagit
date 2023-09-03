@@ -23,36 +23,11 @@
 #include <limits>
 
 #include "yagit/Interpolation.hpp"
-#include "GammaCommon.hpp"
+#include "GammaCommonSimd.hpp"
 
 #include <xsimd/xsimd.hpp>
 
 namespace yagit{
-
-namespace{
-template <typename T>
-using aligned_allocator = xsimd::default_allocator<T>;
-
-template <typename T>
-using aligned_vector = std::vector<T, aligned_allocator<T>>;
-
-constexpr size_t SimdElementCount = xsimd::simd_type<float>::size;
-}
-
-namespace{
-aligned_vector<float> generateCoordinatesAligned(const ImageData& image, ImageAxis axis){
-    if(axis == ImageAxis::Z){
-        return generateVector<float, aligned_allocator<float>>(image.getOffset().frames, image.getSpacing().frames, image.getSize().frames);
-    }
-    else if(axis == ImageAxis::Y){
-        return generateVector<float, aligned_allocator<float>>(image.getOffset().rows, image.getSpacing().rows, image.getSize().rows);
-    }
-    else if(axis == ImageAxis::X){
-        return generateVector<float, aligned_allocator<float>>(image.getOffset().columns, image.getSpacing().columns, image.getSize().columns);
-    }
-    return {};
-}
-}
 
 GammaResult gammaIndex2D(const ImageData& refImg2D, const ImageData& evalImg2D,
                          const GammaParameters& gammaParams, GammaMethod method){
@@ -112,7 +87,7 @@ GammaResult gammaIndex2DClassic(const ImageData& refImg2D, const ImageData& eval
     const std::vector<float> ye = generateCoordinates(evalImg2D, ImageAxis::Y);
     const aligned_vector<float> xe = generateCoordinatesAligned(evalImg2D, ImageAxis::X);
 
-    size_t evalSimdSize = evalImg2D.getSize().columns - evalImg2D.getSize().columns % SimdElementCount;
+    const size_t evalSimdSize = evalImg2D.getSize().columns - evalImg2D.getSize().columns % SimdElementCount;
     const xsimd::batch<float> dtaInvSqVec(dtaInvSq);
 
     // iterate over each row and column of reference image
@@ -209,7 +184,7 @@ GammaResult gammaIndex2_5DClassic(const ImageData& refImg3D, const ImageData& ev
     const std::vector<float> ye = generateCoordinates(evalImg3D, ImageAxis::Y);
     const aligned_vector<float> xe = generateCoordinatesAligned(evalImg3D, ImageAxis::X);
 
-    size_t evalSimdSize = evalImg3D.getSize().columns - evalImg3D.getSize().columns % SimdElementCount;
+    const size_t evalSimdSize = evalImg3D.getSize().columns - evalImg3D.getSize().columns % SimdElementCount;
     const xsimd::batch<float> dtaInvSqVec(dtaInvSq);
 
     // iterate over each frame, row and column of reference image
@@ -308,7 +283,7 @@ GammaResult gammaIndex3DClassic(const ImageData& refImg3D, const ImageData& eval
     const std::vector<float> ye = generateCoordinates(evalImg3D, ImageAxis::Y);
     const aligned_vector<float> xe = generateCoordinatesAligned(evalImg3D, ImageAxis::X);
 
-    size_t evalSimdSize = evalImg3D.getSize().columns - evalImg3D.getSize().columns % SimdElementCount;
+    const size_t evalSimdSize = evalImg3D.getSize().columns - evalImg3D.getSize().columns % SimdElementCount;
     const xsimd::batch<float> dtaInvSqVec(dtaInvSq);
 
     // iterate over each frame, row and column of reference image
