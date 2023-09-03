@@ -24,6 +24,7 @@ jobs:
         gamma-version:
           - "SEQUENTIAL"
           - "THREADED"
+          - "SIMD"
 
     steps:
       - name: Checkout repository
@@ -50,15 +51,27 @@ jobs:
           make
           sudo make install
 
+      # install from source, because apt has old version
+      - name: Install xsimd
+        if: ${{ matrix.gamma-version == 'SIMD' }}
+        run: |
+          git clone https://github.com/xtensor-stack/xsimd.git -b 11.1.0
+          cd xsimd
+          mkdir build && cd build
+          cmake ..
+          make
+          sudo make install
+
       - name: Configure and build with CMake
         run: |
           mkdir build && cd build
           cmake .. -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
                    -DGAMMA_VERSION=${{ matrix.gamma-version }} \
+                   -DSIMD_EXTENSION=${{ matrix.gamma-version == 'SIMD' && 'AVX2' || 'DEFAULT' }} \
                    -DBUILD_EXAMPLES=ON \
                    -DBUILD_TESTING=ON \
                    -DBUILD_PERFORMANCE_TESTING=ON
-          cmake --build .
+          cmake --build . -j
       
       - name: Run unit tests
         run: |
@@ -89,6 +102,7 @@ jobs:
         gamma-version:
           - "SEQUENTIAL"
           - "THREADED"
+          - "SIMD"
 
     steps:
       - name: Checkout repository
@@ -115,10 +129,11 @@ jobs:
           cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake ^
                    -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ^
                    -DGAMMA_VERSION=${{ matrix.gamma-version }} ^
+                   -DSIMD_EXTENSION=${{ matrix.gamma-version == 'SIMD' && 'AVX2' || 'DEFAULT' }} ^
                    -DBUILD_EXAMPLES=ON ^
                    -DBUILD_TESTING=ON ^
                    -DBUILD_PERFORMANCE_TESTING=ON
-          cmake --build . --config ${{ env.BUILD_TYPE }}
+          cmake --build . --config ${{ env.BUILD_TYPE }} -j
 
       - name: Run unit tests
         run: |

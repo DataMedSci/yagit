@@ -40,11 +40,16 @@ cmake --build . --config Release -j
 ## Gamma versions
 
 There are 2 implementations of gamma index: sequential and multithreaded.
-To select the version you want, set the `GAMMA_VERSION` option to one of the values: `SEQUENTIAL`, `THREADED`.
+To select the version you want, set the `GAMMA_VERSION` option to one of the values: `SEQUENTIAL`, `THREADED`, `SIMD`.
 ```
 cmake .. -DGAMMA_VERSION=THREADED
 ```
 The default value of this parameter is `THREADED`.
+
+You can also modify SIMD extension used during the compilation of yagit. To do it, set `SIMD_EXTENSION` option to one of
+the values: `DEFAULT`, `SSE2`, `SSE3`, `SSSE3`, `SSE4.1`, `SSE4.2`, `AVX` `AVX2` `AVX512`, `NATIVE`.
+The default value of this parameter is `DEFAULT`, which means that no additional compilation options are added.
+Option `NATIVE` adds `-march=native` if compiler supports it.
 
 ## Examples
 

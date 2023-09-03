@@ -25,7 +25,34 @@
 #include "yagit/Interpolation.hpp"
 #include "GammaCommon.hpp"
 
+#include <xsimd/xsimd.hpp>
+
 namespace yagit{
+
+namespace{
+template <typename T>
+using aligned_allocator = xsimd::default_allocator<T>;
+
+template <typename T>
+using aligned_vector = std::vector<T, aligned_allocator<T>>;
+
+constexpr size_t SimdElementCount = xsimd::simd_type<float>::size;
+}
+
+namespace{
+aligned_vector<float> generateCoordinatesAligned(const ImageData& image, ImageAxis axis){
+    if(axis == ImageAxis::Z){
+        return generateVector<float, aligned_allocator<float>>(image.getOffset().frames, image.getSpacing().frames, image.getSize().frames);
+    }
+    else if(axis == ImageAxis::Y){
+        return generateVector<float, aligned_allocator<float>>(image.getOffset().rows, image.getSpacing().rows, image.getSize().rows);
+    }
+    else if(axis == ImageAxis::X){
+        return generateVector<float, aligned_allocator<float>>(image.getOffset().columns, image.getSpacing().columns, image.getSize().columns);
+    }
+    return {};
+}
+}
 
 GammaResult gammaIndex2D(const ImageData& refImg2D, const ImageData& evalImg2D,
                          const GammaParameters& gammaParams, GammaMethod method){
@@ -83,11 +110,16 @@ GammaResult gammaIndex2DClassic(const ImageData& refImg2D, const ImageData& eval
     const std::vector<float> yr = generateCoordinates(refImg2D, ImageAxis::Y);
     const std::vector<float> xr = generateCoordinates(refImg2D, ImageAxis::X);
     const std::vector<float> ye = generateCoordinates(evalImg2D, ImageAxis::Y);
-    const std::vector<float> xe = generateCoordinates(evalImg2D, ImageAxis::X);
+    const aligned_vector<float> xe = generateCoordinatesAligned(evalImg2D, ImageAxis::X);
+
+    size_t evalSimdSize = evalImg2D.getSize().columns - evalImg2D.getSize().columns % SimdElementCount;
+    const xsimd::batch<float> dtaInvSqVec(dtaInvSq);
 
     // iterate over each row and column of reference image
     size_t indRef = 0;
     for(uint32_t jr = 0; jr < refImg2D.getSize().rows; jr++){
+        xsimd::batch<float> yrVec(yr[jr]);
+
         for(uint32_t ir = 0; ir < refImg2D.getSize().columns; ir++){
             float doseRef = refImg2D.get(indRef);
 
@@ -97,15 +129,38 @@ GammaResult gammaIndex2DClassic(const ImageData& refImg2D, const ImageData& eval
                 gammaVals.emplace_back(Nan);
             }
             else{
-                float minGammaValSq = Inf;
                 // set squared inversed normalized dd based on the type of normalization (global or local)
                 float ddNormInvSq = (isGlobal ? ddGlobalNormInvSq : (ddInvSq / (doseRef * doseRef)));
+                xsimd::batch<float> ddNormInvSqVec(ddNormInvSq);
+
+                float minGammaValSq = Inf;
+                xsimd::batch<float> minGammaValSqVec(Inf);
+
+                xsimd::batch<float> doseRefVec(doseRef);
+                xsimd::batch<float> xrVec(xr[ir]);
 
                 // iterate over each row and column of evaluated image
                 size_t indEval = 0;
                 for(uint32_t je = 0; je < evalImg2D.getSize().rows; je++){
-                    for(uint32_t ie = 0; ie < evalImg2D.getSize().columns; ie++){
+                    xsimd::batch<float> yeVec(ye[je]);
+
+                    uint32_t ie = 0;
+                    for(; ie < evalSimdSize; ie += SimdElementCount){
+                        auto doseEvalVec = xsimd::load_unaligned(&evalImg2D.get(indEval));
+                        auto xeVec = xsimd::load_aligned(&xe[ie]);
+
+                        // calculate squared gamma
+                        // not using distSq1D and distSq2D functions, because this inlined version on simd vectors is faster
+                        auto gammaValSqVec = (doseRefVec - doseEvalVec) * (doseRefVec - doseEvalVec) * ddNormInvSqVec +
+                                             ((xrVec - xeVec) * (xrVec - xeVec) + (yrVec - yeVec) * (yrVec - yeVec)) * dtaInvSqVec;
+
+                        minGammaValSqVec = xsimd::min(gammaValSqVec, minGammaValSqVec);
+
+                        indEval += SimdElementCount;
+                    }
+                    for(; ie < evalImg2D.getSize().columns; ie++){
                         float doseEval = evalImg2D.get(indEval);
+
                         // calculate squared gamma
                         float gammaValSq = distSq1D(doseEval, doseRef) * ddNormInvSq +
                                            distSq2D(xe[ie], ye[je], xr[ir], yr[jr]) * dtaInvSq;
@@ -117,6 +172,10 @@ GammaResult gammaIndex2DClassic(const ImageData& refImg2D, const ImageData& eval
                     }
                 }
 
+                float minGammaValSqVecMin = xsimd::reduce_min(minGammaValSqVec);
+                if(minGammaValSqVecMin < minGammaValSq){
+                    minGammaValSq = minGammaValSqVecMin;
+                }
                 gammaVals.emplace_back(std::sqrt(minGammaValSq));
             }
 
@@ -148,12 +207,20 @@ GammaResult gammaIndex2_5DClassic(const ImageData& refImg3D, const ImageData& ev
     const std::vector<float> xr = generateCoordinates(refImg3D, ImageAxis::X);
     const std::vector<float> ze = generateCoordinates(evalImg3D, ImageAxis::Z);
     const std::vector<float> ye = generateCoordinates(evalImg3D, ImageAxis::Y);
-    const std::vector<float> xe = generateCoordinates(evalImg3D, ImageAxis::X);
+    const aligned_vector<float> xe = generateCoordinatesAligned(evalImg3D, ImageAxis::X);
+
+    size_t evalSimdSize = evalImg3D.getSize().columns - evalImg3D.getSize().columns % SimdElementCount;
+    const xsimd::batch<float> dtaInvSqVec(dtaInvSq);
 
     // iterate over each frame, row and column of reference image
     size_t indRef = 0;
     for(uint32_t kr = 0; kr < refImg3D.getSize().frames; kr++){
+        xsimd::batch<float> zrVec(zr[kr]);
+        xsimd::batch<float> zeVec(ze[kr]);
+
         for(uint32_t jr = 0; jr < refImg3D.getSize().rows; jr++){
+            xsimd::batch<float> yrVec(yr[jr]);
+
             for(uint32_t ir = 0; ir < refImg3D.getSize().columns; ir++){
                 float doseRef = refImg3D.get(indRef);
 
@@ -165,13 +232,36 @@ GammaResult gammaIndex2_5DClassic(const ImageData& refImg3D, const ImageData& ev
                 else{
                     // set squared inversed normalized dd based on the type of normalization (global or local)
                     float ddNormInvSq = (isGlobal ? ddGlobalNormInvSq : (ddInvSq / (doseRef * doseRef)));
+                    xsimd::batch<float> ddNormInvSqVec(ddNormInvSq);
+
                     float minGammaValSq = Inf;
+                    xsimd::batch<float> minGammaValSqVec(Inf);
+
+                    xsimd::batch<float> doseRefVec(doseRef);
+                    xsimd::batch<float> xrVec(xr[ir]);
 
                     // iterate over each row and column of evaluated image
                     size_t indEval = kr * evalImg3D.getSize().rows * refImg3D.getSize().columns;
                     for(uint32_t je = 0; je < evalImg3D.getSize().rows; je++){
-                        for(uint32_t ie = 0; ie < evalImg3D.getSize().columns; ie++){
+                        xsimd::batch<float> yeVec(ye[je]);
+
+                        uint32_t ie = 0;
+                        for(; ie < evalSimdSize; ie += SimdElementCount){
+                            auto doseEvalVec = xsimd::load_unaligned(&evalImg3D.get(indEval));
+                            auto xeVec = xsimd::load_aligned(&xe[ie]);
+
+                            // calculate squared gamma
+                            // not using distSq1D and distSq2D functions, because this inlined version on simd vectors is faster
+                            auto gammaValSqVec = (doseRefVec - doseEvalVec) * (doseRefVec - doseEvalVec) * ddNormInvSqVec +
+                                                 ((xrVec - xeVec) * (xrVec - xeVec) + (yrVec - yeVec) * (yrVec - yeVec) + (zrVec - zeVec) * (zrVec - zeVec)) * dtaInvSqVec;
+
+                            minGammaValSqVec = xsimd::min(gammaValSqVec, minGammaValSqVec);
+
+                            indEval += SimdElementCount;
+                        }
+                        for(; ie < evalImg3D.getSize().columns; ie++){
                             float doseEval = evalImg3D.get(indEval);
+
                             // calculate squared gamma
                             float gammaValSq = distSq1D(doseEval, doseRef) * ddNormInvSq +
                                                distSq3D(xe[ie], ye[je], ze[kr], xr[ir], yr[jr], zr[kr]) * dtaInvSq;
@@ -183,6 +273,10 @@ GammaResult gammaIndex2_5DClassic(const ImageData& refImg3D, const ImageData& ev
                         }
                     }
 
+                    float minGammaValSqVecMin = xsimd::reduce_min(minGammaValSqVec);
+                    if(minGammaValSqVecMin < minGammaValSq){
+                        minGammaValSq = minGammaValSqVecMin;
+                    }
                     gammaVals.emplace_back(std::sqrt(minGammaValSq));
                 }
 
@@ -212,12 +306,19 @@ GammaResult gammaIndex3DClassic(const ImageData& refImg3D, const ImageData& eval
     const std::vector<float> xr = generateCoordinates(refImg3D, ImageAxis::X);
     const std::vector<float> ze = generateCoordinates(evalImg3D, ImageAxis::Z);
     const std::vector<float> ye = generateCoordinates(evalImg3D, ImageAxis::Y);
-    const std::vector<float> xe = generateCoordinates(evalImg3D, ImageAxis::X);
+    const aligned_vector<float> xe = generateCoordinatesAligned(evalImg3D, ImageAxis::X);
+
+    size_t evalSimdSize = evalImg3D.getSize().columns - evalImg3D.getSize().columns % SimdElementCount;
+    const xsimd::batch<float> dtaInvSqVec(dtaInvSq);
 
     // iterate over each frame, row and column of reference image
     size_t indRef = 0;
     for(uint32_t kr = 0; kr < refImg3D.getSize().frames; kr++){
+        xsimd::batch<float> zrVec(zr[kr]);
+
         for(uint32_t jr = 0; jr < refImg3D.getSize().rows; jr++){
+            xsimd::batch<float> yrVec(yr[jr]);
+
             for(uint32_t ir = 0; ir < refImg3D.getSize().columns; ir++){
                 float doseRef = refImg3D.get(indRef);
 
@@ -229,14 +330,39 @@ GammaResult gammaIndex3DClassic(const ImageData& refImg3D, const ImageData& eval
                 else{
                     // set squared inversed normalized dd based on the type of normalization (global or local)
                     float ddNormInvSq = (isGlobal ? ddGlobalNormInvSq : (ddInvSq / (doseRef * doseRef)));
+                    xsimd::batch<float> ddNormInvSqVec(ddNormInvSq);
+
                     float minGammaValSq = Inf;
+                    xsimd::batch<float> minGammaValSqVec(Inf);
+
+                    xsimd::batch<float> doseRefVec(doseRef);
+                    xsimd::batch<float> xrVec(xr[ir]);
 
                     // iterate over each frame, row and column of evaluated image
                     size_t indEval = 0;
                     for(uint32_t ke = 0; ke < evalImg3D.getSize().frames; ke++){
+                        xsimd::batch<float> zeVec(ze[ke]);
+
                         for(uint32_t je = 0; je < evalImg3D.getSize().rows; je++){
-                            for(uint32_t ie = 0; ie < evalImg3D.getSize().columns; ie++){
+                            xsimd::batch<float> yeVec(ye[je]);
+
+                            uint32_t ie = 0;
+                            for(; ie < evalSimdSize; ie += SimdElementCount){
+                                auto doseEvalVec = xsimd::load_unaligned(&evalImg3D.get(indEval));
+                                auto xeVec = xsimd::load_aligned(&xe[ie]);
+
+                                // calculate squared gamma
+                                // not using distSq1D and distSq2D functions, because this inlined version on simd vectors is faster
+                                auto gammaValSqVec = (doseRefVec - doseEvalVec) * (doseRefVec - doseEvalVec) * ddNormInvSqVec +
+                                                     ((xrVec - xeVec) * (xrVec - xeVec) + (yrVec - yeVec) * (yrVec - yeVec) + (zrVec - zeVec) * (zrVec - zeVec)) * dtaInvSqVec;
+
+                                minGammaValSqVec = xsimd::min(gammaValSqVec, minGammaValSqVec);
+
+                                indEval += SimdElementCount;
+                            }
+                            for(; ie < evalImg3D.getSize().columns; ie++){
                                 float doseEval = evalImg3D.get(indEval);
+
                                 // calculate squared gamma
                                 float gammaValSq = distSq1D(doseEval, doseRef) * ddNormInvSq +
                                                    distSq3D(xe[ie], ye[je], ze[ke], xr[ir], yr[jr], zr[kr]) * dtaInvSq;
@@ -249,6 +375,10 @@ GammaResult gammaIndex3DClassic(const ImageData& refImg3D, const ImageData& eval
                         }
                     }
 
+                    float minGammaValSqVecMin = xsimd::reduce_min(minGammaValSqVec);
+                    if(minGammaValSqVecMin < minGammaValSq){
+                        minGammaValSq = minGammaValSqVecMin;
+                    }
                     gammaVals.emplace_back(std::sqrt(minGammaValSq));
                 }
 
@@ -259,6 +389,16 @@ GammaResult gammaIndex3DClassic(const ImageData& refImg3D, const ImageData& eval
 
     return GammaResult(std::move(gammaVals), refImg3D.getSize(), refImg3D.getOffset(), refImg3D.getSpacing());
 }
+
+// Wendling method of gamma index is not vectorized, because there were two unsuccessful attempts which worked
+// worse than sequential version (in some cases it was even several times slower).
+// The first attempt was to vectorize loop that iterates over sorted points. It turned out that the problem with its
+// performance is stopping condition of loop that in vectorized version was met later than in sequential version
+// (for example sequential version met stopping condition after 1 point, but vectorized version in the same case
+// must process several points).
+// The second attempt was to vectorize only interpolation after evaluation of doses values at adjacent 4/8 points.
+// There were used two methods for calculating this optimally with vectorization (1. horizontall add,
+// 2. calculations on low and high halves of vector), but it turned out to be slower than sequential version.
 
 GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& evalImg2D,
                                  const GammaParameters& gammaParams){

@@ -25,17 +25,24 @@
 namespace yagit::Interpolation{
 
 namespace{
+// absolute tolerance that is useful for floating-point computations
+// currently it is absolute tolerance, but it can be changed to relative tolerance if it turns out to work better
 constexpr double Tolerance{5e-6};
 
 float calcNewOffset(float oldOffset, float gridOffset, float spacing){
-    // calculate closest point to oldOffset that is greater than or equal to oldOffset and also lies on grid
+    // calculate closest point to oldOffset that is greater than or equal to oldOffset and also lies on grid.
+    // Tolerance here is useful in cases where value passed to ceil function is e.g. 12.0000001 due to computer 
+    // floating-point errors and will be evaluated as 13 which is actually an incorrect result (correct is 12)
     int n = std::ceil((oldOffset - gridOffset) / static_cast<double>(spacing) - Tolerance);
     float newOffset = gridOffset + n * spacing;
     return newOffset;
 }
 
 constexpr uint32_t calcNewSize(uint32_t oldSize, float oldSpacing, float offsetRel, float newSpacing){
-    // calculate number of interpolated points that lie on edges or in the middle of original image
+    // calculate number of interpolated points that lie on edges or in the middle of original image.
+    // Tolerance here is useful in cases where value passed to truncation function (cast to integer)
+    // is e.g. 15.9999999 due to computer floating-point errors and will be evaluated as 15 which is actually
+    // an incorrect result (correct is 16)
     return static_cast<uint32_t>((oldSpacing * (oldSize - 1) - offsetRel) / newSpacing + 1 + Tolerance);
 }
 }
@@ -401,8 +408,11 @@ std::optional<float> bilinearAtPoint(const ImageData& img, uint32_t frame, float
         return std::nullopt;
     }
 
-    const uint32_t indy0 = static_cast<uint32_t>((y - img.getOffset().rows) / img.getSpacing().rows);
-    const uint32_t indx0 = static_cast<uint32_t>((x - img.getOffset().columns) / img.getSpacing().columns);
+    float tempy = (y - img.getOffset().rows) / img.getSpacing().rows;
+    float tempx = (x - img.getOffset().columns) / img.getSpacing().columns;
+
+    const uint32_t indy0 = static_cast<uint32_t>(tempy);
+    const uint32_t indx0 = static_cast<uint32_t>(tempx);
     uint32_t indy1 = indy0 + 1;
     uint32_t indx1 = indx0 + 1;
 
@@ -413,16 +423,13 @@ std::optional<float> bilinearAtPoint(const ImageData& img, uint32_t frame, float
         indx1 = indx0;
     }
 
-    float y0 = img.getOffset().rows + indy0 * img.getSpacing().rows;
-    float x0 = img.getOffset().columns + indx0 * img.getSpacing().columns;
+    float yd = tempy - static_cast<float>(indy0);
+    float xd = tempx - static_cast<float>(indx0);
 
     float c00 = img.get(frame, indy0, indx0);
     float c01 = img.get(frame, indy1, indx0);
     float c10 = img.get(frame, indy0, indx1);
     float c11 = img.get(frame, indy1, indx1);
-
-    float yd = (y - y0) / img.getSpacing().rows;
-    float xd = (x - x0) / img.getSpacing().columns;
 
     float c0 = c00*(1 - xd) + c10*xd;
     float c1 = c01*(1 - xd) + c11*xd;
@@ -458,6 +465,10 @@ std::optional<float> trilinearAtPoint(const ImageData& img, float z, float y, fl
     float y0 = img.getOffset().rows + indy0 * img.getSpacing().rows;
     float x0 = img.getOffset().columns + indx0 * img.getSpacing().columns;
 
+    float zd = (z - z0) / img.getSpacing().frames;
+    float yd = (y - y0) / img.getSpacing().rows;
+    float xd = (x - x0) / img.getSpacing().columns;
+
     float c000 = img.get(indz0, indy0, indx0);
     float c001 = img.get(indz1, indy0, indx0);
     float c010 = img.get(indz0, indy1, indx0);
@@ -466,10 +477,6 @@ std::optional<float> trilinearAtPoint(const ImageData& img, float z, float y, fl
     float c101 = img.get(indz1, indy0, indx1);
     float c110 = img.get(indz0, indy1, indx1);
     float c111 = img.get(indz1, indy1, indx1);
-
-    float zd = (z - z0) / img.getSpacing().frames;
-    float yd = (y - y0) / img.getSpacing().rows;
-    float xd = (x - x0) / img.getSpacing().columns;
 
     float c00 = c000*(1 - xd) + c100*xd;
     float c01 = c001*(1 - xd) + c101*xd;

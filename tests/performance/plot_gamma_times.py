@@ -121,16 +121,17 @@ labels = [f'{method[0].upper()}{dims}: {dd}%{norm}/{dta}mm{" DCO" if dco > 0 els
 # PLOT
 fig, ax = plt.subplots()
 ax.set_title(title)
-ax.set_ylabel('Time [ms]')
 
 indices = range(len(time1))
 
 if mode == "TIMES":
+    ax.set_ylabel("Time [ms]")
     width = 0.35
     bars1 = ax.bar(indices, time1, width, zorder=3, label=bars1_label)
     bars2 = ax.bar([index + width for index in indices], time2, width, zorder=3, label=bars2_label)
     ax.set_xticks([index + width/2 for index in indices])
 elif mode == "SPEEDUP":
+    ax.set_ylabel("Speedup")
     width = 0.5
     bars = ax.bar(indices, speedup, width, zorder=3, label="Speedup")
     ax.set_xticks(indices)
