@@ -666,7 +666,7 @@ GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& eva
     const auto sortedPoints = sortedPointsInCircle(gammaParams.maxSearchDistance, gammaParams.stepSize);
 
     std::vector<float> gammaVals =
-        loadBalancingMultithreadedGammaIndex(refImg2D, gammaParams, gammaIndex2DWendlingInternal,
+        loadBalancingMultithreadedGammaIndex(refImg2D.size(), gammaIndex2DWendlingInternal,
                                              std::cref(refImg2D), std::cref(evalImg2D),
                                              std::cref(gammaParams), std::cref(sortedPoints));
 
@@ -682,7 +682,7 @@ GammaResult gammaIndex2_5DWendling(const ImageData& refImg3D, const ImageData& e
     const auto sortedPoints = sortedPointsInCircle(gammaParams.maxSearchDistance, gammaParams.stepSize);
 
     std::vector<float> gammaVals =
-        loadBalancingMultithreadedGammaIndex(refImg3D, gammaParams, gammaIndex2_5DWendlingInternal,
+        loadBalancingMultithreadedGammaIndex(refImg3D.size(), gammaIndex2_5DWendlingInternal,
                                              std::cref(refImg3D), std::cref(evalImgInterpolatedZ),
                                              std::cref(gammaParams), std::cref(sortedPoints));
 
@@ -697,7 +697,7 @@ GammaResult gammaIndex3DWendling(const ImageData& refImg3D, const ImageData& eva
     const auto sortedPoints = sortedPointsInSphere(gammaParams.maxSearchDistance, gammaParams.stepSize);
 
     std::vector<float> gammaVals =
-        loadBalancingMultithreadedGammaIndex(refImg3D, gammaParams, gammaIndex3DWendlingInternal,
+        loadBalancingMultithreadedGammaIndex(refImg3D.size(), gammaIndex3DWendlingInternal,
                                              std::cref(refImg3D), std::cref(evalImg3D),
                                              std::cref(gammaParams), std::cref(sortedPoints));
 

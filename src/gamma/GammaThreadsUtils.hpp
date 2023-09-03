@@ -117,6 +117,7 @@ namespace{
 void addTasksToQueue(LoadBalancingQueue& queue, size_t size, uint32_t nrOfThreads){
     const size_t maxTaskSize = 256;
     const size_t taskSize = std::min(maxTaskSize, std::max(size / nrOfThreads, static_cast<size_t>(1)));
+
     for(uint32_t i = 0; i < size; i += taskSize){
         uint32_t start = i;
         uint32_t end = std::min(start + taskSize, size);
@@ -139,12 +140,11 @@ void loadBalancingMultithreadedGammaIndexInternal(Function&& func, Args&&... arg
 }
 
 template <typename Function, typename... Args>
-std::vector<float> loadBalancingMultithreadedGammaIndex(const ImageData& refImg, const GammaParameters& gammaParams,
-                                                        Function&& func, Args&&... args){
-    std::vector<float> gammaVals(refImg.size(), 0.0f);
+std::vector<float> loadBalancingMultithreadedGammaIndex(size_t refImgSize, Function&& func, Args&&... args){
+    std::vector<float> gammaVals(refImgSize, 0.0f);
 
     const uint32_t nrOfThreads = static_cast<uint32_t>(
-        std::min(static_cast<size_t>(std::thread::hardware_concurrency()), refImg.size()));
+        std::min(static_cast<size_t>(std::thread::hardware_concurrency()), refImgSize));
     
     if(nrOfThreads > 1){  // multi-threaded
         LoadBalancingQueue tasks;
@@ -162,88 +162,7 @@ std::vector<float> loadBalancingMultithreadedGammaIndex(const ImageData& refImg,
         }
     }
     else{  // single-threaded
-        func(std::forward<Args>(args)..., 0, refImg.size(), gammaVals);
-    }
-
-    return gammaVals;
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-
-void addTasksToQueue2(LoadBalancingQueue& queue, size_t nrOfCalcs, uint32_t nrOfThreads,
-                      const std::vector<float>& gammaVals){
-    const size_t maxTaskSize = 256;
-    const size_t taskSize = std::min(maxTaskSize, std::max(nrOfCalcs / nrOfThreads, static_cast<size_t>(1)));
-
-    if(nrOfCalcs == gammaVals.size()){  // gammaVals doesn't contain NaNs
-        for(uint32_t i = 0; i < gammaVals.size(); i += taskSize){
-            uint32_t start = i;
-            uint32_t end = std::min(start + taskSize, gammaVals.size());
-            queue.emplace(start, end);
-        }
-    }
-    else{  // gammaVals contains NaNs
-        size_t start = 0;
-        size_t end = 0;
-
-        while(start < gammaVals.size()){
-            size_t counter = 0;
-            while(counter < taskSize && end < gammaVals.size()){
-                if(gammaVals[end] == Inf){
-                    counter++;
-                    if(counter == 1){
-                        start = end;
-                    }
-                }
-                end++;
-            }
-            queue.emplace(start, end);
-            start = end;
-        }
-    }
-}
-
-template <typename Function, typename... Args>
-std::vector<float> loadBalancingMultithreadedGammaIndex2(const ImageData& refImg, const GammaParameters& gammaParams,
-                                                         Function&& func, Args&&... args){
-    std::vector<float> gammaVals(refImg.size(), 0.0f);
-
-    size_t nrOfCalcs = 0;
-    const bool isLocal = gammaParams.normalization == GammaNormalization::Local;
-    // preprocess gammaVals
-    for(size_t i = 0; i < refImg.size(); i++){
-        float doseRef = refImg.get(i);
-        bool doseBelowCutoff = doseRef < gammaParams.doseCutoff;
-        bool divisionByZero = isLocal && doseRef == 0;
-        if(doseBelowCutoff || divisionByZero){
-            gammaVals[i] = NaN;
-        }
-        else{
-            gammaVals[i] = Inf;
-            nrOfCalcs++;
-        }
-    }
-
-    const uint32_t nrOfThreads = static_cast<uint32_t>(
-        std::min(static_cast<size_t>(std::thread::hardware_concurrency()), refImg.size()));
-    
-    if(nrOfThreads > 1){  // multi-threaded
-        LoadBalancingQueue tasks;
-        addTasksToQueue2(tasks, nrOfCalcs, nrOfThreads, gammaVals);
-
-        std::vector<std::thread> threads;
-        threads.reserve(nrOfThreads);
-
-        for(uint32_t i = 0; i < nrOfThreads; i++){
-            threads.emplace_back(loadBalancingMultithreadedGammaIndexInternal<Function, Args...>,
-                                 std::cref(func), std::forward<Args>(args)..., std::ref(gammaVals), std::ref(tasks));
-        }
-        for(auto& thread : threads){
-            thread.join();
-        }
-    }
-    else{  // single-threaded
-        func(std::forward<Args>(args)..., 0, refImg.size(), gammaVals);
+        func(std::forward<Args>(args)..., 0, refImgSize, gammaVals);
     }
 
     return gammaVals;
