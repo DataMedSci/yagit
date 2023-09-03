@@ -54,7 +54,7 @@ jobs:
 
       # install from source, because apt has old version
       - name: Install xsimd
-        if: ${{ matrix.gamma-version == 'SIMD' }}
+        if: ${{ endsWith(matrix.gamma-version, 'SIMD') }}
         run: |
           git clone https://github.com/xtensor-stack/xsimd.git -b 11.1.0
           cd xsimd
