@@ -47,7 +47,7 @@ cmake .. -DGAMMA_VERSION=THREADS
 The default value of this parameter is `THREADS`.
 
 You can also modify SIMD extension used during the compilation of yagit. To do it, set `SIMD_EXTENSION` option to one of
-the values: `DEFAULT`, `SSE2`, `SSE3`, `SSSE3`, `SSE4.1`, `SSE4.2`, `AVX` `AVX2` `AVX512`, `NATIVE`.
+the values: `DEFAULT`, `SSE2`, `SSE3`, `SSSE3`, `SSE4.1`, `SSE4.2`, `AVX`, `AVX2`, `AVX512`, `NATIVE`.
 The default value of this parameter is `DEFAULT`, which means that no additional compilation options are added.
 Option `NATIVE` adds `-march=native` if compiler supports it.
 
