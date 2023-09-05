@@ -99,7 +99,7 @@ std::vector<float> generateCoordinates(const ImageData& image, ImageAxis axis){
 }
 
 namespace{
-const float Nan{std::numeric_limits<float>::quiet_NaN()};
+const float NaN{std::numeric_limits<float>::quiet_NaN()};
 const float Inf{std::numeric_limits<float>::infinity()};
 
 // absolute tolerance that is useful for floating-point computations

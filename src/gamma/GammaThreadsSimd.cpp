@@ -27,6 +27,7 @@
 
 #include "yagit/Interpolation.hpp"
 #include "GammaCommonSimd.hpp"
+#include "GammaThreadsUtils.hpp"
 
 namespace yagit{
 
@@ -67,106 +68,6 @@ GammaResult gammaIndex3D(const ImageData& refImg3D, const ImageData& evalImg3D,
     else{
         throw std::invalid_argument("invalid method");
     }
-}
-
-namespace{
-std::vector<std::pair<size_t, size_t>> calculationsRanges(uint32_t nrOfRanges, size_t nrOfCalcs,
-                                                          const std::vector<float>& gammaVals){
-    std::vector<std::pair<size_t, size_t>> result;
-    result.reserve(nrOfRanges);
-
-    size_t nrOfCalcsPerThread = nrOfCalcs / nrOfRanges;
-    uint32_t nrOfCalcsPerThreadRemainder = nrOfCalcs % nrOfRanges;
-    size_t startIndex = 0;
-    size_t endIndex = 0;
-
-    if(nrOfCalcs == gammaVals.size()){  // gammaVals doesn't contain NaNs
-        for(uint32_t i = 0; i < nrOfRanges; i++){
-            const size_t amount = nrOfCalcsPerThread + (i < nrOfCalcsPerThreadRemainder);
-            endIndex += amount;
-            result.emplace_back(startIndex, endIndex);
-            startIndex = endIndex;
-        }
-    }
-    else{  // gammaVals contains NaNs
-        for(uint32_t i = 0; i < nrOfRanges; i++){
-            size_t counter = 0;
-            const size_t amount = nrOfCalcsPerThread + (i < nrOfCalcsPerThreadRemainder);
-            while(counter < amount){
-                if(gammaVals[endIndex] == Inf){
-                    counter++;
-                    if(counter == 1){
-                        startIndex = endIndex;
-                    }
-                }
-                endIndex++;
-            }
-            result.emplace_back(startIndex, endIndex);
-            startIndex = endIndex;
-        }
-    }
-    return result;
-}
-
-template <typename Function, typename... Args>
-std::vector<float> multithreadedGammaIndex(const ImageData& refImg, const GammaParameters& gammaParams,
-                                           Function&& func, Args&&... args){
-    std::vector<float> gammaVals;
-    gammaVals.reserve(refImg.size());
-
-    size_t nrOfCalcs = 0;
-    const bool isLocal = gammaParams.normalization == GammaNormalization::Local;
-    // preprocess gammaVals
-    for(size_t i = 0; i < refImg.size(); i++){
-        float doseRef = refImg.get(i);
-        bool doseBelowCutoff = doseRef < gammaParams.doseCutoff;
-        bool divisionByZero = isLocal && doseRef == 0;
-        if(doseBelowCutoff || divisionByZero){
-            gammaVals.emplace_back(Nan);
-        }
-        else{
-            gammaVals.emplace_back(Inf);
-            nrOfCalcs++;
-        }
-    }
-
-    const uint32_t nrOfThreads = static_cast<uint32_t>(
-        std::min(static_cast<size_t>(std::thread::hardware_concurrency()), refImg.size()));
-    if(nrOfThreads > 1){  // multi-threaded
-        std::vector<std::thread> threads;
-        threads.reserve(nrOfThreads);
-
-        for(const auto& range : calculationsRanges(nrOfThreads, nrOfCalcs, gammaVals)){
-            threads.emplace_back(std::forward<Function>(func), std::forward<Args>(args)...,
-                                 range.first, range.second, std::ref(gammaVals));
-        }
-        for(auto& thread : threads){
-            thread.join();
-        }
-    }
-    else{  // single-threaded
-        func(std::forward<Args>(args)..., 0, refImg.size(), gammaVals);
-    }
-
-    return gammaVals;
-}
-}
-
-namespace{
-std::tuple<uint32_t, uint32_t> indexTo2Dindex(size_t index, const DataSize& size){
-    uint32_t j = index / size.columns;
-    uint32_t i = index % size.columns;
-    return {j, i};
-}
-
-std::tuple<uint32_t, uint32_t, uint32_t> indexTo3Dindex(size_t index, const DataSize& size){
-    uint32_t refRcSize = size.rows * size.columns;
-    uint32_t k = index / refRcSize;
-    uint32_t temp = index % refRcSize;
-    uint32_t j = temp / size.columns;
-    uint32_t i = temp % size.columns;
-    return {k, j, i};
-}
 }
 
 namespace{
@@ -532,9 +433,14 @@ void gammaIndex2DWendlingInternal(const ImageData& refImg2D, const ImageData& ev
         float xr = refImg2D.getOffset().columns + iStart2 * refImg2D.getSpacing().columns;
 
         for(uint32_t ir = iStart2; ir < refImg2D.getSize().columns && indRef < endIndex; ir++){
-            if(gammaVals[indRef] == Inf){
-                float doseRef = refImg2D.get(indRef);
+            float doseRef = refImg2D.get(indRef);
 
+            bool doseBelowCutoff = doseRef < gammaParams.doseCutoff;
+            bool divisionByZero = !isGlobal && doseRef == 0;
+            if(doseBelowCutoff || divisionByZero){
+                gammaVals[indRef] = NaN;
+            }
+            else{
                 // set squared inversed normalized dd based on the type of normalization (global or local)
                 float ddNormInvSq = (isGlobal ? ddGlobalNormInvSq : (ddInvSq / (doseRef * doseRef)));
 
@@ -596,7 +502,7 @@ void gammaIndex2DWendlingInternal(const ImageData& refImg2D, const ImageData& ev
                     gammaVals[indRef] = std::sqrt(minGammaValSq);
                 }
                 else{
-                    gammaVals[indRef] = Nan;
+                    gammaVals[indRef] = NaN;
                 }
             }
             xr += refImg2D.getSpacing().columns;
@@ -641,77 +547,77 @@ void gammaIndex2_5DWendlingInternal(const ImageData& refImg3D, const ImageData& 
             float xr = refImg3D.getOffset().columns + iStart2 * refImg3D.getSpacing().columns;
 
             for(uint32_t ir = iStart2; ir < refImg3D.getSize().columns && indRef < endIndex; ir++){
-                if(gammaVals[indRef] == Inf){
-                    bool evalFrameOutsideImage = ke < 0 || ke >= static_cast<int>(evalImg3D.getSize().frames);
-                    if(evalFrameOutsideImage){
-                        gammaVals[indRef] = Nan;
+                float doseRef = refImg3D.get(indRef);
+
+                bool evalFrameOutsideImage = ke < 0 || ke >= static_cast<int>(evalImg3D.getSize().frames);
+                bool doseBelowCutoff = doseRef < gammaParams.doseCutoff;
+                bool divisionByZero = !isGlobal && doseRef == 0;
+                if(evalFrameOutsideImage || doseBelowCutoff || divisionByZero){
+                    gammaVals[indRef] = NaN;
+                }
+                else{
+                    // set squared inversed normalized dd based on the type of normalization (global or local)
+                    float ddNormInvSq = (isGlobal ? ddGlobalNormInvSq : (ddInvSq / (doseRef * doseRef)));
+
+                    float minGammaValSq = Inf;
+
+                    for(const auto& point : sortedPoints){
+                        const float normalizedDistSq = point.distSq * dtaInvSq;
+                        if(normalizedDistSq >= minGammaValSq){
+                            break;
+                        }
+
+                        float ye = yr + point.y;
+                        float xe = xr + point.x;
+
+                        // instead of calling Interpolate::bilinearAtPoint function,
+                        // here is an inlined, optimized version. It gives 5-10% speedup
+
+                        if(ye < yeMin || ye > yeMax ||
+                            xe < xeMin || xe > xeMax){
+                            continue;
+                        }
+
+                        float tempy = (ye - evalImg3D.getOffset().rows) * rowsSpInv;
+                        float tempx = (xe - evalImg3D.getOffset().columns) * columnsSpInv;
+
+                        const uint32_t indy0 = static_cast<uint32_t>(tempy);
+                        const uint32_t indx0 = static_cast<uint32_t>(tempx);
+                        uint32_t indy1 = indy0 + 1;
+                        uint32_t indx1 = indx0 + 1;
+
+                        if(indy1 == evalImg3D.getSize().rows){
+                            indy1 = indy0;
+                        }
+                        if(indx1 == evalImg3D.getSize().columns){
+                            indx1 = indx0;
+                        }
+
+                        float yd = tempy - static_cast<float>(indy0);
+                        float xd = tempx - static_cast<float>(indx0);
+
+                        float c00 = evalImg3D.get(ke, indy0, indx0);
+                        float c01 = evalImg3D.get(ke, indy1, indx0);
+                        float c10 = evalImg3D.get(ke, indy0, indx1);
+                        float c11 = evalImg3D.get(ke, indy1, indx1);
+
+                        float c0 = c00*(1 - xd) + c10*xd;
+                        float c1 = c01*(1 - xd) + c11*xd;
+
+                        float doseEval = c0*(1 - yd) + c1*yd;
+
+                        // calculate squared gamma
+                        float gammaValSq = distSq1D(doseEval, doseRef) * ddNormInvSq + normalizedDistSq;
+                        if(gammaValSq < minGammaValSq){
+                            minGammaValSq = gammaValSq;
+                        }
+                    }
+
+                    if(minGammaValSq != Inf){
+                        gammaVals[indRef] = std::sqrt(minGammaValSq);
                     }
                     else{
-                        float doseRef = refImg3D.get(indRef);
-
-                        // set squared inversed normalized dd based on the type of normalization (global or local)
-                        float ddNormInvSq = (isGlobal ? ddGlobalNormInvSq : (ddInvSq / (doseRef * doseRef)));
-
-                        float minGammaValSq = Inf;
-
-                        for(const auto& point : sortedPoints){
-                            const float normalizedDistSq = point.distSq * dtaInvSq;
-                            if(normalizedDistSq >= minGammaValSq){
-                                break;
-                            }
-
-                            float ye = yr + point.y;
-                            float xe = xr + point.x;
-
-                            // instead of calling Interpolate::bilinearAtPoint function,
-                            // here is an inlined, optimized version. It gives 5-10% speedup
-
-                            if(ye < yeMin || ye > yeMax ||
-                               xe < xeMin || xe > xeMax){
-                                continue;
-                            }
-
-                            float tempy = (ye - evalImg3D.getOffset().rows) * rowsSpInv;
-                            float tempx = (xe - evalImg3D.getOffset().columns) * columnsSpInv;
-
-                            const uint32_t indy0 = static_cast<uint32_t>(tempy);
-                            const uint32_t indx0 = static_cast<uint32_t>(tempx);
-                            uint32_t indy1 = indy0 + 1;
-                            uint32_t indx1 = indx0 + 1;
-
-                            if(indy1 == evalImg3D.getSize().rows){
-                                indy1 = indy0;
-                            }
-                            if(indx1 == evalImg3D.getSize().columns){
-                                indx1 = indx0;
-                            }
-
-                            float yd = tempy - static_cast<float>(indy0);
-                            float xd = tempx - static_cast<float>(indx0);
-
-                            float c00 = evalImg3D.get(ke, indy0, indx0);
-                            float c01 = evalImg3D.get(ke, indy1, indx0);
-                            float c10 = evalImg3D.get(ke, indy0, indx1);
-                            float c11 = evalImg3D.get(ke, indy1, indx1);
-
-                            float c0 = c00*(1 - xd) + c10*xd;
-                            float c1 = c01*(1 - xd) + c11*xd;
-
-                            float doseEval = c0*(1 - yd) + c1*yd;
-
-                            // calculate squared gamma
-                            float gammaValSq = distSq1D(doseEval, doseRef) * ddNormInvSq + normalizedDistSq;
-                            if(gammaValSq < minGammaValSq){
-                                minGammaValSq = gammaValSq;
-                            }
-                        }
-
-                        if(minGammaValSq != Inf){
-                            gammaVals[indRef] = std::sqrt(minGammaValSq);
-                        }
-                        else{
-                            gammaVals[indRef] = Nan;
-                        }
+                        gammaVals[indRef] = NaN;
                     }
                 }
                 xr += refImg3D.getSpacing().columns;
@@ -760,9 +666,14 @@ void gammaIndex3DWendlingInternal(const ImageData& refImg3D, const ImageData& ev
             float xr = refImg3D.getOffset().columns + iStart2 * refImg3D.getSpacing().columns;
 
             for(uint32_t ir = iStart2; ir < refImg3D.getSize().columns && indRef < endIndex; ir++){
-                if(gammaVals[indRef] == Inf){
-                    float doseRef = refImg3D.get(indRef);
+                float doseRef = refImg3D.get(indRef);
 
+                bool doseBelowCutoff = doseRef < gammaParams.doseCutoff;
+                bool divisionByZero = !isGlobal && doseRef == 0;
+                if(doseBelowCutoff || divisionByZero){
+                    gammaVals[indRef] = NaN;
+                }
+                else{
                     // set squared inversed normalized dd based on the type of normalization (global or local)
                     float ddNormInvSq = (isGlobal ? ddGlobalNormInvSq : (ddInvSq / (doseRef * doseRef)));
 
@@ -842,7 +753,7 @@ void gammaIndex3DWendlingInternal(const ImageData& refImg3D, const ImageData& ev
                         gammaVals[indRef] = std::sqrt(minGammaValSq);
                     }
                     else{
-                        gammaVals[indRef] = Nan;
+                        gammaVals[indRef] = NaN;
                     }
                 }
                 xr += refImg3D.getSpacing().columns;
@@ -864,9 +775,9 @@ GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& eva
     const auto sortedPoints = sortedPointsInCircle(gammaParams.maxSearchDistance, gammaParams.stepSize);
 
     std::vector<float> gammaVals =
-        multithreadedGammaIndex(refImg2D, gammaParams, gammaIndex2DWendlingInternal,
-                                std::cref(refImg2D), std::cref(evalImg2D),
-                                std::cref(gammaParams), std::cref(sortedPoints));
+        loadBalancingMultithreadedGammaIndex(refImg2D.size(), gammaIndex2DWendlingInternal,
+                                             std::cref(refImg2D), std::cref(evalImg2D),
+                                             std::cref(gammaParams), std::cref(sortedPoints));
 
     return GammaResult(std::move(gammaVals), refImg2D.getSize(), refImg2D.getOffset(), refImg2D.getSpacing());
 }
@@ -880,9 +791,9 @@ GammaResult gammaIndex2_5DWendling(const ImageData& refImg3D, const ImageData& e
     const auto sortedPoints = sortedPointsInCircle(gammaParams.maxSearchDistance, gammaParams.stepSize);
 
     std::vector<float> gammaVals =
-        multithreadedGammaIndex(refImg3D, gammaParams, gammaIndex2_5DWendlingInternal,
-                                std::cref(refImg3D), std::cref(evalImgInterpolatedZ),
-                                std::cref(gammaParams), std::cref(sortedPoints));
+        loadBalancingMultithreadedGammaIndex(refImg3D.size(), gammaIndex2_5DWendlingInternal,
+                                             std::cref(refImg3D), std::cref(evalImgInterpolatedZ),
+                                             std::cref(gammaParams), std::cref(sortedPoints));
 
     return GammaResult(std::move(gammaVals), refImg3D.getSize(), refImg3D.getOffset(), refImg3D.getSpacing());
 }
@@ -895,9 +806,9 @@ GammaResult gammaIndex3DWendling(const ImageData& refImg3D, const ImageData& eva
     const auto sortedPoints = sortedPointsInSphere(gammaParams.maxSearchDistance, gammaParams.stepSize);
 
     std::vector<float> gammaVals =
-        multithreadedGammaIndex(refImg3D, gammaParams, gammaIndex3DWendlingInternal,
-                                std::cref(refImg3D), std::cref(evalImg3D),
-                                std::cref(gammaParams), std::cref(sortedPoints));
+        loadBalancingMultithreadedGammaIndex(refImg3D.size(), gammaIndex3DWendlingInternal,
+                                             std::cref(refImg3D), std::cref(evalImg3D),
+                                             std::cref(gammaParams), std::cref(sortedPoints));
 
     return GammaResult(std::move(gammaVals), refImg3D.getSize(), refImg3D.getOffset(), refImg3D.getSpacing());
 }

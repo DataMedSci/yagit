@@ -101,7 +101,7 @@ GammaResult gammaIndex2DClassic(const ImageData& refImg2D, const ImageData& eval
             bool doseBelowCutoff = doseRef < gammaParams.doseCutoff;
             bool divisionByZero = !isGlobal && doseRef == 0;
             if(doseBelowCutoff || divisionByZero){
-                gammaVals.emplace_back(Nan);
+                gammaVals.emplace_back(NaN);
             }
             else{
                 // set squared inversed normalized dd based on the type of normalization (global or local)
@@ -202,7 +202,7 @@ GammaResult gammaIndex2_5DClassic(const ImageData& refImg3D, const ImageData& ev
                 bool doseBelowCutoff = doseRef < gammaParams.doseCutoff;
                 bool divisionByZero = !isGlobal && doseRef == 0;
                 if(doseBelowCutoff || divisionByZero){
-                    gammaVals.emplace_back(Nan);
+                    gammaVals.emplace_back(NaN);
                 }
                 else{
                     // set squared inversed normalized dd based on the type of normalization (global or local)
@@ -300,7 +300,7 @@ GammaResult gammaIndex3DClassic(const ImageData& refImg3D, const ImageData& eval
                 bool doseBelowCutoff = doseRef < gammaParams.doseCutoff;
                 bool divisionByZero = !isGlobal && doseRef == 0;
                 if(doseBelowCutoff || divisionByZero){
-                    gammaVals.emplace_back(Nan);
+                    gammaVals.emplace_back(NaN);
                 }
                 else{
                     // set squared inversed normalized dd based on the type of normalization (global or local)
@@ -411,7 +411,7 @@ GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& eva
             bool doseBelowCutoff = doseRef < gammaParams.doseCutoff;
             bool divisionByZero = !isGlobal && doseRef == 0;
             if(doseBelowCutoff || divisionByZero){
-                gammaVals.emplace_back(Nan);
+                gammaVals.emplace_back(NaN);
             }
             else{
                 // set squared inversed normalized dd based on the type of normalization (global or local)
@@ -475,7 +475,7 @@ GammaResult gammaIndex2DWendling(const ImageData& refImg2D, const ImageData& eva
                     gammaVals.emplace_back(std::sqrt(minGammaValSq));
                 }
                 else{
-                    gammaVals.emplace_back(Nan);
+                    gammaVals.emplace_back(NaN);
                 }
             }
             xr += refImg2D.getSpacing().columns;
@@ -530,7 +530,7 @@ GammaResult gammaIndex2_5DWendling(const ImageData& refImg3D, const ImageData& e
                 bool doseBelowCutoff = doseRef < gammaParams.doseCutoff;
                 bool divisionByZero = !isGlobal && doseRef == 0;
                 if(evalFrameOutsideImage || doseBelowCutoff || divisionByZero){
-                    gammaVals.emplace_back(Nan);
+                    gammaVals.emplace_back(NaN);
                 }
                 else{
                     // set squared inversed normalized dd based on the type of normalization (global or local)
@@ -594,7 +594,7 @@ GammaResult gammaIndex2_5DWendling(const ImageData& refImg3D, const ImageData& e
                         gammaVals.emplace_back(std::sqrt(minGammaValSq));
                     }
                     else{
-                        gammaVals.emplace_back(Nan);
+                        gammaVals.emplace_back(NaN);
                     }
                 }
                 xr += refImg3D.getSpacing().columns;
@@ -652,7 +652,7 @@ GammaResult gammaIndex3DWendling(const ImageData& refImg3D, const ImageData& eva
                 bool doseBelowCutoff = doseRef < gammaParams.doseCutoff;
                 bool divisionByZero = !isGlobal && doseRef == 0;
                 if(doseBelowCutoff || divisionByZero){
-                    gammaVals.emplace_back(Nan);
+                    gammaVals.emplace_back(NaN);
                 }
                 else{
                     // set squared inversed normalized dd based on the type of normalization (global or local)
@@ -734,7 +734,7 @@ GammaResult gammaIndex3DWendling(const ImageData& refImg3D, const ImageData& eva
                         gammaVals.emplace_back(std::sqrt(minGammaValSq));
                     }
                     else{
-                        gammaVals.emplace_back(Nan);
+                        gammaVals.emplace_back(NaN);
                     }
                 }
                 xr += refImg3D.getSpacing().columns;
