@@ -18,8 +18,8 @@ set BUILD_EXAMPLES=ON
 set BUILD_TESTING=OFF
 set BUILD_PERFORMANCE_TESTING=OFF
 
-set REF_IMG=original_dose_beam_4.dcm
-set EVAL_IMG=logfile_dose_beam_4.dcm
+set REF_IMG=img_reference.dcm
+set EVAL_IMG=img_evaluated.dcm
 
 set INSTALL=OFF
 set INSTALL_DIR=./yagit
