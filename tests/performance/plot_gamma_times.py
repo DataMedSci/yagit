@@ -75,6 +75,11 @@ dims = ""
 norm = ""
 min_dco = 0
 
+# save to file
+save_to_png = False
+save_to_svg = False
+save_to_pdf = False
+
 
 # check if config is correct
 if len(files) == 0:
@@ -219,4 +224,22 @@ if len(bars_labels) > 0:
     # ax.legend()
 
 plt.tight_layout()
+
+
+# ==============================================
+# SAVE TO FILE
+
+if save_to_png:
+    plt.savefig("plot.png", format="png")
+
+if save_to_svg:
+    plt.savefig("plot.svg", format="svg")
+
+if save_to_pdf:
+    plt.savefig("plot.pdf", format="pdf")
+
+
+# ==============================================
+# SHOW PLOT
+
 plt.show()
