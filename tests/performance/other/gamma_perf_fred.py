@@ -150,9 +150,9 @@ CPU_NO = "auto"
 # FRED requires DCO to be greater than 0
 # config: dd, dta, norm, dco, max_search_dist, step_size, nr_of_tests
 configs = [
-    (3, 3, GLOBAL, DCO, 9, STEP_SIZE, 10),
+    (3, 3, GLOBAL, DCO, 9, STEP_SIZE, 20),
     (2, 2, GLOBAL, DCO, 6, STEP_SIZE, 10),
-    (3, 3, LOCAL,  DCO, 9, STEP_SIZE, 10),
+    (3, 3, LOCAL,  DCO, 9, STEP_SIZE, 20),
     (2, 2, LOCAL,  DCO, 6, STEP_SIZE, 10)
 ]
 
@@ -214,6 +214,7 @@ for i, config in enumerate(configs):
              time_stats_to_csv(times_ms) +\
              gamma_result_to_csv(gamma_res)
     csv_writer.writerow(record)
+    csv_file.flush()
 
     # if i == 0:
     #     save_gamma_to_file(gamma_res, MHA_FILENAME)

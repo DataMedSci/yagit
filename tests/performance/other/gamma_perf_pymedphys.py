@@ -122,10 +122,10 @@ STEP_SIZE = 10  # 1/10 of DTA
 # PyMedPhys has only Wendling 3D
 # config: dd, dta, norm, dco, max_search_dist, step_size, nr_of_tests
 configs = [
-    (3, 3, GLOBAL, 0,   9, STEP_SIZE, 3),
-    (2, 2, GLOBAL, 0,   6, STEP_SIZE, 3),
-    (3, 3, LOCAL,  0,   9, STEP_SIZE, 3),
-    (2, 2, LOCAL,  0,   6, STEP_SIZE, 3),
+    # (3, 3, GLOBAL, 0,   9, STEP_SIZE, 3),
+    # (2, 2, GLOBAL, 0,   6, STEP_SIZE, 3),
+    # (3, 3, LOCAL,  0,   9, STEP_SIZE, 3),
+    # (2, 2, LOCAL,  0,   6, STEP_SIZE, 3),
 
     (3, 3, GLOBAL, DCO, 9, STEP_SIZE, 3),
     (2, 2, GLOBAL, DCO, 6, STEP_SIZE, 3),
@@ -195,6 +195,7 @@ for i, config in enumerate(configs):
              time_stats_to_csv(times_ms) +\
              gamma_result_to_csv(gamma_res)
     csv_writer.writerow(record)
+    csv_file.flush()
 
     # if i == 0:
     #     save_gamma_to_file(gamma_res, img_ref, MHA_FILENAME)
