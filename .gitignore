@@ -107,3 +107,8 @@ docs/build
 # tests data files
 !tests/unit/data/*.dcm
 !tests/unit/data/*.mha
+
+# plot output files
+*plot*.png
+*plot*.svg
+*plot*.pdf
