@@ -27,13 +27,13 @@ namespace yagit::Interpolation{
 namespace{
 // absolute tolerance that is useful for floating-point computations
 // currently it is absolute tolerance, but it can be changed to relative tolerance if it turns out to work better
-constexpr double Tolerance{5e-6};
+constexpr double Tolerance{5e-7};
 
 float calcNewOffset(float oldOffset, float gridOffset, float spacing){
     // calculate closest point to oldOffset that is greater than or equal to oldOffset and also lies on grid.
     // Tolerance here is useful in cases where value passed to ceil function is e.g. 12.0000001 due to computer 
     // floating-point errors and will be evaluated as 13 which is actually an incorrect result (correct is 12)
-    int n = std::ceil((oldOffset - gridOffset) / static_cast<double>(spacing) - Tolerance);
+    int n = std::ceil((oldOffset - gridOffset - Tolerance) / static_cast<double>(spacing));
     float newOffset = gridOffset + n * spacing;
     return newOffset;
 }
@@ -43,7 +43,7 @@ constexpr uint32_t calcNewSize(uint32_t oldSize, float oldSpacing, float offsetR
     // Tolerance here is useful in cases where value passed to truncation function (cast to integer)
     // is e.g. 15.9999999 due to computer floating-point errors and will be evaluated as 15 which is actually
     // an incorrect result (correct is 16)
-    return static_cast<uint32_t>((oldSpacing * (oldSize - 1) - offsetRel) / newSpacing + 1 + Tolerance);
+    return static_cast<uint32_t>((oldSpacing * (oldSize - 1) - offsetRel + Tolerance) / newSpacing + 1);
 }
 }
 
