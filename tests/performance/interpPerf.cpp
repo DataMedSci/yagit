@@ -59,7 +59,7 @@ void measureInterp(uint32_t nrOfTests, Function&& func, Args&&... args){
     for(uint32_t i = 0; i < nrOfTests; i++){
         auto begin = std::chrono::steady_clock::now();
 
-        result = func(std::forward<Args>(args)...);
+        result = func(args...);
 
         auto end = std::chrono::steady_clock::now();
         auto timeMs = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1000.0;
@@ -81,7 +81,7 @@ void measureInterpAtPoint(uint32_t nrOfTests, Function&& func, Args&&... args){
 
         // in each test do it 100000 times, because 1 time takes too little time
         for(uint32_t j = 0; j < 100000; j++){
-            result = func(std::forward<Args>(args)...);
+            result = func(args...);
         }
 
         auto end = std::chrono::steady_clock::now();
