@@ -33,6 +33,11 @@
 const auto GLOBAL = yagit::GammaNormalization::Global;
 const auto LOCAL = yagit::GammaNormalization::Local;
 
+const float MAX_REF_DOSE = -1;  // set automatically max reference dose
+const float DCO1 = -1;          // set automatically 1% of max ref dose
+const float DCO5 = -5;          // set automatically 5% of max ref dose
+const float DCO10 = -10;        // set automatically 10% of max ref dose
+
 using GammaFunc = std::function<yagit::GammaResult(const yagit::ImageData&, const yagit::ImageData&,
                                                    const yagit::GammaParameters&)>;
 
@@ -44,49 +49,37 @@ struct Config{
 };
 
 const std::vector<Config> configs = {
-    {"classic", "2D", {3, 3, GLOBAL, 0, 0, 0, 0}, 10},
-    {"classic", "2D", {2, 2, GLOBAL, 0, 0, 0, 0}, 10},
-    {"classic", "2D", {3, 3, LOCAL, 0, 0, 0, 0}, 10},
-    {"classic", "2D", {2, 2, LOCAL, 0, 0, 0, 0}, 10},
-    {"classic", "2.5D", {3, 3, GLOBAL, 0, 0, 0, 0}, 1},
-    {"classic", "2.5D", {2, 2, GLOBAL, 0, 0, 0, 0}, 1},
-    {"classic", "2.5D", {3, 3, LOCAL, 0, 0, 0, 0}, 1},
-    {"classic", "2.5D", {2, 2, LOCAL, 0, 0, 0, 0}, 1},
+    // classic method
+    {"classic",  "2D",   {3, 3, GLOBAL, MAX_REF_DOSE, 0,    0, 0},   20},
+    {"classic",  "2D",   {3, 3, LOCAL,  0,            0,    0, 0},   20},
+    {"classic",  "2D",   {3, 3, GLOBAL, MAX_REF_DOSE, DCO5, 0, 0},   20},
+    {"classic",  "2D",   {3, 3, LOCAL,  0,            DCO5, 0, 0},   20},
 
-    {"classic", "2D", {3, 3, GLOBAL, 0, 1e-6, 0, 0}, 10},
-    {"classic", "2D", {2, 2, GLOBAL, 0, 1e-6, 0, 0}, 10},
-    {"classic", "2D", {3, 3, LOCAL, 0, 1e-6, 0, 0}, 10},
-    {"classic", "2D", {2, 2, LOCAL, 0, 1e-6, 0, 0}, 10},
-    {"classic", "2.5D", {3, 3, GLOBAL, 0, 1e-6, 0, 0}, 1},
-    {"classic", "2.5D", {2, 2, GLOBAL, 0, 1e-6, 0, 0}, 1},
-    {"classic", "2.5D", {3, 3, LOCAL, 0, 1e-6, 0, 0}, 1},
-    {"classic", "2.5D", {2, 2, LOCAL, 0, 1e-6, 0, 0}, 1},
+    {"classic",  "2.5D", {3, 3, GLOBAL, MAX_REF_DOSE, 0,    0, 0},   4},
+    {"classic",  "2.5D", {3, 3, LOCAL,  0,            0,    0, 0},   8},
+    {"classic",  "2.5D", {3, 3, GLOBAL, MAX_REF_DOSE, DCO5, 0, 0},   10},
+    {"classic",  "2.5D", {3, 3, LOCAL,  0,            DCO5, 0, 0},   10},
 
-    {"wendling", "2D", {3, 3, GLOBAL, 0, 0, 10, 0.3}, 100},
-    {"wendling", "2D", {2, 2, GLOBAL, 0, 0, 10, 0.2}, 100},
-    {"wendling", "2D", {3, 3, LOCAL, 0, 0, 10, 0.3}, 100},
-    {"wendling", "2D", {2, 2, LOCAL, 0, 0, 10, 0.2}, 100},
-    {"wendling", "2.5D", {3, 3, GLOBAL, 0, 0, 10, 0.3}, 10},
-    {"wendling", "2.5D", {2, 2, GLOBAL, 0, 0, 10, 0.2}, 10},
-    {"wendling", "2.5D", {3, 3, LOCAL, 0, 0, 10, 0.3}, 3},
-    {"wendling", "2.5D", {2, 2, LOCAL, 0, 0, 10, 0.2}, 3},
-    {"wendling", "3D", {3, 3, GLOBAL, 0, 0, 10, 0.3}, 10},
-    {"wendling", "3D", {2, 2, GLOBAL, 0, 0, 10, 0.2}, 10},
-    {"wendling", "3D", {3, 3, LOCAL, 0, 0, 10, 0.3}, 1},
-    {"wendling", "3D", {2, 2, LOCAL, 0, 0, 10, 0.2}, 1},
+    // wendling method
+    {"wendling", "2D",   {3, 3, GLOBAL, MAX_REF_DOSE, 0,    9, 0.3}, 1000},
+    {"wendling", "2D",   {3, 3, LOCAL,  0,            0,    9, 0.3}, 200},
+    {"wendling", "2D",   {3, 3, GLOBAL, MAX_REF_DOSE, DCO5, 9, 0.3}, 1000},
+    {"wendling", "2D",   {3, 3, LOCAL,  0,            DCO5, 9, 0.3}, 1000},
 
-    {"wendling", "2D", {3, 3, GLOBAL, 0, 1e-6, 10, 0.3}, 100},
-    {"wendling", "2D", {2, 2, GLOBAL, 0, 1e-6, 10, 0.2}, 100},
-    {"wendling", "2D", {3, 3, LOCAL, 0, 1e-6, 10, 0.3}, 100},
-    {"wendling", "2D", {2, 2, LOCAL, 0, 1e-6, 10, 0.2}, 100},
-    {"wendling", "2.5D", {3, 3, GLOBAL, 0, 1e-6, 10, 0.3}, 10},
-    {"wendling", "2.5D", {2, 2, GLOBAL, 0, 1e-6, 10, 0.2}, 10},
-    {"wendling", "2.5D", {3, 3, LOCAL, 0, 1e-6, 10, 0.3}, 3},
-    {"wendling", "2.5D", {2, 2, LOCAL, 0, 1e-6, 10, 0.2}, 3},
-    {"wendling", "3D", {3, 3, GLOBAL, 0, 1e-6, 10, 0.3}, 10},
-    {"wendling", "3D", {2, 2, GLOBAL, 0, 1e-6, 10, 0.2}, 10},
-    {"wendling", "3D", {3, 3, LOCAL, 0, 1e-6, 10, 0.3}, 1},
-    {"wendling", "3D", {2, 2, LOCAL, 0, 1e-6, 10, 0.2}, 1}
+    {"wendling", "2.5D", {3, 3, GLOBAL, MAX_REF_DOSE, 0,    9, 0.3}, 15},
+    {"wendling", "2.5D", {3, 3, LOCAL,  0,            0,    9, 0.3}, 6},
+    {"wendling", "2.5D", {3, 3, GLOBAL, MAX_REF_DOSE, DCO5, 9, 0.3}, 15},
+    {"wendling", "2.5D", {3, 3, LOCAL,  0,            DCO5, 9, 0.3}, 6},
+
+    {"wendling", "3D",   {3, 3, GLOBAL, MAX_REF_DOSE, 0,    9, 0.3}, 10},
+    {"wendling", "3D",   {3, 3, LOCAL,  0,            0,    9, 0.3}, 3},
+    {"wendling", "3D",   {3, 3, GLOBAL, MAX_REF_DOSE, DCO5, 9, 0.3}, 10},
+    {"wendling", "3D",   {3, 3, LOCAL,  0,            DCO5, 9, 0.3}, 10},
+
+    // {"wendling", "3D",   {3, 3, GLOBAL, MAX_REF_DOSE, DCO5, 9, 0.3}, 50},
+    // {"wendling", "3D",   {2, 2, GLOBAL, MAX_REF_DOSE, DCO5, 6, 0.2}, 20},
+    // {"wendling", "3D",   {3, 3, LOCAL,  0,            DCO5, 9, 0.3}, 50},
+    // {"wendling", "3D",   {2, 2, LOCAL,  0,            DCO5, 6, 0.2}, 20}
 };
 
 std::string csvHeader(){
@@ -189,8 +182,18 @@ int main(int argc, char** argv){
             std::cout << i+1 << "/" << configs.size();
 
             auto [method, dims, gammaParams, nrOfTests] = configs[i];
-            if(gammaParams.normalization == GLOBAL){
+            if(gammaParams.globalNormDose == MAX_REF_DOSE){
                 gammaParams.globalNormDose = (dims == "2D" ? refMaxDose2D : refMaxDose3D);
+            }
+
+            if(gammaParams.doseCutoff == DCO1){
+                gammaParams.doseCutoff = 0.01 * (dims == "2D" ? refMaxDose2D : refMaxDose3D);
+            }
+            else if(gammaParams.doseCutoff == DCO5){
+                gammaParams.doseCutoff = 0.05 * (dims == "2D" ? refMaxDose2D : refMaxDose3D);
+            }
+            else if(gammaParams.doseCutoff == DCO10){
+                gammaParams.doseCutoff = 0.10 * (dims == "2D" ? refMaxDose2D : refMaxDose3D);
             }
 
             csvFile << configToCsv({method, dims, gammaParams, nrOfTests}) << ",";

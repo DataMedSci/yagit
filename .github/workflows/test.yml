@@ -43,21 +43,21 @@ jobs:
           sudo apt install libgdcm-dev
 
       # install from source, because apt has old version
-      - name: Install GoogleTest and GoogleMock
+      - name: Install xsimd
+        if: ${{ endsWith(matrix.gamma-version, 'SIMD') }}
         run: |
-          git clone https://github.com/google/googletest.git -b v1.13.0
-          cd googletest
+          git clone https://github.com/xtensor-stack/xsimd.git -b 11.1.0
+          cd xsimd
           mkdir build && cd build
           cmake ..
           make
           sudo make install
 
       # install from source, because apt has old version
-      - name: Install xsimd
-        if: ${{ endsWith(matrix.gamma-version, 'SIMD') }}
+      - name: Install GoogleTest and GoogleMock
         run: |
-          git clone https://github.com/xtensor-stack/xsimd.git -b 11.1.0
-          cd xsimd
+          git clone https://github.com/google/googletest.git -b v1.13.0
+          cd googletest
           mkdir build && cd build
           cmake ..
           make
@@ -85,6 +85,28 @@ jobs:
       - name: Install yagit
         run: |
           cmake --install build --prefix ./yagit_install_dir
+
+  run-setup-linux:
+    if: >
+      github.repository == 'DataMedSci/yagit' &&
+      !contains(github.event.head_commit.message, '[ci skip]') &&
+      !contains(github.event.head_commit.message, '[skip ci]')
+    name: Run setup.sh on Linux
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Check versions
+        run: |
+          gcc --version
+          g++ --version
+          cmake --version
+
+      - name: Run setup.sh script
+        run: |
+          ./setup.sh
 
   build-windows:
     if: >

@@ -163,8 +163,8 @@ GammaResult gammaIndex2DClassic(const ImageData& refImg2D, const ImageData& eval
 
 GammaResult gammaIndex2_5DClassic(const ImageData& refImg3D, const ImageData& evalImg3D,
                                   const GammaParameters& gammaParams){
-    if(refImg3D.getSize().frames != evalImg3D.getSize().frames){
-        throw std::invalid_argument("reference image and evaluated image don't have the same number of frames");
+    if(evalImg3D.getSize().frames < refImg3D.getSize().frames){
+        throw std::invalid_argument("evaluated image must have at least the same number of frames as the reference image");
     }
     validateGammaParameters(gammaParams);
 

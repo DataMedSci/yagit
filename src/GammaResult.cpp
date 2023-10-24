@@ -25,7 +25,7 @@
 namespace yagit{
 
 double GammaResult::passingRate() const{
-    return static_cast<value_type>(std::count_if(m_data.begin(), m_data.end(), [](value_type el) {
+    return static_cast<double>(std::count_if(m_data.begin(), m_data.end(), [](value_type el) {
         return !std::isnan(el) && el <= 1;
     })) / nansize();
 }

@@ -98,7 +98,7 @@ std::vector<float> multithreadedGammaIndex(const ImageData& refImg, const GammaP
         threads.reserve(nrOfThreads);
 
         for(const auto& range : generateCalcRanges(nrOfThreads, nrOfCalcs, gammaVals)){
-            threads.emplace_back(std::forward<Function>(func), std::forward<Args>(args)...,
+            threads.emplace_back(func, std::cref(args)...,
                                  range.first, range.second, std::ref(gammaVals));
         }
         for(auto& thread : threads){
@@ -106,7 +106,7 @@ std::vector<float> multithreadedGammaIndex(const ImageData& refImg, const GammaP
         }
     }
     else{  // single-threaded
-        func(std::forward<Args>(args)..., 0, refImg.size(), gammaVals);
+        func(args..., 0, refImg.size(), gammaVals);
     }
 
     return gammaVals;
@@ -131,7 +131,7 @@ void loadBalancingMultithreadedGammaIndexInternal(Function&& func, Args&&... arg
     while(true){
         if(auto task = tasks.safePop(); task.has_value()){
             const auto [start, end] = *task;
-            func(std::forward<Args>(args)..., start, end, gammaVals);
+            func(args..., start, end, gammaVals);
         }
         else{
             break;
@@ -155,14 +155,14 @@ std::vector<float> loadBalancingMultithreadedGammaIndex(size_t refImgSize, Funct
 
         for(uint32_t i = 0; i < nrOfThreads; i++){
             threads.emplace_back(loadBalancingMultithreadedGammaIndexInternal<Function, Args...>,
-                                 std::cref(func), std::forward<Args>(args)..., std::ref(gammaVals), std::ref(tasks));
+                                 std::cref(func), std::cref(args)..., std::ref(gammaVals), std::ref(tasks));
         }
         for(auto& thread : threads){
             thread.join();
         }
     }
     else{  // single-threaded
-        func(std::forward<Args>(args)..., 0, refImgSize, gammaVals);
+        func(args..., 0, refImgSize, gammaVals);
     }
 
     return gammaVals;

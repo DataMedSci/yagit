@@ -18,8 +18,8 @@ set BUILD_EXAMPLES=ON
 set BUILD_TESTING=OFF
 set BUILD_PERFORMANCE_TESTING=OFF
 
-set REF_IMG=original_dose_beam_4.dcm
-set EVAL_IMG=logfile_dose_beam_4.dcm
+set REF_IMG=img_reference.dcm
+set EVAL_IMG=img_evaluated.dcm
 
 set INSTALL=OFF
 set INSTALL_DIR=./yagit
@@ -30,7 +30,7 @@ if not exist build\CMakeCache.txt (
     echo CONFIGURING CMAKE FIRST TIME...
     mkdir build
     cd build
-    conan install ..
+    conan install .. --output-folder . --build missing
     cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
     cd ..
 )
@@ -95,10 +95,10 @@ if %INSTALL% == ON (
     echo:
     echo INSTALLING...
     IF "%INSTALL_DIR%" NEQ "" (
-        echo INSTALLING TO %INSTALL_DIR%
+        echo INSTALLING IN %INSTALL_DIR%
         cmake --install build --prefix %INSTALL_DIR%
     ) else (
-        echo INSTALLING TO SYSTEM DIRECTORY
+        echo INSTALLING IN SYSTEM DIRECTORY
         echo MAKE SURE YOU RUN THIS AS ADMINISTRATOR
         cmake --install build
     )

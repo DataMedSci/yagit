@@ -39,7 +39,7 @@
 std::string floatToString(float d){
     std::ostringstream oss;
     oss << d;
-    return oss.str(); 
+    return oss.str();
 }
 
 std::string gammaParametersToString(const yagit::GammaParameters& gammaParams){
