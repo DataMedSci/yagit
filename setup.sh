@@ -25,6 +25,8 @@ BUILD_PERFORMANCE_TESTING=OFF
 REF_IMG=img_reference.dcm
 EVAL_IMG=img_evaluated.dcm
 
+BUILD_DOCUMENTATION=OFF
+
 INSTALL=OFF
 INSTALL_DIR=./yagit
 
@@ -143,6 +145,18 @@ if [ $BUILD_PERFORMANCE_TESTING == ON ]; then
     ./build/tests/performance/gammaPerf "$REF_IMG" "$EVAL_IMG" gammaTimes.csv
     echo ""
     ./build/tests/performance/interpPerf "$EVAL_IMG"
+fi
+
+
+# ============================================================
+if [ $BUILD_DOCUMENTATION == ON ]; then
+    echo ""
+    echo "BUILDING DOCUMENTATION..."
+    cd docs
+    doxygen
+    make html
+    cd ..
+    echo DOCUMENTATION MAIN PAGE: $(pwd)/docs/build/html/index.html
 fi
 
 

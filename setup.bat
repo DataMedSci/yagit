@@ -21,6 +21,8 @@ set BUILD_PERFORMANCE_TESTING=OFF
 set REF_IMG=img_reference.dcm
 set EVAL_IMG=img_evaluated.dcm
 
+set BUILD_DOCUMENTATION=OFF
+
 set INSTALL=OFF
 set INSTALL_DIR=./yagit
 
@@ -87,6 +89,17 @@ if %BUILD_PERFORMANCE_TESTING% == ON (
     build\tests\performance\%BUILD_TYPE%\gammaPerf.exe %REF_IMG% %EVAL_IMG% gammaTimes.csv
     echo:
     build\tests\performance\%BUILD_TYPE%\interpPerf.exe %EVAL_IMG%
+)
+
+
+@REM ============================================================
+if %BUILD_DOCUMENTATION% == ON (
+    echo:
+    echo BUILDING DOCUMENTATION...
+    cd docs
+    doxygen
+    make html
+    echo DOCUMENTATION MAIN PAGE: %cd:\=/%/docs/build/html/index.html
 )
 
 
