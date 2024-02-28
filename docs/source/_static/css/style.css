@@ -1,0 +1,59 @@
+.wy-nav-content {
+    background: white;
+}
+
+figure {
+    margin-bottom: 20px !important;
+}
+
+figure img {
+    margin-bottom: 10px;
+}
+
+figure p {
+    margin-bottom: 0;
+}
+
+figure p a.headerlink {
+    display: none !important;
+}
+
+ul.list,
+ol.list {
+    margin-top: -18px;
+}
+
+ol.list ol,
+ul.list ul,
+ol.list ul,
+ul.list ol {
+    margin-bottom: 10px !important;
+    margin-left: 15px;
+}
+
+ol.list li > p,
+ul.list li > p {
+    margin-bottom: 5px !important;
+}
+
+ol.list li > blockquote,
+ul.list li > blockquote {
+    margin: 0 0 5px 0;
+}
+
+table.center-headers th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+table.right-align-vals td:not(:first-child) {
+    text-align: right;
+}
+
+.math.math-left {
+    text-align: left;
+}
+
+.math.math-left mjx-container.MathJax {
+    text-align: left;
+}
