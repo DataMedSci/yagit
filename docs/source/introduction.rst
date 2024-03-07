@@ -75,7 +75,7 @@ while the evaluated image has dimensions of 200x200x200. They are very similar (
     +------------+------------+------------+------------+------------+------------+
 
 The table shows comparison of calculation times between YAGIT, FRED and PyMedPhys.
-Other parameters: normalizing dose = max. reference image dose, dose cutoff = 5%,
+Other parameters: normalizing dose = max. reference image dose, dose cutoff = 5% of max. reference image dose,
 search radius = 3*DTA, step size = DTA/10.
 
 When using 16 threads, YAGIT and FRED speed up about 8 times.

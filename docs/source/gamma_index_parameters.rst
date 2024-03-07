@@ -1,2 +1,0 @@
-Gamma index parameters
-======================

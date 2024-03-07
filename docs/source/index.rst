@@ -8,7 +8,7 @@ Yet Another Gamma Index Tool |release| documentation
    introduction
    gamma_index
    algorithms
-   gamma_index_parameters
+   parameters
    input_and_output_data
    data_representation
 
@@ -17,5 +17,5 @@ Yet Another Gamma Index Tool |release| documentation
    :caption: Usage
 
    installation
-   api/api
    examples
+   api/api

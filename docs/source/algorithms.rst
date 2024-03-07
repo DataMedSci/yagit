@@ -53,6 +53,7 @@ than in some distant place.
    :scale: 133%
 
    Limited area (circle) on a 2D evaluated image. Gamma function is calculated only for black points.
+   Values at those points are interpolated on-the-fly.
 
 Such a limited area has a maximum search radius and step size, which are parameters of this method.
 Evaluated points, which are checked, are located on a grid with intervals equal to the step size,
@@ -65,7 +66,7 @@ The values at points that do not exist in the evaluated image are determined on-
 Some optimizations of on-the-fly interpolation can be achieved by resampling the evaluated image onto the grid
 of the reference image before initiating gamma index calculations.
 However, YAGIT doesn't perform this step due to two reasons that can lead to less accurate results.
-Firstly, this approach involves double interpolation - first during the resampling process
+Firstly, this approach involves double interpolation -- first during the resampling process
 and second during on-the-fly interpolation.
 Second interpolation uses interpolated points from first interpolation, which can result in less accurate calculations.
 Another reason is the fact that the evaluated image we start with can have a denser grid than the reference image,

@@ -57,3 +57,16 @@ table.right-align-vals td:not(:first-child) {
 .math.math-left mjx-container.MathJax {
     text-align: left;
 }
+
+.list-code-right code {
+    float: right;
+    margin-right: calc(100% - 520px);
+    padding: 0;
+    color: black !important;
+    font-size: 95%;
+}
+
+.list-math-right .math {
+    float: right;
+    margin-right: calc(100% - 150px);
+}
