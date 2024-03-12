@@ -6,7 +6,8 @@ Coordinate system
 
 DICOM and MetaImage use patient (anatomical) coordinate system that is relative to the patient.
 If patient orientation on the couch is changed, then the patient coordinate system is rotated accordingly.
-Other alternatives are the couch (fixed, room) coordinate system and the beam (gantry) coordinate system.
+Other coordinate systems used in radiotherapy are the couch (fixed, room) coordinate system
+and the beam (gantry) coordinate system.
 
 .. figure:: _static/images/coordinate_system.svg
    :alt: DICOM LPS coordinate system
@@ -43,7 +44,7 @@ Sagittal (also known as longitudinal) separates the left from the right.
    The black filled squares represent the first voxel of an image.
 
 
-The i'th column, j'th row and k'th frame map to the coordinates xyz for the respective planes as follows:
+The ith column, jth row, kth frame map to the coordinates xyz for the respective planes as follows:
 
 .. rst-class:: list list-math-right
 
@@ -148,9 +149,9 @@ YAGIT supports only the HFS image orientation, for now.
 Calculating xyz coordinates
 ---------------------------
 
-To determine the xyz coordinates from the indices ijk (i'th column, j'th row, k'th frame),
+To determine the xyz coordinates from the indexes ijk (ith column, jth row, kth frame),
 the following formula should be used,
-incorporating rotation (image orientation), scaling (pixel spacing) and translation (image position).
+incorporating rotation (image orientation), scaling (voxel spacing) and translation (image position).
 
 .. math::
    \begin{bmatrix}
@@ -213,7 +214,43 @@ This formula can be alternatively expressed using 4x4 affine matrix.
    \end{bmatrix}
 
 
-Data memory layout
-------------------
+Data indexing and memory order
+------------------------------
 
-.. TODO
+Accessing a single voxel in the image is done using the image coordinate system,
+where columns, rows, and frames are numbered using indexes.
+
+In YAGIT, the image indexes are written frame-first, column-last --
+instead of using ijk (ith column, jth row, kth frame) it uses kji (kth frame, jth row, ith column).
+It's the same indexing as used in matrices and in most programming languages.
+
+.. figure:: _static/images/3d_index.svg
+   :alt: 3D indexing -- (k,j,i)
+   :align: center
+   :scale: 130%
+
+   3D indexing -- (k,j,i) -- in the axial plane.
+
+
+YAGIT stores 2D and 3D images in the form of a linearized one-dimensional array.
+It arranges single elements in memory according to the row-major order (in this case it is frame-major order).
+DICOM and MetaImage also use this order.
+
+.. figure:: _static/images/1d_index.svg
+   :alt: Linear indexing
+   :align: center
+   :scale: 130%
+
+   Linear indexing in the axial plane.
+
+
+Data type
+---------
+
+Image data elements in YAGIT are stored using float (32-bit single precision floating point).
+It provides 6--8 significant decimal digits of precision, which is sufficient for gamma index calculations.
+In comparison, double (64-bit double precision floating point) provides 15--16 significant decimal digits of precision.
+
+Thanks to the fact that a float has a size that is two times smaller than a double,
+it has two times less memory usage, can fit twice as many elements in the SIMD registers,
+and results in fewer cache misses due to more data fitting in the cache.

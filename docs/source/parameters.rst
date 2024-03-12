@@ -47,15 +47,15 @@ but it is preferable to be several times greater for better gamma index results.
 The step size should be :math:`\frac{1}{10}` of the DTA acceptance criterion,
 as recommended by the authors of this method, to achieve better results.
 
-Instead of using maximum search distance, some other tools use the maximum gamma index value.
+Instead of using maximum search distance, some other tools use the maximum gamma searched for.
 The relation between these two parameters is as follows
 
 .. math::
     g = \frac{s}{\Delta d}
 
 | where:
-| :math:`g` -- maximum gamma index value,
-| :math:`s` -- maximum search distance,
+| :math:`g` -- maximum gamma searched for, so that :math:`\frac{r(\vec{r_r}, \vec{r_e})}{\Delta d} \le g`,
+| :math:`s` -- maximum search distance, so that :math:`r(\vec{r_r}, \vec{r_e}) \le s`,
 | :math:`\Delta d` -- DTA acceptance criterion.
 
 
