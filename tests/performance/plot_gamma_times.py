@@ -1,5 +1,5 @@
 #############################################################################################
-# Copyright (C) 2023 'Yet Another Gamma Index Tool' Developers.
+# Copyright (C) 2023-2024 'Yet Another Gamma Index Tool' Developers.
 #
 # This file is part of 'Yet Another Gamma Index Tool'.
 #
@@ -29,11 +29,10 @@ import matplotlib.pyplot as plt
 # ==============================================
 # CONFIG
 
-# plot_size = (11, 5)
-plot_size = (10, 5)
-# plot_size = (8, 5)
-# plot_size = (7, 5)
-plt.rcParams["figure.figsize"] = plot_size
+width_inches = 9  # 7 - 11
+height_inches = 5
+plt.rcParams["figure.figsize"] = (width_inches, height_inches)
+plt.rcParams["svg.fonttype"] = "none"
 
 title = None
 
@@ -53,7 +52,11 @@ bars_labels = [
 mode = "TIMES"
 # mode = "SPEEDUP"
 
+time_unit = "ms"
+# time_unit = "s"
+
 add_bar_text = False
+bar_text_precision = 1
 rotate_xtick_labels = False
 
 # filters
@@ -80,6 +83,10 @@ if len(files) == 0:
 
 if len(bars_labels) != len(files) and len(bars_labels) != 0:
     print("ERROR: number of bars labels must be equal to number of files or 0")
+    exit(1)
+
+if mode == "TIMES" and time_unit not in ["ms", "s"]:
+    print("ERROR: time unit must be in milliseconds (ms) or seconds (s)")
     exit(1)
 
 if mode == "SPEEDUP" and len(files) < 2:
@@ -134,8 +141,14 @@ for i, df in enumerate(dfs):
             print(f"WARNING: column {col} in dataframe {i+1} is not the same as in the first dataframe")
 
 
-times = [df["meanTime[ms]"] for df in dfs]
-speedups = [times[0] / time for time in times[1:]]
+times_ms = [df["meanTime[ms]"] for df in dfs]
+times = []
+if time_unit == "ms":
+    times = times_ms
+elif time_unit == "s":
+    times = [time / 1000 for time in times_ms]
+
+speedups = [times_ms[0] / time for time in times_ms[1:]]
 
 xtick_labels = [
     f"{method.capitalize()} {dims}\n{dd}%{norm}/{dta}mm{chr(10) + 'DCO' if dco > 0 else ''}"
@@ -171,7 +184,7 @@ def human_readable_time(time_ms):
 # for i, stime in enumerate(summed_times):
 #     print(f"summed time for file {i+1}: {stime:.3f} ms ({human_readable_time(stime)})")
 
-summed_mean_times = [times_in_df.sum() for times_in_df in times]
+summed_mean_times = [times_in_df.sum() for times_in_df in times_ms]
 for i, smtime in enumerate(summed_mean_times):
     print(f"summed mean time for file {i+1}: {smtime:.3f} ms ({human_readable_time(smtime)})")
 
@@ -179,7 +192,9 @@ for i, smtime in enumerate(summed_mean_times):
 # ==============================================
 # PLOT
 
-def plot_bars(ax, values, bars_labels, xtick_labels, add_bar_text=False, rotate_xtick_labels=False, color_cycle=None):
+def plot_bars(ax, values, bars_labels, xtick_labels,
+              add_bar_text=False, bar_text_precision=1,
+              rotate_xtick_labels=False, color_cycle=None):
     group_count = len(values[0])
     bars_per_group_count = len(values)
 
@@ -210,7 +225,7 @@ def plot_bars(ax, values, bars_labels, xtick_labels, add_bar_text=False, rotate_
             for bar in bars_container:
                 pos = bar.get_x() + bar.get_width() / 2.0
                 height = bar.get_height()
-                ax.text(pos, height, f"{height:.1f}", ha="center", va="bottom")
+                ax.text(pos, height, f"{height:.{bar_text_precision}f}", ha="center", va="bottom")
 
     # add more space at the top
     ax.margins(y=0.1)
@@ -261,13 +276,15 @@ color_cycle = ["#1f77b4", "#ff7f0e", "#2ca02c", "#9467bd", "#8c564b", "#e377c2",
 fig, ax = plt.subplots()
 
 if mode == "TIMES":
-    ax.set_ylabel("Time [ms]")
+    ax.set_ylabel(f"Time [{time_unit}]")
     plot_bars(ax, times, bars_labels, xtick_labels,
-              add_bar_text, rotate_xtick_labels, color_cycle)
+              add_bar_text, bar_text_precision,
+              rotate_xtick_labels, color_cycle)
 elif mode == "SPEEDUP":
     ax.set_ylabel("Speedup")
     plot_bars(ax, speedups, bars_labels[1:], xtick_labels,
-              add_bar_text, rotate_xtick_labels, color_cycle[1:])
+              add_bar_text, bar_text_precision,
+              rotate_xtick_labels, color_cycle[1:])
 
 if title is not None:
     ax.set_title(title)
