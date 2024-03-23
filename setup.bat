@@ -93,13 +93,15 @@ if %BUILD_PERFORMANCE_TESTING% == ON (
 
 
 @REM ============================================================
+set YAGIT_DIR=%cd:\=/%
 if %BUILD_DOCUMENTATION% == ON (
     echo:
     echo BUILDING DOCUMENTATION...
     cd docs
     doxygen
     call make.bat html
-    echo DOCUMENTATION MAIN PAGE: %cd:\=/%/docs/build/html/index.html
+    echo DOCUMENTATION MAIN PAGE: %YAGIT_DIR%/docs/build/html/index.html
+    cd ..
 )
 
 
