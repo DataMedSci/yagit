@@ -18,8 +18,8 @@ Its acceptance criterion is expressed in percentages [%]. It is related to globa
 
 .. rst-class:: list
 
-- global - a predetermined value, typically the maximum value in the reference image,
-- local - value at the current point in the reference image.
+- global -- a predetermined value, typically the maximum value in the reference image,
+- local -- value at the current point in the reference image.
 
 If DD value at :math:`\vec{r_r}` point is at most the value of acceptance criterion (e.g. 3%, global),
 then this point passes the test. Otherwise it fails.

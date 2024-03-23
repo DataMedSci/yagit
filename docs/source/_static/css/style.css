@@ -41,6 +41,15 @@ ul.list li > blockquote {
     margin: 0 0 5px 0;
 }
 
+.code {
+    margin-top: -18px;
+}
+
+code {
+    color: #9b2f5f !important;
+    font-weight: 700;
+}
+
 table.center-headers th {
     text-align: center;
     vertical-align: middle;
@@ -48,6 +57,14 @@ table.center-headers th {
 
 table.right-align-vals td:not(:first-child) {
     text-align: right;
+}
+
+table.wrap-text td {
+    white-space: normal;
+}
+
+table.wrap-text td > p {
+    line-height: 1.2rem !important;
 }
 
 .math.math-left {
@@ -64,6 +81,7 @@ table.right-align-vals td:not(:first-child) {
     padding: 0;
     color: black !important;
     font-size: 95%;
+    font-weight: normal;
 }
 
 .list-math-right .math {
