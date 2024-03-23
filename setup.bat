@@ -98,7 +98,7 @@ if %BUILD_DOCUMENTATION% == ON (
     echo BUILDING DOCUMENTATION...
     cd docs
     doxygen
-    make html
+    call make.bat html
     echo DOCUMENTATION MAIN PAGE: %cd:\=/%/docs/build/html/index.html
 )
 
