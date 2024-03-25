@@ -1,8 +1,7 @@
 set(EXAMPLES_SRCS
-    gamma2DInterp
-    gamma25D
+    gammaSimple
     gamma3D
-    gammaImage
+    gammaWithInterp
 )
 
 foreach(example ${EXAMPLES_SRCS})

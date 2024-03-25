@@ -1,5 +1,5 @@
 /********************************************************************************************
- * Copyright (C) 2023 'Yet Another Gamma Index Tool' Developers.
+ * Copyright (C) 2023-2024 'Yet Another Gamma Index Tool' Developers.
  * 
  * This file is part of 'Yet Another Gamma Index Tool'.
  * 
@@ -18,34 +18,37 @@
  ********************************************************************************************/
 /**
  * @file
- * @brief This file provides a simple example of using yagit - 2D gamma index for any image.
+ * @brief This file provides a simple example of using yagit - 2D gamma index for any images.
  * 
  * @example{lineno}
- * This file provides a simple example of using yagit - 2D gamma index for any image.
- * - First, it creates two 2D images - reference and evaluated.
- * - Then it calculates 3%G/3mm 2D gamma index of those 2 images using classic method.
- * Global normalization dose is set to maximum value of reference image.
- * - At the end it prints gamma index passing rate and other info.
+ * Example demonstrating the 2D gamma index for any images.
+ * 1. Create two 2D images - a reference image and an evaluated image.
+ * 2. Calculate 2D gamma index of those two images using classic method.
+ *    The parameters are: 3%G/3mm,
+ *    normalization dose is set to max value of the reference image,
+ *    and dose cutoff is set to 10% of max value of the reference image.
+ * 3. Print gamma index image, gamma index passing rate and other statistics.
  */
 
 #include <string>
 #include <iostream>
+#include <sstream>
 
 #include <yagit/yagit.hpp>
 
 void printImage2D(const yagit::Image2D& img){
-    std::cout << "[";
+    std::ostringstream oss;
+    oss << "[";
     for(size_t i = 0; i < img.size(); i++){
-        std::cout << (i == 0 ? "[" : " [");
+        oss << (i == 0 ? "[" : " [");
         for(size_t j = 0; j < img[i].size() - 1; j++){
-            std::cout << img[i][j] << ", ";
+            oss << img[i][j] << ", ";
         }
-        std::cout << img[i].back() << "]";
-        if(i < img.size() - 1){
-            std::cout << ",\n";
-        }
+        oss << img[i].back();
+        oss << (i < img.size() - 1 ? "],\n" : "]");
     }
-    std::cout << "]\n";
+    oss << "]\n";
+    std::cout << oss.str();
 }
 
 void printImageData(const yagit::ImageData& imageData){
@@ -60,24 +63,27 @@ void printImageData(const yagit::ImageData& imageData){
 }
 
 int main(){
-
+    // set the values of the images
     yagit::Image2D refImg = {
         {0.93, 0.95},
         {0.97, 1.00}
     };
     yagit::Image2D evalImg = {
-        {0.95, 0.97},
-        {1.00, 1.03}
+        {0.93, 0.96},
+        {0.90, 1.02}
     };
 
+    // set the offset and the spacing of the images
     yagit::DataOffset refOffset{0, 0, -1};
-    yagit::DataOffset evalOffset{0, -1, 0};
-    yagit::DataSpacing refSpacing{1, 1, 1};
-    yagit::DataSpacing evalSpacing{1, 1, 1};
+    yagit::DataOffset evalOffset{0, 1, 0};
+    yagit::DataSpacing refSpacing{2, 2, 2};
+    yagit::DataSpacing evalSpacing{2, 2, 2};
 
+    // create the reference image and the evaluated image
     yagit::ImageData refImgDose(refImg, refOffset, refSpacing);
     yagit::ImageData evalImgDose(evalImg, evalOffset, evalSpacing);
 
+    // print info about the reference image and the evaluated image
     std::cout << "Reference image:\n";
     printImageData(refImgDose);
     std::cout << "------------------------------\n";
@@ -85,22 +91,26 @@ int main(){
     printImageData(evalImgDose);
     std::cout << "------------------------------\n";
 
-    float refMaxDose = refImgDose.max();
+    // set gamma index parameters
     yagit::GammaParameters gammaParams;
     gammaParams.ddThreshold = 3.0;   // [%]
     gammaParams.dtaThreshold = 3.0;  // [mm]
     gammaParams.normalization = yagit::GammaNormalization::Global;
-    gammaParams.globalNormDose = refMaxDose;
+    gammaParams.globalNormDose = refImgDose.max();
     gammaParams.doseCutoff = 0;
 
-    yagit::GammaResult gammaRes = yagit::gammaIndex2DClassic(refImgDose, evalImgDose, gammaParams);
+    // calculate 2D gamma index using classic method
+    const yagit::GammaResult gammaRes = yagit::gammaIndex2D(refImgDose, evalImgDose, gammaParams,
+                                                            yagit::GammaMethod::Classic);
 
-    std::cout << "Gamma index image:\n";
+    // print gamma index image
     // expected:
-    // [[0.816496, 0.333333],
-    //  [0.942809, 0.333333]]
+    // [[0.471405, 0.57735],
+    //  [1.10554, 0.816496]]
+    std::cout << "Gamma index image:\n";
     printImage2D(gammaRes.getImage2D(0));
 
+    // print gamma index statistics
     std::cout << "GIPR: " << gammaRes.passingRate() * 100 << "%\n"
               << "Gamma mean: " << gammaRes.meanGamma() << "\n"
               << "Gamma min: " << gammaRes.minGamma() << "\n"

@@ -1,5 +1,5 @@
 /********************************************************************************************
- * Copyright (C) 2023 'Yet Another Gamma Index Tool' Developers.
+ * Copyright (C) 2023-2024 'Yet Another Gamma Index Tool' Developers.
  * 
  * This file is part of 'Yet Another Gamma Index Tool'.
  * 
@@ -18,18 +18,20 @@
  ********************************************************************************************/
 /**
  * @file
- * @brief This file provides a simple example of using yagit - 2D gamma index with interpolation of eval img.
+ * @brief This file provides a simple example of using yagit - 2D gamma index with interpolation of eval image.
  * 
  * @example{lineno}
- * This file provides a simple example of using yagit - 2D gamma index with interpolation of eval img.
- * - First, it reads reference image and evaluated image from DICOM files.
- * - Next, it takes 2D frames from the middle of images in coronal plane.
- * - After that, it interpolates eval image to be on the same grid as ref image.
- * - Then it calculates 2%L/2mm 2D gamma index of those 2D images using classic method.
- * Also, it is set to not take into account voxels with dose below 1% of max reference dose -
- * in this case, NaN value will be set.
- * - After that, it prints gamma index passing rate and other info.
- * - At the end, it saves result to MetaImage file.
+ * Example demonstrating the 2D gamma index with interpolation of an evaluated image.
+ * 1. Read a reference image and an evaluated image from DICOM files.
+ * 2. Take 2D frames from the middle of the images in the coronal plane.
+ * 3. Interpolate the evaluated image to have a spacing set to 1/3
+ *    of the DTA criterion or lower.
+ * 4. Calculate 2D gamma index of those 2D images using classic method.
+ *    The parameters are: 2%G/2mm,
+ *    normalization dose is set to max value of the reference image,
+ *    and dose cutoff is set to 1% of max value of the reference image.
+ * 5. Print gamma index passing rate and other statistics.
+ * 6. Save the result to a MetaImage file.
  */
 
 #include <string>
@@ -40,7 +42,7 @@
 int main(int argc, char** argv){
     if(argc <= 2){
         std::cerr << "too few arguments\n";
-        std::cerr << "Usage: gamma2DInterp refImgPath evalImgPath\n";
+        std::cerr << "Usage: gammaWithInterp refImgPath evalImgPath\n";
         return 1;
     }
 
@@ -48,33 +50,42 @@ int main(int argc, char** argv){
     const std::string evalImgPath{argv[2]};
 
     try{
+        // read a reference image and an evaluated image from DICOM files
         yagit::ImageData refImg = yagit::DataReader::readRTDoseDicom(refImgPath);
         yagit::ImageData evalImg = yagit::DataReader::readRTDoseDicom(evalImgPath);
 
-        // get 2D coronal frame from the middle of the images
+        // take 2D frames from the middle of the images in the coronal plane
         uint32_t yframe = refImg.getSize().rows / 2;
         refImg = refImg.getImageData2D(yframe, yagit::ImagePlane::Coronal);
-        evalImg = evalImg.getImageData2D(yframe, yagit::ImagePlane::Coronal);
+        evalImg = evalImg.getImageData2D(yframe, yagit::ImagePlane::Coronal);    
 
-        // interpolate eval image to have values on the same grid as ref image
-        evalImg = yagit::Interpolation::bilinearOnPlane(evalImg, refImg, yagit::ImagePlane::Axial);
-
+        // set gamma index parameters
         float refMaxDose = refImg.max();
         yagit::GammaParameters gammaParams;
         gammaParams.ddThreshold = 2.0;   // [%]
         gammaParams.dtaThreshold = 2.0;  // [mm]
-        gammaParams.normalization = yagit::GammaNormalization::Local;
+        gammaParams.normalization = yagit::GammaNormalization::Global;
+        gammaParams.globalNormDose = refMaxDose;
         gammaParams.doseCutoff = 0.01 * refMaxDose;  // 1% * ref_max
 
+        // interpolate the evaluated image to have a spacing set to 1/3 of the DTA criterion or lower
+        float newSpacingY = std::min(gammaParams.dtaThreshold / 3, evalImg.getSpacing().rows);
+        float newSpacingX = std::min(gammaParams.dtaThreshold / 3, evalImg.getSpacing().columns);
+        evalImg = yagit::Interpolation::bilinearOnPlane(evalImg, newSpacingY, newSpacingX, yagit::ImagePlane::YX);
+
+        // calculate 2D gamma index using classic method
+        std::cout << "Calculating 2D gamma index using classic method with interpolated evaluated image\n";
         const yagit::GammaResult gammaRes = yagit::gammaIndex2D(refImg, evalImg, gammaParams,
                                                                 yagit::GammaMethod::Classic);
 
+        // print gamma index statistics
         std::cout << "GIPR: " << gammaRes.passingRate() * 100 << "%\n"
                   << "Gamma mean: " << gammaRes.meanGamma() << "\n"
                   << "Gamma min: " << gammaRes.minGamma() << "\n"
                   << "Gamma max: " << gammaRes.maxGamma() << "\n"
                   << "NaN values: " << gammaRes.size() - gammaRes.nansize() << " / " << gammaRes.size() << "\n";
 
+        // save the result containing gamma index image to a MetaImage file
         yagit::DataWriter::writeToMetaImage(gammaRes, "gamma_index_2d.mha");
     }
     catch(const std::exception &e){

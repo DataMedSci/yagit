@@ -3,6 +3,7 @@ Installation
 
 YAGIT requires C++ compiler that supports C++17 standard.
 It also requires `CMake`_ (3.16 or newer).
+It works on Linux and Windows.
 
 .. _CMake: https://cmake.org/
 
@@ -208,7 +209,7 @@ Here is an example of adding YAGIT to your CMake project.
    add_executable(program program.cpp)
    target_link_libraries(program PRIVATE yagit::yagit)
 
-If YAGIT has been installed in a custom location, then you need to set the ``CMAKE_PREFIX_PATH`` variable
+If YAGIT has been installed in a custom location, then you need to set the ``CMAKE_PREFIX_PATH`` option
 to the path of the installed YAGIT. This is necessary for locating the *yagitConfig.cmake* file.
 
 

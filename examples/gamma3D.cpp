@@ -1,5 +1,5 @@
 /********************************************************************************************
- * Copyright (C) 2023 'Yet Another Gamma Index Tool' Developers.
+ * Copyright (C) 2023-2024 'Yet Another Gamma Index Tool' Developers.
  * 
  * This file is part of 'Yet Another Gamma Index Tool'.
  * 
@@ -21,13 +21,14 @@
  * @brief This file provides a simple example of using yagit - 3D gamma index.
  * 
  * @example{lineno}
- * This file provides a simple example of using yagit - 3D gamma index.
- * - First, it reads reference image and evaluated image from DICOM files.
- * - Then it calculates 3%G/3mm 3D gamma index of those images using Wendling method.
- * Also, it is set to not take into account voxels with dose below 10% of max reference dose -
- * in this case, NaN value will be set.
- * - After that, it prints gamma index passing rate and other info.
- * - At the end, it saves result to MetaImage file.
+ * Example demonstrating the 3D gamma index.
+ * 1. Read a reference image and an evaluated image from DICOM files.
+ * 2. Calculate 3D gamma index of those images using Wendling method.
+ *    The parameters are: 3%G/3mm,
+ *    normalization dose is set to max value of the reference image,
+ *    and dose cutoff is set to 10% of max value of the reference image.
+ * 3. Print gamma index passing rate and other statistics.
+ * 4. Save the result to a MetaImage file.
  */
 
 #include <string>
@@ -60,13 +61,11 @@ int main(int argc, char** argv){
     const std::string evalImgPath{argv[2]};
 
     try{
-        std::cout << "Reading reference image\n";
-        yagit::ImageData refImg = yagit::DataReader::readRTDoseDicom(refImgPath, true);
-        std::cout << "------------------------------\n";
-        std::cout << "Reading evaluated image\n";
-        yagit::ImageData evalImg = yagit::DataReader::readRTDoseDicom(evalImgPath, true);
-        std::cout << "------------------------------\n";
+        // read a reference image and an evaluated image from DICOM files
+        const yagit::ImageData refImg = yagit::DataReader::readRTDoseDicom(refImgPath);
+        const yagit::ImageData evalImg = yagit::DataReader::readRTDoseDicom(evalImgPath);
 
+        // set gamma index parameters
         float refMaxDose = refImg.max();
         yagit::GammaParameters gammaParams;
         gammaParams.ddThreshold = 3.0;   // [%]
@@ -75,18 +74,25 @@ int main(int argc, char** argv){
         gammaParams.globalNormDose = refMaxDose;
         gammaParams.doseCutoff = 0.1 * refMaxDose;  // 10% * ref_max
         // two parameters below are exclusively used by Wendling method
-        gammaParams.maxSearchDistance = 10;  // [mm]
-        gammaParams.stepSize = gammaParams.dtaThreshold / 10;
+        gammaParams.maxSearchDistance = 10;                    // [mm]
+        gammaParams.stepSize = gammaParams.dtaThreshold / 10;  // [mm]
 
-        std::cout << "Calculating 3D gamma index with parameters: " << gammaParametersToString(gammaParams) << "\n";
-        const yagit::GammaResult gammaRes = yagit::gammaIndex3D(refImg, evalImg, gammaParams);
+        // print gamma index parameters
+        std::cout << "Calculating 3D gamma index using Wendling method with parameters: "
+                  << gammaParametersToString(gammaParams) << "\n";
 
+        // calculate 3D gamma index using Wendling method
+        const yagit::GammaResult gammaRes = yagit::gammaIndex3D(refImg, evalImg, gammaParams,
+                                                                yagit::GammaMethod::Wendling);
+
+        // print gamma index statistics
         std::cout << "GIPR: " << gammaRes.passingRate() * 100 << "%\n"
                   << "Gamma mean: " << gammaRes.meanGamma() << "\n"
                   << "Gamma min: " << gammaRes.minGamma() << "\n"
                   << "Gamma max: " << gammaRes.maxGamma() << "\n"
                   << "NaN values: " << gammaRes.size() - gammaRes.nansize() << " / " << gammaRes.size() << "\n";
 
+        // save the result containing gamma index image to a MetaImage file
         yagit::DataWriter::writeToMetaImage(gammaRes, "gamma_index_3d.mha");
     }
     catch(const std::exception &e){
