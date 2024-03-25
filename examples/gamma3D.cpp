@@ -17,7 +17,7 @@
  * along with 'Yet Another Gamma Index Tool'.  If not, see <http://www.gnu.org/licenses/>.
  ********************************************************************************************/
 /**
- * @file
+ * @file gamma3D.cpp
  * @brief This file provides a simple example of using yagit - 3D gamma index.
  * 
  * @example{lineno}

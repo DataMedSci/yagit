@@ -4,6 +4,8 @@ Examples
 Examples are located in the *examples* directory. To build them, set the option ``BUILD_EXAMPLES=ON``.
 
 
+.. _simple_gamma_example:
+
 2D gamma index using classic method for simple images
 -----------------------------------------------------
 

@@ -17,7 +17,7 @@
  * along with 'Yet Another Gamma Index Tool'.  If not, see <http://www.gnu.org/licenses/>.
  ********************************************************************************************/
 /**
- * @file
+ * @file gammaSimple.cpp
  * @brief This file provides a simple example of using yagit - 2D gamma index for any images.
  * 
  * @example{lineno}

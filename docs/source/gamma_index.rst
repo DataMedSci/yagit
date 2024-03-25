@@ -139,6 +139,10 @@ Note that some of the gamma function calculations are skipped, and only minimum 
     GIPR = \frac{3}{4} = 75\%
 
 
+The calculation of the gamma index for this example using YAGIT library
+is presented :ref:`here <simple_gamma_example>`.
+
+
 References
 ----------
 

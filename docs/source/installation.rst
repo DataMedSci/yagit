@@ -19,9 +19,11 @@ YAGIT uses these dependencies:
 .. _xsimd: https://github.com/xtensor-stack/xsimd
 .. _GoogleTest: https://github.com/google/googletest
 
-You can build and install YAGIT using `setup script <#setup-script-install>`_
-or doing it `manually <#manual-install>`_.
+You can build and install YAGIT using `setup script <setup_install_>`_
+or doing it `manually <manual_install_>`_.
 
+
+.. _setup_install:
 
 Setup script installation
 -------------------------
@@ -131,6 +133,8 @@ Some of the options are the same as in the `CMake YAGIT options`_ section as the
 .. _Doxygen: https://www.doxygen.nl/
 .. _Python: https://www.python.org/
 
+
+.. _manual_install:
 
 Manual installation
 -------------------

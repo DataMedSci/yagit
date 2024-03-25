@@ -17,7 +17,7 @@
  * along with 'Yet Another Gamma Index Tool'.  If not, see <http://www.gnu.org/licenses/>.
  ********************************************************************************************/
 /**
- * @file
+ * @file gammaWithInterp.cpp
  * @brief This file provides a simple example of using yagit - 2D gamma index with interpolation of eval image.
  * 
  * @example{lineno}
