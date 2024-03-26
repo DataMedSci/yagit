@@ -20,6 +20,10 @@ exclude_patterns = []
 html_theme = "renku"
 html_static_path = ["_static"]
 
+html_theme_options = {
+    "display_version": True
+}
+
 
 # -- Breathe configuration ---------------------------------------------------
 breathe_projects = {"yagit": "../xml"}

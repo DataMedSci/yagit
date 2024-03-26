@@ -1,5 +1,5 @@
-Yet Another Gamma Index Tool |release| documentation
-====================================================
+Yet Another Gamma Index Tool documentation
+==========================================
 
 .. toctree::
    :maxdepth: 1
@@ -11,6 +11,7 @@ Yet Another Gamma Index Tool |release| documentation
    parameters
    input_and_output_data
    data_representation
+
 
 .. toctree::
    :maxdepth: 1

@@ -153,8 +153,9 @@ if [ $BUILD_DOCUMENTATION == ON ]; then
     echo ""
     echo "BUILDING DOCUMENTATION..."
     cd docs
-    doxygen
-    make html
+    VERSION=$(git describe --tags --dirty --match "v*")
+    (cat Doxyfile; echo PROJECT_NUMBER=$VERSION) | doxygen -
+    make html SPHINXOPTS=-Dversion=$VERSION
     cd ..
     echo DOCUMENTATION MAIN PAGE: $(pwd)/docs/build/html/index.html
 fi

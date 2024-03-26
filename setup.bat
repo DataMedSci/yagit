@@ -94,11 +94,16 @@ if %BUILD_PERFORMANCE_TESTING% == ON (
 
 @REM ============================================================
 set YAGIT_DIR=%cd:\=/%
+
+@REM save git tag to variable
+for /f %%v in ('git describe --tags --dirty --match "v*"') do set VERSION=%%v
+
 if %BUILD_DOCUMENTATION% == ON (
     echo:
     echo BUILDING DOCUMENTATION...
     cd docs
-    doxygen
+    (type Doxyfile & echo PROJECT_NUMBER=%VERSION%) | doxygen -
+    set SPHINXOPTS=-Dversion=%VERSION%
     call make.bat html
     echo DOCUMENTATION MAIN PAGE: %YAGIT_DIR%/docs/build/html/index.html
     cd ..
