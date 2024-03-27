@@ -1,5 +1,5 @@
 /********************************************************************************************
- * Copyright (C) 2023 'Yet Another Gamma Index Tool' Developers.
+ * Copyright (C) 2023-2024 'Yet Another Gamma Index Tool' Developers.
  * 
  * This file is part of 'Yet Another Gamma Index Tool'.
  * 
@@ -39,7 +39,7 @@ ImageData linearAlongAxis(const ImageData& img, float spacing, ImageAxis axis);
  * @brief Linear interpolation along @a axis on new grid with @a offset and @a spacing
  * 
  * On an infinite grid spanning all directions, utilizing new @a offset and @a spacing,
- * we determine the values that are on this grid and lying on the edge or in the middle of the interpolated image.
+ * we determine the values that are on this grid that fall within the interpolated image.
  * 
  * @param img Image to interpolate.
  * It can be 1D, 2D or 3D image - interpolation is done along one axis and won't take into account other axes.
@@ -54,7 +54,7 @@ ImageData linearAlongAxis(const ImageData& img, float gridOffset, float spacing,
  * @brief Linear interpolation along @a axis on the grid of @a refImg.
  * 
  * On an infinite grid spanning all directions, utilizing offset and spacing of @a refImg,
- * we determine the values that are on this grid and lying on the edge or in the middle of the interpolated image.
+ * we determine the values that are on this grid that fall within the interpolated image.
  * 
  * @param targetImg Image to interpolate
  * @param refImg Image from which offset and spacing is retrieved and used to create grid on which interpolation is performed
@@ -80,7 +80,7 @@ ImageData bilinearOnPlane(const ImageData& img, float firstAxisSpacing, float se
  * @brief Bilinear interpolation on @a plane on new grid with offset and spacing.
  * 
  * On an infinite grid spanning all directions, utilizing new offsets and spacings,
- * we determine the values that are on this grid and lying on the edge or in the middle of the interpolated image.
+ * we determine the values that are on this grid that fall within the interpolated image.
  * 
  * @param img Image to interpolate.
  * It can be 1D, 2D or 3D image - interpolation is done on one plane and won't take into account other planes.
@@ -104,7 +104,7 @@ ImageData bilinearOnPlane(const ImageData& img, float firstAxisGridOffset, float
  * @brief Bilinear interpolation on @a plane on the grid of @a refImg.
  * 
  * On an infinite grid spanning all directions, utilizing offset and spacing of @a refImg,
- * we determine the values that are on this grid and lying on the edge or in the middle of the interpolated image.
+ * we determine the values that are on this grid that fall within the interpolated image.
  * 
  * @param targetImg Image to interpolate
  * @param refImg Image from which offset and spacing is retrieved and used to create grid on which interpolation is performed
@@ -115,7 +115,7 @@ ImageData bilinearOnPlane(const ImageData& targetImg, const ImageData& refImg, I
 
 /**
  * @brief Trilinear interpolation - along all axes (Z, Y, X) - with new spacing
- * @param img Image to interpolate.
+ * @param img Image to interpolate
  * @param spacing New spacing by which interpolation is performed
  * @return Interpolated image with new spacing
  */
@@ -125,9 +125,9 @@ ImageData trilinear(const ImageData& img, const DataSpacing& spacing);
  * @brief Trilinear interpolation - along all axes (Z, Y, X) - on new grid with @a offset and @a spacing.
  * 
  * On an infinite grid spanning all directions, utilizing new @a offset and @a spacing,
- * we determine the values that are on this grid and lying on the edge or in the middle of the interpolated image.
+ * we determine the values that are on this grid that fall within the interpolated image.
  * 
- * @param img Image to interpolate.
+ * @param img Image to interpolate
  * @param gridOffset Offset of interpolation grid. New grid on which image is interpolated will be offsetted by this value
  * @param spacing New spacing by which interpolation is performed
  * @return Image interpolated on new grid
@@ -138,7 +138,7 @@ ImageData trilinear(const ImageData& img, const DataOffset& gridOffset, const Da
  * @brief Trilinear interpolation - along all axes (Z, Y, X) - on the grid of @a refImg.
  * 
  * On an infinite grid spanning all directions, utilizing offset and spacing of @a refImg,
- * we determine the values that are on this grid and lying on the edge or in the middle of the interpolated image.
+ * we determine the values that are on this grid that fall within the interpolated image.
  * 
  * @param targetImg Image to interpolate
  * @param refImg Image from which offset and spacing is retrieved and used to create grid on which interpolation is performed

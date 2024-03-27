@@ -1,5 +1,5 @@
 /********************************************************************************************
- * Copyright (C) 2023 'Yet Another Gamma Index Tool' Developers.
+ * Copyright (C) 2023-2024 'Yet Another Gamma Index Tool' Developers.
  * 
  * This file is part of 'Yet Another Gamma Index Tool'.
  * 
@@ -28,7 +28,7 @@ namespace yagit::DataReader{
  * @brief Read RT Dose DICOM file and retrieve dose image from it
  * @param filepath File path to RT Dose DICOM (.dcm)
  * @param displayInfo Whether to show additional information read from the file
- * @return Image containing dose and image info (size, offset, spacing) retrieved from DICOM file
+ * @return Image containing dose values and image info (size, offset, spacing) retrieved from DICOM file
  */
 ImageData readRTDoseDicom(const std::string& filepath, bool displayInfo = false);
 
@@ -36,7 +36,7 @@ ImageData readRTDoseDicom(const std::string& filepath, bool displayInfo = false)
  * @brief Read MetaImage file and retrieve image from it
  * @param filepath File path to MetaImage file (.mha)
  * @param displayInfo Whether to show additional information read from the file
- * @return Image and its info (size, offset, spacing) retrieved from MetaImage file 
+ * @return Image and its info (size, offset, spacing) retrieved from MetaImage file
  */
 ImageData readMetaImage(const std::string& filepath, bool displayInfo = false);
 

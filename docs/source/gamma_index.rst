@@ -39,7 +39,7 @@ on the two images.
 .. math::
     where\ \ D_e(\vec{r_e}) = D_r(\vec{r_r})
 
-Its acceptance criterion is expressed in milimeters [mm].
+Its acceptance criterion is expressed in millimeters [mm].
 If DTA value at :math:`\vec{r_r}` point is at most the value of acceptance criterion (e.g. 3 mm),
 then this point passes the test. Otherwise it fails.
 

@@ -1,5 +1,5 @@
 /********************************************************************************************
- * Copyright (C) 2023 'Yet Another Gamma Index Tool' Developers.
+ * Copyright (C) 2023-2024 'Yet Another Gamma Index Tool' Developers.
  * 
  * This file is part of 'Yet Another Gamma Index Tool'.
  * 
@@ -30,10 +30,10 @@ namespace yagit{
  * @brief Container storing image and its metadata (size, offset, spacing)
  * 
  * Images are in format (frame, row, column) corresponding to (z, y, x) axes.
- * Coordinates are based on DICOM Reference Coordinate System (RCS).
+ * Coordinates are based on LPS coordinate system.
  * 
- * @note It doesn't contain information in what plane image is oriented.
- * Instead it assumes that all images are in the axial plane.
+ * @note It doesn't contain information about the plane in which the image is saved.
+ * Instead, it assumes that all images are in the axial plane.
  */
 class ImageData{
 public:
@@ -89,11 +89,11 @@ public:
         return m_data.size();
     }
 
-    /// @brief Check that the position (@a frame, @a row, @a column) is within the valid range
-    /// and get image element at that position
+    /// @brief Get image element at position (@a frame, @a row, @a column)
+    /// with checking that the position is within the valid range
     reference at(uint32_t frame, uint32_t row, uint32_t column);
-    /// @brief Check that the position (@a frame, @a row, @a column) is within the valid range
-    /// and get image element at that position
+    /// @brief Get image element at position (@a frame, @a row, @a column)
+    /// with checking that the position is within the valid range
     const_reference at(uint32_t frame, uint32_t row, uint32_t column) const;
 
     /// @brief Get image element at position (@a frame, @a row, @a column)
@@ -131,17 +131,17 @@ public:
     /**
      * @brief Get the ImageData containing a 2D fragment of current image
      * @param frame Frame of @a plane which will be returned
-     * @param plane 
+     * @param plane Image plane according to which 2D image is obtained
      * @return ImageData with 2D fragment of current image
-     * @note Returned image doesn't contain information about plane - it converts it to axial.
+     * @note Returned image doesn't contain information about plane - it is assumed it is axial.
      */
     ImageData getImageData2D(uint32_t frame, ImagePlane plane = ImagePlane::Axial) const;
 
     /**
      * @brief Get the ImageData containing a 3D image that is rotated according to chosen @a plane
-     * @param plane 
+     * @param plane Image plane according to which image is rotated
      * @return ImageData with rotated 3D image
-     * @note Returned image doesn't contain information about plane - it assumes it is axial.
+     * @note Returned image doesn't contain information about plane - it is assumed it is axial.
      */
     ImageData getImageData3D(ImagePlane plane) const;
 

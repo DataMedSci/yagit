@@ -34,7 +34,7 @@ enum class GammaNormalization{
 struct GammaParameters{
     /// Acceptance criterion for dose difference (DD) in percents [%]
     float ddThreshold;
-    /// Acceptance criterion for distance to agreement (DTA) in milimeters [mm]
+    /// Acceptance criterion for distance to agreement (DTA) in millimeters [mm]
     float dtaThreshold;
     /// Type of calculation of absolute dose difference criterion
     GammaNormalization normalization;
@@ -42,10 +42,11 @@ struct GammaParameters{
     float globalNormDose;
     /// Dose value in the reference image, below which gamma index will not be calculated
     float doseCutoff;
-    /// @brief Maximum search distance in milimeters [mm]. Radius of a circle in which searching will be performed.
+    /// @brief Maximum search distance in millimeters [mm].
+    /// Radius of the circle/sphere in which searching will be performed.
     /// Used only for Wendling method.
     float maxSearchDistance;
-    /// @brief Step size in milimeters [mm] that is used when searching within the circle.
+    /// @brief Step size in millimeters [mm] that is used when searching within the circle/sphere.
     /// Used only for Wendling method.
     float stepSize;
 };

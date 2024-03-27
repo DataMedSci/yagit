@@ -1,5 +1,5 @@
 /********************************************************************************************
- * Copyright (C) 2023 'Yet Another Gamma Index Tool' Developers.
+ * Copyright (C) 2023-2024 'Yet Another Gamma Index Tool' Developers.
  * 
  * This file is part of 'Yet Another Gamma Index Tool'.
  * 
@@ -39,13 +39,13 @@ struct DataSize{
 };
 
 /**
- * @brief Position of first voxel in 3D image in milimeters [mm]
+ * @brief Position of first voxel in 3D image in millimeters [mm]
  * @note Values can be negative
  */
 struct DataOffset{
-    float frames;   ///< Position of first frame in image in milimeters [mm]
-    float rows;     ///< Position of first row in image in milimeters [mm]
-    float columns;  ///< Position of first column in image in milimeters [mm]
+    float frames;   ///< Position of first frame in image in millimeters [mm]
+    float rows;     ///< Position of first row in image in millimeters [mm]
+    float columns;  ///< Position of first column in image in millimeters [mm]
 
     bool operator==(const DataOffset& other) const{
         return frames == other.frames && rows == other.rows && columns == other.columns;
@@ -56,13 +56,13 @@ struct DataOffset{
 };
 
 /**
- * @brief Distance between voxels in 3D image in milimeters [mm]
+ * @brief Distance between voxels in 3D image in millimeters [mm]
  * @note Values should be positive
  */
 struct DataSpacing{
-    float frames;   ///< Spacing between frames in milimeters [mm]
-    float rows;     ///< Spacing between rows in milimeters [mm]
-    float columns;  ///< Spacing between columns in milimeters [mm]
+    float frames;   ///< Spacing between frames in millimeters [mm]
+    float rows;     ///< Spacing between rows in millimeters [mm]
+    float columns;  ///< Spacing between columns in millimeters [mm]
 
     bool operator==(const DataSpacing& other) const{
         return frames == other.frames && rows == other.rows && columns == other.columns;
@@ -71,8 +71,5 @@ struct DataSpacing{
         return !operator==(other);
     }
 };
-
-// TODO: DataDirection with 3 enum fields
-// enum with 2 possible values: Forward, Backward
 
 }
