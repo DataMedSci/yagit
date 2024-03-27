@@ -4,10 +4,10 @@ Data representation
 Coordinate system
 -----------------
 
-DICOM and MetaImage use patient (anatomical) coordinate system that is relative to the patient.
+DICOM and MetaImage use patient (also known as anatomical) coordinate system that is relative to the patient.
 If patient orientation on the couch is changed, then the patient coordinate system is rotated accordingly.
-Other coordinate systems used in radiotherapy are the couch (fixed, room) coordinate system
-and the beam (gantry) coordinate system.
+Other coordinate systems used in radiotherapy are the couch (also known as fixed or room) coordinate system
+and the beam (also known as gantry) coordinate system.
 
 .. figure:: _static/images/coordinate_system.svg
    :alt: DICOM LPS coordinate system
@@ -15,16 +15,19 @@ and the beam (gantry) coordinate system.
    :scale: 135%
 
    Directions and LPS coordinate system relative to a patient.
-   
+
    L -- Left, R -- Right, A -- Anterior, P -- Posterior, S -- Superior, I -- Inferior.
 
 Specifically, DICOM uses LPS (right to Left, anterior to Posterior, inferior to Superior) coordinate system.
-MetaImage uses the same system, but it denotes it as RAI (Right to left, Anterior to posterior, Inferior to superior).
+MetaImage uses the same system, but it employs "from" notation instead of "to" notation, and thus denotes it as RAI
+(Right to left, Anterior to posterior, Inferior to superior).
 YAGIT also uses this system.
 
 The three-letter coordinate system defines the axis directions as well as their order.
 The first letter corresponds to the x-axis, the second to the y-axis, and the third to the z-axis.
 For example, in the LPS system: L=x, P=y, S=z, and in the SLP system: S=x, L=y, P=z.
+
+It is also worth noting that LPS is a right-handed coordinate system.
 
 
 Image planes

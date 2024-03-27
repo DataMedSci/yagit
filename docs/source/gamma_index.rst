@@ -52,6 +52,8 @@ Gamma function and gamma index
 
 To overcome disadvantages of DD and DTA, the gamma index was developed.
 Before calculating it, it is necessary to first determine the gamma function, which combines DD and DTA.
+In the case of the DTA component, only the distance is calculated
+without taking into account the condition of equal doses.
 
 .. math::
     \Gamma(\vec{r_r}, \vec{r_e}) =
@@ -68,6 +70,8 @@ of the gamma function :math:`\Gamma` for that point and all evaluated points.
 
 It is calculated for each reference point, and in the end, the image containing gamma index values is obtained.
 It has the same size as the reference image.
+
+The gamma index is not symmetric -- swapping the reference and evaluated images can yield a different result.
 
 
 GIPR

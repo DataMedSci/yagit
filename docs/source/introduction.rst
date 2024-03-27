@@ -4,6 +4,7 @@ Introduction
 YAGIT (Yet Another Gamma Index Tool) is an efficient open-source library for calculating gamma index.
 It can be used for comparison of two images (reference image and evaluated image) containing
 2D or 3D radiation dose distributions. It is written in C++ and works on Linux and Windows.
+The code is available on GitHub: `<https://github.com/DataMedSci/yagit>`_.
 
 
 Main functionalities

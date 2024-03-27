@@ -4,6 +4,7 @@ Installation
 YAGIT requires C++ compiler that supports C++17 standard.
 It also requires `CMake`_ (3.16 or newer).
 It works on Linux and Windows.
+It can be downloaded from `<https://github.com/DataMedSci/yagit>`_.
 
 .. _CMake: https://cmake.org/
 
@@ -48,7 +49,7 @@ On Windows, run:
 Note that, by default these scripts will only build the library but not install it.
 To install it, configure the options appropriately in the script file.
 
-For now, the Windows script can only install dependencies using `Conan`_ package manager.
+For now, the Windows script can install dependencies using only `Conan`_ package manager.
 
 .. _Conan: https://conan.io/
 
