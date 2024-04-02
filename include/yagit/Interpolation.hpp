@@ -28,7 +28,7 @@ namespace yagit::Interpolation{
 /**
  * @brief Linear interpolation along @a axis with new spacing
  * @param img Image to interpolate.
- * It can be 1D, 2D or 3D image - interpolation is done along one axis and won't take into account other axes.
+ * It can be 1D, 2D, or 3D image - interpolation is done along one axis and won't take into account other axes.
  * @param spacing New spacing by which interpolation is performed
  * @param axis Axis along which interpolation is performed
  * @return Interpolated image with new spacing
@@ -42,7 +42,7 @@ ImageData linearAlongAxis(const ImageData& img, float spacing, ImageAxis axis);
  * we determine the values that are on this grid that fall within the interpolated image.
  * 
  * @param img Image to interpolate.
- * It can be 1D, 2D or 3D image - interpolation is done along one axis and won't take into account other axes.
+ * It can be 1D, 2D, or 3D image - interpolation is done along one axis and won't take into account other axes.
  * @param gridOffset Offset of interpolation grid. New grid on which image is interpolated will be offsetted by this value
  * @param spacing New spacing by which interpolation is performed
  * @param axis Axis along which interpolation is performed
@@ -66,11 +66,11 @@ ImageData linearAlongAxis(const ImageData& targetImg, const ImageData& refImg, I
 /**
  * @brief Bilinear interpolation on @a plane with new spacing
  * @param img Image to interpolate.
- * It can be 1D, 2D or 3D image - interpolation is done on one plane and won't take into account other planes.
+ * It can be 1D, 2D, or 3D image - interpolation is done on one plane and won't take into account other planes.
  * @param firstAxisSpacing First spacing by which interpolation is performed.
- * E.g. when interpolating on plane YX, @a firstAxisSpacing is applied to Y axis.
+ * E.g., when interpolating on plane YX, @a firstAxisSpacing is applied to Y axis.
  * @param secondAxisSpacing Second spacing by which interpolation is performed.
- * E.g. when interpolating on plane YX, @a secondAxisSpacing is applied to X axis.
+ * E.g., when interpolating on plane YX, @a secondAxisSpacing is applied to X axis.
  * @param plane Plane on which interpolation is performed
  * @return Interpolated image with new spacing
  */
@@ -83,17 +83,17 @@ ImageData bilinearOnPlane(const ImageData& img, float firstAxisSpacing, float se
  * we determine the values that are on this grid that fall within the interpolated image.
  * 
  * @param img Image to interpolate.
- * It can be 1D, 2D or 3D image - interpolation is done on one plane and won't take into account other planes.
+ * It can be 1D, 2D, or 3D image - interpolation is done on one plane and won't take into account other planes.
  * @param firstAxisGridOffset First offset of interpolation grid. 
- * E.g. when interpolating on plane YX, @a firstAxisOffset is applied to Y axis.
+ * E.g., when interpolating on plane YX, @a firstAxisOffset is applied to Y axis.
  * New grid on which image is interpolated will be offsetted by this value.
  * @param secondAxisGridOffset Second offset of interpolation grid.
- * E.g. when interpolating on plane YX, @a secondAxisOffset is applied to X axis.
+ * E.g., when interpolating on plane YX, @a secondAxisOffset is applied to X axis.
  * New grid on which image is interpolated will be offsetted by this value.
  * @param firstAxisSpacing First spacing by which interpolation is performed. 
- * E.g. when interpolating on plane YX, @a firstAxisSpacing is applied to Y axis.
+ * E.g., when interpolating on plane YX, @a firstAxisSpacing is applied to Y axis.
  * @param secondAxisSpacing Second spacing by which interpolation is performed. 
- * E.g. when interpolating on plane YX, @a secondAxisSpacing is applied to X axis.
+ * E.g., when interpolating on plane YX, @a secondAxisSpacing is applied to X axis.
  * @param plane Plane on which interpolation is performed
  * @return Image interpolated on new grid
  */

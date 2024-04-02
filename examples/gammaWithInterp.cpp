@@ -26,7 +26,7 @@
  * 2. Take 2D frames from the middle of the images in the coronal plane.
  * 3. Interpolate the evaluated image to have a spacing set to 1/3
  *    of the DTA criterion or lower.
- * 4. Calculate 2D gamma index of those 2D images using classic method.
+ * 4. Calculate the 2D gamma index of those 2D images using the classic method.
  *    The parameters are: 2%G/2mm,
  *    normalization dose is set to max value of the reference image,
  *    and dose cutoff is set to 1% of max value of the reference image.
@@ -73,7 +73,7 @@ int main(int argc, char** argv){
         float newSpacingX = std::min(gammaParams.dtaThreshold / 3, evalImg.getSpacing().columns);
         evalImg = yagit::Interpolation::bilinearOnPlane(evalImg, newSpacingY, newSpacingX, yagit::ImagePlane::YX);
 
-        // calculate 2D gamma index using classic method
+        // calculate the 2D gamma index using the classic method
         std::cout << "Calculating 2D gamma index using classic method with interpolated evaluated image\n";
         const yagit::GammaResult gammaRes = yagit::gammaIndex2D(refImg, evalImg, gammaParams,
                                                                 yagit::GammaMethod::Classic);

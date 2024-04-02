@@ -23,7 +23,7 @@
 namespace yagit{
 
 /**
- * @brief Number of frames, rows and columns in 3D image
+ * @brief Number of frames, rows, and columns in 3D image
  */
 struct DataSize{
     uint32_t frames;   ///< Number of frames

@@ -23,7 +23,7 @@
  * @example{lineno}
  * Example demonstrating the 3D gamma index.
  * 1. Read a reference image and an evaluated image from DICOM files.
- * 2. Calculate 3D gamma index of those images using Wendling method.
+ * 2. Calculate the 3D gamma index of those images using the Wendling method.
  *    The parameters are: 3%G/3mm,
  *    normalization dose is set to max value of the reference image,
  *    and dose cutoff is set to 10% of max value of the reference image.
@@ -73,15 +73,15 @@ int main(int argc, char** argv){
         gammaParams.normalization = yagit::GammaNormalization::Global;
         gammaParams.globalNormDose = refMaxDose;
         gammaParams.doseCutoff = 0.1 * refMaxDose;  // 10% * ref_max
-        // two parameters below are exclusively used by Wendling method
+        // two parameters below are exclusively used by the Wendling method
         gammaParams.maxSearchDistance = 10;                    // [mm]
         gammaParams.stepSize = gammaParams.dtaThreshold / 10;  // [mm]
 
-        // print gamma index parameters
+        // print the gamma index parameters
         std::cout << "Calculating 3D gamma index using Wendling method with parameters: "
                   << gammaParametersToString(gammaParams) << "\n";
 
-        // calculate 3D gamma index using Wendling method
+        // calculate the 3D gamma index using the Wendling method
         const yagit::GammaResult gammaRes = yagit::gammaIndex3D(refImg, evalImg, gammaParams,
                                                                 yagit::GammaMethod::Wendling);
 
@@ -92,7 +92,7 @@ int main(int argc, char** argv){
                   << "Gamma max: " << gammaRes.maxGamma() << "\n"
                   << "NaN values: " << gammaRes.size() - gammaRes.nansize() << " / " << gammaRes.size() << "\n";
 
-        // save the result containing gamma index image to a MetaImage file
+        // save the result containing the gamma index image to a MetaImage file
         yagit::DataWriter::writeToMetaImage(gammaRes, "gamma_index_3d.mha");
     }
     catch(const std::exception &e){

@@ -1,7 +1,7 @@
 # Yet Another Gamma Index Tool
 
-YAGIT is a library written in C++ for performing efficient comparison of two images
-containing radiation dose distributions using 2D, 2.5D and 3D gamma index concept.
+YAGIT is a library written in C++ for performing efficient comparisons of two images
+containing radiation dose distributions using the 2D, 2.5D, and 3D gamma index concepts.
 
 ## Documentation
 

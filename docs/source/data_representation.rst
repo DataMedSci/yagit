@@ -4,8 +4,8 @@ Data representation
 Coordinate system
 -----------------
 
-DICOM and MetaImage use patient (also known as anatomical) coordinate system that is relative to the patient.
-If patient orientation on the couch is changed, then the patient coordinate system is rotated accordingly.
+DICOM and MetaImage use the patient (also known as anatomical) coordinate system that is relative to the patient.
+If the patient's orientation on the couch is changed, then the patient coordinate system is rotated accordingly.
 Other coordinate systems used in radiotherapy are the couch (also known as fixed or room) coordinate system
 and the beam (also known as gantry) coordinate system.
 
@@ -18,8 +18,8 @@ and the beam (also known as gantry) coordinate system.
 
    L -- Left, R -- Right, A -- Anterior, P -- Posterior, S -- Superior, I -- Inferior.
 
-Specifically, DICOM uses LPS (right to Left, anterior to Posterior, inferior to Superior) coordinate system.
-MetaImage uses the same system, but it employs "from" notation instead of "to" notation, and thus denotes it as RAI
+Specifically, DICOM uses the LPS (right to Left, anterior to Posterior, inferior to Superior) coordinate system.
+MetaImage uses the same system, but it employs "from" notation instead of "to" notation, and thus it denotes it as RAI
 (Right to left, Anterior to posterior, Inferior to superior).
 YAGIT also uses this system.
 
@@ -33,17 +33,17 @@ It is also worth noting that LPS is a right-handed coordinate system.
 Image planes
 ------------
 
-The 3D image can be viewed from three perspectives: axial, coronal and sagittal.
+The 3D image can be viewed from three perspectives: axial, coronal, and sagittal.
 Axial (also known as transverse or horizontal) separates the superior from the inferior.
 Coronal (also known as frontal) separates the anterior from the posterior.
 Sagittal (also known as longitudinal) separates the left from the right.
 
 .. figure:: _static/images/image_planes.svg
-   :alt: Image planes (axial, coronal and sagittal)
+   :alt: Image planes (axial, coronal, and sagittal)
    :align: center
    :scale: 135%
 
-   3D image planes -- axial, coronal and sagittal -- with coordinates consistent with LPS.
+   3D image planes -- axial, coronal, and sagittal -- with coordinates consistent with LPS.
    The black filled squares represent the first voxel of an image.
 
 
@@ -58,11 +58,10 @@ The ith column, jth row, kth frame map to the coordinates xyz for the respective
 A 3D image is stored in a file slice-by-slice using one out of three planes.
 The plane used depends on the third letter of the coordinate system:
 S or I for axial, A or P for coronal, L or R for sagittal.
-In the LPS coordinate system, slices are stored using the axial plane.
+In the LPS coordinate system, slices are stored in the axial plane.
 
 Note that when calculating the gamma index, YAGIT does not take into account whether the plane of the image was changed
-after reading from a file.
-It treats all images as if they were stored in the axial plane.
+after reading from a file. It treats all images as if they were stored in the axial plane.
 
 
 Image position and voxel spacing
@@ -79,14 +78,14 @@ but if all three spacings are equal, the image is said to have isotropic voxel s
 
 Additionally, DICOM allows for unevenly distributed spacing along the z-axis (spacing between slices),
 as the spacing may be greater in areas that are farther from the main region of interest.
-YAGIT doesn't support this kind of images.
+YAGIT doesn't support this kind of image.
 
 .. figure:: _static/images/position_and_spacing.svg
-   :alt: Image position and voxel spacing
+   :alt: Image position and pixel spacing
    :align: center
    :scale: 130%
 
-   Example of image position and pixel spacing for a 2D image.
+   An example of image position and pixel spacing for a 2D image.
 
    :math:`T_x, T_y` -- image position, :math:`S_x, S_y` -- pixel spacing.
 
@@ -100,7 +99,7 @@ and whether they are oriented head-first or feet-first towards the machine.
 The most basic orientation is HFS (Head First Supine).
 In this case, the patient is positioned head-first towards the machine and lying on their back.
 
-The image orientation is provided in the form of direction cosines of the first row and the first column,
+The image orientation is provided in the form of the direction cosines of the first row and the first column,
 as well as the normal vector to these two directions.
 
 .. math::
@@ -146,7 +145,7 @@ There are 8 basic image orientations:
 - FFDL -- Feet First Decubitus Left   ``[ 0  1, 0;  1  0  0;  0  0 -1]``
 - FFDR -- Feet First Decubitus Right  ``[ 0 -1  0; -1  0  0;  0  0 -1]``
 
-YAGIT supports only the HFS image orientation, for now.
+YAGIT supports only the HFS image orientation for now.
 
 
 Calculating xyz coordinates
@@ -154,7 +153,7 @@ Calculating xyz coordinates
 
 To determine the xyz coordinates from the indexes ijk (ith column, jth row, kth frame),
 the following formula should be used,
-incorporating rotation (image orientation), scaling (voxel spacing) and translation (image position).
+incorporating rotation (image orientation), scaling (voxel spacing), and translation (image position).
 
 .. math::
    \begin{bmatrix}
@@ -193,7 +192,7 @@ incorporating rotation (image orientation), scaling (voxel spacing) and translat
 | :math:`T_x, T_y, T_z` -- xyz image positions of the first voxel.
 
 
-This formula can be alternatively expressed using 4x4 affine matrix.
+This formula can be alternatively expressed using a 4x4 affine matrix.
 
 .. math::
    \begin{bmatrix}
@@ -224,7 +223,7 @@ Accessing a single voxel in the image is done using the image coordinate system,
 where columns, rows, and frames are numbered using indexes.
 
 In YAGIT, the image indexes are written frame-first, column-last --
-instead of using ijk (ith column, jth row, kth frame) it uses kji (kth frame, jth row, ith column).
+instead of using ijk (ith column, jth row, kth frame), it uses kji (kth frame, jth row, ith column).
 It's the same indexing as used in matrices and in most programming languages.
 
 .. figure:: _static/images/3d_index.svg
@@ -236,7 +235,7 @@ It's the same indexing as used in matrices and in most programming languages.
 
 
 YAGIT stores 2D and 3D images in the form of a linearized one-dimensional array.
-It arranges single elements in memory according to the row-major order (in this case it is frame-major order).
+It arranges single elements in memory according to the row-major order (in this case, it is the frame-major order).
 DICOM and MetaImage also use this order.
 
 .. figure:: _static/images/1d_index.svg
@@ -250,9 +249,9 @@ DICOM and MetaImage also use this order.
 Data type
 ---------
 
-Image data elements in YAGIT are stored using float (32-bit single precision floating point).
+Image data elements in YAGIT are stored using a float (32-bit single precision floating point).
 It provides 6--8 significant decimal digits of precision, which is sufficient for gamma index calculations.
-In comparison, double (64-bit double precision floating point) provides 15--16 significant decimal digits of precision.
+In comparison, a double (64-bit double precision floating point) provides 15--16 significant decimal digits of precision.
 
 Thanks to the fact that a float has a size that is two times smaller than a double,
 it has two times less memory usage, can fit twice as many elements in the SIMD registers,

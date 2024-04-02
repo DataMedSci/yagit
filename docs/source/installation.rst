@@ -1,7 +1,7 @@
 Installation
 ============
 
-YAGIT requires C++ compiler that supports C++17 standard.
+YAGIT requires a C++ compiler that supports C++17.
 It also requires `CMake`_ (3.16 or newer).
 It works on Linux and Windows.
 It can be downloaded from `<https://github.com/DataMedSci/yagit>`_.
@@ -20,8 +20,8 @@ YAGIT uses these dependencies:
 .. _xsimd: https://github.com/xtensor-stack/xsimd
 .. _GoogleTest: https://github.com/google/googletest
 
-You can build and install YAGIT using `setup script <setup_install_>`_
-or doing it `manually <manual_install_>`_.
+You can build and install YAGIT using `the setup script <setup_install_>`_
+or by doing it `manually <manual_install_>`_.
 
 
 .. _setup_install:
@@ -46,7 +46,7 @@ On Windows, run:
    setup.bat
 
 
-Note that, by default these scripts will only build the library but not install it.
+Note that these scripts will only build the library and not install it by default.
 To install it, configure the options appropriately in the script file.
 
 For now, the Windows script can install dependencies using only `Conan`_ package manager.
@@ -57,8 +57,8 @@ For now, the Windows script can install dependencies using only `Conan`_ package
 Script options
 ~~~~~~~~~~~~~~
 
-You can freely configure options that are in the script files.
-Some of the options are the same as in the `CMake YAGIT options`_ section as they are simply passed to CMake.
+You can freely configure the options that are in the script files.
+Some of the options are the same as in the `CMake YAGIT options`_ section, as they are simply passed to CMake.
 
 .. rst-class:: wrap-text
 .. table::
@@ -69,24 +69,24 @@ Some of the options are the same as in the `CMake YAGIT options`_ section as the
    +===============================+========================+=============+============================================+
    | ``BUILD_TYPE``                | ``Release``, ``Debug``,| ``Release`` | Build type used in the script              |
    |                               | ``RelWithDebInfo``,    |             | by CMake for single-target generators      |
-   |                               | ``MinSizeRel``         |             | (e.g. Makefile Generators) and             |
+   |                               | ``MinSizeRel``         |             | (e.g., Makefile Generators) and            |
    |                               |                        |             | by a compiler for multi-target generators  |
-   |                               |                        |             | (e.g. Visual Studio Generators).           |
+   |                               |                        |             | (e.g., Visual Studio Generators).          |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
    | ``BUILD_SHARED_LIBS``         | ``ON``, ``OFF``        | ``OFF``     | Equivalent to the CMake YAGIT option.      |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
-   | ``INSTALL_DEPENDENCIES``      | ``OFF``, ``LOCAL``     | ``LOCAL``   | Method of installing dependencies.         |
+   | ``INSTALL_DEPENDENCIES``      | ``OFF``, ``LOCAL``,    | ``LOCAL``   | Method of installing dependencies.         |
    |                               | ``GLOBAL``, ``CONAN``  |             | Value ``OFF`` doesn't install any          |
    |                               |                        |             | dependencies, and it assumes               |
    |                               |                        |             | they are already installed system-wide.    |
    |                               |                        |             | Value ``LOCAL`` installs dependencies      |
-   |                               |                        |             | locally to *build/deps* directory.         |
+   |                               |                        |             | locally in the *build/deps* directory.     |
    |                               |                        |             | Value ``GLOBAL`` installs dependencies     |
    |                               |                        |             | system-wide. It requires admin privileges. |
    |                               |                        |             | Value ``CONAN`` installs dependencies      |
    |                               |                        |             | using `Conan`_ package manager.            |
-   |                               |                        |             | It requires installed Conan.               |
-   |                               |                        |             | This option is only availble in *setup.sh*.|
+   |                               |                        |             | It requires installed Conan. This option   |
+   |                               |                        |             | is only available in *setup.sh*.           |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
    | ``GAMMA_VERSION``             | ``SEQUENTIAL``,        | ``THREADS`` | Equivalent to the CMake YAGIT option.      |
    |                               | ``THREADS``,           |             |                                            |
@@ -103,13 +103,13 @@ Some of the options are the same as in the `CMake YAGIT options`_ section as the
    | ``ENABLE_FMA``                | ``ON``, ``OFF``        | ``OFF``     | Equivalent to the CMake YAGIT option.      |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
    | ``BUILD_EXAMPLES``            | ``ON``, ``OFF``        | ``ON``      | Equivalent to the CMake YAGIT option.      |
-   |                               |                        |             | Additionally it runs examples.             |
+   |                               |                        |             | Additionally, it runs examples.            |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
    | ``BUILD_TESTING``             | ``ON``, ``OFF``        | ``OFF``     | Equivalent to the CMake YAGIT option.      |
-   |                               |                        |             | Additionally it runs unit tests.           |
+   |                               |                        |             | Additionally, it runs unit tests.          |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
    | ``BUILD_PERFORMANCE_TESTING`` | ``ON``, ``OFF``        | ``OFF``     | Equivalent to the CMake YAGIT option.      |
-   |                               |                        |             | Additionally it runs performance tests.    |
+   |                               |                        |             | Additionally, it runs performance tests.   |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
    | ``REF_IMG``                   | ---                    | ---         | Path to a reference image                  |
    |                               |                        |             | used in examples and performance tests.    |
@@ -119,7 +119,7 @@ Some of the options are the same as in the `CMake YAGIT options`_ section as the
    +-------------------------------+------------------------+-------------+--------------------------------------------+
    | ``BUILD_DOCUMENTATION``       | ``ON``, ``OFF``        | ``OFF``     | Build documentation (*docs* directory).    |
    |                               |                        |             | It requires `Doxygen`_,                    |
-   |                               |                        |             | `Python`_ and libraries                    |
+   |                               |                        |             | `Python`_, and libraries                   |
    |                               |                        |             | listed in *docs/requirements.txt*.         |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
    | ``INSTALL``                   | ``ON``, ``OFF``        | ``OFF``     | Install YAGIT library.                     |
@@ -143,7 +143,7 @@ Manual installation
 If you prefer to perform the installation manually without the script,
 then follow the commands below to build and install YAGIT on Linux.
 Before running them, ensure that you have installed the dependencies
-(e.g. using a package manager or by building from source).
+(e.g., by using a package manager or by building from source).
 
 .. code-block::
 
@@ -171,7 +171,7 @@ CMake YAGIT options
    +-------------------------------+------------------------+-------------+--------------------------------------------+
    | Option                        | Values                 | Default     | Description                                |
    +===============================+========================+=============+============================================+
-   | ``BUILD_SHARED_LIBS``         | ``ON``, ``OFF``        | ``OFF``     | Build YAGIT as shared or static library.   |
+   | ``BUILD_SHARED_LIBS``         | ``ON``, ``OFF``        | ``OFF``     | Build YAGIT as a shared or static library. |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
    | ``BUILD_EXAMPLES``            | ``ON``, ``OFF``        | ``OFF``     | Build examples                             |
    |                               |                        |             | (*examples* directory).                    |
@@ -182,25 +182,25 @@ CMake YAGIT options
    | ``BUILD_PERFORMANCE_TESTING`` | ``ON``, ``OFF``        | ``OFF``     | Build performance tests                    |
    |                               |                        |             | (*tests/performance* directory).           |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
-   | ``GAMMA_VERSION``             | ``SEQUENTIAL``,        | ``THREADS`` | Implementation of an algorithm calculating |
+   | ``GAMMA_VERSION``             | ``SEQUENTIAL``,        | ``THREADS`` | Implementation of algorithms calculating   |
    |                               | ``THREADS``,           |             | the gamma index.                           |
    |                               | ``SIMD``,              |             |                                            |
    |                               | ``THREADS_SIMD``       |             |                                            |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
    | ``SIMD_EXTENSION``            | ``DEFAULT``,           | ``DEFAULT`` | SIMD instruction set extension.            |
-   |                               | ``SSE2``, ``SSE3``,    |             | Works only when ``GAMMA_VERSION`` is       |
+   |                               | ``SSE2``, ``SSE3``,    |             | It works only when ``GAMMA_VERSION`` is    |
    |                               | ``SSSE3``, ``SSE4.1``, |             | set to ``SIMD`` or ``THREADS_SIMD``.       |
    |                               | ``SSE4.2``, ``AVX``,   |             | Value ``DEFAULT`` adds no additional       |
    |                               | ``AVX2``, ``AVX512``,  |             | compilation flags.                         |
    |                               | ``NATIVE``             |             | Value ``NATIVE`` adds *-march=native*      |
-   |                               |                        |             | if compiler supports it.                   |
+   |                               |                        |             | if a compiler supports it.                 |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
    | ``ENABLE_FMA``                | ``ON``, ``OFF``        | ``OFF``     | Enable fused multiply-add (FMA)            |
    |                               |                        |             | when building YAGIT library.               |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
 
 To use these options, pass them to CMake during configuration using ``-D<option>=<value>``
-(e.g. ``cmake .. -DGAMMA_VERSION=THREADS_SIMD -DSIMD_EXTENSION=AVX2``).
+(e.g., ``cmake .. -DGAMMA_VERSION=THREADS_SIMD -DSIMD_EXTENSION=AVX2``).
 
 
 CMake YAGIT integration
@@ -221,7 +221,7 @@ to the path of the installed YAGIT. This is necessary for locating the *yagitCon
 Including YAGIT
 ---------------
 
-To include whole YAGIT library in your code, use the line below.
+To include the whole YAGIT library in your code, use the line below.
 
 .. code-block:: c++
 

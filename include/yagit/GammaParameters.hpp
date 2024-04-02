@@ -24,7 +24,7 @@ namespace yagit{
  *  @brief Enum with types of calculation of absolute dose difference criterion
 */
 enum class GammaNormalization{
-    Global,  ///< Using any value you choose (e.g. max value in the reference image)
+    Global,  ///< Using any value you choose (e.g., max value in the reference image)
     Local    ///< Using local reference value (value at current voxel in the reference image)
 };
 

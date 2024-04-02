@@ -38,7 +38,7 @@ namespace yagit{
 class ImageData{
 public:
     // dose data is stored as float type
-    // it is float instead of a double, because float provides sufficient precision for gamma index calculations
+    // it is a float instead of a double, because a float provides sufficient precision for gamma index calculations
     // additionally, it takes two times less space and has better optimization possibilities
     using value_type = float;
     using size_type = std::vector<value_type>::size_type;

@@ -23,11 +23,11 @@
  * @example{lineno}
  * Example demonstrating the 2D gamma index for any images.
  * 1. Create two 2D images - a reference image and an evaluated image.
- * 2. Calculate 2D gamma index of those two images using classic method.
+ * 2. Calculate the 2D gamma index of those two images using the classic method.
  *    The parameters are: 3%G/3mm,
  *    normalization dose is set to max value of the reference image,
  *    and dose cutoff is set to 10% of max value of the reference image.
- * 3. Print gamma index image, gamma index passing rate and other statistics.
+ * 3. Print the gamma index image, gamma index passing rate, and other statistics.
  */
 
 #include <string>
@@ -63,7 +63,7 @@ void printImageData(const yagit::ImageData& imageData){
 }
 
 int main(){
-    // set the values of the images
+    // set values of images
     yagit::Image2D refImg = {
         {0.93, 0.95},
         {0.97, 1.00}
@@ -99,11 +99,11 @@ int main(){
     gammaParams.globalNormDose = refImgDose.max();
     gammaParams.doseCutoff = 0;
 
-    // calculate 2D gamma index using classic method
+    // calculate the 2D gamma index using the classic method
     const yagit::GammaResult gammaRes = yagit::gammaIndex2D(refImgDose, evalImgDose, gammaParams,
                                                             yagit::GammaMethod::Classic);
 
-    // print gamma index image
+    // print the gamma index image
     // expected:
     // [[0.471405, 0.57735],
     //  [1.10554, 0.816496]]

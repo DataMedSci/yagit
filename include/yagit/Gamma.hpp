@@ -67,7 +67,7 @@ GammaResult gammaIndex2_5D(const ImageData& refImg3D, const ImageData& evalImg3D
 /**
  * @brief Calculate 3D gamma index using classic or Wendling method.
  * 
- * It takes into account z, y and x coordinates of images.
+ * It takes into account z, y, and x coordinates of images.
  * 
  * @param refImg3D 3D reference image
  * @param evalImg3D 3D evaluated image
@@ -116,7 +116,7 @@ GammaResult gammaIndex2_5DClassic(const ImageData& refImg3D, const ImageData& ev
 /**
  * @brief Calculate 3D gamma index using classic method.
  * 
- * It takes into account z, y and x coordinates of images.
+ * It takes into account z, y, and x coordinates of images.
  * 
  * Based on https://doi.org/10.1118/1.598248
  * 
@@ -168,7 +168,7 @@ GammaResult gammaIndex2_5DWendling(const ImageData& refImg3D, const ImageData& e
 /**
  * @brief Calculate 3D gamma index using Wendling method.
  * 
- * It takes into account z, y and x coordinates of images.
+ * It takes into account z, y, and x coordinates of images.
  * 
  * It is faster than classic method, so using this function is recommended.
  * Based on https://doi.org/10.1118/1.2721657

@@ -8,21 +8,21 @@ It combines two other simpler methods: Dose Difference (DD) and Distance To Agre
 Dose Difference
 ---------------
 
-DD is based on calculating the dose difference at corresponding points :math:`\vec{r_e}` and :math:`\vec{r_r}`
-located respectively on the evaluated image :math:`D_e` and the reference image :math:`D_r`.
+The DD is based on calculating the dose difference at corresponding points :math:`\vec{r_e}` and :math:`\vec{r_r}`
+located on the evaluated image :math:`D_e` and the reference image :math:`D_r`, respectively.
 
 .. math::
     \delta(\vec{r_r}, \vec{r_e}) = D_e(\vec{r_e}) - D_r(\vec{r_r})
 
-Its acceptance criterion is expressed in percentages [%]. It is related to global or local value:
+Its acceptance criterion is expressed in percentages [%]. It is relative to global or local value:
 
 .. rst-class:: list
 
 - global -- a predetermined value, typically the maximum value in the reference image,
 - local -- value at the current point in the reference image.
 
-If DD value at :math:`\vec{r_r}` point is at most the value of acceptance criterion (e.g. 3%, global),
-then this point passes the test. Otherwise it fails.
+If the DD value at :math:`\vec{r_r}` point is less than or equal to the value of the acceptance criterion
+(e.g., 3%, global), then this point passes the test. Otherwise, it fails.
 
 The drawback of this test is that it struggles with high gradient regions, as small shifts in the spatial
 distribution of radiation doses can result in large DD values.
@@ -31,8 +31,8 @@ distribution of radiation doses can result in large DD values.
 Distance To Agreement
 ---------------------
 
-DTA, on the other hand, is determined by calculating the distance between two closest points with the same dose
-on the two images.
+The DTA, on the other hand, is determined by calculating the distance between
+the two closest points with the same dose on two images.
 
 .. math::
     r(\vec{r_r}, \vec{r_e}) = | \vec{r_e} - \vec{r_r} |,
@@ -40,17 +40,17 @@ on the two images.
     where\ \ D_e(\vec{r_e}) = D_r(\vec{r_r})
 
 Its acceptance criterion is expressed in millimeters [mm].
-If DTA value at :math:`\vec{r_r}` point is at most the value of acceptance criterion (e.g. 3 mm),
-then this point passes the test. Otherwise it fails.
+If the DTA value at :math:`\vec{r_r}` point is less than or equal to the value of the acceptance criterion
+(e.g., 3 mm), then this point passes the test. Otherwise, it fails.
 
 The drawback of this method is that it encounters difficulties in low gradient areas,
-where minor dose misalignments may require large search radius (large DTA value).
+where minor dose misalignments may require a large search radius (large DTA value).
 
 
 Gamma function and gamma index
 ------------------------------
 
-To overcome disadvantages of DD and DTA, the gamma index was developed.
+To overcome the disadvantages of DD and DTA, the gamma index was developed.
 Before calculating it, it is necessary to first determine the gamma function, which combines DD and DTA.
 In the case of the DTA component, only the distance is calculated
 without taking into account the condition of equal doses.
@@ -59,10 +59,10 @@ without taking into account the condition of equal doses.
     \Gamma(\vec{r_r}, \vec{r_e}) =
     \sqrt{\frac{\delta^2(\vec{r_r}, \vec{r_e})}{\Delta D ^2} + \frac{r^2(\vec{r_r}, \vec{r_e})}{\Delta d ^2}}
 
-:math:`\Delta D` and :math:`\Delta d` are acceptance criteria of DD and DTA, respectively.
+:math:`\Delta D` and :math:`\Delta d` are acceptance criteria for DD and DTA, respectively.
 The commonly used criteria values are 3%/3mm with global normalization, abbreviated as 3%G/3mm.
 
-Now, to obtain the gamma index value for a single reference point, one must select the minimum value
+Now, to obtain the gamma index value for a single reference point :math:`\vec{r_r}`, one must select the minimum value
 of the gamma function :math:`\Gamma` for that point and all evaluated points.
 
 .. math::
@@ -83,7 +83,7 @@ that is, how many gamma index values are less than or equal to 1.
 .. math::
     GIPR = \frac{| \{\gamma(\vec{r_r}) \le 1\} |}{| \{\gamma(\vec{r_r})\} |}
 
-When this value is sufficiently high (e.g. 90%), it can be considered that
+When this value is sufficiently high (e.g., 90%), it can be considered that
 the two compared images are sufficiently similar to each other.
 
 
@@ -102,10 +102,11 @@ a lot more information about the result.
 Example
 -------
 
-To ilustrate how the gamma index works, a simple example is presented here.
-It is calculated for two-dimensional images, each containing only 4 elements.
+To illustrate how the gamma index works, a simple example is presented here.
+It is calculated for two-dimensional images, each containing only four elements.
 
-Used parameters are: 3% with global normalization for DD acceptance criterion and 3 mm for DTA acceptance criterion.
+The used parameters are:
+3% with global normalization for the DD acceptance criterion and 3 mm for the DTA acceptance criterion.
 
 .. figure:: _static/images/gamma_index_example.svg
    :alt: Example of calculating 2D gamma index - 3%G/3mm
