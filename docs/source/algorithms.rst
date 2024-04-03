@@ -138,5 +138,5 @@ References
        Medical Physics, vol. 30, no. 9, pp. 2455-2464, 2003.
 
 .. [3] M. Wendling, L. Zijp, L. McDermott, E. Smit, J.-J. Sonke, B. Mijnheer, and M. Herk,
-       “A fast algorithm for gamma evaluation in 3d,”
+       “A fast algorithm for gamma evaluation in 3D,”
        Medical physics, vol. 34, pp. 1647-54, 06 2007.

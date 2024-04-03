@@ -1,10 +1,10 @@
 Introduction
 ============
 
-YAGIT (Yet Another Gamma Index Tool) is an efficient open-source library for calculating the gamma index.
+YAGIT (Yet Another Gamma Index Tool) is an efficient library for calculating the gamma index.
 It can be used for the comparison of two images (a reference image and an evaluated image) containing
 2D or 3D radiation dose distributions. It is written in C++ and works on Linux and Windows.
-The code is available on GitHub: `<https://github.com/DataMedSci/yagit>`_.
+The code is free and open-source. It can be found on GitHub: `<https://github.com/DataMedSci/yagit>`_.
 
 
 Main functionalities
@@ -51,8 +51,10 @@ Tested versions of tools are:
 - FRED tools 0.6.79 with libFredGI.so 4.2,
 - PyMedPhys 0.39.3.
 
-Two 3D DICOM images have been used in the tests. The reference image has dimensions of 198x198x198,
-while the evaluated image has dimensions of 200x200x200. They are very similar (GIPR ~ 99%).
+Two 3D DICOM images have been used in the tests.
+They have been generated using irradiation plans from DCPT LET-measurements 2022 [1]_.
+The reference image has dimensions of 198x198x198, while the evaluated image has dimensions of 200x200x200.
+They are very similar (GIPR ~ 99%).
 
 
 .. rst-class:: center-headers right-align-vals
@@ -125,3 +127,11 @@ YAGIT is about 2--3 times faster than FRED.
 
 In this table, it can be noticed that the values of GIPR in YAGIT and FRED are nearly identical.
 However, PyMedPhys returns values that slightly differ from the other two tools.
+
+
+References
+----------
+
+.. [1] N. Bassler, L. Grzanka, J. B. Christensen, J. Villads, H. Brkić, Y. Perrot, L. Pasariček, and M. Romero-Expósito,
+       “MC particle transport simulations for the 2022 LET-measurements at DCPT: v1.0.0”.
+       Zenodo, February 09, 2024. doi: 10.5281/zenodo.10641085.

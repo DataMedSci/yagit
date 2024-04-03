@@ -251,8 +251,9 @@ Data type
 
 Image data elements in YAGIT are stored using a float (32-bit single precision floating point).
 It provides 6--8 significant decimal digits of precision, which is sufficient for gamma index calculations.
-In comparison, a double (64-bit double precision floating point) provides 15--16 significant decimal digits of precision.
+In comparison, a double (64-bit double precision floating point)
+provides 15--16 significant decimal digits of precision.
 
-Thanks to the fact that a float has a size that is two times smaller than a double,
-it has two times less memory usage, can fit twice as many elements in the SIMD registers,
+Thanks to the fact that a float is only half the size of a double,
+it uses half the memory, can fit twice as many elements in the SIMD registers,
 and results in fewer cache misses due to more data fitting in the cache.
