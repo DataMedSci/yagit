@@ -22,9 +22,8 @@
 # 'SPEEDUP' mode plots speedup compared to the first file.
 # There is also the possibility to set filters to show only part of the data (e.g. only classic method).
 
-import pandas as pd
 import matplotlib.pyplot as plt
-
+import pandas as pd
 
 # ==============================================
 # CONFIG
