@@ -25,10 +25,10 @@ Frequently used parameters in radiotherapy are values within the range of 1--3% 
 with global normalization and 1--3 mm for the acceptance criterion DTA.
 These parameters are shortened, e.g., 3%G/3mm (3% DD criterion, global normalization, 3 mm DTA criterion).
 
-In YAGIT, in the case of local normalization, when the dose value at the current reference point is 0,
+In YAGIT, in the case of local normalization, if the dose value at the current reference point is 0,
 that point is skipped to avoid division by zero.
-Similarly, when a reference point has a value below the dose cutoff value, such a point is also skipped.
-In both cases, the gamma index value will be set to NaN.
+Similarly, if a reference point has a value below the dose cutoff value, such a point is also skipped.
+In both cases, the gamma index value is set to NaN.
 When calculating GIPR, NaN values are not taken into account in either the numerator or the denominator.
 
 

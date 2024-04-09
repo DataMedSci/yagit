@@ -29,7 +29,7 @@ Tested versions of tools are:
 Two 3D DICOM images have been used in the tests.
 They have been generated using irradiation plans from DCPT LET-measurements 2022 [1]_.
 The reference image has been created in Eclipse TPS using an analytical dose calculation algorithm for proton therapy,
-and the evaluated image has been created in Topas using Monte Carlo (MC) simulation.
+and the evaluated image has been created in TOPAS using Monte Carlo (MC) simulation.
 The reference image has dimensions of 198x198x198, while the evaluated image has dimensions of 200x200x200.
 The GIPR is quite high (~ 99%), which affects the computation time in the case of the tested Wendling method --
 in general, the higher the GIPR, the faster the gamma index is calculated.

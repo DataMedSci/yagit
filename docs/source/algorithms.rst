@@ -65,11 +65,11 @@ for precise results.
 The values at points that do not exist in the evaluated image are determined on-the-fly using interpolation
 (e.g., bilinear for 2D and trilinear for 3D).
 
-Some optimizations of on-the-fly interpolation can be achieved by resampling the evaluated image onto the grid
+Some optimizations of the on-the-fly interpolation can be achieved by resampling the evaluated image onto the grid
 of the reference image before initiating gamma index calculations.
 However, YAGIT doesn't perform this step due to two reasons that can lead to less accurate results.
 Firstly, this approach involves double interpolation --
-first during the resampling process and second during on-the-fly interpolation.
+first during the resampling process and second during the on-the-fly interpolation.
 The second interpolation uses interpolated points from the first interpolation,
 which can result in less accurate results.
 Another reason is the fact that the evaluated image we start with can have a denser grid than the reference image,

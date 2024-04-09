@@ -24,8 +24,8 @@ Its acceptance criterion is expressed in percentages [%]. It is relative to glob
 If the DD value at :math:`\vec{r_r}` point is less than or equal to the value of the acceptance criterion
 (e.g., 3%, global), then this point passes the test. Otherwise, it fails.
 
-The drawback of this test is that it struggles with high gradient regions, as small shifts in the spatial
-distribution of radiation doses can result in large DD values.
+The drawback of this test is that it struggles with high-gradient regions, as small shifts in the spatial
+distribution of radiation dose can result in large DD values.
 
 
 Distance To Agreement
@@ -43,15 +43,15 @@ Its acceptance criterion is expressed in millimeters [mm].
 If the DTA value at :math:`\vec{r_r}` point is less than or equal to the value of the acceptance criterion
 (e.g., 3 mm), then this point passes the test. Otherwise, it fails.
 
-The drawback of this method is that it encounters difficulties in low gradient areas,
-where minor dose misalignments may require a large search radius (large DTA value).
+The drawback of this method is that it encounters difficulties in low-gradient areas,
+where minor dose misalignments may require a large search radius, resulting in a large DTA value.
 
 
 Gamma function and gamma index
 ------------------------------
 
 To overcome the disadvantages of DD and DTA, the gamma index was developed.
-Before calculating it, it is necessary to first determine the gamma function, which combines DD and DTA.
+First, it is necessary to calculate the gamma function, which combines DD and DTA.
 In the case of the DTA component, only the distance is calculated
 without taking into account the condition of equal doses.
 
@@ -83,8 +83,7 @@ that is, how many gamma index values are less than or equal to 1.
 .. math::
     GIPR = \frac{| \{\gamma(\vec{r_r}) \le 1\} |}{| \{\gamma(\vec{r_r})\} |}
 
-When this value is sufficiently high (e.g., 90%), it can be considered that
-the two compared images are sufficiently similar to each other.
+If this value is sufficiently high (e.g., at least 90%), the evaluated image is acceptable.
 
 
 Flow diagram
