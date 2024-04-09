@@ -5,7 +5,7 @@ on:
     types: [ published ]
 
 jobs:
-  documenation:
+  documentation:
     runs-on: ubuntu-latest
 
     steps:
