@@ -11,6 +11,7 @@ Yet Another Gamma Index Tool documentation
    parameters
    input_and_output_data
    data_representation
+   performance
 
 
 .. toctree::
