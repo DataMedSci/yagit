@@ -1,0 +1,4 @@
+Gamma
+=====
+
+.. doxygenfile:: Gamma.hpp

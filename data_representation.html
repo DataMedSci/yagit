@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data representation &mdash; Yet Another Gamma Index Tool  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/style.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Performance" href="performance.html" />
+    <link rel="prev" title="Input and output data" href="input_and_output_data.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Yet Another Gamma Index Tool
+          </a>
+              <div class="version">
+                v0.5.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gamma_index.html">Gamma index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input_and_output_data.html">Input and output data</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data representation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#coordinate-system">Coordinate system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#image-planes">Image planes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#image-position-and-voxel-spacing">Image position and voxel spacing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#image-orientation">Image orientation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calculating-xyz-coordinates">Calculating xyz coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-indexing-and-memory-order">Data indexing and memory order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-type">Data type</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Yet Another Gamma Index Tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Data representation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/data_representation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data-representation">
+<h1>Data representation<a class="headerlink" href="#data-representation" title="Permalink to this heading"></a></h1>
+<section id="coordinate-system">
+<h2>Coordinate system<a class="headerlink" href="#coordinate-system" title="Permalink to this heading"></a></h2>
+<p>DICOM and MetaImage use the patient (also known as anatomical) coordinate system that is relative to the patient.
+If the patient’s orientation on the couch is changed, then the patient coordinate system is rotated accordingly.
+Other coordinate systems used in radiotherapy are the couch (also known as fixed or room) coordinate system
+and the beam (also known as gantry) coordinate system.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="_images/coordinate_system.svg"><img alt="DICOM LPS coordinate system" height="337" src="_images/coordinate_system.svg" width="488" /></a>
+<figcaption>
+<p><span class="caption-text">Directions and LPS coordinate system relative to a patient.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+<div class="legend">
+<p>L – Left, R – Right, A – Anterior, P – Posterior, S – Superior, I – Inferior.</p>
+</div>
+</figcaption>
+</figure>
+<p>Specifically, DICOM uses the LPS (right to Left, anterior to Posterior, inferior to Superior) coordinate system.
+MetaImage uses the same system, but it employs “from” notation instead of “to” notation, and thus it denotes it as RAI
+(Right to left, Anterior to posterior, Inferior to superior).
+YAGIT also uses this system.</p>
+<p>The three-letter coordinate system defines the axis directions as well as their order.
+The first letter corresponds to the x-axis, the second to the y-axis, and the third to the z-axis.
+For example, in the LPS system: L=x, P=y, S=z, and in the SLP system: S=x, L=y, P=z.</p>
+<p>It is also worth noting that LPS is a right-handed coordinate system.</p>
+</section>
+<section id="image-planes">
+<h2>Image planes<a class="headerlink" href="#image-planes" title="Permalink to this heading"></a></h2>
+<p>The 3D image can be viewed from three perspectives: axial, coronal, and sagittal.
+Axial (also known as transverse or horizontal) separates the superior from the inferior.
+Coronal (also known as frontal) separates the anterior from the posterior.
+Sagittal (also known as longitudinal) separates the left from the right.</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="_images/image_planes.svg"><img alt="Image planes (axial, coronal, and sagittal)" height="210" src="_images/image_planes.svg" width="564" /></a>
+<figcaption>
+<p><span class="caption-text">3D image planes – axial, coronal, and sagittal – with coordinates consistent with LPS.
+The black filled squares represent the first voxel of an image.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>The ith column, jth row, kth frame map to the coordinates xyz for the respective planes as follows:</p>
+<ul class="list list-math-right simple">
+<li><p>Axial: <span class="math notranslate nohighlight">\(ijk \rightarrow xyz\)</span></p></li>
+<li><p>Coronal: <span class="math notranslate nohighlight">\(ijk \rightarrow xzy\)</span></p></li>
+<li><p>Sagittal: <span class="math notranslate nohighlight">\(ijk \rightarrow yzx\)</span></p></li>
+</ul>
+<p>A 3D image is stored in a file slice-by-slice using one out of three planes.
+The plane used depends on the third letter of the coordinate system:
+S or I for axial, A or P for coronal, L or R for sagittal.
+In the LPS coordinate system, slices are stored in the axial plane.</p>
+<p>Note that when calculating the gamma index, YAGIT does not take into account whether the plane of the image was changed
+after reading from a file. It treats all images as if they were stored in the axial plane.</p>
+</section>
+<section id="image-position-and-voxel-spacing">
+<h2>Image position and voxel spacing<a class="headerlink" href="#image-position-and-voxel-spacing" title="Permalink to this heading"></a></h2>
+<p>Image position refers to the coordinates x, y, z of the first voxel of the image, expressed in millimeters.
+It determines the offset from the point (0, 0, 0), which is related to the treatment machine,
+and it is the intersection point of the x, y, and z axes.</p>
+<p>Voxel spacing specifies the distances between adjacent voxels along each axis in millimeters.
+Alternatively, it can be viewed as the size of a voxel.
+The voxel spacing can have different values for each axis,
+but if all three spacings are equal, the image is said to have isotropic voxel spacing.</p>
+<p>Additionally, DICOM allows for unevenly distributed spacing along the z-axis (spacing between slices),
+as the spacing may be greater in areas that are farther from the main region of interest.
+YAGIT doesn’t support this kind of image.</p>
+<figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="_images/position_and_spacing.svg"><img alt="Image position and pixel spacing" height="313" src="_images/position_and_spacing.svg" width="453" /></a>
+<figcaption>
+<p><span class="caption-text">An example of image position and pixel spacing for a 2D image.</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+<div class="legend">
+<p><span class="math notranslate nohighlight">\(T_x, T_y\)</span> – image position, <span class="math notranslate nohighlight">\(S_x, S_y\)</span> – pixel spacing.</p>
+</div>
+</figcaption>
+</figure>
+</section>
+<section id="image-orientation">
+<h2>Image orientation<a class="headerlink" href="#image-orientation" title="Permalink to this heading"></a></h2>
+<p>The image orientation indicates how the patient is positioned on the couch –
+whether lying on their back, stomach, or side,
+and whether they are oriented head-first or feet-first towards the machine.
+The most basic orientation is HFS (Head First Supine).
+In this case, the patient is positioned head-first towards the machine and lying on their back.</p>
+<p>The image orientation is provided in the form of the direction cosines of the first row and the first column,
+as well as the normal vector to these two directions.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\vec{v_r} =
+\begin{bmatrix}
+A_x \\
+A_y \\
+A_z
+\end{bmatrix}
+,\ \ \
+\vec{v_c} =
+\begin{bmatrix}
+B_x \\
+B_y \\
+B_z
+\end{bmatrix}
+,\ \ \
+\vec{v_n} =
+\vec{v_r} \times \vec{v_c} =
+\begin{bmatrix}
+C_x \\
+C_y \\
+C_z
+\end{bmatrix}\end{split}\]</div>
+<p>They are often written in the form of a single vector.</p>
+<div class="math notranslate nohighlight">
+\[\vec{v} =
+\begin{bmatrix} A_x &amp; A_y &amp; A_z; &amp; B_x &amp; B_y &amp; B_z; &amp; C_x &amp; C_y &amp; C_z \end{bmatrix}\]</div>
+<p>There are 8 basic image orientations:</p>
+<ul class="list list-code-right simple">
+<li><p>HFS – Head First Supine            <code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">1</span>&#160; <span class="pre">0</span>&#160; <span class="pre">0;</span>&#160; <span class="pre">0</span>&#160; <span class="pre">1</span>&#160; <span class="pre">0;</span>&#160; <span class="pre">0</span>&#160; <span class="pre">0</span>&#160; <span class="pre">1]</span></code></p></li>
+<li><p>HFP – Head First Prone             <code class="docutils literal notranslate"><span class="pre">[-1</span>&#160; <span class="pre">0</span>&#160; <span class="pre">0;</span>&#160; <span class="pre">0</span> <span class="pre">-1</span>&#160; <span class="pre">0;</span>&#160; <span class="pre">0</span>&#160; <span class="pre">0</span>&#160; <span class="pre">1]</span></code></p></li>
+<li><p>HFDL – Head First Decubitus Left   <code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">0</span> <span class="pre">-1</span>&#160; <span class="pre">0;</span>&#160; <span class="pre">1</span>&#160; <span class="pre">0</span>&#160; <span class="pre">0;</span>&#160; <span class="pre">0</span>&#160; <span class="pre">0</span>&#160; <span class="pre">1]</span></code></p></li>
+<li><p>HFDR – Head First Decubitus Right  <code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">0</span>&#160; <span class="pre">1</span>&#160; <span class="pre">0;</span> <span class="pre">-1</span>&#160; <span class="pre">0</span>&#160; <span class="pre">0;</span>&#160; <span class="pre">0</span>&#160; <span class="pre">0</span>&#160; <span class="pre">1]</span></code></p></li>
+<li><p>FFS – Feet First Supine            <code class="docutils literal notranslate"><span class="pre">[-1</span>&#160; <span class="pre">0</span>&#160; <span class="pre">0;</span>&#160; <span class="pre">0</span>&#160; <span class="pre">1</span>&#160; <span class="pre">0;</span>&#160; <span class="pre">0</span>&#160; <span class="pre">0</span> <span class="pre">-1]</span></code></p></li>
+<li><p>FFP – Feet First Prone             <code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">1</span>&#160; <span class="pre">0</span>&#160; <span class="pre">0;</span>&#160; <span class="pre">0</span> <span class="pre">-1</span>&#160; <span class="pre">0;</span>&#160; <span class="pre">0</span>&#160; <span class="pre">0</span> <span class="pre">-1]</span></code></p></li>
+<li><p>FFDL – Feet First Decubitus Left   <code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">0</span>&#160; <span class="pre">1,</span> <span class="pre">0;</span>&#160; <span class="pre">1</span>&#160; <span class="pre">0</span>&#160; <span class="pre">0;</span>&#160; <span class="pre">0</span>&#160; <span class="pre">0</span> <span class="pre">-1]</span></code></p></li>
+<li><p>FFDR – Feet First Decubitus Right  <code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">0</span> <span class="pre">-1</span>&#160; <span class="pre">0;</span> <span class="pre">-1</span>&#160; <span class="pre">0</span>&#160; <span class="pre">0;</span>&#160; <span class="pre">0</span>&#160; <span class="pre">0</span> <span class="pre">-1]</span></code></p></li>
+</ul>
+<p>YAGIT supports only the HFS image orientation for now.</p>
+</section>
+<section id="calculating-xyz-coordinates">
+<h2>Calculating xyz coordinates<a class="headerlink" href="#calculating-xyz-coordinates" title="Permalink to this heading"></a></h2>
+<p>To determine the xyz coordinates from the indexes ijk (ith column, jth row, kth frame),
+the following formula should be used,
+incorporating rotation (image orientation), scaling (voxel spacing), and translation (image position).</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+x \\
+y \\
+z
+\end{bmatrix}
+=
+\begin{bmatrix}
+A_x &amp; B_x &amp; C_x \\
+A_y &amp; B_y &amp; C_y \\
+A_z &amp; B_z &amp; C_z
+\end{bmatrix}
+\begin{bmatrix}
+S_x &amp; 0   &amp; 0   \\
+0   &amp; S_y &amp; 0   \\
+0   &amp; 0   &amp; S_z
+\end{bmatrix}
+\begin{bmatrix}
+i \\
+j \\
+k
+\end{bmatrix}
++
+\begin{bmatrix}
+T_x \\
+T_y \\
+T_z
+\end{bmatrix}\end{split}\]</div>
+<div class="line-block">
+<div class="line">where:</div>
+<div class="line"><span class="math notranslate nohighlight">\(A_x, A_y, A_z\)</span> – values from the direction cosine of the first row (x),</div>
+<div class="line"><span class="math notranslate nohighlight">\(B_x, B_y, B_z\)</span> – values from the direction cosine of the first column (y),</div>
+<div class="line"><span class="math notranslate nohighlight">\(C_x, C_y, C_z\)</span> – values from the normal vector of the image frames (z),</div>
+<div class="line"><span class="math notranslate nohighlight">\(S_x, S_y, S_z\)</span> – xyz voxel spacings,</div>
+<div class="line"><span class="math notranslate nohighlight">\(T_x, T_y, T_z\)</span> – xyz image positions of the first voxel.</div>
+</div>
+<p>This formula can be alternatively expressed using a 4x4 affine matrix.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+x \\
+y \\
+z \\
+1
+\end{bmatrix}
+=
+\begin{bmatrix}
+A_x S_x &amp; B_x S_y &amp; C_x S_z &amp; T_x \\
+A_y S_x &amp; B_y S_y &amp; C_y S_z &amp; T_y \\
+A_z S_x &amp; B_z S_y &amp; C_z S_z &amp; T_z \\
+0       &amp; 0       &amp; 0       &amp; 1
+\end{bmatrix}
+\begin{bmatrix}
+i \\
+j \\
+k \\
+1
+\end{bmatrix}\end{split}\]</div>
+</section>
+<section id="data-indexing-and-memory-order">
+<h2>Data indexing and memory order<a class="headerlink" href="#data-indexing-and-memory-order" title="Permalink to this heading"></a></h2>
+<p>Accessing a single voxel in the image is done using the image coordinate system,
+where columns, rows, and frames are numbered using indexes.</p>
+<p>In YAGIT, the image indexes are written frame-first, column-last –
+instead of using ijk (ith column, jth row, kth frame), it uses kji (kth frame, jth row, ith column).
+It’s the same indexing as used in matrices and in most programming languages.</p>
+<figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="_images/3d_index.svg"><img alt="3D indexing -- (k,j,i)" height="236" src="_images/3d_index.svg" width="427" /></a>
+<figcaption>
+<p><span class="caption-text">3D indexing – (k,j,i) – in the axial plane.</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>YAGIT stores 2D and 3D images in the form of a linearized one-dimensional array.
+It arranges single elements in memory according to the row-major order (in this case, it is the frame-major order).
+DICOM and MetaImage also use this order.</p>
+<figure class="align-center" id="id5">
+<a class="reference internal image-reference" href="_images/1d_index.svg"><img alt="Linear indexing" height="236" src="_images/1d_index.svg" width="429" /></a>
+<figcaption>
+<p><span class="caption-text">Linear indexing in the axial plane.</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="data-type">
+<h2>Data type<a class="headerlink" href="#data-type" title="Permalink to this heading"></a></h2>
+<p>Image data elements in YAGIT are stored using a float (32-bit single precision floating point).
+It provides 6–8 significant decimal digits of precision, which is sufficient for gamma index calculations.
+In comparison, a double (64-bit double precision floating point)
+provides 15–16 significant decimal digits of precision.</p>
+<p>Thanks to the fact that a float is only half the size of a double,
+it uses half the memory, can fit twice as many elements in the SIMD registers,
+and results in fewer cache misses due to more data fitting in the cache.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="input_and_output_data.html" class="btn btn-neutral float-left" title="Input and output data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="performance.html" class="btn btn-neutral float-right" title="Performance" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-2024, YAGIT Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

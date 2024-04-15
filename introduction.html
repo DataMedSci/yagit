@@ -1,401 +1,194 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Introduction &#8212; gamma-index  documentation</title>
-    
-  <link href="_static/css/theme.css" rel="stylesheet">
-  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
-
-    
-  <link rel="stylesheet"
-    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
-
-    
-      
-
-    
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
-    
-  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
-
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction &mdash; Yet Another Gamma Index Tool  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/style.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="GNU General Public License" href="license.html" />
-    <link rel="prev" title="yet Another Gamma Index Tool" href="index.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en">
-    
+    <link rel="next" title="Gamma index" href="gamma_index.html" />
+    <link rel="prev" title="Yet Another Gamma Index Tool documentation" href="index.html" /> 
+</head>
 
-    <!-- Google Analytics -->
-    
-  </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
-    
-    <div class="container-fluid" id="banner"></div>
-
-    
-
-    <div class="container-xl">
-      <div class="row">
-          
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="index.html">
-      
-      
-      
-      <h1 class="site-logo" id="site-title">gamma-index  documentation</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  OVERVIEW
- </span>
-</p>
-<ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Introduction
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="license.html">
-   GNU General Public License
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  ALGORITHM
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="gamma_index.html">
-   Gamma Index
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="classic_version.html">
-   Classic version
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  USER GUIDE
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="instalation.html">
-   Installation Guide
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="gi_gui.html">
-   GUI guide
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  DEVELOPER GUIDE
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="gi_core_2d_example_client.html">
-   Gamma Index Core 2D example
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="gi_wrapper_example_client.html">
-   Gamma Index Wrapper example
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="matrix_representation.html">
-   Matrix representation
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="api.html">
-   API
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="core.html">
-     Core
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="additions.html">
-     Additions
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="wrapper.html">
-     Wrapper
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="components.html">
-   Components
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="image.html">
-     Image
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="solver.html">
-     Solvers
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="dicom_reader.html">
-     DicomReader
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="dicom_writer.html">
-     DicomWriter
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="dicom_tag_rewrite_strategies.html">
-     DicomTagRewriteStrategies
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
-
-    </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
-</div>
-
-</div>
-
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
 
           
-
-
           
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
-            
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/DataMedSci/gi-yagit"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        
-        
-    </div>
-</div>
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
-            </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#modules">
-   Modules
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#advantages-of-our-solution">
-   Advantages of our solution
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#limitations">
-   Limitations
-  </a>
- </li>
-</ul>
-
-            </nav>
-        </div>
-    </div>
-</div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-        
-              <div>
-                
-  <div class="section" id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
-<p>The purpose of the <em>yet Another Gamma Index Tool</em> project was to create an open-source tool for performing the Gamma Index comparison of 1D, 2D, 3D images within a very short time. There could be observed a fair amount of enthusiasm among potential clients, as they can experience a shortage of free, fast and convenient applications offering Gamma Index analysis.</p>
-<div class="section" id="modules">
-<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
-<dl>
-<dt><em>yAGIT</em> application consists of 3 modules:</dt><dd><ol class="arabic">
-<li><p><strong>Core module</strong> - performs a comparison of two images passed as linearised arrays of real numbers - the dose values at given points. This module is completely independent and can be used separately. In order to accelerate the calculations, it has been deprived of all the responsibilities that are not necessary for comparison. Module contains implementation of // TODO versions of Gamma Index algorithm:</p>
-<blockquote>
-<div><ol class="loweralpha simple">
-<li><p>classic version using CPU - it is very slow, and was only attached as some kind of reference to the spiral versions</p></li>
-</ol>
-</div></blockquote>
-<p>// TODO</p>
-</li>
-<li><p><strong>Wrapper module</strong> - reads images from DICOM files and stores them into linearised tables so that the core module can make use of them. It is also responsible for saving the resulting Gamma Index matrix into an output DICOM file. It uses an external library <em>Imebra</em></p></li>
-<li><p><strong>GUI module</strong> - it is a Graphical User Interface created using <em>wxWidgets</em> library that allows to select images for comparison, set a wide range of parameters (which can be saved and stored in the form of profiles), perform comparisons and write the output to a DICOM file. It has dependencies to all of the other modules.</p></li>
-</ol>
-</dd>
-</dl>
-</div>
-<div class="section" id="advantages-of-our-solution">
-<h2>Advantages of our solution<a class="headerlink" href="#advantages-of-our-solution" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><ul>
-<li><p><strong>speed</strong> (the most important feature of <em>yAGIT</em>) - for all available test data, even for large 3D images (219 x 147 x 351), computation time using the spiral version was less than 1 minute</p></li>
-<li><p>ability to perform different types of analysis (1D, 2D, 3D, 2.5D, 2DFrom3D)</p></li>
-<li><p>no use of interpolation - we decided not to include interpolation in our application for a few reasons:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>the use of interpolation, makes the program run much slower</p></li>
-<li><p>users do not need to worry about errors associated with the use of interpolation (there is no phenomenon of over-fitting compared images)</p></li>
-<li><p>some users do not want the application to use the interpolation; if one would like to have the images interpolated before performing the Gamma Index comparison, they can interpolate the input image themselves and pass only the modified samples to the <em>yAGIT</em> application.</p></li>
-</ul>
-</div></blockquote>
-</li>
-<li><p>portability - application can be used by both Windows and Linux users</p></li>
-<li><p>modularity - the application is divided into modules, users decide how they want to use the application, for example, users can use the API provided by the <em>core module</em> or a <em>wrapper module</em>, but they can also use the <em>GUI module</em></p></li>
-<li><p>simple and user friendly GUI</p></li>
-<li><p>support for DICOM images</p></li>
-<li><p>support for images represented as linearised floating point C++ arrays</p></li>
-<li><p>support for GPU acceleration</p></li>
-<li><p>supplied test framework // TODO - is it still true?</p></li>
-</ul>
-</div></blockquote>
-</div>
-<div class="section" id="limitations">
-<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><ul class="simple">
-<li><p>lack of built-in visualization tool</p></li>
-<li><p>support only for files of DICOM type (although user can easily write their own wrapper and integrate it with our application)</p></li>
-<li><p>lack of support for images not specified on a regular grid (images with different pixel spacing along one axis)</p></li>
-<li><p>lack of support for DICOMDIR images</p></li>
-</ul>
-</div></blockquote>
-</div>
-</div>
-
-
+          <a href="index.html" class="icon icon-home">
+            Yet Another Gamma Index Tool
+          </a>
+              <div class="version">
+                v0.5.0
               </div>
-              
-        
-            <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="index.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">yet Another Gamma Index Tool</p>
-        </div>
-    </a>
-    <a class='right-next' id="next-link" href="license.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">GNU General Public License</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
 </div>
-        
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#main-functionalities">Main functionalities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#simple-example">Simple example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#performance">Performance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gamma_index.html">Gamma index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input_and_output_data.html">Input and output data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_representation.html">Data representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api.html">API</a></li>
+</ul>
+
         </div>
-    </div>
-    <footer class="footer">
-    <div class="container">
-      <p>
-        
-          By gamma-index-team<br/>
-        
-            &copy; Copyright 2021, gamma-index-team.<br/>
-      </p>
-    </div>
-  </footer>
-</main>
-
-
       </div>
-    </div>
-  
-  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+    </nav>
 
-  </body>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Yet Another Gamma Index Tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/introduction.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
+<p>YAGIT (Yet Another Gamma Index Tool) is an efficient library for calculating the gamma index.
+It can be used for the comparison of two images (a reference image and an evaluated image) containing
+2D or 3D radiation dose distributions. It is written in C++ and works on Linux and Windows.
+The code is free and open-source. It can be found on GitHub: <a class="reference external" href="https://github.com/DataMedSci/yagit">https://github.com/DataMedSci/yagit</a>.</p>
+<section id="main-functionalities">
+<h2>Main functionalities<a class="headerlink" href="#main-functionalities" title="Permalink to this heading"></a></h2>
+<p>Most important features of YAGIT are:</p>
+<ul class="list simple">
+<li><p>two methods of gamma index calculation: classic and Wendling,</p></li>
+<li><p>four implementations of the classic method (sequential, multithreaded, SIMD, multithreaded + SIMD),</p></li>
+<li><p>two implementations of the Wendling method (sequential, multithreaded),</p></li>
+<li><p>three versions of the gamma index: 2D, 2.5D, and 3D,</p></li>
+<li><p>reading input files (DICOM and MetaImage),</p></li>
+<li><p>saving data and results to an output file (MetaImage),</p></li>
+<li><p>linear, bilinear, and trilinear interpolation of data.</p></li>
+</ul>
+</section>
+<section id="simple-example">
+<h2>Simple example<a class="headerlink" href="#simple-example" title="Permalink to this heading"></a></h2>
+<p>Below is a fragment of a program that calculates the 2D gamma index and saves the result to a file.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// read a reference image and an evaluated image from DICOM files</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">ref2d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">DataReader</span><span class="o">::</span><span class="n">readRTDoseDicom</span><span class="p">(</span><span class="s">&quot;img_ref2d.dcm&quot;</span><span class="p">);</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">eval2d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">DataReader</span><span class="o">::</span><span class="n">readRTDoseDicom</span><span class="p">(</span><span class="s">&quot;img_eval2d.dcm&quot;</span><span class="p">);</span>
+
+<span class="c1">// set gamma index parameters</span>
+<span class="n">yagit</span><span class="o">::</span><span class="n">GammaParameters</span><span class="w"> </span><span class="n">params</span><span class="p">;</span>
+<span class="n">params</span><span class="p">.</span><span class="n">ddThreshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.0</span><span class="p">;</span><span class="w">  </span><span class="c1">// [%]</span>
+<span class="n">params</span><span class="p">.</span><span class="n">dtaThreshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.0</span><span class="p">;</span><span class="w">  </span><span class="c1">// [mm]</span>
+<span class="n">params</span><span class="p">.</span><span class="n">normalization</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">GammaNormalization</span><span class="o">::</span><span class="n">Global</span><span class="p">;</span>
+<span class="n">params</span><span class="p">.</span><span class="n">globalNormDose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ref2d</span><span class="p">.</span><span class="n">max</span><span class="p">();</span>
+<span class="n">params</span><span class="p">.</span><span class="n">doseCutoff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">params</span><span class="p">.</span><span class="n">maxSearchDistance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span><span class="w">  </span><span class="c1">// [mm]</span>
+<span class="n">params</span><span class="p">.</span><span class="n">stepSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">params</span><span class="p">.</span><span class="n">dtaThreshold</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span><span class="w">  </span><span class="c1">// [mm]</span>
+
+<span class="c1">// calculate the 2D gamma index using the Wendling method</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">gamma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">gammaIndex2D</span><span class="p">(</span><span class="n">ref2d</span><span class="p">,</span><span class="w"> </span><span class="n">eval2d</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="p">);</span>
+
+<span class="c1">// save the gamma index image to a MetaImage file</span>
+<span class="n">yagit</span><span class="o">::</span><span class="n">DataWriter</span><span class="o">::</span><span class="n">writeToMetaImage</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;gamma2d.mha&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The image below shows a 2D reference image, a 2D evaluated image, and their comparison.
+The gamma index (3%G/3mm) has been calculated using the code above.
+In addition, the difference between the evaluated image and the reference image is also shown.</p>
+<figure class="align-center">
+<img alt="Reference image, Evaluated image, Dose difference (eval - ref) image, Gamma index (3%G/3mm) image" src="_images/introduction_example.jpg" />
+</figure>
+<p>More examples with complete code are presented on the <a class="reference internal" href="examples.html"><span class="doc">examples</span></a> subpage.</p>
+</section>
+<section id="performance">
+<h2>Performance<a class="headerlink" href="#performance" title="Permalink to this heading"></a></h2>
+<p>Calculating the 3D gamma index for large images can take a long time,
+so an efficient implementation of the algorithm is crucial.
+YAGIT is the fastest free library for calculating the gamma index.</p>
+<figure class="align-center" id="id1">
+<img alt="Multi-threaded gamma index using Wendling method" src="_images/yf_16threads.svg" /><figcaption>
+<p><span class="caption-text">A sample comparison of computation times for YAGIT and <a class="reference external" href="https://www.fred-mc.org/">FRED</a>.
+The gamma index has been calculated for two 3D images with dimensions of approximately 200x200x200 and GIPR ~ 99%.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>More information about the performance of YAGIT is presented on the <a class="reference internal" href="performance.html"><span class="doc">performance</span></a> subpage.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Yet Another Gamma Index Tool documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gamma_index.html" class="btn btn-neutral float-right" title="Gamma index" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-2024, YAGIT Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
 </html>

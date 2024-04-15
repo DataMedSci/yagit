@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Examples &mdash; Yet Another Gamma Index Tool  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/style.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API" href="api/api.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Yet Another Gamma Index Tool
+          </a>
+              <div class="version">
+                v0.5.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gamma_index.html">Gamma index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input_and_output_data.html">Input and output data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_representation.html">Data representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#d-gamma-index-using-classic-method-for-simple-images">2D gamma index using classic method for simple images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#d-gamma-index-using-wendling-method">3D gamma index using Wendling method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#d-gamma-index-using-classic-method-with-interpolation">2D gamma index using classic method with interpolation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Yet Another Gamma Index Tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Examples</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/examples.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h1>
+<p>Examples are located in the <em>examples</em> directory. To build them, set the option <code class="docutils literal notranslate"><span class="pre">BUILD_EXAMPLES=ON</span></code>.</p>
+<section id="d-gamma-index-using-classic-method-for-simple-images">
+<span id="simple-gamma-example"></span><h2>2D gamma index using classic method for simple images<a class="headerlink" href="#d-gamma-index-using-classic-method-for-simple-images" title="Permalink to this heading"></a></h2>
+<p>This example shows how to use YAGIT even without any input files.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="cm">/**</span>
+<span class="linenos">  2</span><span class="cm"> * @file gammaSimple.cpp</span>
+<span class="linenos">  3</span><span class="cm"> * @brief This file provides a simple example of using yagit - 2D gamma index for any images.</span>
+<span class="linenos">  4</span><span class="cm"> * </span>
+<span class="linenos">  5</span><span class="cm"> * @example{lineno}</span>
+<span class="linenos">  6</span><span class="cm"> * Example demonstrating the 2D gamma index for any images.</span>
+<span class="linenos">  7</span><span class="cm"> * 1. Create two 2D images - a reference image and an evaluated image.</span>
+<span class="linenos">  8</span><span class="cm"> * 2. Calculate the 2D gamma index of those two images using the classic method.</span>
+<span class="linenos">  9</span><span class="cm"> *    The parameters are: 3%G/3mm,</span>
+<span class="linenos"> 10</span><span class="cm"> *    normalization dose is set to max value of the reference image,</span>
+<span class="linenos"> 11</span><span class="cm"> *    and dose cutoff is set to 10% of max value of the reference image.</span>
+<span class="linenos"> 12</span><span class="cm"> * 3. Print the gamma index image, gamma index passing rate, and other statistics.</span>
+<span class="linenos"> 13</span><span class="cm"> */</span>
+<span class="linenos"> 14</span>
+<span class="linenos"> 15</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
+<span class="linenos"> 16</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
+<span class="linenos"> 17</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span>
+<span class="linenos"> 18</span>
+<span class="linenos"> 19</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;yagit/yagit.hpp&gt;</span>
+<span class="linenos"> 20</span>
+<span class="linenos"> 21</span><span class="kt">void</span><span class="w"> </span><span class="nf">printImage2D</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">Image2D</span><span class="o">&amp;</span><span class="w"> </span><span class="n">img</span><span class="p">){</span>
+<span class="linenos"> 22</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">ostringstream</span><span class="w"> </span><span class="n">oss</span><span class="p">;</span>
+<span class="linenos"> 23</span><span class="w">    </span><span class="n">oss</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;[&quot;</span><span class="p">;</span>
+<span class="linenos"> 24</span><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">img</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+<span class="linenos"> 25</span><span class="w">        </span><span class="n">oss</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;[&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot; [&quot;</span><span class="p">);</span>
+<span class="linenos"> 26</span><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">img</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">){</span>
+<span class="linenos"> 27</span><span class="w">            </span><span class="n">oss</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">img</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;, &quot;</span><span class="p">;</span>
+<span class="linenos"> 28</span><span class="w">        </span><span class="p">}</span>
+<span class="linenos"> 29</span><span class="w">        </span><span class="n">oss</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">img</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">back</span><span class="p">();</span>
+<span class="linenos"> 30</span><span class="w">        </span><span class="n">oss</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">img</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;],</span><span class="se">\n</span><span class="s">&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;]&quot;</span><span class="p">);</span>
+<span class="linenos"> 31</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos"> 32</span><span class="w">    </span><span class="n">oss</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos"> 33</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">oss</span><span class="p">.</span><span class="n">str</span><span class="p">();</span>
+<span class="linenos"> 34</span><span class="p">}</span>
+<span class="linenos"> 35</span>
+<span class="linenos"> 36</span><span class="kt">void</span><span class="w"> </span><span class="nf">printImageData</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">ImageData</span><span class="o">&amp;</span><span class="w"> </span><span class="n">imageData</span><span class="p">){</span>
+<span class="linenos"> 37</span><span class="w">    </span><span class="n">printImage2D</span><span class="p">(</span><span class="n">imageData</span><span class="p">.</span><span class="n">getImage2D</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="linenos"> 38</span>
+<span class="linenos"> 39</span><span class="w">    </span><span class="n">yagit</span><span class="o">::</span><span class="n">DataSize</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">imageData</span><span class="p">.</span><span class="n">getSize</span><span class="p">();</span>
+<span class="linenos"> 40</span><span class="w">    </span><span class="n">yagit</span><span class="o">::</span><span class="n">DataOffset</span><span class="w"> </span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">imageData</span><span class="p">.</span><span class="n">getOffset</span><span class="p">();</span>
+<span class="linenos"> 41</span><span class="w">    </span><span class="n">yagit</span><span class="o">::</span><span class="n">DataSpacing</span><span class="w"> </span><span class="n">spacing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">imageData</span><span class="p">.</span><span class="n">getSpacing</span><span class="p">();</span>
+<span class="linenos"> 42</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;size: (&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">size</span><span class="p">.</span><span class="n">frames</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;, &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">size</span><span class="p">.</span><span class="n">rows</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;, &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">size</span><span class="p">.</span><span class="n">columns</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;)</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="linenos"> 43</span><span class="w">              </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;offset: (&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">offset</span><span class="p">.</span><span class="n">frames</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;, &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">offset</span><span class="p">.</span><span class="n">rows</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;, &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">offset</span><span class="p">.</span><span class="n">columns</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;)</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="linenos"> 44</span><span class="w">              </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;spacing: (&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">spacing</span><span class="p">.</span><span class="n">frames</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;, &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">spacing</span><span class="p">.</span><span class="n">rows</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;, &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">spacing</span><span class="p">.</span><span class="n">columns</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos"> 45</span><span class="p">}</span>
+<span class="linenos"> 46</span>
+<span class="linenos"> 47</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(){</span>
+<span class="linenos"> 48</span><span class="w">    </span><span class="c1">// set values of images</span>
+<span class="linenos"> 49</span><span class="w">    </span><span class="n">yagit</span><span class="o">::</span><span class="n">Image2D</span><span class="w"> </span><span class="n">refImg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 50</span><span class="w">        </span><span class="p">{</span><span class="mf">0.93</span><span class="p">,</span><span class="w"> </span><span class="mf">0.95</span><span class="p">},</span>
+<span class="linenos"> 51</span><span class="w">        </span><span class="p">{</span><span class="mf">0.97</span><span class="p">,</span><span class="w"> </span><span class="mf">1.00</span><span class="p">}</span>
+<span class="linenos"> 52</span><span class="w">    </span><span class="p">};</span>
+<span class="linenos"> 53</span><span class="w">    </span><span class="n">yagit</span><span class="o">::</span><span class="n">Image2D</span><span class="w"> </span><span class="n">evalImg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 54</span><span class="w">        </span><span class="p">{</span><span class="mf">0.93</span><span class="p">,</span><span class="w"> </span><span class="mf">0.96</span><span class="p">},</span>
+<span class="linenos"> 55</span><span class="w">        </span><span class="p">{</span><span class="mf">0.90</span><span class="p">,</span><span class="w"> </span><span class="mf">1.02</span><span class="p">}</span>
+<span class="linenos"> 56</span><span class="w">    </span><span class="p">};</span>
+<span class="linenos"> 57</span>
+<span class="linenos"> 58</span><span class="w">    </span><span class="c1">// set the offset and the spacing of the images</span>
+<span class="linenos"> 59</span><span class="w">    </span><span class="n">yagit</span><span class="o">::</span><span class="n">DataOffset</span><span class="w"> </span><span class="n">refOffset</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">-1</span><span class="p">};</span>
+<span class="linenos"> 60</span><span class="w">    </span><span class="n">yagit</span><span class="o">::</span><span class="n">DataOffset</span><span class="w"> </span><span class="n">evalOffset</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">};</span>
+<span class="linenos"> 61</span><span class="w">    </span><span class="n">yagit</span><span class="o">::</span><span class="n">DataSpacing</span><span class="w"> </span><span class="n">refSpacing</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">};</span>
+<span class="linenos"> 62</span><span class="w">    </span><span class="n">yagit</span><span class="o">::</span><span class="n">DataSpacing</span><span class="w"> </span><span class="n">evalSpacing</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">};</span>
+<span class="linenos"> 63</span>
+<span class="linenos"> 64</span><span class="w">    </span><span class="c1">// create the reference image and the evaluated image</span>
+<span class="linenos"> 65</span><span class="w">    </span><span class="n">yagit</span><span class="o">::</span><span class="n">ImageData</span><span class="w"> </span><span class="n">refImgDose</span><span class="p">(</span><span class="n">refImg</span><span class="p">,</span><span class="w"> </span><span class="n">refOffset</span><span class="p">,</span><span class="w"> </span><span class="n">refSpacing</span><span class="p">);</span>
+<span class="linenos"> 66</span><span class="w">    </span><span class="n">yagit</span><span class="o">::</span><span class="n">ImageData</span><span class="w"> </span><span class="n">evalImgDose</span><span class="p">(</span><span class="n">evalImg</span><span class="p">,</span><span class="w"> </span><span class="n">evalOffset</span><span class="p">,</span><span class="w"> </span><span class="n">evalSpacing</span><span class="p">);</span>
+<span class="linenos"> 67</span>
+<span class="linenos"> 68</span><span class="w">    </span><span class="c1">// print info about the reference image and the evaluated image</span>
+<span class="linenos"> 69</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Reference image:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos"> 70</span><span class="w">    </span><span class="n">printImageData</span><span class="p">(</span><span class="n">refImgDose</span><span class="p">);</span>
+<span class="linenos"> 71</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;------------------------------</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos"> 72</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Evaluated image:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos"> 73</span><span class="w">    </span><span class="n">printImageData</span><span class="p">(</span><span class="n">evalImgDose</span><span class="p">);</span>
+<span class="linenos"> 74</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;------------------------------</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos"> 75</span>
+<span class="linenos"> 76</span><span class="w">    </span><span class="c1">// set gamma index parameters</span>
+<span class="linenos"> 77</span><span class="w">    </span><span class="n">yagit</span><span class="o">::</span><span class="n">GammaParameters</span><span class="w"> </span><span class="n">gammaParams</span><span class="p">;</span>
+<span class="linenos"> 78</span><span class="w">    </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">ddThreshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.0</span><span class="p">;</span><span class="w">   </span><span class="c1">// [%]</span>
+<span class="linenos"> 79</span><span class="w">    </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">dtaThreshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.0</span><span class="p">;</span><span class="w">  </span><span class="c1">// [mm]</span>
+<span class="linenos"> 80</span><span class="w">    </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">normalization</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">GammaNormalization</span><span class="o">::</span><span class="n">Global</span><span class="p">;</span>
+<span class="linenos"> 81</span><span class="w">    </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">globalNormDose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">refImgDose</span><span class="p">.</span><span class="n">max</span><span class="p">();</span>
+<span class="linenos"> 82</span><span class="w">    </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">doseCutoff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos"> 83</span>
+<span class="linenos"> 84</span><span class="w">    </span><span class="c1">// calculate the 2D gamma index using the classic method</span>
+<span class="linenos"> 85</span><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">GammaResult</span><span class="w"> </span><span class="n">gammaRes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">gammaIndex2D</span><span class="p">(</span><span class="n">refImgDose</span><span class="p">,</span><span class="w"> </span><span class="n">evalImgDose</span><span class="p">,</span><span class="w"> </span><span class="n">gammaParams</span><span class="p">,</span>
+<span class="linenos"> 86</span><span class="w">                                                            </span><span class="n">yagit</span><span class="o">::</span><span class="n">GammaMethod</span><span class="o">::</span><span class="n">Classic</span><span class="p">);</span>
+<span class="linenos"> 87</span>
+<span class="linenos"> 88</span><span class="w">    </span><span class="c1">// print the gamma index image</span>
+<span class="linenos"> 89</span><span class="w">    </span><span class="c1">// expected:</span>
+<span class="linenos"> 90</span><span class="w">    </span><span class="c1">// [[0.471405, 0.57735],</span>
+<span class="linenos"> 91</span><span class="w">    </span><span class="c1">//  [1.10554, 0.816496]]</span>
+<span class="linenos"> 92</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Gamma index image:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos"> 93</span><span class="w">    </span><span class="n">printImage2D</span><span class="p">(</span><span class="n">gammaRes</span><span class="p">.</span><span class="n">getImage2D</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="linenos"> 94</span>
+<span class="linenos"> 95</span><span class="w">    </span><span class="c1">// print gamma index statistics</span>
+<span class="linenos"> 96</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;GIPR: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">gammaRes</span><span class="p">.</span><span class="n">passingRate</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;%</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="linenos"> 97</span><span class="w">              </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Gamma mean: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">gammaRes</span><span class="p">.</span><span class="n">meanGamma</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="linenos"> 98</span><span class="w">              </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Gamma min: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">gammaRes</span><span class="p">.</span><span class="n">minGamma</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="linenos"> 99</span><span class="w">              </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Gamma max: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">gammaRes</span><span class="p">.</span><span class="n">maxGamma</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">100</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="d-gamma-index-using-wendling-method">
+<h2>3D gamma index using Wendling method<a class="headerlink" href="#d-gamma-index-using-wendling-method" title="Permalink to this heading"></a></h2>
+<p>This example shows the most useful use case – 3D gamma index using the Wendling method.
+The Wendling method is more preferred than the classic method
+because it computes the gamma index faster and provides more accurate results,
+thanks to the ability to set a small step size.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cm">/**</span>
+<span class="linenos"> 2</span><span class="cm"> * @file gamma3D.cpp</span>
+<span class="linenos"> 3</span><span class="cm"> * @brief This file provides a simple example of using yagit - 3D gamma index.</span>
+<span class="linenos"> 4</span><span class="cm"> * </span>
+<span class="linenos"> 5</span><span class="cm"> * @example{lineno}</span>
+<span class="linenos"> 6</span><span class="cm"> * Example demonstrating the 3D gamma index.</span>
+<span class="linenos"> 7</span><span class="cm"> * 1. Read a reference image and an evaluated image from DICOM files.</span>
+<span class="linenos"> 8</span><span class="cm"> * 2. Calculate the 3D gamma index of those images using the Wendling method.</span>
+<span class="linenos"> 9</span><span class="cm"> *    The parameters are: 3%G/3mm,</span>
+<span class="linenos">10</span><span class="cm"> *    normalization dose is set to max value of the reference image,</span>
+<span class="linenos">11</span><span class="cm"> *    and dose cutoff is set to 10% of max value of the reference image.</span>
+<span class="linenos">12</span><span class="cm"> * 3. Print gamma index passing rate and other statistics.</span>
+<span class="linenos">13</span><span class="cm"> * 4. Save the result to a MetaImage file.</span>
+<span class="linenos">14</span><span class="cm"> */</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
+<span class="linenos">17</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
+<span class="linenos">18</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;yagit/yagit.hpp&gt;</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">floatToString</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">d</span><span class="p">){</span>
+<span class="linenos">23</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">ostringstream</span><span class="w"> </span><span class="n">oss</span><span class="p">;</span>
+<span class="linenos">24</span><span class="w">    </span><span class="n">oss</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">d</span><span class="p">;</span>
+<span class="linenos">25</span><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">oss</span><span class="p">.</span><span class="n">str</span><span class="p">();</span>
+<span class="linenos">26</span><span class="p">}</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">gammaParametersToString</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">GammaParameters</span><span class="o">&amp;</span><span class="w"> </span><span class="n">gammaParams</span><span class="p">){</span>
+<span class="linenos">29</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">dd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">floatToString</span><span class="p">(</span><span class="n">gammaParams</span><span class="p">.</span><span class="n">ddThreshold</span><span class="p">);</span>
+<span class="linenos">30</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">dta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">floatToString</span><span class="p">(</span><span class="n">gammaParams</span><span class="p">.</span><span class="n">dtaThreshold</span><span class="p">);</span>
+<span class="linenos">31</span><span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">norm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">normalization</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">GammaNormalization</span><span class="o">::</span><span class="n">Global</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="sc">&#39;G&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="sc">&#39;L&#39;</span><span class="p">;</span>
+<span class="linenos">32</span><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">dd</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;%&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">norm</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dta</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;mm&quot;</span><span class="p">;</span>
+<span class="linenos">33</span><span class="p">}</span>
+<span class="linenos">34</span>
+<span class="linenos">35</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">**</span><span class="w"> </span><span class="n">argv</span><span class="p">){</span>
+<span class="linenos">36</span><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">argc</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">2</span><span class="p">){</span>
+<span class="linenos">37</span><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cerr</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;too few arguments</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">38</span><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cerr</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Usage: gamma3D refImgPath evalImgPath</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">39</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="linenos">40</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">41</span>
+<span class="linenos">42</span><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">refImgPath</span><span class="p">{</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]};</span>
+<span class="linenos">43</span><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">evalImgPath</span><span class="p">{</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]};</span>
+<span class="linenos">44</span>
+<span class="linenos">45</span><span class="w">    </span><span class="k">try</span><span class="p">{</span>
+<span class="linenos">46</span><span class="w">        </span><span class="c1">// read a reference image and an evaluated image from DICOM files</span>
+<span class="linenos">47</span><span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">ImageData</span><span class="w"> </span><span class="n">refImg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">DataReader</span><span class="o">::</span><span class="n">readRTDoseDicom</span><span class="p">(</span><span class="n">refImgPath</span><span class="p">);</span>
+<span class="linenos">48</span><span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">ImageData</span><span class="w"> </span><span class="n">evalImg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">DataReader</span><span class="o">::</span><span class="n">readRTDoseDicom</span><span class="p">(</span><span class="n">evalImgPath</span><span class="p">);</span>
+<span class="linenos">49</span>
+<span class="linenos">50</span><span class="w">        </span><span class="c1">// set gamma index parameters</span>
+<span class="linenos">51</span><span class="w">        </span><span class="kt">float</span><span class="w"> </span><span class="n">refMaxDose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">refImg</span><span class="p">.</span><span class="n">max</span><span class="p">();</span>
+<span class="linenos">52</span><span class="w">        </span><span class="n">yagit</span><span class="o">::</span><span class="n">GammaParameters</span><span class="w"> </span><span class="n">gammaParams</span><span class="p">;</span>
+<span class="linenos">53</span><span class="w">        </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">ddThreshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.0</span><span class="p">;</span><span class="w">   </span><span class="c1">// [%]</span>
+<span class="linenos">54</span><span class="w">        </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">dtaThreshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.0</span><span class="p">;</span><span class="w">  </span><span class="c1">// [mm]</span>
+<span class="linenos">55</span><span class="w">        </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">normalization</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">GammaNormalization</span><span class="o">::</span><span class="n">Global</span><span class="p">;</span>
+<span class="linenos">56</span><span class="w">        </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">globalNormDose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">refMaxDose</span><span class="p">;</span>
+<span class="linenos">57</span><span class="w">        </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">doseCutoff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">refMaxDose</span><span class="p">;</span><span class="w">  </span><span class="c1">// 10% * ref_max</span>
+<span class="linenos">58</span><span class="w">        </span><span class="c1">// two parameters below are exclusively used by the Wendling method</span>
+<span class="linenos">59</span><span class="w">        </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">maxSearchDistance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span><span class="w">                    </span><span class="c1">// [mm]</span>
+<span class="linenos">60</span><span class="w">        </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">stepSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">dtaThreshold</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span><span class="w">  </span><span class="c1">// [mm]</span>
+<span class="linenos">61</span>
+<span class="linenos">62</span><span class="w">        </span><span class="c1">// print the gamma index parameters</span>
+<span class="linenos">63</span><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Calculating 3D gamma index using Wendling method with parameters: &quot;</span>
+<span class="linenos">64</span><span class="w">                  </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">gammaParametersToString</span><span class="p">(</span><span class="n">gammaParams</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">65</span>
+<span class="linenos">66</span><span class="w">        </span><span class="c1">// calculate the 3D gamma index using the Wendling method</span>
+<span class="linenos">67</span><span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">GammaResult</span><span class="w"> </span><span class="n">gammaRes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">gammaIndex3D</span><span class="p">(</span><span class="n">refImg</span><span class="p">,</span><span class="w"> </span><span class="n">evalImg</span><span class="p">,</span><span class="w"> </span><span class="n">gammaParams</span><span class="p">,</span>
+<span class="linenos">68</span><span class="w">                                                                </span><span class="n">yagit</span><span class="o">::</span><span class="n">GammaMethod</span><span class="o">::</span><span class="n">Wendling</span><span class="p">);</span>
+<span class="linenos">69</span>
+<span class="linenos">70</span><span class="w">        </span><span class="c1">// print gamma index statistics</span>
+<span class="linenos">71</span><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;GIPR: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">gammaRes</span><span class="p">.</span><span class="n">passingRate</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;%</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="linenos">72</span><span class="w">                  </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Gamma mean: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">gammaRes</span><span class="p">.</span><span class="n">meanGamma</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="linenos">73</span><span class="w">                  </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Gamma min: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">gammaRes</span><span class="p">.</span><span class="n">minGamma</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="linenos">74</span><span class="w">                  </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Gamma max: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">gammaRes</span><span class="p">.</span><span class="n">maxGamma</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="linenos">75</span><span class="w">                  </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;NaN values: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">gammaRes</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">gammaRes</span><span class="p">.</span><span class="n">nansize</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; / &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">gammaRes</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">76</span>
+<span class="linenos">77</span><span class="w">        </span><span class="c1">// save the result containing the gamma index image to a MetaImage file</span>
+<span class="linenos">78</span><span class="w">        </span><span class="n">yagit</span><span class="o">::</span><span class="n">DataWriter</span><span class="o">::</span><span class="n">writeToMetaImage</span><span class="p">(</span><span class="n">gammaRes</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;gamma_index_3d.mha&quot;</span><span class="p">);</span>
+<span class="linenos">79</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">80</span><span class="w">    </span><span class="k">catch</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="w"> </span><span class="o">&amp;</span><span class="n">e</span><span class="p">){</span>
+<span class="linenos">81</span><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cerr</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;ERROR: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">82</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">83</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="d-gamma-index-using-classic-method-with-interpolation">
+<h2>2D gamma index using classic method with interpolation<a class="headerlink" href="#d-gamma-index-using-classic-method-with-interpolation" title="Permalink to this heading"></a></h2>
+<p>This example demonstrates the classic method with interpolation of the evaluated image
+to achieve more accurate results (though at the expense of longer computations).
+In this example, the 2D version is used instead of the 3D version
+because the classic method for the 3D version can take a very long time to compute.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cm">/**</span>
+<span class="linenos"> 2</span><span class="cm"> * @file gammaWithInterp.cpp</span>
+<span class="linenos"> 3</span><span class="cm"> * @brief This file provides a simple example of using yagit - 2D gamma index with interpolation of eval image.</span>
+<span class="linenos"> 4</span><span class="cm"> * </span>
+<span class="linenos"> 5</span><span class="cm"> * @example{lineno}</span>
+<span class="linenos"> 6</span><span class="cm"> * Example demonstrating the 2D gamma index with interpolation of an evaluated image.</span>
+<span class="linenos"> 7</span><span class="cm"> * 1. Read a reference image and an evaluated image from DICOM files.</span>
+<span class="linenos"> 8</span><span class="cm"> * 2. Take 2D frames from the middle of the images in the coronal plane.</span>
+<span class="linenos"> 9</span><span class="cm"> * 3. Interpolate the evaluated image to have a spacing set to 1/3</span>
+<span class="linenos">10</span><span class="cm"> *    of the DTA criterion or lower.</span>
+<span class="linenos">11</span><span class="cm"> * 4. Calculate the 2D gamma index of those 2D images using the classic method.</span>
+<span class="linenos">12</span><span class="cm"> *    The parameters are: 2%G/2mm,</span>
+<span class="linenos">13</span><span class="cm"> *    normalization dose is set to max value of the reference image,</span>
+<span class="linenos">14</span><span class="cm"> *    and dose cutoff is set to 1% of max value of the reference image.</span>
+<span class="linenos">15</span><span class="cm"> * 5. Print gamma index passing rate and other statistics.</span>
+<span class="linenos">16</span><span class="cm"> * 6. Save the result to a MetaImage file.</span>
+<span class="linenos">17</span><span class="cm"> */</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
+<span class="linenos">20</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;yagit/yagit.hpp&gt;</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">**</span><span class="w"> </span><span class="n">argv</span><span class="p">){</span>
+<span class="linenos">25</span><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">argc</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">2</span><span class="p">){</span>
+<span class="linenos">26</span><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cerr</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;too few arguments</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">27</span><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cerr</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Usage: gammaWithInterp refImgPath evalImgPath</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">28</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="linenos">29</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">refImgPath</span><span class="p">{</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]};</span>
+<span class="linenos">32</span><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">evalImgPath</span><span class="p">{</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]};</span>
+<span class="linenos">33</span>
+<span class="linenos">34</span><span class="w">    </span><span class="k">try</span><span class="p">{</span>
+<span class="linenos">35</span><span class="w">        </span><span class="c1">// read a reference image and an evaluated image from DICOM files</span>
+<span class="linenos">36</span><span class="w">        </span><span class="n">yagit</span><span class="o">::</span><span class="n">ImageData</span><span class="w"> </span><span class="n">refImg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">DataReader</span><span class="o">::</span><span class="n">readRTDoseDicom</span><span class="p">(</span><span class="n">refImgPath</span><span class="p">);</span>
+<span class="linenos">37</span><span class="w">        </span><span class="n">yagit</span><span class="o">::</span><span class="n">ImageData</span><span class="w"> </span><span class="n">evalImg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">DataReader</span><span class="o">::</span><span class="n">readRTDoseDicom</span><span class="p">(</span><span class="n">evalImgPath</span><span class="p">);</span>
+<span class="linenos">38</span>
+<span class="linenos">39</span><span class="w">        </span><span class="c1">// take 2D frames from the middle of the images in the coronal plane</span>
+<span class="linenos">40</span><span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">yframe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">refImg</span><span class="p">.</span><span class="n">getSize</span><span class="p">().</span><span class="n">rows</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="linenos">41</span><span class="w">        </span><span class="n">refImg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">refImg</span><span class="p">.</span><span class="n">getImageData2D</span><span class="p">(</span><span class="n">yframe</span><span class="p">,</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">ImagePlane</span><span class="o">::</span><span class="n">Coronal</span><span class="p">);</span>
+<span class="linenos">42</span><span class="w">        </span><span class="n">evalImg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">evalImg</span><span class="p">.</span><span class="n">getImageData2D</span><span class="p">(</span><span class="n">yframe</span><span class="p">,</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">ImagePlane</span><span class="o">::</span><span class="n">Coronal</span><span class="p">);</span><span class="w">    </span>
+<span class="linenos">43</span>
+<span class="linenos">44</span><span class="w">        </span><span class="c1">// set gamma index parameters</span>
+<span class="linenos">45</span><span class="w">        </span><span class="kt">float</span><span class="w"> </span><span class="n">refMaxDose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">refImg</span><span class="p">.</span><span class="n">max</span><span class="p">();</span>
+<span class="linenos">46</span><span class="w">        </span><span class="n">yagit</span><span class="o">::</span><span class="n">GammaParameters</span><span class="w"> </span><span class="n">gammaParams</span><span class="p">;</span>
+<span class="linenos">47</span><span class="w">        </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">ddThreshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="p">;</span><span class="w">   </span><span class="c1">// [%]</span>
+<span class="linenos">48</span><span class="w">        </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">dtaThreshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="p">;</span><span class="w">  </span><span class="c1">// [mm]</span>
+<span class="linenos">49</span><span class="w">        </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">normalization</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">GammaNormalization</span><span class="o">::</span><span class="n">Global</span><span class="p">;</span>
+<span class="linenos">50</span><span class="w">        </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">globalNormDose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">refMaxDose</span><span class="p">;</span>
+<span class="linenos">51</span><span class="w">        </span><span class="n">gammaParams</span><span class="p">.</span><span class="n">doseCutoff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.01</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">refMaxDose</span><span class="p">;</span><span class="w">  </span><span class="c1">// 1% * ref_max</span>
+<span class="linenos">52</span>
+<span class="linenos">53</span><span class="w">        </span><span class="c1">// interpolate the evaluated image to have a spacing set to 1/3 of the DTA criterion or lower</span>
+<span class="linenos">54</span><span class="w">        </span><span class="kt">float</span><span class="w"> </span><span class="n">newSpacingY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">gammaParams</span><span class="p">.</span><span class="n">dtaThreshold</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">evalImg</span><span class="p">.</span><span class="n">getSpacing</span><span class="p">().</span><span class="n">rows</span><span class="p">);</span>
+<span class="linenos">55</span><span class="w">        </span><span class="kt">float</span><span class="w"> </span><span class="n">newSpacingX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">gammaParams</span><span class="p">.</span><span class="n">dtaThreshold</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">evalImg</span><span class="p">.</span><span class="n">getSpacing</span><span class="p">().</span><span class="n">columns</span><span class="p">);</span>
+<span class="linenos">56</span><span class="w">        </span><span class="n">evalImg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">Interpolation</span><span class="o">::</span><span class="n">bilinearOnPlane</span><span class="p">(</span><span class="n">evalImg</span><span class="p">,</span><span class="w"> </span><span class="n">newSpacingY</span><span class="p">,</span><span class="w"> </span><span class="n">newSpacingX</span><span class="p">,</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">ImagePlane</span><span class="o">::</span><span class="n">YX</span><span class="p">);</span>
+<span class="linenos">57</span>
+<span class="linenos">58</span><span class="w">        </span><span class="c1">// calculate the 2D gamma index using the classic method</span>
+<span class="linenos">59</span><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Calculating 2D gamma index using classic method with interpolated evaluated image</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">60</span><span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">GammaResult</span><span class="w"> </span><span class="n">gammaRes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yagit</span><span class="o">::</span><span class="n">gammaIndex2D</span><span class="p">(</span><span class="n">refImg</span><span class="p">,</span><span class="w"> </span><span class="n">evalImg</span><span class="p">,</span><span class="w"> </span><span class="n">gammaParams</span><span class="p">,</span>
+<span class="linenos">61</span><span class="w">                                                                </span><span class="n">yagit</span><span class="o">::</span><span class="n">GammaMethod</span><span class="o">::</span><span class="n">Classic</span><span class="p">);</span>
+<span class="linenos">62</span>
+<span class="linenos">63</span><span class="w">        </span><span class="c1">// print gamma index statistics</span>
+<span class="linenos">64</span><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;GIPR: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">gammaRes</span><span class="p">.</span><span class="n">passingRate</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;%</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="linenos">65</span><span class="w">                  </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Gamma mean: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">gammaRes</span><span class="p">.</span><span class="n">meanGamma</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="linenos">66</span><span class="w">                  </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Gamma min: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">gammaRes</span><span class="p">.</span><span class="n">minGamma</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="linenos">67</span><span class="w">                  </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Gamma max: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">gammaRes</span><span class="p">.</span><span class="n">maxGamma</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="linenos">68</span><span class="w">                  </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;NaN values: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">gammaRes</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">gammaRes</span><span class="p">.</span><span class="n">nansize</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; / &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">gammaRes</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">69</span>
+<span class="linenos">70</span><span class="w">        </span><span class="c1">// save the result containing gamma index image to a MetaImage file</span>
+<span class="linenos">71</span><span class="w">        </span><span class="n">yagit</span><span class="o">::</span><span class="n">DataWriter</span><span class="o">::</span><span class="n">writeToMetaImage</span><span class="p">(</span><span class="n">gammaRes</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;gamma_index_2d.mha&quot;</span><span class="p">);</span>
+<span class="linenos">72</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">73</span><span class="w">    </span><span class="k">catch</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="w"> </span><span class="o">&amp;</span><span class="n">e</span><span class="p">){</span>
+<span class="linenos">74</span><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cerr</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;ERROR: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="linenos">75</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">76</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api/api.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-2024, YAGIT Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

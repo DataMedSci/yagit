@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation &mdash; Yet Another Gamma Index Tool  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/style.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Performance" href="performance.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Yet Another Gamma Index Tool
+          </a>
+              <div class="version">
+                v0.5.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gamma_index.html">Gamma index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input_and_output_data.html">Input and output data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_representation.html">Data representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#setup-script-installation">Setup script installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#script-options">Script options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#manual-installation">Manual installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cmake-yagit-options">CMake YAGIT options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cmake-yagit-integration">CMake YAGIT integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#including-yagit">Including YAGIT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Yet Another Gamma Index Tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Installation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h1>
+<p>YAGIT requires a C++ compiler that supports C++17.
+It also requires <a class="reference external" href="https://cmake.org/">CMake</a> (3.16 or newer).
+It works on Linux and Windows.
+It can be downloaded from <a class="reference external" href="https://github.com/DataMedSci/yagit">https://github.com/DataMedSci/yagit</a>.</p>
+<p>YAGIT uses these dependencies:</p>
+<ul class="list simple">
+<li><p><a class="reference external" href="https://github.com/malaterre/GDCM">GDCM</a> – used for reading DICOM files.</p></li>
+<li><p><a class="reference external" href="https://github.com/xtensor-stack/xsimd">xsimd</a> – used for vectorization. Used only when <code class="docutils literal notranslate"><span class="pre">GAMMA_VERSION=SIMD</span></code> or <code class="docutils literal notranslate"><span class="pre">GAMMA_VERSION=THREADS_SIMD</span></code>.</p></li>
+<li><p><a class="reference external" href="https://github.com/google/googletest">GoogleTest</a> – used for unit tests. Used only when <code class="docutils literal notranslate"><span class="pre">BUILD_TESTING=ON</span></code>.</p></li>
+</ul>
+<p>You can build and install YAGIT using <a class="reference internal" href="#setup-install">the setup script</a>
+or by doing it <a class="reference internal" href="#manual-install">manually</a>.</p>
+<section id="setup-script-installation">
+<span id="setup-install"></span><h2>Setup script installation<a class="headerlink" href="#setup-script-installation" title="Permalink to this heading"></a></h2>
+<p>To build YAGIT, simply run <em>setup.sh</em> or <em>setup.bat</em> script, depending on your operating system.</p>
+<p>On Linux, run:</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">setup</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>On Windows, run:</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">setup</span><span class="o">.</span><span class="n">bat</span>
+</pre></div>
+</div>
+<p>Note that these scripts will only build the library and not install it by default.
+To install it, configure the options appropriately in the script file.</p>
+<p>For now, the Windows script can install dependencies using only <a class="reference external" href="https://conan.io/">Conan</a> package manager.</p>
+<section id="script-options">
+<h3>Script options<a class="headerlink" href="#script-options" title="Permalink to this heading"></a></h3>
+<p>You can freely configure the options that are in the script files.
+Some of the options are the same as in the <a class="reference internal" href="#cmake-yagit-options">CMake YAGIT options</a> section, as they are simply passed to CMake.</p>
+<table class="wrap-text docutils align-center">
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Values</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_TYPE</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Release</span></code>, <code class="docutils literal notranslate"><span class="pre">Debug</span></code>,
+<code class="docutils literal notranslate"><span class="pre">RelWithDebInfo</span></code>,
+<code class="docutils literal notranslate"><span class="pre">MinSizeRel</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Release</span></code></p></td>
+<td><p>Build type used in the script
+by CMake for single-target generators
+(e.g., Makefile Generators) and
+by a compiler for multi-target generators
+(e.g., Visual Studio Generators).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_SHARED_LIBS</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Equivalent to the CMake YAGIT option.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">INSTALL_DEPENDENCIES</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code>, <code class="docutils literal notranslate"><span class="pre">LOCAL</span></code>,
+<code class="docutils literal notranslate"><span class="pre">GLOBAL</span></code>, <code class="docutils literal notranslate"><span class="pre">CONAN</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">LOCAL</span></code></p></td>
+<td><p>Method of installing dependencies.
+Value <code class="docutils literal notranslate"><span class="pre">OFF</span></code> doesn’t install any
+dependencies, and it assumes
+they are already installed system-wide.
+Value <code class="docutils literal notranslate"><span class="pre">LOCAL</span></code> installs dependencies
+locally in the <em>build/deps</em> directory.
+Value <code class="docutils literal notranslate"><span class="pre">GLOBAL</span></code> installs dependencies
+system-wide. It requires admin privileges.
+Value <code class="docutils literal notranslate"><span class="pre">CONAN</span></code> installs dependencies
+using <a class="reference external" href="https://conan.io/">Conan</a> package manager.
+It requires installed Conan. This option
+is only available in <em>setup.sh</em>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GAMMA_VERSION</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SEQUENTIAL</span></code>,
+<code class="docutils literal notranslate"><span class="pre">THREADS</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SIMD</span></code>,
+<code class="docutils literal notranslate"><span class="pre">THREADS_SIMD</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">THREADS</span></code></p></td>
+<td><p>Equivalent to the CMake YAGIT option.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SIMD_EXTENSION</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SSE2</span></code>, <code class="docutils literal notranslate"><span class="pre">SSE3</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SSSE3</span></code>, <code class="docutils literal notranslate"><span class="pre">SSE4.1</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SSE4.2</span></code>, <code class="docutils literal notranslate"><span class="pre">AVX</span></code>,
+<code class="docutils literal notranslate"><span class="pre">AVX2</span></code>, <code class="docutils literal notranslate"><span class="pre">AVX512</span></code>,
+<code class="docutils literal notranslate"><span class="pre">NATIVE</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code></p></td>
+<td><p>Equivalent to the CMake YAGIT option.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ENABLE_FMA</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Equivalent to the CMake YAGIT option.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_EXAMPLES</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code></p></td>
+<td><p>Equivalent to the CMake YAGIT option.
+Additionally, it runs examples.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_TESTING</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Equivalent to the CMake YAGIT option.
+Additionally, it runs unit tests.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_PERFORMANCE_TESTING</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Equivalent to the CMake YAGIT option.
+Additionally, it runs performance tests.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">REF_IMG</span></code></p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+<td><p>Path to a reference image
+used in examples and performance tests.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">EVAL_IMG</span></code></p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+<td><p>Path to an evaluated image
+used in examples and performance tests.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_DOCUMENTATION</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Build documentation (<em>docs</em> directory).
+It requires <a class="reference external" href="https://www.doxygen.nl/">Doxygen</a>,
+<a class="reference external" href="https://www.python.org/">Python</a>, and libraries
+listed in <em>docs/requirements.txt</em>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">INSTALL</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Install YAGIT library.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">INSTALL_DIR</span></code></p></td>
+<td><p>—</p></td>
+<td><p>./yagit</p></td>
+<td><p>Directory where YAGIT will be installed
+(only if <code class="docutils literal notranslate"><span class="pre">INSTALL=ON</span></code>).
+If this is set to an empty string,
+then it will be installed system-wide.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="manual-installation">
+<span id="manual-install"></span><h2>Manual installation<a class="headerlink" href="#manual-installation" title="Permalink to this heading"></a></h2>
+<p>If you prefer to perform the installation manually without the script,
+then follow the commands below to build and install YAGIT on Linux.
+Before running them, ensure that you have installed the dependencies
+(e.g., by using a package manager or by building from source).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">build</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">build</span>
+<span class="n">cmake</span> <span class="o">..</span> <span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Release</span>
+<span class="n">cmake</span> <span class="o">--</span><span class="n">build</span> <span class="o">.</span> <span class="o">-</span><span class="n">j</span>
+<span class="n">sudo</span> <span class="n">cmake</span> <span class="o">--</span><span class="n">install</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>If you don’t have admin privileges or you want to install in a specific directory, then use this command:</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cmake</span> <span class="o">--</span><span class="n">install</span> <span class="o">.</span> <span class="o">--</span><span class="n">prefix</span> <span class="o">&lt;</span><span class="n">yagit</span> <span class="n">installation</span> <span class="n">path</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="cmake-yagit-options">
+<h2>CMake YAGIT options<a class="headerlink" href="#cmake-yagit-options" title="Permalink to this heading"></a></h2>
+<table class="wrap-text docutils align-center">
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Values</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_SHARED_LIBS</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Build YAGIT as a shared or static library.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_EXAMPLES</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Build examples
+(<em>examples</em> directory).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_TESTING</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Build unit tests
+(<em>tests/unit</em> directory).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_PERFORMANCE_TESTING</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Build performance tests
+(<em>tests/performance</em> directory).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GAMMA_VERSION</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SEQUENTIAL</span></code>,
+<code class="docutils literal notranslate"><span class="pre">THREADS</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SIMD</span></code>,
+<code class="docutils literal notranslate"><span class="pre">THREADS_SIMD</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">THREADS</span></code></p></td>
+<td><p>Implementation of algorithms calculating
+the gamma index.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SIMD_EXTENSION</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SSE2</span></code>, <code class="docutils literal notranslate"><span class="pre">SSE3</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SSSE3</span></code>, <code class="docutils literal notranslate"><span class="pre">SSE4.1</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SSE4.2</span></code>, <code class="docutils literal notranslate"><span class="pre">AVX</span></code>,
+<code class="docutils literal notranslate"><span class="pre">AVX2</span></code>, <code class="docutils literal notranslate"><span class="pre">AVX512</span></code>,
+<code class="docutils literal notranslate"><span class="pre">NATIVE</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code></p></td>
+<td><p>SIMD instruction set extension.
+It works only when <code class="docutils literal notranslate"><span class="pre">GAMMA_VERSION</span></code> is
+set to <code class="docutils literal notranslate"><span class="pre">SIMD</span></code> or <code class="docutils literal notranslate"><span class="pre">THREADS_SIMD</span></code>.
+Value <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> adds no additional
+compilation flags.
+Value <code class="docutils literal notranslate"><span class="pre">NATIVE</span></code> adds <em>-march=native</em>
+if a compiler supports it.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ENABLE_FMA</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OFF</span></code></p></td>
+<td><p>Enable fused multiply-add (FMA)
+when building YAGIT library.</p></td>
+</tr>
+</tbody>
+</table>
+<p>To use these options, pass them to CMake during configuration using <code class="docutils literal notranslate"><span class="pre">-D&lt;option&gt;=&lt;value&gt;</span></code>
+(e.g., <code class="docutils literal notranslate"><span class="pre">cmake</span> <span class="pre">..</span> <span class="pre">-DGAMMA_VERSION=THREADS_SIMD</span> <span class="pre">-DSIMD_EXTENSION=AVX2</span></code>).</p>
+</section>
+<section id="cmake-yagit-integration">
+<h2>CMake YAGIT integration<a class="headerlink" href="#cmake-yagit-integration" title="Permalink to this heading"></a></h2>
+<p>Here is an example of adding YAGIT to your CMake project.</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">find_package</span><span class="p">(</span><span class="s">yagit</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
+<span class="nb">add_executable</span><span class="p">(</span><span class="s">program</span><span class="w"> </span><span class="s">program.cpp</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">program</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">yagit::yagit</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If YAGIT has been installed in a custom location, then you need to set the <code class="docutils literal notranslate"><span class="pre">CMAKE_PREFIX_PATH</span></code> option
+to the path of the installed YAGIT. This is necessary for locating the <em>yagitConfig.cmake</em> file.</p>
+</section>
+<section id="including-yagit">
+<h2>Including YAGIT<a class="headerlink" href="#including-yagit" title="Permalink to this heading"></a></h2>
+<p>To include the whole YAGIT library in your code, use the line below.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;yagit/yagit.hpp&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="performance.html" class="btn btn-neutral float-left" title="Performance" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-2024, YAGIT Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

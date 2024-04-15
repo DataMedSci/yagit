@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Algorithms &mdash; Yet Another Gamma Index Tool  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/style.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Parameters" href="parameters.html" />
+    <link rel="prev" title="Gamma index" href="gamma_index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Yet Another Gamma Index Tool
+          </a>
+              <div class="version">
+                v0.5.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gamma_index.html">Gamma index</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Algorithms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#classic-method">Classic method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#wendling-method">Wendling method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input_and_output_data.html">Input and output data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_representation.html">Data representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Yet Another Gamma Index Tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Algorithms</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/algorithms.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="algorithms">
+<h1>Algorithms<a class="headerlink" href="#algorithms" title="Permalink to this heading"></a></h1>
+<p>YAGIT implements two methods to calculate the gamma index: the classic method and the Wendling method.
+The latter is significantly faster.</p>
+<section id="classic-method">
+<h2>Classic method<a class="headerlink" href="#classic-method" title="Permalink to this heading"></a></h2>
+<p>The classic method was introduced with the paper that introduced the gamma index concept by Low et al. <a class="footnote-reference brackets" href="#id4" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> in 1998.
+This is a brute-force method, and because of that, it is very slow. It is based on calculating
+the gamma function for each pair of points in the reference image and the evaluated image.
+This results in a time complexity of <span class="math notranslate nohighlight">\(O(n^k * n^k) = O(n^{2k})\)</span>,
+where <span class="math notranslate nohighlight">\(n\)</span> is the size of each axis of the input data and <span class="math notranslate nohighlight">\(k\)</span> is the dimensionality of the data.
+For example, the 3D gamma index has <span class="math notranslate nohighlight">\(O(n^6)\)</span> time complexity.</p>
+<p>The subsequent steps of the algorithm are as follows:</p>
+<ol class="arabic list">
+<li><p>For each reference point <span class="math notranslate nohighlight">\(\vec{r_r}\)</span>, calculate the gamma index <span class="math notranslate nohighlight">\(\gamma(\vec{r_r})\)</span>:</p>
+<blockquote>
+<div><ol class="upperalpha simple">
+<li><p>For each evaluated point <span class="math notranslate nohighlight">\(\vec{r_e}\)</span>, calculate the gamma function <span class="math notranslate nohighlight">\(\Gamma(\vec{r_r}, \vec{r_e})\)</span>.</p></li>
+<li><p>Choose the minimum value of the calculated <span class="math notranslate nohighlight">\(\Gamma(\vec{r_r}, \vec{r_e})\)</span>
+as the gamma index <span class="math notranslate nohighlight">\(\gamma(\vec{r_r})\)</span>.</p></li>
+</ol>
+</div></blockquote>
+</li>
+<li><p>In the end, the gamma index image is obtained.</p></li>
+</ol>
+<p>To speed up these calculations for 3D images, a 2.5D version was introduced, which involves calculating the gamma index
+in a 2D version for each slice of the 3D image separately. This results in a time complexity of
+<span class="math notranslate nohighlight">\(O(n^3 * n^2) = O(n^5)\)</span>. Unfortunately, it returns less accurate results.</p>
+<p>A commonly used step in the classic method to obtain more accurate results is the interpolation of the evaluated image
+before initiating gamma index calculations. This results in larger input data, further increasing the computation time.
+Low and Dempsey propose that the spacing in the evaluated image should be less than or equal to <span class="math notranslate nohighlight">\(\frac{1}{3}\)</span>
+of the DTA acceptance criterion <a class="footnote-reference brackets" href="#id5" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+</section>
+<section id="wendling-method">
+<h2>Wendling method<a class="headerlink" href="#wendling-method" title="Permalink to this heading"></a></h2>
+<p>In 2007, a new fast method was introduced by Wendling et al. <a class="footnote-reference brackets" href="#id6" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.
+It is based on limiting the searched area in the evaluated image to a circle (in the case of the 2D and 2.5D versions)
+or a sphere (in the case of the 3D version).
+There is a higher probability of finding the minimum value of the gamma function in the vicinity of the reference point
+than in some distant place.</p>
+<figure class="align-center" id="id7">
+<a class="reference internal image-reference" href="_images/wendling_circle.svg"><img alt="Circle with a radius of the maximum search distance used in Wendling method" height="421" src="_images/wendling_circle.svg" width="400" /></a>
+<figcaption>
+<p><span class="caption-text">Limited area (circle) on a 2D evaluated image. The gamma function is calculated only for black points.
+Values at those points are interpolated on-the-fly.</span><a class="headerlink" href="#id7" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Such a limited area has a maximum search radius and a step size, which are parameters of this method.
+Evaluated points, which are checked, are located on a grid with intervals equal to the step size,
+and their distance from the center does not exceed the search radius.
+Wendling et al. propose that the step size should be <span class="math notranslate nohighlight">\(\frac{1}{10}\)</span> of the DTA acceptance criterion
+for precise results.
+The values at points that do not exist in the evaluated image are determined on-the-fly using interpolation
+(e.g., bilinear for 2D and trilinear for 3D).</p>
+<p>Some optimizations of the on-the-fly interpolation can be achieved by resampling the evaluated image onto the grid
+of the reference image before initiating gamma index calculations.
+However, YAGIT doesn’t perform this step due to two reasons that can lead to less accurate results.
+Firstly, this approach involves double interpolation –
+first during the resampling process and second during the on-the-fly interpolation.
+The second interpolation uses interpolated points from the first interpolation,
+which can result in less accurate results.
+Another reason is the fact that the evaluated image we start with can have a denser grid than the reference image,
+and by resampling it, we would lose a lot of information.</p>
+<figure class="align-center" id="id8">
+<a class="reference internal image-reference" href="_images/wendling_circle_distances.svg"><img alt="Squared distances in circle used in Wendling method" height="383" src="_images/wendling_circle_distances.svg" width="400" /></a>
+<figcaption>
+<p><span class="caption-text">Squared distances from the center in the limited area (circle) on a 2D evaluated image.</span><a class="headerlink" href="#id8" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>An important part of this method is the order of traversing through points in the limited area.
+We start from the point at the center of the circle/sphere and traverse through subsequent points that are
+increasingly distant from the center.
+This order and the squared distances only need to be calculated once – at the very beginning –
+and then used thereafter.</p>
+<p>Significant speedup can be achieved by stopping the search when it is no longer possible for subsequent points
+to yield a smaller value of the gamma function, which occurs when <span class="math notranslate nohighlight">\(\frac{r(\vec{r_r}, \vec{r_e})}{\Delta d}\)</span>
+is greater than or equal to the current minimum value of the gamma function <span class="math notranslate nohighlight">\(\Gamma\)</span> for <span class="math notranslate nohighlight">\(\vec{r_r}\)</span>.</p>
+<p>The subsequent steps of the algorithm are as follows:</p>
+<ol class="arabic simple list">
+<li><p>Resample the evaluated image onto the grid of the reference image (YAGIT doesn’t do this).</p></li>
+<li><p>Create a list of points located within the circle/sphere, sorted in ascending order by their distance from the center
+of the circle/sphere.</p></li>
+<li><p>For each reference point <span class="math notranslate nohighlight">\(\vec{r_r}\)</span>, calculate the gamma index <span class="math notranslate nohighlight">\(\gamma(\vec{r_r})\)</span> searching within
+the limited region on the evaluated image:</p>
+<ol class="upperalpha simple">
+<li><p>Start searching at <span class="math notranslate nohighlight">\(\vec{r_e} = \vec{r_r}\)</span> and move through the previously created list of points,
+which are increasingly farther from the initial point:</p>
+<ol class="loweralpha simple">
+<li><p>If the value <span class="math notranslate nohighlight">\(r(\vec{r_r}, \vec{r_e}) / \Delta d\)</span> is greater than or equal to the current minimum
+found value of the gamma function <span class="math notranslate nohighlight">\(\Gamma\)</span> for <span class="math notranslate nohighlight">\(\vec{r_r}\)</span>, then stop the search.</p></li>
+<li><p>Determine the value at the point <span class="math notranslate nohighlight">\(\vec{r_e}\)</span> using interpolation.</p></li>
+<li><p>Calculate the value of the gamma function <span class="math notranslate nohighlight">\(\Gamma(\vec{r_r}, \vec{r_e})\)</span>.</p></li>
+</ol>
+</li>
+<li><p>Choose the minimum value of calculated <span class="math notranslate nohighlight">\(\Gamma(\vec{r_r}, \vec{r_e})\)</span>
+as the gamma index <span class="math notranslate nohighlight">\(\gamma(\vec{r_r})\)</span>.</p></li>
+</ol>
+</li>
+<li><p>In the end, the gamma index image is obtained.</p></li>
+</ol>
+<p>The time complexity of such an algorithm is <span class="math notranslate nohighlight">\(O(n^k * m^k)\)</span>,
+where <span class="math notranslate nohighlight">\(n\)</span> is the number of voxels along each axis,
+<span class="math notranslate nohighlight">\(k\)</span> is the dimensionality of the data,
+and <span class="math notranslate nohighlight">\(m\)</span> is the number of points along the radius of the circle/sphere.
+Typically, the algorithm only traverses through a small portion of points within the circle/sphere,
+so the average complexity is better.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id4" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>D. A. Low, W. B. Harms, S. Mutic, and J. A. Purdy,
+“A technique for the quantitative evaluation of dose distributions,”
+Medical Physics, vol. 25, no. 5, pp. 656-661, 1998.</p>
+</aside>
+<aside class="footnote brackets" id="id5" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>D. A. Low and J. F. Dempsey,
+“Evaluation of the gamma dose distribution comparison method,”
+Medical Physics, vol. 30, no. 9, pp. 2455-2464, 2003.</p>
+</aside>
+<aside class="footnote brackets" id="id6" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p>M. Wendling, L. Zijp, L. McDermott, E. Smit, J.-J. Sonke, B. Mijnheer, and M. Herk,
+“A fast algorithm for gamma evaluation in 3D,”
+Medical physics, vol. 34, pp. 1647-54, 06 2007.</p>
+</aside>
+</aside>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gamma_index.html" class="btn btn-neutral float-left" title="Gamma index" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="parameters.html" class="btn btn-neutral float-right" title="Parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-2024, YAGIT Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

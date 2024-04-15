@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parameters &mdash; Yet Another Gamma Index Tool  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/style.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Input and output data" href="input_and_output_data.html" />
+    <link rel="prev" title="Algorithms" href="algorithms.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Yet Another Gamma Index Tool
+          </a>
+              <div class="version">
+                v0.5.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gamma_index.html">Gamma index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">Algorithms</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#general-parameters">General parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#wendling-method-parameters">Wendling method parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#impact-of-changes-in-parameters-on-computation-time">Impact of changes in parameters on computation time</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dd-and-dta">DD and DTA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#normalization">Normalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dose-cutoff">Dose cutoff</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="input_and_output_data.html">Input and output data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_representation.html">Data representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Yet Another Gamma Index Tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Parameters</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/parameters.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="parameters">
+<h1>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h1>
+<p>The gamma index is configurable by adjusting its parameters. They impact the results and the computation time.</p>
+<section id="general-parameters">
+<h2>General parameters<a class="headerlink" href="#general-parameters" title="Permalink to this heading"></a></h2>
+<p>Algorithms calculating the gamma index have several parameters:</p>
+<ul class="list">
+<li><p>DD acceptance criterion <span class="math notranslate nohighlight">\(\Delta D\)</span> [%],</p></li>
+<li><p>DTA acceptance criterion <span class="math notranslate nohighlight">\(\Delta d\)</span> [mm],</p></li>
+<li><p>normalization:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>global – a predetermined value, typically the maximum value in the reference image,</p></li>
+<li><p>local – value at the current point in the reference image,</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>dose cutoff (DCO) – the gamma index will not be calculated for reference points
+with radiation dose values below this threshold.</p></li>
+</ul>
+<p>Frequently used parameters in radiotherapy are values within the range of 1–3% for the acceptance criterion DD
+with global normalization and 1–3 mm for the acceptance criterion DTA.
+These parameters are shortened, e.g., 3%G/3mm (3% DD criterion, global normalization, 3 mm DTA criterion).</p>
+<p>In YAGIT, in the case of local normalization, if the dose value at the current reference point is 0,
+that point is skipped to avoid division by zero.
+Similarly, if a reference point has a value below the dose cutoff value, such a point is also skipped.
+In both cases, the gamma index value is set to NaN.
+When calculating GIPR, NaN values are not taken into account in either the numerator or the denominator.</p>
+</section>
+<section id="wendling-method-parameters">
+<h2>Wendling method parameters<a class="headerlink" href="#wendling-method-parameters" title="Permalink to this heading"></a></h2>
+<p>There are also two parameters exclusive to the Wendling method:</p>
+<ul class="list simple">
+<li><p>maximum search distance [mm] – the radius of the circle/sphere that will be searched in the evaluated image,</p></li>
+<li><p>step size [mm] – the spacing between searched points inside the circle/sphere.</p></li>
+</ul>
+<p>The maximum search distance should be at least equal to the DTA acceptance criterion,
+but it is preferable to be several times greater for better gamma index results.
+The step size should be <span class="math notranslate nohighlight">\(\frac{1}{10}\)</span> of the DTA acceptance criterion,
+as recommended by the authors of this method, to achieve better results.</p>
+<p>Instead of using the maximum search distance, some other tools use the maximum gamma searched for.
+The relation between these two parameters is as follows:</p>
+<div class="math notranslate nohighlight">
+\[g = \frac{s}{\Delta d}\]</div>
+<div class="line-block">
+<div class="line">where:</div>
+<div class="line"><span class="math notranslate nohighlight">\(g\)</span> – maximum gamma searched for, so that <span class="math notranslate nohighlight">\(\frac{r(\vec{r_r}, \vec{r_e})}{\Delta d} \le g\)</span>,</div>
+<div class="line"><span class="math notranslate nohighlight">\(s\)</span> – maximum search distance, so that <span class="math notranslate nohighlight">\(r(\vec{r_r}, \vec{r_e}) \le s\)</span>,</div>
+<div class="line"><span class="math notranslate nohighlight">\(\Delta d\)</span> – DTA acceptance criterion.</div>
+</div>
+</section>
+<section id="impact-of-changes-in-parameters-on-computation-time">
+<h2>Impact of changes in parameters on computation time<a class="headerlink" href="#impact-of-changes-in-parameters-on-computation-time" title="Permalink to this heading"></a></h2>
+<section id="dd-and-dta">
+<h3>DD and DTA<a class="headerlink" href="#dd-and-dta" title="Permalink to this heading"></a></h3>
+<p>The change of DD and DTA parameters in the classic method has no impact on the computation time
+because changing them doesn’t affect the number of operations performed.</p>
+<p>In the Wendling method, the computation time is inversely proportional to the value of the DD criterion
+(<span class="math notranslate nohighlight">\(t \sim \frac{1}{\Delta D}\)</span>) and proportional to the value of the DTA criterion (<span class="math notranslate nohighlight">\(t \sim \Delta d\)</span>).
+The proportionality with the DTA criterion holds true when only the DTA criterion is changed
+without adjusting the maximum search distance and the step size with it.
+Changing DD and DTA acceptance criteria affects when the stopping condition will occur during the search
+of the circle/sphere, thus also impacting the computation time.</p>
+</section>
+<section id="normalization">
+<h3>Normalization<a class="headerlink" href="#normalization" title="Permalink to this heading"></a></h3>
+<p>In the classical method, changing the normalization from global to local reduces computation time
+due to skipping all reference points with a value of 0.
+There are many such points (usually around 50%) in an average reference image.</p>
+<p>However, in the Wendling method, the runtime increases because, when using local normalization
+for reference points with small doses, the stopping condition occurs much later.
+These problematic points can be skipped by appropriately setting the dose cutoff.</p>
+</section>
+<section id="dose-cutoff">
+<h3>Dose cutoff<a class="headerlink" href="#dose-cutoff" title="Permalink to this heading"></a></h3>
+<p>Changing the dose cutoff value can significantly affect computation time because typical images contain
+a large background region (an area where the dose value is equal to 0)
+and numerous low-dose regions (areas where the dose value is relatively low compared to other regions).
+In both methods, the larger the dose cutoff, the shorter the computation time.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="algorithms.html" class="btn btn-neutral float-left" title="Algorithms" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="input_and_output_data.html" class="btn btn-neutral float-right" title="Input and output data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-2024, YAGIT Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

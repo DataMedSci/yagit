@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Input and output data &mdash; Yet Another Gamma Index Tool  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/style.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Data representation" href="data_representation.html" />
+    <link rel="prev" title="Parameters" href="parameters.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Yet Another Gamma Index Tool
+          </a>
+              <div class="version">
+                v0.5.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gamma_index.html">Gamma index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Input and output data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#input-data">Input data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#key-elements-of-input-data">Key elements of input data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#output-data">Output data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_representation.html">Data representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Yet Another Gamma Index Tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Input and output data</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/input_and_output_data.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="input-and-output-data">
+<h1>Input and output data<a class="headerlink" href="#input-and-output-data" title="Permalink to this heading"></a></h1>
+<p>Algorithms computing the gamma index take two images with radiation dose distributions
+and return a single image with gamma index values.</p>
+<section id="input-data">
+<h2>Input data<a class="headerlink" href="#input-data" title="Permalink to this heading"></a></h2>
+<p>The input data for the gamma index calculation algorithm consists of two-dimensional or three-dimensional images
+containing a spatial distribution of radiation dose.
+Two images are needed for comparison: a reference image and an evaluated image.
+Typically, the reference image is a measured image,
+which is obtained from measurements of an actual radiation dose by appropriate detectors.
+Meanwhile, the evaluated image is usually a calculated/planned image,
+which is an image generated by a treatment planning system (TPS).</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="_images/reference_image_example.png"><img alt="Example of a reference image" src="_images/reference_image_example.png" style="width: 90%;" /></a>
+<figcaption>
+<p><span class="caption-text">A simple 3D reference image with a spatial distribution of radiation dose visualized in the <a class="reference external" href="https://www.slicer.org/">3D Slicer</a> program.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Such data is stored in various file formats.
+These include, among others, <a class="reference external" href="https://www.dicomstandard.org/">DICOM</a> (.dcm), ITK <a class="reference external" href="https://github.com/Kitware/MetaIO">MetaImage</a> (.mha, .mhd, .raw), and <a class="reference external" href="https://github.com/nrc-cnrc/EGSnrc">DOSXYZnrc</a> 3D dose (.3ddose).</p>
+<p>YAGIT is able to read DICOM files with radiation dose data (Modality = RTDOSE) and MetaImage files.</p>
+<section id="key-elements-of-input-data">
+<h3>Key elements of input data<a class="headerlink" href="#key-elements-of-input-data" title="Permalink to this heading"></a></h3>
+<p>The algorithm calculating the gamma index requires the following information from the input files:</p>
+<ul class="list simple">
+<li><p>radiation dose values.</p></li>
+<li><p>size – number of frames, rows, and columns.</p></li>
+<li><p>offset/position – the position of the first voxel in the image, expressed in millimeters.
+Each axis has its own offset value.</p></li>
+<li><p>spacing – the spacing between voxels expressed in millimeters. Each axis has its own spacing value.</p></li>
+</ul>
+<p>In particular, it is not necessary for the reference and evaluated images to have the same sizes, offsets, or spacings.</p>
+</section>
+</section>
+<section id="output-data">
+<h2>Output data<a class="headerlink" href="#output-data" title="Permalink to this heading"></a></h2>
+<p>The algorithm outputs an image with gamma index values for each point of the reference image.
+The resulting image has the same size, offset, and spacing as the reference image.</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="_images/gamma_image_example.png"><img alt="Example of a gamma index image" src="_images/gamma_image_example.png" style="width: 90%;" /></a>
+<figcaption>
+<p><span class="caption-text">The image with gamma index values calculated for the parameters 3%L/3mm visualized in the <a class="reference external" href="https://www.slicer.org/">3D Slicer</a> program.
+The black areas contain NaN values.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>In YAGIT, the gamma index for reference points with a value below the dose cutoff value is set to NaN.
+The same value is also assigned in the case of local normalization when the algorithm encounters a zero dose value
+at a reference point, to avoid division by zero when calculating the gamma function.</p>
+<p>Due to the possibility of the resulting image containing NaN values,
+a suitable file format for storing the gamma index image is MetaImage.
+This is because MetaImage saves images directly in binary format
+for both integers and floating-point numbers (including special values such as NaN and infinity).
+DICOM, on the other hand, only stores integers as binary data.
+If the image contains floating-point numbers, it needs to convert values before saving
+and determine appropriate coefficients that will allow for the reconstruction of the original values,
+but this prevents the storage of NaN values and infinity.
+The only exception is DICOM Parametric Map, which allows for the direct storage of floating-point numbers,
+but YAGIT doesn’t support it.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="parameters.html" class="btn btn-neutral float-left" title="Parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="data_representation.html" class="btn btn-neutral float-right" title="Data representation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-2024, YAGIT Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

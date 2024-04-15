@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Structs &mdash; Yet Another Gamma Index Tool  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/style.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Data Writer" href="data_writer.html" />
+    <link rel="prev" title="Data Reader" href="data_reader.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Yet Another Gamma Index Tool
+          </a>
+              <div class="version">
+                v0.5.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gamma_index.html">Gamma index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parameters.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input_and_output_data.html">Input and output data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_representation.html">Data representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="data_reader.html">Data Reader</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Data Structs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_writer.html">Data Writer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma.html">Gamma</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma_parameters.html">Gamma Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma_result.html">Gamma Result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="image_data.html">Image Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolation.html">Interpolation</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Yet Another Gamma Index Tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api.html">API</a></li>
+      <li class="breadcrumb-item active">Data Structs</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/data_structs.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data-structs">
+<h1>Data Structs<a class="headerlink" href="#data-structs" title="Permalink to this heading"></a></h1>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv45yagit">
+<span id="_CPPv35yagit"></span><span id="_CPPv25yagit"></span><span id="yagit"></span><span class="target" id="namespaceyagit"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">yagit</span></span></span><br /></dt>
+<dd><dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit8DataSizeE">
+<span id="_CPPv3N5yagit8DataSizeE"></span><span id="_CPPv2N5yagit8DataSizeE"></span><span id="yagit::DataSize"></span><span class="target" id="structyagit_1_1DataSize"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DataSize</span></span></span><a class="headerlink" href="#_CPPv4N5yagit8DataSizeE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Number of frames, rows, and columns in 3D image. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit8DataSizeeqERK8DataSize">
+<span id="_CPPv3NK5yagit8DataSizeeqERK8DataSize"></span><span id="_CPPv2NK5yagit8DataSizeeqERK8DataSize"></span><span id="yagit::DataSize::eq-operator__DataSizeCRC"></span><span class="target" id="structyagit_1_1DataSize_1a84b6b8160391894f077e7adcb0177398"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">==</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit8DataSizeE" title="yagit::DataSize"><span class="n"><span class="pre">DataSize</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit8DataSizeeqERK8DataSize" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit8DataSizeneERK8DataSize">
+<span id="_CPPv3NK5yagit8DataSizeneERK8DataSize"></span><span id="_CPPv2NK5yagit8DataSizeneERK8DataSize"></span><span id="yagit::DataSize::neq-operator__DataSizeCRC"></span><span class="target" id="structyagit_1_1DataSize_1ad8b6cab3d74b269d7adaccc6bab28577"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">!=</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit8DataSizeE" title="yagit::DataSize"><span class="n"><span class="pre">DataSize</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit8DataSizeneERK8DataSize" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit8DataSize6framesE">
+<span id="_CPPv3N5yagit8DataSize6framesE"></span><span id="_CPPv2N5yagit8DataSize6framesE"></span><span id="yagit::DataSize::frames__uint32_t"></span><span class="target" id="structyagit_1_1DataSize_1a4f9539bab70b344078cf0fff9d5ca127"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">frames</span></span></span><a class="headerlink" href="#_CPPv4N5yagit8DataSize6framesE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Number of frames. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit8DataSize4rowsE">
+<span id="_CPPv3N5yagit8DataSize4rowsE"></span><span id="_CPPv2N5yagit8DataSize4rowsE"></span><span id="yagit::DataSize::rows__uint32_t"></span><span class="target" id="structyagit_1_1DataSize_1a0f181db706b5c29aa03d04c941a9068f"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rows</span></span></span><a class="headerlink" href="#_CPPv4N5yagit8DataSize4rowsE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Number of rows. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit8DataSize7columnsE">
+<span id="_CPPv3N5yagit8DataSize7columnsE"></span><span id="_CPPv2N5yagit8DataSize7columnsE"></span><span id="yagit::DataSize::columns__uint32_t"></span><span class="target" id="structyagit_1_1DataSize_1a4b9394b9ca301ef2da96947531ea2492"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">columns</span></span></span><a class="headerlink" href="#_CPPv4N5yagit8DataSize7columnsE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Number of columns. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit10DataOffsetE">
+<span id="_CPPv3N5yagit10DataOffsetE"></span><span id="_CPPv2N5yagit10DataOffsetE"></span><span id="yagit::DataOffset"></span><span class="target" id="structyagit_1_1DataOffset"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DataOffset</span></span></span><a class="headerlink" href="#_CPPv4N5yagit10DataOffsetE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Position of first voxel in 3D image in millimeters [mm]. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Values can be negative </p>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit10DataOffseteqERK10DataOffset">
+<span id="_CPPv3NK5yagit10DataOffseteqERK10DataOffset"></span><span id="_CPPv2NK5yagit10DataOffseteqERK10DataOffset"></span><span id="yagit::DataOffset::eq-operator__DataOffsetCRC"></span><span class="target" id="structyagit_1_1DataOffset_1ad15e00018aa96a357ada1b66e1327afa"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">==</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit10DataOffsetE" title="yagit::DataOffset"><span class="n"><span class="pre">DataOffset</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit10DataOffseteqERK10DataOffset" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit10DataOffsetneERK10DataOffset">
+<span id="_CPPv3NK5yagit10DataOffsetneERK10DataOffset"></span><span id="_CPPv2NK5yagit10DataOffsetneERK10DataOffset"></span><span id="yagit::DataOffset::neq-operator__DataOffsetCRC"></span><span class="target" id="structyagit_1_1DataOffset_1aec92bd893b3b7b73d7930920ab31c350"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">!=</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit10DataOffsetE" title="yagit::DataOffset"><span class="n"><span class="pre">DataOffset</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit10DataOffsetneERK10DataOffset" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit10DataOffset6framesE">
+<span id="_CPPv3N5yagit10DataOffset6framesE"></span><span id="_CPPv2N5yagit10DataOffset6framesE"></span><span id="yagit::DataOffset::frames__float"></span><span class="target" id="structyagit_1_1DataOffset_1aef25c25debad9528081b0e2c813cb3dc"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">frames</span></span></span><a class="headerlink" href="#_CPPv4N5yagit10DataOffset6framesE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Position of first frame in image in millimeters [mm]. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit10DataOffset4rowsE">
+<span id="_CPPv3N5yagit10DataOffset4rowsE"></span><span id="_CPPv2N5yagit10DataOffset4rowsE"></span><span id="yagit::DataOffset::rows__float"></span><span class="target" id="structyagit_1_1DataOffset_1abb4f9d4a6cf1f3040cbc4486a3785501"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rows</span></span></span><a class="headerlink" href="#_CPPv4N5yagit10DataOffset4rowsE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Position of first row in image in millimeters [mm]. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit10DataOffset7columnsE">
+<span id="_CPPv3N5yagit10DataOffset7columnsE"></span><span id="_CPPv2N5yagit10DataOffset7columnsE"></span><span id="yagit::DataOffset::columns__float"></span><span class="target" id="structyagit_1_1DataOffset_1ad36969a7cf0274f6b715a7a194aeaaa6"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">columns</span></span></span><a class="headerlink" href="#_CPPv4N5yagit10DataOffset7columnsE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Position of first column in image in millimeters [mm]. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit11DataSpacingE">
+<span id="_CPPv3N5yagit11DataSpacingE"></span><span id="_CPPv2N5yagit11DataSpacingE"></span><span id="yagit::DataSpacing"></span><span class="target" id="structyagit_1_1DataSpacing"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DataSpacing</span></span></span><a class="headerlink" href="#_CPPv4N5yagit11DataSpacingE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Distance between voxels in 3D image in millimeters [mm]. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Values should be positive </p>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit11DataSpacingeqERK11DataSpacing">
+<span id="_CPPv3NK5yagit11DataSpacingeqERK11DataSpacing"></span><span id="_CPPv2NK5yagit11DataSpacingeqERK11DataSpacing"></span><span id="yagit::DataSpacing::eq-operator__DataSpacingCRC"></span><span class="target" id="structyagit_1_1DataSpacing_1a8f04b2f06d94e6c4a58a41a7728da0dd"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">==</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit11DataSpacingE" title="yagit::DataSpacing"><span class="n"><span class="pre">DataSpacing</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit11DataSpacingeqERK11DataSpacing" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit11DataSpacingneERK11DataSpacing">
+<span id="_CPPv3NK5yagit11DataSpacingneERK11DataSpacing"></span><span id="_CPPv2NK5yagit11DataSpacingneERK11DataSpacing"></span><span id="yagit::DataSpacing::neq-operator__DataSpacingCRC"></span><span class="target" id="structyagit_1_1DataSpacing_1ae438cb92a31bec388c0f8ae1824cc555"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">!=</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit11DataSpacingE" title="yagit::DataSpacing"><span class="n"><span class="pre">DataSpacing</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit11DataSpacingneERK11DataSpacing" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit11DataSpacing6framesE">
+<span id="_CPPv3N5yagit11DataSpacing6framesE"></span><span id="_CPPv2N5yagit11DataSpacing6framesE"></span><span id="yagit::DataSpacing::frames__float"></span><span class="target" id="structyagit_1_1DataSpacing_1af8d348c2d1baddf2a2a5e901e8597f20"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">frames</span></span></span><a class="headerlink" href="#_CPPv4N5yagit11DataSpacing6framesE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Spacing between frames in millimeters [mm]. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit11DataSpacing4rowsE">
+<span id="_CPPv3N5yagit11DataSpacing4rowsE"></span><span id="_CPPv2N5yagit11DataSpacing4rowsE"></span><span id="yagit::DataSpacing::rows__float"></span><span class="target" id="structyagit_1_1DataSpacing_1ac1927f74c5d66e7d4a31ee82d9aed747"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rows</span></span></span><a class="headerlink" href="#_CPPv4N5yagit11DataSpacing4rowsE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Spacing between rows in millimeters [mm]. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit11DataSpacing7columnsE">
+<span id="_CPPv3N5yagit11DataSpacing7columnsE"></span><span id="_CPPv2N5yagit11DataSpacing7columnsE"></span><span id="yagit::DataSpacing::columns__float"></span><span class="target" id="structyagit_1_1DataSpacing_1a13a5e3948493a9d642523d1e02bbceb1"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">columns</span></span></span><a class="headerlink" href="#_CPPv4N5yagit11DataSpacing7columnsE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Spacing between columns in millimeters [mm]. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="data_reader.html" class="btn btn-neutral float-left" title="Data Reader" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="data_writer.html" class="btn btn-neutral float-right" title="Data Writer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-2024, YAGIT Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

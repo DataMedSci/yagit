@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gamma Parameters &mdash; Yet Another Gamma Index Tool  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/style.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Gamma Result" href="gamma_result.html" />
+    <link rel="prev" title="Gamma" href="gamma.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Yet Another Gamma Index Tool
+          </a>
+              <div class="version">
+                v0.5.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gamma_index.html">Gamma index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parameters.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input_and_output_data.html">Input and output data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_representation.html">Data representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="data_reader.html">Data Reader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_structs.html">Data Structs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_writer.html">Data Writer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma.html">Gamma</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Gamma Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma_result.html">Gamma Result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="image_data.html">Image Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolation.html">Interpolation</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Yet Another Gamma Index Tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api.html">API</a></li>
+      <li class="breadcrumb-item active">Gamma Parameters</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/gamma_parameters.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gamma-parameters">
+<h1>Gamma Parameters<a class="headerlink" href="#gamma-parameters" title="Permalink to this heading"></a></h1>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv45yagit">
+<span id="_CPPv35yagit"></span><span id="_CPPv25yagit"></span><span id="yagit"></span><span class="target" id="namespaceyagit"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">yagit</span></span></span><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-enums">Enums</p>
+<dl class="cpp enum-class">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit18GammaNormalizationE">
+<span id="_CPPv3N5yagit18GammaNormalizationE"></span><span id="_CPPv2N5yagit18GammaNormalizationE"></span><span class="target" id="namespaceyagit_1a799f62f6d6e1c26fa10933d46149bb2f"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GammaNormalization</span></span></span><a class="headerlink" href="#_CPPv4N5yagit18GammaNormalizationE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Enum with types of calculation of absolute dose difference criterion. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit18GammaNormalization6GlobalE">
+<span id="_CPPv3N5yagit18GammaNormalization6GlobalE"></span><span id="_CPPv2N5yagit18GammaNormalization6GlobalE"></span><span class="target" id="namespaceyagit_1a799f62f6d6e1c26fa10933d46149bb2fa4cc6684df7b4a92b1dec6fce3264fac8"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Global</span></span></span><a class="headerlink" href="#_CPPv4N5yagit18GammaNormalization6GlobalE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Using any value you choose (e.g., max value in the reference image) </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit18GammaNormalization5LocalE">
+<span id="_CPPv3N5yagit18GammaNormalization5LocalE"></span><span id="_CPPv2N5yagit18GammaNormalization5LocalE"></span><span class="target" id="namespaceyagit_1a799f62f6d6e1c26fa10933d46149bb2fa509820290d57f333403f490dde7316f4"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Local</span></span></span><a class="headerlink" href="#_CPPv4N5yagit18GammaNormalization5LocalE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Using local reference value (value at current voxel in the reference image) </p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit15GammaParametersE">
+<span id="_CPPv3N5yagit15GammaParametersE"></span><span id="_CPPv2N5yagit15GammaParametersE"></span><span id="yagit::GammaParameters"></span><span class="target" id="structyagit_1_1GammaParameters"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GammaParameters</span></span></span><a class="headerlink" href="#_CPPv4N5yagit15GammaParametersE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Structure with parameters of gamma index. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit15GammaParameters11ddThresholdE">
+<span id="_CPPv3N5yagit15GammaParameters11ddThresholdE"></span><span id="_CPPv2N5yagit15GammaParameters11ddThresholdE"></span><span id="yagit::GammaParameters::ddThreshold__float"></span><span class="target" id="structyagit_1_1GammaParameters_1a224de65d8cfe259e9dd71a235b0e9c1a"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ddThreshold</span></span></span><a class="headerlink" href="#_CPPv4N5yagit15GammaParameters11ddThresholdE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Acceptance criterion for dose difference (DD) in percents [%]. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit15GammaParameters12dtaThresholdE">
+<span id="_CPPv3N5yagit15GammaParameters12dtaThresholdE"></span><span id="_CPPv2N5yagit15GammaParameters12dtaThresholdE"></span><span id="yagit::GammaParameters::dtaThreshold__float"></span><span class="target" id="structyagit_1_1GammaParameters_1a0f445122143b68232b804a1355d4189a"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dtaThreshold</span></span></span><a class="headerlink" href="#_CPPv4N5yagit15GammaParameters12dtaThresholdE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Acceptance criterion for distance to agreement (DTA) in millimeters [mm]. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit15GammaParameters13normalizationE">
+<span id="_CPPv3N5yagit15GammaParameters13normalizationE"></span><span id="_CPPv2N5yagit15GammaParameters13normalizationE"></span><span id="yagit::GammaParameters::normalization__GammaNormalization"></span><span class="target" id="structyagit_1_1GammaParameters_1a2db25737e204aa387d40fa34b2b4cd3f"></span><a class="reference internal" href="#_CPPv4N5yagit18GammaNormalizationE" title="yagit::GammaNormalization"><span class="n"><span class="pre">GammaNormalization</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">normalization</span></span></span><a class="headerlink" href="#_CPPv4N5yagit15GammaParameters13normalizationE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Type of calculation of absolute dose difference criterion. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit15GammaParameters14globalNormDoseE">
+<span id="_CPPv3N5yagit15GammaParameters14globalNormDoseE"></span><span id="_CPPv2N5yagit15GammaParameters14globalNormDoseE"></span><span id="yagit::GammaParameters::globalNormDose__float"></span><span class="target" id="structyagit_1_1GammaParameters_1a10161c844f64b56e20d1f3f1c5038610"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">globalNormDose</span></span></span><a class="headerlink" href="#_CPPv4N5yagit15GammaParameters14globalNormDoseE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Value used for global normalization. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit15GammaParameters10doseCutoffE">
+<span id="_CPPv3N5yagit15GammaParameters10doseCutoffE"></span><span id="_CPPv2N5yagit15GammaParameters10doseCutoffE"></span><span id="yagit::GammaParameters::doseCutoff__float"></span><span class="target" id="structyagit_1_1GammaParameters_1a7ae28949b29ab2caf21283efbba1d01e"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">doseCutoff</span></span></span><a class="headerlink" href="#_CPPv4N5yagit15GammaParameters10doseCutoffE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Dose value in the reference image, below which gamma index will not be calculated. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit15GammaParameters17maxSearchDistanceE">
+<span id="_CPPv3N5yagit15GammaParameters17maxSearchDistanceE"></span><span id="_CPPv2N5yagit15GammaParameters17maxSearchDistanceE"></span><span id="yagit::GammaParameters::maxSearchDistance__float"></span><span class="target" id="structyagit_1_1GammaParameters_1a93cb9ac4bc35a4f36af62d5ac4514d88"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">maxSearchDistance</span></span></span><a class="headerlink" href="#_CPPv4N5yagit15GammaParameters17maxSearchDistanceE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Maximum search distance in millimeters [mm]. Radius of the circle/sphere in which searching will be performed. Used only for Wendling method. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit15GammaParameters8stepSizeE">
+<span id="_CPPv3N5yagit15GammaParameters8stepSizeE"></span><span id="_CPPv2N5yagit15GammaParameters8stepSizeE"></span><span id="yagit::GammaParameters::stepSize__float"></span><span class="target" id="structyagit_1_1GammaParameters_1a9fed2f8ab53062991461a490335add34"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stepSize</span></span></span><a class="headerlink" href="#_CPPv4N5yagit15GammaParameters8stepSizeE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Step size in millimeters [mm] that is used when searching within the circle/sphere. Used only for Wendling method. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gamma.html" class="btn btn-neutral float-left" title="Gamma" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gamma_result.html" class="btn btn-neutral float-right" title="Gamma Result" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-2024, YAGIT Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

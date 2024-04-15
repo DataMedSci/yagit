@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gamma Result &mdash; Yet Another Gamma Index Tool  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/style.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Image" href="image.html" />
+    <link rel="prev" title="Gamma Parameters" href="gamma_parameters.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Yet Another Gamma Index Tool
+          </a>
+              <div class="version">
+                v0.5.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gamma_index.html">Gamma index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parameters.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input_and_output_data.html">Input and output data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_representation.html">Data representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="data_reader.html">Data Reader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_structs.html">Data Structs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_writer.html">Data Writer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma.html">Gamma</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma_parameters.html">Gamma Parameters</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Gamma Result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="image_data.html">Image Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolation.html">Interpolation</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Yet Another Gamma Index Tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api.html">API</a></li>
+      <li class="breadcrumb-item active">Gamma Result</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/gamma_result.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gamma-result">
+<h1>Gamma Result<a class="headerlink" href="#gamma-result" title="Permalink to this heading"></a></h1>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv45yagit">
+<span id="_CPPv35yagit"></span><span id="_CPPv25yagit"></span><span id="yagit"></span><span class="target" id="namespaceyagit"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">yagit</span></span></span><br /></dt>
+<dd><dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit11GammaResultE">
+<span id="_CPPv3N5yagit11GammaResultE"></span><span id="_CPPv2N5yagit11GammaResultE"></span><span id="yagit::GammaResult"></span><span class="target" id="classyagit_1_1GammaResult"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GammaResult</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><a class="reference internal" href="data_reader.html#_CPPv45yagit" title="yagit"><span class="n"><span class="pre">yagit</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><a class="headerlink" href="#_CPPv4N5yagit11GammaResultE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Container storing gamma index values. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit11GammaResult11passingRateEv">
+<span id="_CPPv3NK5yagit11GammaResult11passingRateEv"></span><span id="_CPPv2NK5yagit11GammaResult11passingRateEv"></span><span id="yagit::GammaResult::passingRateC"></span><span class="target" id="classyagit_1_1GammaResult_1a82023874c78db8fd310b37ed71f6b0cb"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">passingRate</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit11GammaResult11passingRateEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>The percentage of elements that are less than or equal to 1. It ignores NaN values. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit11GammaResult8minGammaEv">
+<span id="_CPPv3NK5yagit11GammaResult8minGammaEv"></span><span id="_CPPv2NK5yagit11GammaResult8minGammaEv"></span><span id="yagit::GammaResult::minGammaC"></span><span class="target" id="classyagit_1_1GammaResult_1aabff50d0931d3137cc0acd5c8110b664"></span><span class="n"><span class="pre">value_type</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">minGamma</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit11GammaResult8minGammaEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Minimum value of gamma index. It ignores NaN values. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit11GammaResult8maxGammaEv">
+<span id="_CPPv3NK5yagit11GammaResult8maxGammaEv"></span><span id="_CPPv2NK5yagit11GammaResult8maxGammaEv"></span><span id="yagit::GammaResult::maxGammaC"></span><span class="target" id="classyagit_1_1GammaResult_1a99c30b5c9566ded37e73dee2c5c4d683"></span><span class="n"><span class="pre">value_type</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">maxGamma</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit11GammaResult8maxGammaEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Maximum value of gamma index. It ignores NaN values. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit11GammaResult8sumGammaEv">
+<span id="_CPPv3NK5yagit11GammaResult8sumGammaEv"></span><span id="_CPPv2NK5yagit11GammaResult8sumGammaEv"></span><span id="yagit::GammaResult::sumGammaC"></span><span class="target" id="classyagit_1_1GammaResult_1a4e9140e9d7819438501fd5eb24714c9f"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sumGamma</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit11GammaResult8sumGammaEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Sum of values of gamma index. It ignores NaN values. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit11GammaResult9meanGammaEv">
+<span id="_CPPv3NK5yagit11GammaResult9meanGammaEv"></span><span id="_CPPv2NK5yagit11GammaResult9meanGammaEv"></span><span id="yagit::GammaResult::meanGammaC"></span><span class="target" id="classyagit_1_1GammaResult_1a21d2ce36a9f1fd91d738811631bad45a"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">meanGamma</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit11GammaResult9meanGammaEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Mean of values of gamma index. It ignores NaN values. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit11GammaResult8varGammaEv">
+<span id="_CPPv3NK5yagit11GammaResult8varGammaEv"></span><span id="_CPPv2NK5yagit11GammaResult8varGammaEv"></span><span id="yagit::GammaResult::varGammaC"></span><span class="target" id="classyagit_1_1GammaResult_1a53b72dfc98b6224ac955f0f20f3a7be0"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">varGamma</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit11GammaResult8varGammaEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Variance of values of gamma index. It ignores NaN values. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit11GammaResult9ImageDataEv">
+<span id="_CPPv3N5yagit11GammaResult9ImageDataEv"></span><span id="_CPPv2N5yagit11GammaResult9ImageDataEv"></span><span id="yagit::GammaResult::ImageData"></span><span class="target" id="classyagit_1_1GammaResult_1ac35ffeef7379a9975113d2e6bad03f4d"></span><span class="sig-name descname"><span class="n"><span class="pre">ImageData</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit11GammaResult9ImageDataEv" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN5yagit11GammaResult9ImageDataERKNSt6vectorI1UEERK8DataSizeRK10DataOffsetRK11DataSpacing">
+<span id="_CPPv3I0EN5yagit11GammaResult9ImageDataERKNSt6vectorI1UEERK8DataSizeRK10DataOffsetRK11DataSpacing"></span><span id="_CPPv2I0EN5yagit11GammaResult9ImageDataERKNSt6vectorI1UEERK8DataSizeRK10DataOffsetRK11DataSpacing"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">U</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classyagit_1_1GammaResult_1a3a0c504f34c17017e07f0ea1fc5a8a44"></span><span class="sig-name descname"><span class="n"><span class="pre">ImageData</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN5yagit11GammaResult9ImageDataERKNSt6vectorI1UEERK8DataSizeRK10DataOffsetRK11DataSpacing" title="yagit::GammaResult::ImageData::U"><span class="n"><span class="pre">U</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit8DataSizeE" title="yagit::DataSize"><span class="n"><span class="pre">DataSize</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">size</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit10DataOffsetE" title="yagit::DataOffset"><span class="n"><span class="pre">DataOffset</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">offset</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit11DataSpacingE" title="yagit::DataSpacing"><span class="n"><span class="pre">DataSpacing</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">spacing</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN5yagit11GammaResult9ImageDataERKNSt6vectorI1UEERK8DataSizeRK10DataOffsetRK11DataSpacing" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit11GammaResult9ImageDataERK7Image2DRK10DataOffsetRK11DataSpacing">
+<span id="_CPPv3N5yagit11GammaResult9ImageDataERK7Image2DRK10DataOffsetRK11DataSpacing"></span><span id="_CPPv2N5yagit11GammaResult9ImageDataERK7Image2DRK10DataOffsetRK11DataSpacing"></span><span id="yagit::GammaResult::ImageData__Image2DCR.DataOffsetCR.DataSpacingCR"></span><span class="target" id="classyagit_1_1GammaResult_1a940a4efcfe920eca874c51d4abd7cb6d"></span><span class="sig-name descname"><span class="n"><span class="pre">ImageData</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image.html#_CPPv4N5yagit7Image2DE" title="yagit::Image2D"><span class="n"><span class="pre">Image2D</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">image2d</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit10DataOffsetE" title="yagit::DataOffset"><span class="n"><span class="pre">DataOffset</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">offset</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit11DataSpacingE" title="yagit::DataSpacing"><span class="n"><span class="pre">DataSpacing</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">spacing</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit11GammaResult9ImageDataERK7Image2DRK10DataOffsetRK11DataSpacing" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit11GammaResult9ImageDataERK7Image3DRK10DataOffsetRK11DataSpacing">
+<span id="_CPPv3N5yagit11GammaResult9ImageDataERK7Image3DRK10DataOffsetRK11DataSpacing"></span><span id="_CPPv2N5yagit11GammaResult9ImageDataERK7Image3DRK10DataOffsetRK11DataSpacing"></span><span id="yagit::GammaResult::ImageData__Image3DCR.DataOffsetCR.DataSpacingCR"></span><span class="target" id="classyagit_1_1GammaResult_1a974d183b4f06d42f0c42368daad7cf77"></span><span class="sig-name descname"><span class="n"><span class="pre">ImageData</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image.html#_CPPv4N5yagit7Image3DE" title="yagit::Image3D"><span class="n"><span class="pre">Image3D</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">image3d</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit10DataOffsetE" title="yagit::DataOffset"><span class="n"><span class="pre">DataOffset</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">offset</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit11DataSpacingE" title="yagit::DataSpacing"><span class="n"><span class="pre">DataSpacing</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">spacing</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit11GammaResult9ImageDataERK7Image3DRK10DataOffsetRK11DataSpacing" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit11GammaResult9ImageDataERRNSt6vectorI10value_typeEERK8DataSizeRK10DataOffsetRK11DataSpacing">
+<span id="_CPPv3N5yagit11GammaResult9ImageDataERRNSt6vectorI10value_typeEERK8DataSizeRK10DataOffsetRK11DataSpacing"></span><span id="_CPPv2N5yagit11GammaResult9ImageDataERRNSt6vectorI10value_typeEERK8DataSizeRK10DataOffsetRK11DataSpacing"></span><span id="yagit::GammaResult::ImageData__std::vector:value_type:RR.DataSizeCR.DataOffsetCR.DataSpacingCR"></span><span class="target" id="classyagit_1_1GammaResult_1a2de67a86efd359e854f6af8b3da56a95"></span><span class="sig-name descname"><span class="n"><span class="pre">ImageData</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">value_type</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit8DataSizeE" title="yagit::DataSize"><span class="n"><span class="pre">DataSize</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">size</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit10DataOffsetE" title="yagit::DataOffset"><span class="n"><span class="pre">DataOffset</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">offset</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit11DataSpacingE" title="yagit::DataSpacing"><span class="n"><span class="pre">DataSpacing</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">spacing</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N5yagit11GammaResult9ImageDataERRNSt6vectorI10value_typeEERK8DataSizeRK10DataOffsetRK11DataSpacing" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit11GammaResult9ImageDataERK9ImageData">
+<span id="_CPPv3N5yagit11GammaResult9ImageDataERK9ImageData"></span><span id="_CPPv2N5yagit11GammaResult9ImageDataERK9ImageData"></span><span id="yagit::GammaResult::ImageData__ImageDataCR"></span><span class="target" id="classyagit_1_1GammaResult_1ab3008ecb203223b6f45d6474c11fa315"></span><span class="sig-name descname"><span class="n"><span class="pre">ImageData</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit11GammaResult9ImageDataERK9ImageData" title="yagit::GammaResult::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N5yagit11GammaResult9ImageDataERK9ImageData" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit11GammaResult9ImageDataERR9ImageData">
+<span id="_CPPv3N5yagit11GammaResult9ImageDataERR9ImageData"></span><span id="_CPPv2N5yagit11GammaResult9ImageDataERR9ImageData"></span><span id="yagit::GammaResult::ImageData__ImageDataRR"></span><span class="target" id="classyagit_1_1GammaResult_1a7b30f1cdb847fa14a0d03577f12d202c"></span><span class="sig-name descname"><span class="n"><span class="pre">ImageData</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N5yagit11GammaResult9ImageDataERR9ImageData" title="yagit::GammaResult::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N5yagit11GammaResult9ImageDataERR9ImageData" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gamma_parameters.html" class="btn btn-neutral float-left" title="Gamma Parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="image.html" class="btn btn-neutral float-right" title="Image" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-2024, YAGIT Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

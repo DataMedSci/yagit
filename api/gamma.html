@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gamma &mdash; Yet Another Gamma Index Tool  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/style.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Gamma Parameters" href="gamma_parameters.html" />
+    <link rel="prev" title="Data Writer" href="data_writer.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Yet Another Gamma Index Tool
+          </a>
+              <div class="version">
+                v0.5.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gamma_index.html">Gamma index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parameters.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input_and_output_data.html">Input and output data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_representation.html">Data representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="data_reader.html">Data Reader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_structs.html">Data Structs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_writer.html">Data Writer</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Gamma</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma_parameters.html">Gamma Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma_result.html">Gamma Result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="image_data.html">Image Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolation.html">Interpolation</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Yet Another Gamma Index Tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api.html">API</a></li>
+      <li class="breadcrumb-item active">Gamma</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/gamma.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gamma">
+<h1>Gamma<a class="headerlink" href="#gamma" title="Permalink to this heading"></a></h1>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv45yagit">
+<span id="_CPPv35yagit"></span><span id="_CPPv25yagit"></span><span id="yagit"></span><span class="target" id="namespaceyagit"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">yagit</span></span></span><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-enums">Enums</p>
+<dl class="cpp enum-class">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit11GammaMethodE">
+<span id="_CPPv3N5yagit11GammaMethodE"></span><span id="_CPPv2N5yagit11GammaMethodE"></span><span class="target" id="namespaceyagit_1a0e813f4d4228cd8b3675715719fc83e1"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GammaMethod</span></span></span><a class="headerlink" href="#_CPPv4N5yagit11GammaMethodE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Enum with methods of calculating gamma index. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit11GammaMethod7ClassicE">
+<span id="_CPPv3N5yagit11GammaMethod7ClassicE"></span><span id="_CPPv2N5yagit11GammaMethod7ClassicE"></span><span class="target" id="namespaceyagit_1a0e813f4d4228cd8b3675715719fc83e1ad35b51b639528d580362ca7042de6a0e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Classic</span></span></span><a class="headerlink" href="#_CPPv4N5yagit11GammaMethod7ClassicE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Classic method. Based on <a class="reference external" href="https://doi.org/10.1118/1.598248">https://doi.org/10.1118/1.598248</a>. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit11GammaMethod8WendlingE">
+<span id="_CPPv3N5yagit11GammaMethod8WendlingE"></span><span id="_CPPv2N5yagit11GammaMethod8WendlingE"></span><span class="target" id="namespaceyagit_1a0e813f4d4228cd8b3675715719fc83e1a028147ff04dbb49468ef07295564c5c4"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Wendling</span></span></span><a class="headerlink" href="#_CPPv4N5yagit11GammaMethod8WendlingE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Wendling method. Based on <a class="reference external" href="https://doi.org/10.1118/1.2721657">https://doi.org/10.1118/1.2721657</a>. </p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit12gammaIndex2DERK9ImageDataRK9ImageDataRK15GammaParameters11GammaMethod">
+<span id="_CPPv3N5yagit12gammaIndex2DERK9ImageDataRK9ImageDataRK15GammaParameters11GammaMethod"></span><span id="_CPPv2N5yagit12gammaIndex2DERK9ImageDataRK9ImageDataRK15GammaParameters11GammaMethod"></span><span id="yagit::gammaIndex2D__ImageDataCR.ImageDataCR.GammaParametersCR.GammaMethod"></span><span class="target" id="namespaceyagit_1ac7ee9cd510a8c39f2bcf693daad0db42"></span><a class="reference internal" href="gamma_result.html#_CPPv4N5yagit11GammaResultE" title="yagit::GammaResult"><span class="n"><span class="pre">GammaResult</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gammaIndex2D</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">refImg2D</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">evalImg2D</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="gamma_parameters.html#_CPPv4N5yagit15GammaParametersE" title="yagit::GammaParameters"><span class="n"><span class="pre">GammaParameters</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">gammaParams</span></span>, <a class="reference internal" href="#_CPPv4N5yagit11GammaMethodE" title="yagit::GammaMethod"><span class="n"><span class="pre">GammaMethod</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">method</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit11GammaMethodE" title="yagit::GammaMethod"><span class="n"><span class="pre">GammaMethod</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5yagit11GammaMethod8WendlingE" title="yagit::GammaMethod::Wendling"><span class="n"><span class="pre">Wendling</span></span></a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit12gammaIndex2DERK9ImageDataRK9ImageDataRK15GammaParameters11GammaMethod" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Calculate 2D gamma index using classic or Wendling method. </p>
+<p>It takes into account y and x coordinates of images. It doesn’t take into account the z coordinates (different z-offsets of <em>refImg</em> and <em>evalImg</em> have no impact on the result).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>refImg2D</strong> – 2D reference image </p></li>
+<li><p><strong>evalImg2D</strong> – 2D evaluated image </p></li>
+<li><p><strong>gammaParams</strong> – Parameters of gamma index </p></li>
+<li><p><strong>method</strong> – Method that will be used to calculate gamma index </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>2D image containing gamma index values </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit14gammaIndex2_5DERK9ImageDataRK9ImageDataRK15GammaParameters11GammaMethod">
+<span id="_CPPv3N5yagit14gammaIndex2_5DERK9ImageDataRK9ImageDataRK15GammaParameters11GammaMethod"></span><span id="_CPPv2N5yagit14gammaIndex2_5DERK9ImageDataRK9ImageDataRK15GammaParameters11GammaMethod"></span><span id="yagit::gammaIndex2_5D__ImageDataCR.ImageDataCR.GammaParametersCR.GammaMethod"></span><span class="target" id="namespaceyagit_1ac2e2285b766364c40da2bbac85b53192"></span><a class="reference internal" href="gamma_result.html#_CPPv4N5yagit11GammaResultE" title="yagit::GammaResult"><span class="n"><span class="pre">GammaResult</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gammaIndex2_5D</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">refImg3D</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">evalImg3D</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="gamma_parameters.html#_CPPv4N5yagit15GammaParametersE" title="yagit::GammaParameters"><span class="n"><span class="pre">GammaParameters</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">gammaParams</span></span>, <a class="reference internal" href="#_CPPv4N5yagit11GammaMethodE" title="yagit::GammaMethod"><span class="n"><span class="pre">GammaMethod</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">method</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit11GammaMethodE" title="yagit::GammaMethod"><span class="n"><span class="pre">GammaMethod</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5yagit11GammaMethod8WendlingE" title="yagit::GammaMethod::Wendling"><span class="n"><span class="pre">Wendling</span></span></a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit14gammaIndex2_5DERK9ImageDataRK9ImageDataRK15GammaParameters11GammaMethod" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Calculate 2.5D gamma index using classic or Wendling method. </p>
+<p>It calculates gamma index slice by slice going along axial plane. On each slice, it takes into account y and x coordinates of images. It also takes into account z coordinate in a way that depends on a method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>refImg3D</strong> – 3D reference image </p></li>
+<li><p><strong>evalImg3D</strong> – 3D evaluated image </p></li>
+<li><p><strong>gammaParams</strong> – Parameters of gamma index </p></li>
+<li><p><strong>method</strong> – Method that will be used to calculate gamma index </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>3D image containing gamma index values </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit12gammaIndex3DERK9ImageDataRK9ImageDataRK15GammaParameters11GammaMethod">
+<span id="_CPPv3N5yagit12gammaIndex3DERK9ImageDataRK9ImageDataRK15GammaParameters11GammaMethod"></span><span id="_CPPv2N5yagit12gammaIndex3DERK9ImageDataRK9ImageDataRK15GammaParameters11GammaMethod"></span><span id="yagit::gammaIndex3D__ImageDataCR.ImageDataCR.GammaParametersCR.GammaMethod"></span><span class="target" id="namespaceyagit_1a0fa919a53e86a49065a00891a26f1d55"></span><a class="reference internal" href="gamma_result.html#_CPPv4N5yagit11GammaResultE" title="yagit::GammaResult"><span class="n"><span class="pre">GammaResult</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gammaIndex3D</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">refImg3D</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">evalImg3D</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="gamma_parameters.html#_CPPv4N5yagit15GammaParametersE" title="yagit::GammaParameters"><span class="n"><span class="pre">GammaParameters</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">gammaParams</span></span>, <a class="reference internal" href="#_CPPv4N5yagit11GammaMethodE" title="yagit::GammaMethod"><span class="n"><span class="pre">GammaMethod</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">method</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit11GammaMethodE" title="yagit::GammaMethod"><span class="n"><span class="pre">GammaMethod</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N5yagit11GammaMethod8WendlingE" title="yagit::GammaMethod::Wendling"><span class="n"><span class="pre">Wendling</span></span></a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit12gammaIndex3DERK9ImageDataRK9ImageDataRK15GammaParameters11GammaMethod" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Calculate 3D gamma index using classic or Wendling method. </p>
+<p>It takes into account z, y, and x coordinates of images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>refImg3D</strong> – 3D reference image </p></li>
+<li><p><strong>evalImg3D</strong> – 3D evaluated image </p></li>
+<li><p><strong>gammaParams</strong> – Parameters of gamma index </p></li>
+<li><p><strong>method</strong> – Method that will be used to calculate gamma index </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>3D image containing gamma index values </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit19gammaIndex2DClassicERK9ImageDataRK9ImageDataRK15GammaParameters">
+<span id="_CPPv3N5yagit19gammaIndex2DClassicERK9ImageDataRK9ImageDataRK15GammaParameters"></span><span id="_CPPv2N5yagit19gammaIndex2DClassicERK9ImageDataRK9ImageDataRK15GammaParameters"></span><span id="yagit::gammaIndex2DClassic__ImageDataCR.ImageDataCR.GammaParametersCR"></span><span class="target" id="namespaceyagit_1a41e983c2221116466be45104712e0e6c"></span><a class="reference internal" href="gamma_result.html#_CPPv4N5yagit11GammaResultE" title="yagit::GammaResult"><span class="n"><span class="pre">GammaResult</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gammaIndex2DClassic</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">refImg2D</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">evalImg2D</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="gamma_parameters.html#_CPPv4N5yagit15GammaParametersE" title="yagit::GammaParameters"><span class="n"><span class="pre">GammaParameters</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">gammaParams</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit19gammaIndex2DClassicERK9ImageDataRK9ImageDataRK15GammaParameters" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Calculate 2D gamma index using classic method. </p>
+<p>It takes into account y and x coordinates of images. It doesn’t take into account the z coordinates (different z-offsets of <em>refImg</em> and <em>evalImg</em> have no impact on the result).</p>
+<p>Based on <a class="reference external" href="https://doi.org/10.1118/1.598248">https://doi.org/10.1118/1.598248</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>refImg2D</strong> – 2D reference image </p></li>
+<li><p><strong>evalImg2D</strong> – 2D evaluated image </p></li>
+<li><p><strong>gammaParams</strong> – Parameters of gamma index </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>2D image containing gamma index values </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit21gammaIndex2_5DClassicERK9ImageDataRK9ImageDataRK15GammaParameters">
+<span id="_CPPv3N5yagit21gammaIndex2_5DClassicERK9ImageDataRK9ImageDataRK15GammaParameters"></span><span id="_CPPv2N5yagit21gammaIndex2_5DClassicERK9ImageDataRK9ImageDataRK15GammaParameters"></span><span id="yagit::gammaIndex2_5DClassic__ImageDataCR.ImageDataCR.GammaParametersCR"></span><span class="target" id="namespaceyagit_1ab927b710ce66ceb6827d05d218252a06"></span><a class="reference internal" href="gamma_result.html#_CPPv4N5yagit11GammaResultE" title="yagit::GammaResult"><span class="n"><span class="pre">GammaResult</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gammaIndex2_5DClassic</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">refImg3D</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">evalImg3D</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="gamma_parameters.html#_CPPv4N5yagit15GammaParametersE" title="yagit::GammaParameters"><span class="n"><span class="pre">GammaParameters</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">gammaParams</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit21gammaIndex2_5DClassicERK9ImageDataRK9ImageDataRK15GammaParameters" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Calculate 2.5D gamma index using classic method. </p>
+<p>It calculates gamma index slice by slice going along axial plane. On each slice, it takes into account y and x coordinates of images. Also, it takes into account z coordinates to calculate distance between two corresponding frames of <em>refImg3D</em> and <em>evalImg3D</em>.</p>
+<p>Based on <a class="reference external" href="https://doi.org/10.1118/1.598248">https://doi.org/10.1118/1.598248</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>refImg3D</strong> – 3D reference image </p></li>
+<li><p><strong>evalImg3D</strong> – 3D evaluated image </p></li>
+<li><p><strong>gammaParams</strong> – Parameters of gamma index </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>3D image containing gamma index values </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit19gammaIndex3DClassicERK9ImageDataRK9ImageDataRK15GammaParameters">
+<span id="_CPPv3N5yagit19gammaIndex3DClassicERK9ImageDataRK9ImageDataRK15GammaParameters"></span><span id="_CPPv2N5yagit19gammaIndex3DClassicERK9ImageDataRK9ImageDataRK15GammaParameters"></span><span id="yagit::gammaIndex3DClassic__ImageDataCR.ImageDataCR.GammaParametersCR"></span><span class="target" id="namespaceyagit_1a752cffbe2802234502180cc0ee27f9e0"></span><a class="reference internal" href="gamma_result.html#_CPPv4N5yagit11GammaResultE" title="yagit::GammaResult"><span class="n"><span class="pre">GammaResult</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gammaIndex3DClassic</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">refImg3D</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">evalImg3D</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="gamma_parameters.html#_CPPv4N5yagit15GammaParametersE" title="yagit::GammaParameters"><span class="n"><span class="pre">GammaParameters</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">gammaParams</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit19gammaIndex3DClassicERK9ImageDataRK9ImageDataRK15GammaParameters" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Calculate 3D gamma index using classic method. </p>
+<p>It takes into account z, y, and x coordinates of images.</p>
+<p>Based on <a class="reference external" href="https://doi.org/10.1118/1.598248">https://doi.org/10.1118/1.598248</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>refImg3D</strong> – 3D reference image </p></li>
+<li><p><strong>evalImg3D</strong> – 3D evaluated image </p></li>
+<li><p><strong>gammaParams</strong> – Parameters of gamma index </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>3D image containing gamma index values </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit20gammaIndex2DWendlingERK9ImageDataRK9ImageDataRK15GammaParameters">
+<span id="_CPPv3N5yagit20gammaIndex2DWendlingERK9ImageDataRK9ImageDataRK15GammaParameters"></span><span id="_CPPv2N5yagit20gammaIndex2DWendlingERK9ImageDataRK9ImageDataRK15GammaParameters"></span><span id="yagit::gammaIndex2DWendling__ImageDataCR.ImageDataCR.GammaParametersCR"></span><span class="target" id="namespaceyagit_1a9c0a674e384bd9eac83aede3d17604c8"></span><a class="reference internal" href="gamma_result.html#_CPPv4N5yagit11GammaResultE" title="yagit::GammaResult"><span class="n"><span class="pre">GammaResult</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gammaIndex2DWendling</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">refImg2D</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">evalImg2D</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="gamma_parameters.html#_CPPv4N5yagit15GammaParametersE" title="yagit::GammaParameters"><span class="n"><span class="pre">GammaParameters</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">gammaParams</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit20gammaIndex2DWendlingERK9ImageDataRK9ImageDataRK15GammaParameters" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Calculate 2D gamma index using Wendling method. </p>
+<p>It takes into account y and x coordinates of images. It doesn’t take into account the z coordinates (different z-offsets of <em>refImg</em> and <em>evalImg</em> have no impact on the result).</p>
+<p>It is faster than classic method, so using this function is recommended. Based on <a class="reference external" href="https://doi.org/10.1118/1.2721657">https://doi.org/10.1118/1.2721657</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>refImg2D</strong> – 2D reference image </p></li>
+<li><p><strong>evalImg2D</strong> – 2D evaluated image </p></li>
+<li><p><strong>gammaParams</strong> – Parameters of gamma index </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>2D image containing gamma index values </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit22gammaIndex2_5DWendlingERK9ImageDataRK9ImageDataRK15GammaParameters">
+<span id="_CPPv3N5yagit22gammaIndex2_5DWendlingERK9ImageDataRK9ImageDataRK15GammaParameters"></span><span id="_CPPv2N5yagit22gammaIndex2_5DWendlingERK9ImageDataRK9ImageDataRK15GammaParameters"></span><span id="yagit::gammaIndex2_5DWendling__ImageDataCR.ImageDataCR.GammaParametersCR"></span><span class="target" id="namespaceyagit_1a49003aecc81af01d846aef8490db2ea8"></span><a class="reference internal" href="gamma_result.html#_CPPv4N5yagit11GammaResultE" title="yagit::GammaResult"><span class="n"><span class="pre">GammaResult</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gammaIndex2_5DWendling</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">refImg3D</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">evalImg3D</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="gamma_parameters.html#_CPPv4N5yagit15GammaParametersE" title="yagit::GammaParameters"><span class="n"><span class="pre">GammaParameters</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">gammaParams</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit22gammaIndex2_5DWendlingERK9ImageDataRK9ImageDataRK15GammaParameters" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Calculate 2.5D gamma index using Wendling method. </p>
+<p>It calculates gamma index slice by slice going along axial plane. On each slice, it takes into account y and x coordinates of images. <em>evalImg3D</em> is interpolated along the z axis before gamma calculations to have the same grid only along that axis as <em>refImg</em>.</p>
+<p>It is faster than classic method, so using this function is recommended. Based on <a class="reference external" href="https://doi.org/10.1118/1.2721657">https://doi.org/10.1118/1.2721657</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>refImg3D</strong> – 3D reference image </p></li>
+<li><p><strong>evalImg3D</strong> – 3D evaluated image </p></li>
+<li><p><strong>gammaParams</strong> – Parameters of gamma index </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>3D image containing gamma index values </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit20gammaIndex3DWendlingERK9ImageDataRK9ImageDataRK15GammaParameters">
+<span id="_CPPv3N5yagit20gammaIndex3DWendlingERK9ImageDataRK9ImageDataRK15GammaParameters"></span><span id="_CPPv2N5yagit20gammaIndex3DWendlingERK9ImageDataRK9ImageDataRK15GammaParameters"></span><span id="yagit::gammaIndex3DWendling__ImageDataCR.ImageDataCR.GammaParametersCR"></span><span class="target" id="namespaceyagit_1ad5fce4caf280a085a3eff0e17e478640"></span><a class="reference internal" href="gamma_result.html#_CPPv4N5yagit11GammaResultE" title="yagit::GammaResult"><span class="n"><span class="pre">GammaResult</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gammaIndex3DWendling</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">refImg3D</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">evalImg3D</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="gamma_parameters.html#_CPPv4N5yagit15GammaParametersE" title="yagit::GammaParameters"><span class="n"><span class="pre">GammaParameters</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">gammaParams</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit20gammaIndex3DWendlingERK9ImageDataRK9ImageDataRK15GammaParameters" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Calculate 3D gamma index using Wendling method. </p>
+<p>It takes into account z, y, and x coordinates of images.</p>
+<p>It is faster than classic method, so using this function is recommended. Based on <a class="reference external" href="https://doi.org/10.1118/1.2721657">https://doi.org/10.1118/1.2721657</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>refImg3D</strong> – 3D reference image </p></li>
+<li><p><strong>evalImg3D</strong> – 3D evaluated image </p></li>
+<li><p><strong>gammaParams</strong> – Parameters of gamma index </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>3D image containing gamma index values </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="data_writer.html" class="btn btn-neutral float-left" title="Data Writer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gamma_parameters.html" class="btn btn-neutral float-right" title="Gamma Parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-2024, YAGIT Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,355 +1,246 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gamma Index &#8212; gamma-index  documentation</title>
-    
-  <link href="_static/css/theme.css" rel="stylesheet">
-  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
-
-    
-  <link rel="stylesheet"
-    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
-
-    
-      
-
-    
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
-    
-  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
-
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gamma index &mdash; Yet Another Gamma Index Tool  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/style.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Classic version" href="classic_version.html" />
-    <link rel="prev" title="GNU General Public License" href="license.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en">
-    
+    <link rel="next" title="Algorithms" href="algorithms.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+</head>
 
-    <!-- Google Analytics -->
-    
-  </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
-    
-    <div class="container-fluid" id="banner"></div>
-
-    
-
-    <div class="container-xl">
-      <div class="row">
-          
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="index.html">
-      
-      
-      
-      <h1 class="site-logo" id="site-title">gamma-index  documentation</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  OVERVIEW
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="introduction.html">
-   Introduction
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="license.html">
-   GNU General Public License
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  ALGORITHM
- </span>
-</p>
-<ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Gamma Index
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="classic_version.html">
-   Classic version
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  USER GUIDE
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="instalation.html">
-   Installation Guide
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="gi_gui.html">
-   GUI guide
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  DEVELOPER GUIDE
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="gi_core_2d_example_client.html">
-   Gamma Index Core 2D example
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="gi_wrapper_example_client.html">
-   Gamma Index Wrapper example
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="matrix_representation.html">
-   Matrix representation
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="api.html">
-   API
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="core.html">
-     Core
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="additions.html">
-     Additions
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="wrapper.html">
-     Wrapper
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="components.html">
-   Components
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="image.html">
-     Image
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="solver.html">
-     Solvers
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="dicom_reader.html">
-     DicomReader
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="dicom_writer.html">
-     DicomWriter
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="dicom_tag_rewrite_strategies.html">
-     DicomTagRewriteStrategies
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
-
-    </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
-</div>
-
-</div>
-
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
 
           
-
-
           
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
-            
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/DataMedSci/gi-yagit"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        
-        
-    </div>
-</div>
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
-            </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#concept">
-   Concept
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#constituent-metrics">
-   Constituent metrics
-  </a>
- </li>
-</ul>
-
-            </nav>
-        </div>
-    </div>
-</div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-        
-              <div>
-                
-  <div class="section" id="gamma-index">
-<h1>Gamma Index<a class="headerlink" href="#gamma-index" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="concept">
-<h2>Concept<a class="headerlink" href="#concept" title="Permalink to this headline">¶</a></h2>
-<p><em>Gamma Index</em> is a metric used for comparing two images (called reference and target) of dose distribution. It allows to express the difference between the images in a given point in space with a number, which is very important for performing a Quality Assurance.</p>
-<p>This technique, developed by <a class="reference external" href="https://dx.doi.org/10.1118/1.598248">Low at al. (1998)</a>, is based on two other metrics of dose distribution comparison: <em>Dose Difference</em> (DD) and <em>Distance To Agreement</em> (DTA). Gamma Index as a metric is quite sophisticated in comparison to the other two, but it combines them in such way that eliminates their deficiencies and exposes their advantages.</p>
-<p>Despite the high complexity, Gamma Index has gained lot of popularity in the radiotherapy treatment - it is used for planning and evaluating the radiation dose that is administered to a patient. However, to become useful on a daily basis, it requires a smart tool for performing the Gamma Index calculations, which would make the computation time acceptable for the user.</p>
-<p>The gamma test (Gamma Index is also sometimes called that way) is considered as passed if its value is lower than 1. It is achievable only if its both components (DD and DTA) also have the value below 1.</p>
-</div>
-<div class="section" id="constituent-metrics">
-<h2>Constituent metrics<a class="headerlink" href="#constituent-metrics" title="Permalink to this headline">¶</a></h2>
-<p><em>Dose Difference</em> - a metric that calculates a difference between doses in two corresponding points of reference and target images. If this difference is smaller then some certain value (e.g. 3% of the maximum of the reference image), then these points pass the test. <em>Dose Difference</em>  is most efficient in areas of small gradient and is less reliable in parts with high variability.</p>
-<p><em>Distance To Agreement</em> - a metric based on the distance between given point of the reference image and the closest point of the target image, with the equal value. This test is considered as passed, if the distance is smaller than some arbitrary parameter (e.g. 3mm). It it most efficient in high gradient, but does very poorly in small gradient regions.</p>
-<p>Detailed descriptions of DTA and DD can be found on:
-<a class="reference external" href="http://medphys365.blogspot.com/2012/05/comparing-dose-distributions-dta-and.html">http://medphys365.blogspot.com/2012/05/comparing-dose-distributions-dta-and.html</a></p>
-</div>
-</div>
-
-
+          <a href="index.html" class="icon icon-home">
+            Yet Another Gamma Index Tool
+          </a>
+              <div class="version">
+                v0.5.0
               </div>
-              
-        
-            <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="license.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">GNU General Public License</p>
-        </div>
-    </a>
-    <a class='right-next' id="next-link" href="classic_version.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Classic version</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
 </div>
-        
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Gamma index</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dose-difference">Dose Difference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#distance-to-agreement">Distance To Agreement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gamma-function-and-gamma-index">Gamma function and gamma index</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gipr">GIPR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#flow-diagram">Flow diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input_and_output_data.html">Input and output data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_representation.html">Data representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api.html">API</a></li>
+</ul>
+
         </div>
-    </div>
-    <footer class="footer">
-    <div class="container">
-      <p>
-        
-          By gamma-index-team<br/>
-        
-            &copy; Copyright 2021, gamma-index-team.<br/>
-      </p>
-    </div>
-  </footer>
-</main>
-
-
       </div>
-    </div>
-  
-  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+    </nav>
 
-  </body>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Yet Another Gamma Index Tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Gamma index</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/gamma_index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gamma-index">
+<h1>Gamma index<a class="headerlink" href="#gamma-index" title="Permalink to this heading"></a></h1>
+<p>The gamma index was proposed by Low et al. <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> in 1998.
+It combines two other simpler methods: Dose Difference (DD) and Distance To Agreement (DTA).</p>
+<section id="dose-difference">
+<h2>Dose Difference<a class="headerlink" href="#dose-difference" title="Permalink to this heading"></a></h2>
+<p>The DD is based on calculating the dose difference at corresponding points <span class="math notranslate nohighlight">\(\vec{r_e}\)</span> and <span class="math notranslate nohighlight">\(\vec{r_r}\)</span>
+located on the evaluated image <span class="math notranslate nohighlight">\(D_e\)</span> and the reference image <span class="math notranslate nohighlight">\(D_r\)</span>, respectively.</p>
+<div class="math notranslate nohighlight">
+\[\delta(\vec{r_r}, \vec{r_e}) = D_e(\vec{r_e}) - D_r(\vec{r_r})\]</div>
+<p>Its acceptance criterion is expressed in percentages [%]. It is relative to global or local value:</p>
+<ul class="list simple">
+<li><p>global – a predetermined value, typically the maximum value in the reference image,</p></li>
+<li><p>local – value at the current point in the reference image.</p></li>
+</ul>
+<p>If the DD value at <span class="math notranslate nohighlight">\(\vec{r_r}\)</span> point is less than or equal to the value of the acceptance criterion
+(e.g., 3%, global), then this point passes the test. Otherwise, it fails.</p>
+<p>The drawback of this test is that it struggles with high-gradient regions, as small shifts in the spatial
+distribution of radiation dose can result in large DD values.</p>
+</section>
+<section id="distance-to-agreement">
+<h2>Distance To Agreement<a class="headerlink" href="#distance-to-agreement" title="Permalink to this heading"></a></h2>
+<p>The DTA, on the other hand, is determined by calculating the distance between
+the two closest points with the same dose on two images.</p>
+<div class="math notranslate nohighlight">
+\[r(\vec{r_r}, \vec{r_e}) = | \vec{r_e} - \vec{r_r} |,\]</div>
+<div class="math notranslate nohighlight">
+\[where\ \ D_e(\vec{r_e}) = D_r(\vec{r_r})\]</div>
+<p>Its acceptance criterion is expressed in millimeters [mm].
+If the DTA value at <span class="math notranslate nohighlight">\(\vec{r_r}\)</span> point is less than or equal to the value of the acceptance criterion
+(e.g., 3 mm), then this point passes the test. Otherwise, it fails.</p>
+<p>The drawback of this method is that it encounters difficulties in low-gradient areas,
+where minor dose misalignments may require a large search radius, resulting in a large DTA value.</p>
+</section>
+<section id="gamma-function-and-gamma-index">
+<h2>Gamma function and gamma index<a class="headerlink" href="#gamma-function-and-gamma-index" title="Permalink to this heading"></a></h2>
+<p>To overcome the disadvantages of DD and DTA, the gamma index was developed.
+First, it is necessary to calculate the gamma function, which combines DD and DTA.
+In the case of the DTA component, only the distance is calculated
+without taking into account the condition of equal doses.</p>
+<div class="math notranslate nohighlight">
+\[\Gamma(\vec{r_r}, \vec{r_e}) =
+\sqrt{\frac{\delta^2(\vec{r_r}, \vec{r_e})}{\Delta D ^2} + \frac{r^2(\vec{r_r}, \vec{r_e})}{\Delta d ^2}}\]</div>
+<p><span class="math notranslate nohighlight">\(\Delta D\)</span> and <span class="math notranslate nohighlight">\(\Delta d\)</span> are acceptance criteria for DD and DTA, respectively.
+The commonly used criteria values are 3%/3mm with global normalization, abbreviated as 3%G/3mm.</p>
+<p>Now, to obtain the gamma index value for a single reference point <span class="math notranslate nohighlight">\(\vec{r_r}\)</span>, one must select the minimum value
+of the gamma function <span class="math notranslate nohighlight">\(\Gamma\)</span> for that point and all evaluated points.</p>
+<div class="math notranslate nohighlight">
+\[\gamma(\vec{r_r}) = \min_{\vec{r_e}}\Gamma(\vec{r_r}, \vec{r_e})\]</div>
+<p>It is calculated for each reference point, and in the end, the image containing gamma index values is obtained.
+It has the same size as the reference image.</p>
+<p>The gamma index is not symmetric – swapping the reference and evaluated images can yield a different result.</p>
+</section>
+<section id="gipr">
+<h2>GIPR<a class="headerlink" href="#gipr" title="Permalink to this heading"></a></h2>
+<p>The Gamma Index Passing Rate (GIPR) is a measure indicating how many points passed the test –
+that is, how many gamma index values are less than or equal to 1.</p>
+<div class="math notranslate nohighlight">
+\[GIPR = \frac{| \{\gamma(\vec{r_r}) \le 1\} |}{| \{\gamma(\vec{r_r})\} |}\]</div>
+<p>If this value is sufficiently high (e.g., at least 90%), the evaluated image is acceptable.</p>
+</section>
+<section id="flow-diagram">
+<h2>Flow diagram<a class="headerlink" href="#flow-diagram" title="Permalink to this heading"></a></h2>
+<figure class="align-center">
+<img alt="Flow diagram of gamma index" src="_images/flow_diagram.svg" /></figure>
+<p>The figure shows the successive stages of the gamma index calculations.
+GIPR is an optional step that provides a simple single metric, but analyzing the gamma index image can provide
+a lot more information about the result.</p>
+</section>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h2>
+<p>To illustrate how the gamma index works, a simple example is presented here.
+It is calculated for two-dimensional images, each containing only four elements.</p>
+<p>The used parameters are:
+3% with global normalization for the DD acceptance criterion and 3 mm for the DTA acceptance criterion.</p>
+<figure class="align-center">
+<img alt="Example of calculating 2D gamma index - 3%G/3mm" src="_images/gamma_index_example.svg" /></figure>
+<p>Below are the calculations of gamma index image values.
+Note that some of the gamma function calculations are skipped, and only minimum values are shown.</p>
+<div class="math-left math notranslate nohighlight">
+\[\gamma(\vec{r_{r0}}) = \Gamma(\vec{r_{r0}}, \vec{r_{e0}}) =
+\sqrt{\frac{(0.93 - 0.93)^2}{(0.03*1.00)^2} + \frac{(0 - (-1))^2 + (1 - 0)^2}{3^2}} \approx
+\sqrt{0 + 0.222} \approx 0.471\]</div>
+<div class="math-left math notranslate nohighlight">
+\[\gamma(\vec{r_{r1}}) = \Gamma(\vec{r_{r1}}, \vec{r_{e1}}) =
+\sqrt{\frac{(0.96 - 0.95)^2}{(0.03*1.00)^2} + \frac{(2 - 1)^2 + (1 - 0)^2}{3^2}} \approx
+\sqrt{0.111 + 0.222} \approx 0.577\]</div>
+<div class="math-left math notranslate nohighlight">
+\[\gamma(\vec{r_{r2}}) = \Gamma(\vec{r_{r2}}, \vec{r_{e1}}) =
+\sqrt{\frac{(0.96 - 0.97)^2}{(0.03*1.00)^2} + \frac{(2 - (-1))^2 + (1 - 2)^2}{3^2}} \approx
+\sqrt{0.111 + 1.111} \approx 1.106\]</div>
+<div class="math-left math notranslate nohighlight">
+\[\gamma(\vec{r_{r3}}) = \Gamma(\vec{r_{r3}}, \vec{r_{e3}}) =
+\sqrt{\frac{(1.02 - 1.00)^2}{(0.03*1.00)^2} + \frac{(2 - 1)^2 + (3 - 2)^2}{3^2}} \approx
+\sqrt{0.444 + 0.222} \approx 0.816\]</div>
+<div class="math-left math notranslate nohighlight">
+\[GIPR = \frac{3}{4} = 75\%\]</div>
+<p>The calculation of the gamma index for this example using YAGIT library
+is presented <a class="reference internal" href="examples.html#simple-gamma-example"><span class="std std-ref">here</span></a>.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>D. A. Low, W. B. Harms, S. Mutic, and J. A. Purdy,
+“A technique for the quantitative evaluation of dose distributions,”
+Medical Physics, vol. 25, no. 5, pp. 656-661, 1998.</p>
+</aside>
+</aside>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="algorithms.html" class="btn btn-neutral float-right" title="Algorithms" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-2024, YAGIT Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
 </html>

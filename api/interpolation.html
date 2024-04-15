@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interpolation &mdash; Yet Another Gamma Index Tool  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/style.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Image Data" href="image_data.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Yet Another Gamma Index Tool
+          </a>
+              <div class="version">
+                v0.5.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gamma_index.html">Gamma index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parameters.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input_and_output_data.html">Input and output data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_representation.html">Data representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="data_reader.html">Data Reader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_structs.html">Data Structs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_writer.html">Data Writer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma.html">Gamma</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma_parameters.html">Gamma Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma_result.html">Gamma Result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="image_data.html">Image Data</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Interpolation</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Yet Another Gamma Index Tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api.html">API</a></li>
+      <li class="breadcrumb-item active">Interpolation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/interpolation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="interpolation">
+<h1>Interpolation<a class="headerlink" href="#interpolation" title="Permalink to this heading"></a></h1>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv45yagit">
+<span id="_CPPv35yagit"></span><span id="_CPPv25yagit"></span><span id="yagit"></span><span class="target" id="namespaceyagit"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">yagit</span></span></span><br /></dt>
+<dd><dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit13InterpolationE">
+<span id="_CPPv3N5yagit13InterpolationE"></span><span id="_CPPv2N5yagit13InterpolationE"></span><span id="yagit::Interpolation"></span><span class="target" id="namespaceyagit_1_1Interpolation"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Interpolation</span></span></span><a class="headerlink" href="#_CPPv4N5yagit13InterpolationE" title="Permalink to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit13Interpolation15linearAlongAxisERK9ImageDataf9ImageAxis">
+<span id="_CPPv3N5yagit13Interpolation15linearAlongAxisERK9ImageDataf9ImageAxis"></span><span id="_CPPv2N5yagit13Interpolation15linearAlongAxisERK9ImageDataf9ImageAxis"></span><span id="yagit::Interpolation::linearAlongAxis__ImageDataCR.float.ImageAxis"></span><span class="target" id="namespaceyagit_1_1Interpolation_1a95c2ac112902e8dcb42b5352b6b9d3bb"></span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">linearAlongAxis</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">img</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">spacing</span></span>, <a class="reference internal" href="image.html#_CPPv4N5yagit9ImageAxisE" title="yagit::ImageAxis"><span class="n"><span class="pre">ImageAxis</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">axis</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit13Interpolation15linearAlongAxisERK9ImageDataf9ImageAxis" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Linear interpolation along <em>axis</em> with new spacing. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – Image to interpolate. It can be 1D, 2D, or 3D image - interpolation is done along one axis and won’t take into account other axes. </p></li>
+<li><p><strong>spacing</strong> – New spacing by which interpolation is performed </p></li>
+<li><p><strong>axis</strong> – Axis along which interpolation is performed </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Interpolated image with new spacing </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit13Interpolation15linearAlongAxisERK9ImageDataff9ImageAxis">
+<span id="_CPPv3N5yagit13Interpolation15linearAlongAxisERK9ImageDataff9ImageAxis"></span><span id="_CPPv2N5yagit13Interpolation15linearAlongAxisERK9ImageDataff9ImageAxis"></span><span id="yagit::Interpolation::linearAlongAxis__ImageDataCR.float.float.ImageAxis"></span><span class="target" id="namespaceyagit_1_1Interpolation_1af1ccd5471786ca74896bd517208e937d"></span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">linearAlongAxis</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">img</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">gridOffset</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">spacing</span></span>, <a class="reference internal" href="image.html#_CPPv4N5yagit9ImageAxisE" title="yagit::ImageAxis"><span class="n"><span class="pre">ImageAxis</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">axis</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit13Interpolation15linearAlongAxisERK9ImageDataff9ImageAxis" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Linear interpolation along <em>axis</em> on new grid with <em>offset</em> and <em>spacing</em>. </p>
+<p>On an infinite grid spanning all directions, utilizing new <em>offset</em> and <em>spacing</em>, we determine the values that are on this grid that fall within the interpolated image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – Image to interpolate. It can be 1D, 2D, or 3D image - interpolation is done along one axis and won’t take into account other axes. </p></li>
+<li><p><strong>gridOffset</strong> – Offset of interpolation grid. New grid on which image is interpolated will be offsetted by this value </p></li>
+<li><p><strong>spacing</strong> – New spacing by which interpolation is performed </p></li>
+<li><p><strong>axis</strong> – Axis along which interpolation is performed </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Image interpolated on new grid </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit13Interpolation15linearAlongAxisERK9ImageDataRK9ImageData9ImageAxis">
+<span id="_CPPv3N5yagit13Interpolation15linearAlongAxisERK9ImageDataRK9ImageData9ImageAxis"></span><span id="_CPPv2N5yagit13Interpolation15linearAlongAxisERK9ImageDataRK9ImageData9ImageAxis"></span><span id="yagit::Interpolation::linearAlongAxis__ImageDataCR.ImageDataCR.ImageAxis"></span><span class="target" id="namespaceyagit_1_1Interpolation_1a0bfaf59bc6c5787da14b758689ff47c8"></span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">linearAlongAxis</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">targetImg</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">refImg</span></span>, <a class="reference internal" href="image.html#_CPPv4N5yagit9ImageAxisE" title="yagit::ImageAxis"><span class="n"><span class="pre">ImageAxis</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">axis</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit13Interpolation15linearAlongAxisERK9ImageDataRK9ImageData9ImageAxis" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Linear interpolation along <em>axis</em> on the grid of <em>refImg</em>. </p>
+<p>On an infinite grid spanning all directions, utilizing offset and spacing of <em>refImg</em>, we determine the values that are on this grid that fall within the interpolated image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>targetImg</strong> – Image to interpolate </p></li>
+<li><p><strong>refImg</strong> – Image from which offset and spacing is retrieved and used to create grid on which interpolation is performed </p></li>
+<li><p><strong>axis</strong> – Axis along which interpolation is performed </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Image interpolated on the grid of <em>refImg</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit13Interpolation15bilinearOnPlaneERK9ImageDataff10ImagePlane">
+<span id="_CPPv3N5yagit13Interpolation15bilinearOnPlaneERK9ImageDataff10ImagePlane"></span><span id="_CPPv2N5yagit13Interpolation15bilinearOnPlaneERK9ImageDataff10ImagePlane"></span><span id="yagit::Interpolation::bilinearOnPlane__ImageDataCR.float.float.ImagePlane"></span><span class="target" id="namespaceyagit_1_1Interpolation_1ac2721e9ecc688554ab8905c1863134ca"></span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bilinearOnPlane</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">img</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">firstAxisSpacing</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">secondAxisSpacing</span></span>, <a class="reference internal" href="image.html#_CPPv4N5yagit10ImagePlaneE" title="yagit::ImagePlane"><span class="n"><span class="pre">ImagePlane</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">plane</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit13Interpolation15bilinearOnPlaneERK9ImageDataff10ImagePlane" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Bilinear interpolation on <em>plane</em> with new spacing. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – Image to interpolate. It can be 1D, 2D, or 3D image - interpolation is done on one plane and won’t take into account other planes. </p></li>
+<li><p><strong>firstAxisSpacing</strong> – First spacing by which interpolation is performed. E.g., when interpolating on plane YX, <em>firstAxisSpacing</em> is applied to Y axis. </p></li>
+<li><p><strong>secondAxisSpacing</strong> – Second spacing by which interpolation is performed. E.g., when interpolating on plane YX, <em>secondAxisSpacing</em> is applied to X axis. </p></li>
+<li><p><strong>plane</strong> – Plane on which interpolation is performed </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Interpolated image with new spacing </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit13Interpolation15bilinearOnPlaneERK9ImageDataffff10ImagePlane">
+<span id="_CPPv3N5yagit13Interpolation15bilinearOnPlaneERK9ImageDataffff10ImagePlane"></span><span id="_CPPv2N5yagit13Interpolation15bilinearOnPlaneERK9ImageDataffff10ImagePlane"></span><span id="yagit::Interpolation::bilinearOnPlane__ImageDataCR.float.float.float.float.ImagePlane"></span><span class="target" id="namespaceyagit_1_1Interpolation_1a961c4173dfd4b6856f5f3b66b906966c"></span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bilinearOnPlane</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">img</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">firstAxisGridOffset</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">secondAxisGridOffset</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">firstAxisSpacing</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">secondAxisSpacing</span></span>, <a class="reference internal" href="image.html#_CPPv4N5yagit10ImagePlaneE" title="yagit::ImagePlane"><span class="n"><span class="pre">ImagePlane</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">plane</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit13Interpolation15bilinearOnPlaneERK9ImageDataffff10ImagePlane" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Bilinear interpolation on <em>plane</em> on new grid with offset and spacing. </p>
+<p>On an infinite grid spanning all directions, utilizing new offsets and spacings, we determine the values that are on this grid that fall within the interpolated image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – Image to interpolate. It can be 1D, 2D, or 3D image - interpolation is done on one plane and won’t take into account other planes. </p></li>
+<li><p><strong>firstAxisGridOffset</strong> – First offset of interpolation grid. E.g., when interpolating on plane YX, <em>firstAxisOffset</em> is applied to Y axis. New grid on which image is interpolated will be offsetted by this value. </p></li>
+<li><p><strong>secondAxisGridOffset</strong> – Second offset of interpolation grid. E.g., when interpolating on plane YX, <em>secondAxisOffset</em> is applied to X axis. New grid on which image is interpolated will be offsetted by this value. </p></li>
+<li><p><strong>firstAxisSpacing</strong> – First spacing by which interpolation is performed. E.g., when interpolating on plane YX, <em>firstAxisSpacing</em> is applied to Y axis. </p></li>
+<li><p><strong>secondAxisSpacing</strong> – Second spacing by which interpolation is performed. E.g., when interpolating on plane YX, <em>secondAxisSpacing</em> is applied to X axis. </p></li>
+<li><p><strong>plane</strong> – Plane on which interpolation is performed </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Image interpolated on new grid </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit13Interpolation15bilinearOnPlaneERK9ImageDataRK9ImageData10ImagePlane">
+<span id="_CPPv3N5yagit13Interpolation15bilinearOnPlaneERK9ImageDataRK9ImageData10ImagePlane"></span><span id="_CPPv2N5yagit13Interpolation15bilinearOnPlaneERK9ImageDataRK9ImageData10ImagePlane"></span><span id="yagit::Interpolation::bilinearOnPlane__ImageDataCR.ImageDataCR.ImagePlane"></span><span class="target" id="namespaceyagit_1_1Interpolation_1ad353d389689227f920d9a48aa6bb572a"></span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bilinearOnPlane</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">targetImg</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">refImg</span></span>, <a class="reference internal" href="image.html#_CPPv4N5yagit10ImagePlaneE" title="yagit::ImagePlane"><span class="n"><span class="pre">ImagePlane</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">plane</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit13Interpolation15bilinearOnPlaneERK9ImageDataRK9ImageData10ImagePlane" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Bilinear interpolation on <em>plane</em> on the grid of <em>refImg</em>. </p>
+<p>On an infinite grid spanning all directions, utilizing offset and spacing of <em>refImg</em>, we determine the values that are on this grid that fall within the interpolated image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>targetImg</strong> – Image to interpolate </p></li>
+<li><p><strong>refImg</strong> – Image from which offset and spacing is retrieved and used to create grid on which interpolation is performed </p></li>
+<li><p><strong>plane</strong> – Plane on which interpolation is performed </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Image interpolated on the grid of <em>refImg</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit13Interpolation9trilinearERK9ImageDataRK11DataSpacing">
+<span id="_CPPv3N5yagit13Interpolation9trilinearERK9ImageDataRK11DataSpacing"></span><span id="_CPPv2N5yagit13Interpolation9trilinearERK9ImageDataRK11DataSpacing"></span><span id="yagit::Interpolation::trilinear__ImageDataCR.DataSpacingCR"></span><span class="target" id="namespaceyagit_1_1Interpolation_1a5c292f2044a28ec13da271f1edadff65"></span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">trilinear</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">img</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit11DataSpacingE" title="yagit::DataSpacing"><span class="n"><span class="pre">DataSpacing</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">spacing</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit13Interpolation9trilinearERK9ImageDataRK11DataSpacing" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Trilinear interpolation - along all axes (Z, Y, X) - with new spacing. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – Image to interpolate </p></li>
+<li><p><strong>spacing</strong> – New spacing by which interpolation is performed </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Interpolated image with new spacing </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit13Interpolation9trilinearERK9ImageDataRK10DataOffsetRK11DataSpacing">
+<span id="_CPPv3N5yagit13Interpolation9trilinearERK9ImageDataRK10DataOffsetRK11DataSpacing"></span><span id="_CPPv2N5yagit13Interpolation9trilinearERK9ImageDataRK10DataOffsetRK11DataSpacing"></span><span id="yagit::Interpolation::trilinear__ImageDataCR.DataOffsetCR.DataSpacingCR"></span><span class="target" id="namespaceyagit_1_1Interpolation_1aa963e9da0cedf90985a9e8a345bdc601"></span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">trilinear</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">img</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit10DataOffsetE" title="yagit::DataOffset"><span class="n"><span class="pre">DataOffset</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">gridOffset</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit11DataSpacingE" title="yagit::DataSpacing"><span class="n"><span class="pre">DataSpacing</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">spacing</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit13Interpolation9trilinearERK9ImageDataRK10DataOffsetRK11DataSpacing" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Trilinear interpolation - along all axes (Z, Y, X) - on new grid with <em>offset</em> and <em>spacing</em>. </p>
+<p>On an infinite grid spanning all directions, utilizing new <em>offset</em> and <em>spacing</em>, we determine the values that are on this grid that fall within the interpolated image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – Image to interpolate </p></li>
+<li><p><strong>gridOffset</strong> – Offset of interpolation grid. New grid on which image is interpolated will be offsetted by this value </p></li>
+<li><p><strong>spacing</strong> – New spacing by which interpolation is performed </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Image interpolated on new grid </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit13Interpolation9trilinearERK9ImageDataRK9ImageData">
+<span id="_CPPv3N5yagit13Interpolation9trilinearERK9ImageDataRK9ImageData"></span><span id="_CPPv2N5yagit13Interpolation9trilinearERK9ImageDataRK9ImageData"></span><span id="yagit::Interpolation::trilinear__ImageDataCR.ImageDataCR"></span><span class="target" id="namespaceyagit_1_1Interpolation_1a58a009eda5c4da44d77c3ec78b9c01f2"></span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">trilinear</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">targetImg</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">refImg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit13Interpolation9trilinearERK9ImageDataRK9ImageData" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Trilinear interpolation - along all axes (Z, Y, X) - on the grid of <em>refImg</em>. </p>
+<p>On an infinite grid spanning all directions, utilizing offset and spacing of <em>refImg</em>, we determine the values that are on this grid that fall within the interpolated image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>targetImg</strong> – Image to interpolate </p></li>
+<li><p><strong>refImg</strong> – Image from which offset and spacing is retrieved and used to create grid on which interpolation is performed </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Image interpolated on the grid of <em>refImg</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit13Interpolation15bilinearAtPointERK9ImageData8uint32_tff">
+<span id="_CPPv3N5yagit13Interpolation15bilinearAtPointERK9ImageData8uint32_tff"></span><span id="_CPPv2N5yagit13Interpolation15bilinearAtPointERK9ImageData8uint32_tff"></span><span id="yagit::Interpolation::bilinearAtPoint__ImageDataCR.uint32_t.float.float"></span><span class="target" id="namespaceyagit_1_1Interpolation_1afeeb3cf30f7aab0e7b4a7e90b84450eb"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">optional</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bilinearAtPoint</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">img</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">frame</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit13Interpolation15bilinearAtPointERK9ImageData8uint32_tff" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Bilinear interpolation at point inside image. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – Image on which interpolation is performed </p></li>
+<li><p><strong>frame</strong> – Axial frame where interpolation is performed </p></li>
+<li><p><strong>y</strong> – Y coordinate of the point where interpolation is performed </p></li>
+<li><p><strong>x</strong> – X coordinate of the point where interpolation is performed </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the point is inside the image, then an interpolated value is returned </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit13Interpolation16trilinearAtPointERK9ImageDatafff">
+<span id="_CPPv3N5yagit13Interpolation16trilinearAtPointERK9ImageDatafff"></span><span id="_CPPv2N5yagit13Interpolation16trilinearAtPointERK9ImageDatafff"></span><span id="yagit::Interpolation::trilinearAtPoint__ImageDataCR.float.float.float"></span><span class="target" id="namespaceyagit_1_1Interpolation_1abc71c45cfb5e3e94aa704826554a1733"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">optional</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">trilinearAtPoint</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image_data.html#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">img</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">z</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit13Interpolation16trilinearAtPointERK9ImageDatafff" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Trilinear interpolation at point inside image. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – Image on which interpolation is performed </p></li>
+<li><p><strong>z</strong> – Z coordinate of the point where interpolation is performed </p></li>
+<li><p><strong>y</strong> – Y coordinate of the point where interpolation is performed </p></li>
+<li><p><strong>x</strong> – X coordinate of the point where interpolation is performed </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the point is inside the image, then an interpolated value is returned </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="image_data.html" class="btn btn-neutral float-left" title="Image Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-2024, YAGIT Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

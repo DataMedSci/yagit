@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image &mdash; Yet Another Gamma Index Tool  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/style.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Image Data" href="image_data.html" />
+    <link rel="prev" title="Gamma Result" href="gamma_result.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Yet Another Gamma Index Tool
+          </a>
+              <div class="version">
+                v0.5.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gamma_index.html">Gamma index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parameters.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input_and_output_data.html">Input and output data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_representation.html">Data representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="data_reader.html">Data Reader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_structs.html">Data Structs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_writer.html">Data Writer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma.html">Gamma</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma_parameters.html">Gamma Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma_result.html">Gamma Result</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="image_data.html">Image Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolation.html">Interpolation</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Yet Another Gamma Index Tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api.html">API</a></li>
+      <li class="breadcrumb-item active">Image</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/image.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="image">
+<h1>Image<a class="headerlink" href="#image" title="Permalink to this heading"></a></h1>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv45yagit">
+<span id="_CPPv35yagit"></span><span id="_CPPv25yagit"></span><span id="yagit"></span><span class="target" id="namespaceyagit"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">yagit</span></span></span><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-typedefs">Typedefs</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit7Image2DE">
+<span id="_CPPv3N5yagit7Image2DE"></span><span id="_CPPv2N5yagit7Image2DE"></span><span class="target" id="namespaceyagit_1ac524358c68d998a67662abb5e5eb32c0"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Image2D</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N5yagit7Image2DE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Type for storing 2D image. </p>
+</dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit7Image3DE">
+<span id="_CPPv3N5yagit7Image3DE"></span><span id="_CPPv2N5yagit7Image3DE"></span><span class="target" id="namespaceyagit_1a59eb4467700715130e621ead4d0900da"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Image3D</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N5yagit7Image2DE" title="yagit::Image2D"><span class="n"><span class="pre">Image2D</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N5yagit7Image3DE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Type for storing 3D image. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-enums">Enums</p>
+<dl class="cpp enum-class">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageAxisE">
+<span id="_CPPv3N5yagit9ImageAxisE"></span><span id="_CPPv2N5yagit9ImageAxisE"></span><span class="target" id="namespaceyagit_1a30893a6b773ce316188ed366445c0e71"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ImageAxis</span></span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageAxisE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Axis of image (Z, Y, X) </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageAxis1ZE">
+<span id="_CPPv3N5yagit9ImageAxis1ZE"></span><span id="_CPPv2N5yagit9ImageAxis1ZE"></span><span class="target" id="namespaceyagit_1a30893a6b773ce316188ed366445c0e71a21c2e59531c8710156d34a3c30ac81d5"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Z</span></span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageAxis1ZE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Z axis. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageAxis1YE">
+<span id="_CPPv3N5yagit9ImageAxis1YE"></span><span id="_CPPv2N5yagit9ImageAxis1YE"></span><span class="target" id="namespaceyagit_1a30893a6b773ce316188ed366445c0e71a57cec4137b614c87cb4e24a3d003a3e0"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Y</span></span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageAxis1YE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Y axis. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageAxis1XE">
+<span id="_CPPv3N5yagit9ImageAxis1XE"></span><span id="_CPPv2N5yagit9ImageAxis1XE"></span><span class="target" id="namespaceyagit_1a30893a6b773ce316188ed366445c0e71a02129bb861061d1a052c592e2dc6b383"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">X</span></span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageAxis1XE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>X axis. </p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum-class">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit10ImagePlaneE">
+<span id="_CPPv3N5yagit10ImagePlaneE"></span><span id="_CPPv2N5yagit10ImagePlaneE"></span><span class="target" id="namespaceyagit_1a63633619e4faa77092ac207432e47492"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ImagePlane</span></span></span><a class="headerlink" href="#_CPPv4N5yagit10ImagePlaneE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Plane of image (YX, ZX, ZY). </p>
+<p>Planes based on LPS coordinate system </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit10ImagePlane5AxialE">
+<span id="_CPPv3N5yagit10ImagePlane5AxialE"></span><span id="_CPPv2N5yagit10ImagePlane5AxialE"></span><span class="target" id="namespaceyagit_1a63633619e4faa77092ac207432e47492aaea35ecbc8c3c17c0a56a0697b13c685"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Axial</span></span></span><a class="headerlink" href="#_CPPv4N5yagit10ImagePlane5AxialE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>YX plane (Axial, Transverse, Horizontal) </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit10ImagePlane10TransverseE">
+<span id="_CPPv3N5yagit10ImagePlane10TransverseE"></span><span id="_CPPv2N5yagit10ImagePlane10TransverseE"></span><span class="target" id="namespaceyagit_1a63633619e4faa77092ac207432e47492a0a4d4ebda5f7abafcc722a02891070a3"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Transverse</span></span></span><a class="headerlink" href="#_CPPv4N5yagit10ImagePlane10TransverseE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>YX plane (Axial, Transverse, Horizontal) </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit10ImagePlane10HorizontalE">
+<span id="_CPPv3N5yagit10ImagePlane10HorizontalE"></span><span id="_CPPv2N5yagit10ImagePlane10HorizontalE"></span><span class="target" id="namespaceyagit_1a63633619e4faa77092ac207432e47492ac1b5fa03ecdb95d4a45dd1c40b02527f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Horizontal</span></span></span><a class="headerlink" href="#_CPPv4N5yagit10ImagePlane10HorizontalE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>YX plane (Axial, Transverse, Horizontal) </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit10ImagePlane2YXE">
+<span id="_CPPv3N5yagit10ImagePlane2YXE"></span><span id="_CPPv2N5yagit10ImagePlane2YXE"></span><span class="target" id="namespaceyagit_1a63633619e4faa77092ac207432e47492a923db922542fbe09e7ff87bb31b2f310"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">YX</span></span></span><a class="headerlink" href="#_CPPv4N5yagit10ImagePlane2YXE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>YX plane (Axial, Transverse, Horizontal) </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit10ImagePlane7CoronalE">
+<span id="_CPPv3N5yagit10ImagePlane7CoronalE"></span><span id="_CPPv2N5yagit10ImagePlane7CoronalE"></span><span class="target" id="namespaceyagit_1a63633619e4faa77092ac207432e47492a28e8426a6ea4d80cad5e2efc00a85a9a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Coronal</span></span></span><a class="headerlink" href="#_CPPv4N5yagit10ImagePlane7CoronalE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>ZX plane (Coronal, Frontal) </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit10ImagePlane7FrontalE">
+<span id="_CPPv3N5yagit10ImagePlane7FrontalE"></span><span id="_CPPv2N5yagit10ImagePlane7FrontalE"></span><span class="target" id="namespaceyagit_1a63633619e4faa77092ac207432e47492a6aa29d9960f30deba446d52eccd50ef6"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Frontal</span></span></span><a class="headerlink" href="#_CPPv4N5yagit10ImagePlane7FrontalE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>ZX plane (Coronal, Frontal) </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit10ImagePlane2ZXE">
+<span id="_CPPv3N5yagit10ImagePlane2ZXE"></span><span id="_CPPv2N5yagit10ImagePlane2ZXE"></span><span class="target" id="namespaceyagit_1a63633619e4faa77092ac207432e47492a7d40f0d6c4baa81950b1759d3712a225"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ZX</span></span></span><a class="headerlink" href="#_CPPv4N5yagit10ImagePlane2ZXE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>ZX plane (Coronal, Frontal) </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit10ImagePlane8SagittalE">
+<span id="_CPPv3N5yagit10ImagePlane8SagittalE"></span><span id="_CPPv2N5yagit10ImagePlane8SagittalE"></span><span class="target" id="namespaceyagit_1a63633619e4faa77092ac207432e47492a0a43717e78987cb2ee50ce676deb003f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Sagittal</span></span></span><a class="headerlink" href="#_CPPv4N5yagit10ImagePlane8SagittalE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>ZY plane (Sagittal, Longitudinal) </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit10ImagePlane12LongitudinalE">
+<span id="_CPPv3N5yagit10ImagePlane12LongitudinalE"></span><span id="_CPPv2N5yagit10ImagePlane12LongitudinalE"></span><span class="target" id="namespaceyagit_1a63633619e4faa77092ac207432e47492ad9d493609a109cf5795be658f7a067fd"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Longitudinal</span></span></span><a class="headerlink" href="#_CPPv4N5yagit10ImagePlane12LongitudinalE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>ZY plane (Sagittal, Longitudinal) </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit10ImagePlane2ZYE">
+<span id="_CPPv3N5yagit10ImagePlane2ZYE"></span><span id="_CPPv2N5yagit10ImagePlane2ZYE"></span><span class="target" id="namespaceyagit_1a63633619e4faa77092ac207432e47492ada9d9a8877decfb3dce19cf7856e721c"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ZY</span></span></span><a class="headerlink" href="#_CPPv4N5yagit10ImagePlane2ZYE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>ZY plane (Sagittal, Longitudinal) </p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gamma_result.html" class="btn btn-neutral float-left" title="Gamma Result" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="image_data.html" class="btn btn-neutral float-right" title="Image Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-2024, YAGIT Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

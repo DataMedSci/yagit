@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Data &mdash; Yet Another Gamma Index Tool  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/style.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/fonts.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Interpolation" href="interpolation.html" />
+    <link rel="prev" title="Image" href="image.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Yet Another Gamma Index Tool
+          </a>
+              <div class="version">
+                v0.5.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gamma_index.html">Gamma index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithms.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parameters.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input_and_output_data.html">Input and output data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_representation.html">Data representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="data_reader.html">Data Reader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_structs.html">Data Structs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_writer.html">Data Writer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma.html">Gamma</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma_parameters.html">Gamma Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gamma_result.html">Gamma Result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="image.html">Image</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Image Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolation.html">Interpolation</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Yet Another Gamma Index Tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api.html">API</a></li>
+      <li class="breadcrumb-item active">Image Data</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/image_data.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="image-data">
+<h1>Image Data<a class="headerlink" href="#image-data" title="Permalink to this heading"></a></h1>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv45yagit">
+<span id="_CPPv35yagit"></span><span id="_CPPv25yagit"></span><span id="yagit"></span><span class="target" id="namespaceyagit"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">yagit</span></span></span><br /></dt>
+<dd><dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageDataE">
+<span id="_CPPv3N5yagit9ImageDataE"></span><span id="_CPPv2N5yagit9ImageDataE"></span><span id="yagit::ImageData"></span><span class="target" id="classyagit_1_1ImageData"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ImageData</span></span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageDataE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Container storing image and its metadata (size, offset, spacing) </p>
+<p>Images are in format (frame, row, column) corresponding to (z, y, x) axes. Coordinates are based on LPS coordinate system.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It doesn’t contain information about the plane in which the image is saved. Instead, it assumes that all images are in the axial plane. </p>
+</div>
+<p>Subclassed by <a class="reference internal" href="gamma_result.html#classyagit_1_1GammaResult"><span class="std std-ref">yagit::GammaResult</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData10value_typeE">
+<span id="_CPPv3N5yagit9ImageData10value_typeE"></span><span id="_CPPv2N5yagit9ImageData10value_typeE"></span><span class="target" id="classyagit_1_1ImageData_1a3b33891e61d0fb5452283bd3e281d133"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">value_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageData10value_typeE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData9size_typeE">
+<span id="_CPPv3N5yagit9ImageData9size_typeE"></span><span id="_CPPv2N5yagit9ImageData9size_typeE"></span><span class="target" id="classyagit_1_1ImageData_1a96c6118f42c38dc58cc2e7f805f3d4c6"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">size_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N5yagit9ImageData10value_typeE" title="yagit::ImageData::value_type"><span class="n"><span class="pre">value_type</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_type</span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageData9size_typeE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData9referenceE">
+<span id="_CPPv3N5yagit9ImageData9referenceE"></span><span id="_CPPv2N5yagit9ImageData9referenceE"></span><span class="target" id="classyagit_1_1ImageData_1a9fe0127128062645fb151bee4ab79072"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">reference</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit9ImageData10value_typeE" title="yagit::ImageData::value_type"><span class="n"><span class="pre">value_type</span></span></a><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageData9referenceE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData15const_referenceE">
+<span id="_CPPv3N5yagit9ImageData15const_referenceE"></span><span id="_CPPv2N5yagit9ImageData15const_referenceE"></span><span class="target" id="classyagit_1_1ImageData_1ae98d6126b9cbe7a652d17e2c101fd335"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">const_reference</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit9ImageData10value_typeE" title="yagit::ImageData::value_type"><span class="n"><span class="pre">value_type</span></span></a><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageData15const_referenceE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData7pointerE">
+<span id="_CPPv3N5yagit9ImageData7pointerE"></span><span id="_CPPv2N5yagit9ImageData7pointerE"></span><span class="target" id="classyagit_1_1ImageData_1afe084ff8de7094780ed6e5ecf755ec81"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pointer</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N5yagit9ImageData10value_typeE" title="yagit::ImageData::value_type"><span class="n"><span class="pre">value_type</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pointer</span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageData7pointerE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData13const_pointerE">
+<span id="_CPPv3N5yagit9ImageData13const_pointerE"></span><span id="_CPPv2N5yagit9ImageData13const_pointerE"></span><span class="target" id="classyagit_1_1ImageData_1ad972c9a37b36c8eea52d03c1efcee56e"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">const_pointer</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N5yagit9ImageData10value_typeE" title="yagit::ImageData::value_type"><span class="n"><span class="pre">value_type</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">const_pointer</span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageData13const_pointerE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData9ImageDataEv">
+<span id="_CPPv3N5yagit9ImageData9ImageDataEv"></span><span id="_CPPv2N5yagit9ImageData9ImageDataEv"></span><span id="yagit::ImageData::ImageData"></span><span class="target" id="classyagit_1_1ImageData_1ac35ffeef7379a9975113d2e6bad03f4d"></span><span class="sig-name descname"><span class="n"><span class="pre">ImageData</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit9ImageData9ImageDataEv" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN5yagit9ImageData9ImageDataERKNSt6vectorI1UEERK8DataSizeRK10DataOffsetRK11DataSpacing">
+<span id="_CPPv3I0EN5yagit9ImageData9ImageDataERKNSt6vectorI1UEERK8DataSizeRK10DataOffsetRK11DataSpacing"></span><span id="_CPPv2I0EN5yagit9ImageData9ImageDataERKNSt6vectorI1UEERK8DataSizeRK10DataOffsetRK11DataSpacing"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">U</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classyagit_1_1ImageData_1a3a0c504f34c17017e07f0ea1fc5a8a44"></span><span class="sig-name descname"><span class="n"><span class="pre">ImageData</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN5yagit9ImageData9ImageDataERKNSt6vectorI1UEERK8DataSizeRK10DataOffsetRK11DataSpacing" title="yagit::ImageData::ImageData::U"><span class="n"><span class="pre">U</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit8DataSizeE" title="yagit::DataSize"><span class="n"><span class="pre">DataSize</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">size</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit10DataOffsetE" title="yagit::DataOffset"><span class="n"><span class="pre">DataOffset</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">offset</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit11DataSpacingE" title="yagit::DataSpacing"><span class="n"><span class="pre">DataSpacing</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">spacing</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN5yagit9ImageData9ImageDataERKNSt6vectorI1UEERK8DataSizeRK10DataOffsetRK11DataSpacing" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData9ImageDataERK7Image2DRK10DataOffsetRK11DataSpacing">
+<span id="_CPPv3N5yagit9ImageData9ImageDataERK7Image2DRK10DataOffsetRK11DataSpacing"></span><span id="_CPPv2N5yagit9ImageData9ImageDataERK7Image2DRK10DataOffsetRK11DataSpacing"></span><span id="yagit::ImageData::ImageData__Image2DCR.DataOffsetCR.DataSpacingCR"></span><span class="target" id="classyagit_1_1ImageData_1a940a4efcfe920eca874c51d4abd7cb6d"></span><span class="sig-name descname"><span class="n"><span class="pre">ImageData</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image.html#_CPPv4N5yagit7Image2DE" title="yagit::Image2D"><span class="n"><span class="pre">Image2D</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">image2d</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit10DataOffsetE" title="yagit::DataOffset"><span class="n"><span class="pre">DataOffset</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">offset</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit11DataSpacingE" title="yagit::DataSpacing"><span class="n"><span class="pre">DataSpacing</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">spacing</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit9ImageData9ImageDataERK7Image2DRK10DataOffsetRK11DataSpacing" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData9ImageDataERK7Image3DRK10DataOffsetRK11DataSpacing">
+<span id="_CPPv3N5yagit9ImageData9ImageDataERK7Image3DRK10DataOffsetRK11DataSpacing"></span><span id="_CPPv2N5yagit9ImageData9ImageDataERK7Image3DRK10DataOffsetRK11DataSpacing"></span><span id="yagit::ImageData::ImageData__Image3DCR.DataOffsetCR.DataSpacingCR"></span><span class="target" id="classyagit_1_1ImageData_1a974d183b4f06d42f0c42368daad7cf77"></span><span class="sig-name descname"><span class="n"><span class="pre">ImageData</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="image.html#_CPPv4N5yagit7Image3DE" title="yagit::Image3D"><span class="n"><span class="pre">Image3D</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">image3d</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit10DataOffsetE" title="yagit::DataOffset"><span class="n"><span class="pre">DataOffset</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">offset</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit11DataSpacingE" title="yagit::DataSpacing"><span class="n"><span class="pre">DataSpacing</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">spacing</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit9ImageData9ImageDataERK7Image3DRK10DataOffsetRK11DataSpacing" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData9ImageDataERRNSt6vectorI10value_typeEERK8DataSizeRK10DataOffsetRK11DataSpacing">
+<span id="_CPPv3N5yagit9ImageData9ImageDataERRNSt6vectorI10value_typeEERK8DataSizeRK10DataOffsetRK11DataSpacing"></span><span id="_CPPv2N5yagit9ImageData9ImageDataERRNSt6vectorI10value_typeEERK8DataSizeRK10DataOffsetRK11DataSpacing"></span><span id="yagit::ImageData::ImageData__std::vector:value_type:RR.DataSizeCR.DataOffsetCR.DataSpacingCR"></span><span class="target" id="classyagit_1_1ImageData_1a2de67a86efd359e854f6af8b3da56a95"></span><span class="sig-name descname"><span class="n"><span class="pre">ImageData</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N5yagit9ImageData10value_typeE" title="yagit::ImageData::value_type"><span class="n"><span class="pre">value_type</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit8DataSizeE" title="yagit::DataSize"><span class="n"><span class="pre">DataSize</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">size</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit10DataOffsetE" title="yagit::DataOffset"><span class="n"><span class="pre">DataOffset</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">offset</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit11DataSpacingE" title="yagit::DataSpacing"><span class="n"><span class="pre">DataSpacing</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">spacing</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageData9ImageDataERRNSt6vectorI10value_typeEERK8DataSizeRK10DataOffsetRK11DataSpacing" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData9ImageDataERK9ImageData">
+<span id="_CPPv3N5yagit9ImageData9ImageDataERK9ImageData"></span><span id="_CPPv2N5yagit9ImageData9ImageDataERK9ImageData"></span><span id="yagit::ImageData::ImageData__ImageDataCR"></span><span class="target" id="classyagit_1_1ImageData_1ab3008ecb203223b6f45d6474c11fa315"></span><span class="sig-name descname"><span class="n"><span class="pre">ImageData</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit9ImageData9ImageDataERK9ImageData" title="yagit::ImageData::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageData9ImageDataERK9ImageData" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageDataaSERK9ImageData">
+<span id="_CPPv3N5yagit9ImageDataaSERK9ImageData"></span><span id="_CPPv2N5yagit9ImageDataaSERK9ImageData"></span><span id="yagit::ImageData::assign-operator__ImageDataCR"></span><span class="target" id="classyagit_1_1ImageData_1aee9ab9ef5c86bbfc8c2aca4dd69ea119"></span><a class="reference internal" href="#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageDataaSERK9ImageData" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData9ImageDataERR9ImageData">
+<span id="_CPPv3N5yagit9ImageData9ImageDataERR9ImageData"></span><span id="_CPPv2N5yagit9ImageData9ImageDataERR9ImageData"></span><span id="yagit::ImageData::ImageData__ImageDataRR"></span><span class="target" id="classyagit_1_1ImageData_1a7b30f1cdb847fa14a0d03577f12d202c"></span><span class="sig-name descname"><span class="n"><span class="pre">ImageData</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N5yagit9ImageData9ImageDataERR9ImageData" title="yagit::ImageData::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageData9ImageDataERR9ImageData" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageDataaSERR9ImageData">
+<span id="_CPPv3N5yagit9ImageDataaSERR9ImageData"></span><span id="_CPPv2N5yagit9ImageDataaSERR9ImageData"></span><span id="yagit::ImageData::assign-operator__ImageDataRR"></span><span class="target" id="classyagit_1_1ImageData_1a347c8884761c385ad12595aaf7672bf5"></span><a class="reference internal" href="#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageDataaSERR9ImageData" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageDataeqERK9ImageData">
+<span id="_CPPv3NK5yagit9ImageDataeqERK9ImageData"></span><span id="_CPPv2NK5yagit9ImageDataeqERK9ImageData"></span><span id="yagit::ImageData::eq-operator__ImageDataCRC"></span><span class="target" id="classyagit_1_1ImageData_1a3c6dabade8ab899b9aa4c5609a617388"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">==</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageDataeqERK9ImageData" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageDataneERK9ImageData">
+<span id="_CPPv3NK5yagit9ImageDataneERK9ImageData"></span><span id="_CPPv2NK5yagit9ImageDataneERK9ImageData"></span><span id="yagit::ImageData::neq-operator__ImageDataCRC"></span><span class="target" id="classyagit_1_1ImageData_1a0b8c3092b381dc0e4543a2f932b82a20"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">!=</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageDataneERK9ImageData" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData7getSizeEv">
+<span id="_CPPv3NK5yagit9ImageData7getSizeEv"></span><span id="_CPPv2NK5yagit9ImageData7getSizeEv"></span><span id="yagit::ImageData::getSizeC"></span><span class="target" id="classyagit_1_1ImageData_1a098ba31c10faf9bbe570c6231c2b361f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit8DataSizeE" title="yagit::DataSize"><span class="n"><span class="pre">DataSize</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getSize</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData7getSizeEv" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData9getOffsetEv">
+<span id="_CPPv3NK5yagit9ImageData9getOffsetEv"></span><span id="_CPPv2NK5yagit9ImageData9getOffsetEv"></span><span id="yagit::ImageData::getOffsetC"></span><span class="target" id="classyagit_1_1ImageData_1a3add2365235babf396c9ac75763bbd65"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit10DataOffsetE" title="yagit::DataOffset"><span class="n"><span class="pre">DataOffset</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getOffset</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData9getOffsetEv" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData10getSpacingEv">
+<span id="_CPPv3NK5yagit9ImageData10getSpacingEv"></span><span id="_CPPv2NK5yagit9ImageData10getSpacingEv"></span><span id="yagit::ImageData::getSpacingC"></span><span class="target" id="classyagit_1_1ImageData_1a41e976089ff80277c8f50d5a8e3d9976"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit11DataSpacingE" title="yagit::DataSpacing"><span class="n"><span class="pre">DataSpacing</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getSpacing</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData10getSpacingEv" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData7setSizeERK8DataSize">
+<span id="_CPPv3N5yagit9ImageData7setSizeERK8DataSize"></span><span id="_CPPv2N5yagit9ImageData7setSizeERK8DataSize"></span><span id="yagit::ImageData::setSize__DataSizeCR"></span><span class="target" id="classyagit_1_1ImageData_1a092037a2bb70227299fdd613218ffd57"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setSize</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit8DataSizeE" title="yagit::DataSize"><span class="n"><span class="pre">DataSize</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">size</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit9ImageData7setSizeERK8DataSize" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Set the size of image (frames, rows, columns) </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>size</strong> – New size - new number of elements (frames*rows*columns) must be the same as old </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData9setOffsetERK10DataOffset">
+<span id="_CPPv3N5yagit9ImageData9setOffsetERK10DataOffset"></span><span id="_CPPv2N5yagit9ImageData9setOffsetERK10DataOffset"></span><span id="yagit::ImageData::setOffset__DataOffsetCR"></span><span class="target" id="classyagit_1_1ImageData_1aad4a120fc45946ab985ba2582870361d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setOffset</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit10DataOffsetE" title="yagit::DataOffset"><span class="n"><span class="pre">DataOffset</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">offset</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit9ImageData9setOffsetERK10DataOffset" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData10setSpacingERK11DataSpacing">
+<span id="_CPPv3N5yagit9ImageData10setSpacingERK11DataSpacing"></span><span id="_CPPv2N5yagit9ImageData10setSpacingERK11DataSpacing"></span><span id="yagit::ImageData::setSpacing__DataSpacingCR"></span><span class="target" id="classyagit_1_1ImageData_1a70afe2acf34ed7309f33fea3061f04a9"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setSpacing</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit11DataSpacingE" title="yagit::DataSpacing"><span class="n"><span class="pre">DataSpacing</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">spacing</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit9ImageData10setSpacingERK11DataSpacing" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData4sizeEv">
+<span id="_CPPv3NK5yagit9ImageData4sizeEv"></span><span id="_CPPv2NK5yagit9ImageData4sizeEv"></span><span id="yagit::ImageData::sizeC"></span><span class="target" id="classyagit_1_1ImageData_1ad6770a5ccd4c0500487440795fd60396"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit9ImageData9size_typeE" title="yagit::ImageData::size_type"><span class="n"><span class="pre">size_type</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">size</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData4sizeEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Number of elements of image (frames*rows*columns) </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData2atE8uint32_t8uint32_t8uint32_t">
+<span id="_CPPv3N5yagit9ImageData2atE8uint32_t8uint32_t8uint32_t"></span><span id="_CPPv2N5yagit9ImageData2atE8uint32_t8uint32_t8uint32_t"></span><span id="yagit::ImageData::at__uint32_t.uint32_t.uint32_t"></span><span class="target" id="classyagit_1_1ImageData_1a40646eeac5b9e1e530b025b06dfd4326"></span><a class="reference internal" href="#_CPPv4N5yagit9ImageData9referenceE" title="yagit::ImageData::reference"><span class="n"><span class="pre">reference</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">at</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">frame</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">row</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">column</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit9ImageData2atE8uint32_t8uint32_t8uint32_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Get image element at position (<em>frame</em>, <em>row</em>, <em>column</em>) with checking that the position is within the valid range. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData2atE8uint32_t8uint32_t8uint32_t">
+<span id="_CPPv3NK5yagit9ImageData2atE8uint32_t8uint32_t8uint32_t"></span><span id="_CPPv2NK5yagit9ImageData2atE8uint32_t8uint32_t8uint32_t"></span><span id="yagit::ImageData::at__uint32_t.uint32_t.uint32_tC"></span><span class="target" id="classyagit_1_1ImageData_1a5d2cb87cd3e0bed5757d6f16a5d42261"></span><a class="reference internal" href="#_CPPv4N5yagit9ImageData15const_referenceE" title="yagit::ImageData::const_reference"><span class="n"><span class="pre">const_reference</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">at</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">frame</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">row</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">column</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData2atE8uint32_t8uint32_t8uint32_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Get image element at position (<em>frame</em>, <em>row</em>, <em>column</em>) with checking that the position is within the valid range. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData3getE8uint32_t8uint32_t8uint32_t">
+<span id="_CPPv3N5yagit9ImageData3getE8uint32_t8uint32_t8uint32_t"></span><span id="_CPPv2N5yagit9ImageData3getE8uint32_t8uint32_t8uint32_t"></span><span id="yagit::ImageData::get__uint32_t.uint32_t.uint32_t"></span><span class="target" id="classyagit_1_1ImageData_1a2726b7438e4d547049a624691c82fcbe"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit9ImageData9referenceE" title="yagit::ImageData::reference"><span class="n"><span class="pre">reference</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">frame</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">row</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">column</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit9ImageData3getE8uint32_t8uint32_t8uint32_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Get image element at position (<em>frame</em>, <em>row</em>, <em>column</em>) </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData3getE8uint32_t8uint32_t8uint32_t">
+<span id="_CPPv3NK5yagit9ImageData3getE8uint32_t8uint32_t8uint32_t"></span><span id="_CPPv2NK5yagit9ImageData3getE8uint32_t8uint32_t8uint32_t"></span><span id="yagit::ImageData::get__uint32_t.uint32_t.uint32_tC"></span><span class="target" id="classyagit_1_1ImageData_1a565d773bcfdcaa7f350e825cc325a086"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit9ImageData15const_referenceE" title="yagit::ImageData::const_reference"><span class="n"><span class="pre">const_reference</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">frame</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">row</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">column</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData3getE8uint32_t8uint32_t8uint32_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Get image element at position (<em>frame</em>, <em>row</em>, <em>column</em>) </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData3getE8uint32_t">
+<span id="_CPPv3N5yagit9ImageData3getE8uint32_t"></span><span id="_CPPv2N5yagit9ImageData3getE8uint32_t"></span><span id="yagit::ImageData::get__uint32_t"></span><span class="target" id="classyagit_1_1ImageData_1a4b66620ce29c5d5d8ce69c39324580cf"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit9ImageData9referenceE" title="yagit::ImageData::reference"><span class="n"><span class="pre">reference</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit9ImageData3getE8uint32_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Get element at <em>index</em> of flattened image. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData3getE8uint32_t">
+<span id="_CPPv3NK5yagit9ImageData3getE8uint32_t"></span><span id="_CPPv2NK5yagit9ImageData3getE8uint32_t"></span><span id="yagit::ImageData::get__uint32_tC"></span><span class="target" id="classyagit_1_1ImageData_1a3073fe20aa6f7885020dea0cf562e6f1"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit9ImageData15const_referenceE" title="yagit::ImageData::const_reference"><span class="n"><span class="pre">const_reference</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData3getE8uint32_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Get element at <em>index</em> of flattened image. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData4dataEv">
+<span id="_CPPv3N5yagit9ImageData4dataEv"></span><span id="_CPPv2N5yagit9ImageData4dataEv"></span><span id="yagit::ImageData::data"></span><span class="target" id="classyagit_1_1ImageData_1a7dc248bf2354f6149dcc0df577da5254"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit9ImageData7pointerE" title="yagit::ImageData::pointer"><span class="n"><span class="pre">pointer</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">data</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5yagit9ImageData4dataEv" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData4dataEv">
+<span id="_CPPv3NK5yagit9ImageData4dataEv"></span><span id="_CPPv2NK5yagit9ImageData4dataEv"></span><span id="yagit::ImageData::dataC"></span><span class="target" id="classyagit_1_1ImageData_1a621ef55c2200ea2bb64691d3023af77d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N5yagit9ImageData13const_pointerE" title="yagit::ImageData::const_pointer"><span class="n"><span class="pre">const_pointer</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">data</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData4dataEv" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData7getDataEv">
+<span id="_CPPv3NK5yagit9ImageData7getDataEv"></span><span id="_CPPv2NK5yagit9ImageData7getDataEv"></span><span id="yagit::ImageData::getDataC"></span><span class="target" id="classyagit_1_1ImageData_1aa1b81a4fe6fb2524a1b58c87b9a345f3"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N5yagit9ImageData10value_typeE" title="yagit::ImageData::value_type"><span class="n"><span class="pre">value_type</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getData</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData7getDataEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns copy of flattened image. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData10getImage2DE8uint32_t10ImagePlane">
+<span id="_CPPv3NK5yagit9ImageData10getImage2DE8uint32_t10ImagePlane"></span><span id="_CPPv2NK5yagit9ImageData10getImage2DE8uint32_t10ImagePlane"></span><span id="yagit::ImageData::getImage2D__uint32_t.ImagePlaneC"></span><span class="target" id="classyagit_1_1ImageData_1a98192e9a512b10289fe4af1bb85e6f26"></span><a class="reference internal" href="image.html#_CPPv4N5yagit7Image2DE" title="yagit::Image2D"><span class="n"><span class="pre">Image2D</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getImage2D</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">frame</span></span>, <a class="reference internal" href="image.html#_CPPv4N5yagit10ImagePlaneE" title="yagit::ImagePlane"><span class="n"><span class="pre">ImagePlane</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">plane</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="image.html#_CPPv4N5yagit10ImagePlaneE" title="yagit::ImagePlane"><span class="n"><span class="pre">ImagePlane</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="image.html#_CPPv4N5yagit10ImagePlane5AxialE" title="yagit::ImagePlane::Axial"><span class="n"><span class="pre">Axial</span></span></a><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData10getImage2DE8uint32_t10ImagePlane" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns copy of 2D fragment of image. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData10getImage3DE10ImagePlane">
+<span id="_CPPv3NK5yagit9ImageData10getImage3DE10ImagePlane"></span><span id="_CPPv2NK5yagit9ImageData10getImage3DE10ImagePlane"></span><span id="yagit::ImageData::getImage3D__ImagePlaneC"></span><span class="target" id="classyagit_1_1ImageData_1ac80426ef3485f9767ceeab79beee6513"></span><a class="reference internal" href="image.html#_CPPv4N5yagit7Image3DE" title="yagit::Image3D"><span class="n"><span class="pre">Image3D</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getImage3D</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="image.html#_CPPv4N5yagit10ImagePlaneE" title="yagit::ImagePlane"><span class="n"><span class="pre">ImagePlane</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">plane</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="image.html#_CPPv4N5yagit10ImagePlaneE" title="yagit::ImagePlane"><span class="n"><span class="pre">ImagePlane</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="image.html#_CPPv4N5yagit10ImagePlane5AxialE" title="yagit::ImagePlane::Axial"><span class="n"><span class="pre">Axial</span></span></a><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData10getImage3DE10ImagePlane" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Returns copy of 3D image. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData14getImageData2DE8uint32_t10ImagePlane">
+<span id="_CPPv3NK5yagit9ImageData14getImageData2DE8uint32_t10ImagePlane"></span><span id="_CPPv2NK5yagit9ImageData14getImageData2DE8uint32_t10ImagePlane"></span><span id="yagit::ImageData::getImageData2D__uint32_t.ImagePlaneC"></span><span class="target" id="classyagit_1_1ImageData_1ab21aedb64b98670d4ca715d21f65b8c9"></span><a class="reference internal" href="#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getImageData2D</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">frame</span></span>, <a class="reference internal" href="image.html#_CPPv4N5yagit10ImagePlaneE" title="yagit::ImagePlane"><span class="n"><span class="pre">ImagePlane</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">plane</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="image.html#_CPPv4N5yagit10ImagePlaneE" title="yagit::ImagePlane"><span class="n"><span class="pre">ImagePlane</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="image.html#_CPPv4N5yagit10ImagePlane5AxialE" title="yagit::ImagePlane::Axial"><span class="n"><span class="pre">Axial</span></span></a><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData14getImageData2DE8uint32_t10ImagePlane" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Get the <a class="reference internal" href="#classyagit_1_1ImageData"><span class="std std-ref">ImageData</span></a> containing a 2D fragment of current image. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Returned image doesn’t contain information about plane - it is assumed it is axial. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frame</strong> – Frame of <em>plane</em> which will be returned </p></li>
+<li><p><strong>plane</strong> – Image plane according to which 2D image is obtained </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#classyagit_1_1ImageData"><span class="std std-ref">ImageData</span></a> with 2D fragment of current image </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData14getImageData3DE10ImagePlane">
+<span id="_CPPv3NK5yagit9ImageData14getImageData3DE10ImagePlane"></span><span id="_CPPv2NK5yagit9ImageData14getImageData3DE10ImagePlane"></span><span id="yagit::ImageData::getImageData3D__ImagePlaneC"></span><span class="target" id="classyagit_1_1ImageData_1afd327abbd4ce4826ebeecda6fe8a732b"></span><a class="reference internal" href="#_CPPv4N5yagit9ImageDataE" title="yagit::ImageData"><span class="n"><span class="pre">ImageData</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getImageData3D</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="image.html#_CPPv4N5yagit10ImagePlaneE" title="yagit::ImagePlane"><span class="n"><span class="pre">ImagePlane</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">plane</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData14getImageData3DE10ImagePlane" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Get the <a class="reference internal" href="#classyagit_1_1ImageData"><span class="std std-ref">ImageData</span></a> containing a 3D image that is rotated according to chosen <em>plane</em>. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Returned image doesn’t contain information about plane - it is assumed it is axial. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>plane</strong> – Image plane according to which image is rotated </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#classyagit_1_1ImageData"><span class="std std-ref">ImageData</span></a> with rotated 3D image </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData3minEv">
+<span id="_CPPv3NK5yagit9ImageData3minEv"></span><span id="_CPPv2NK5yagit9ImageData3minEv"></span><span id="yagit::ImageData::minC"></span><span class="target" id="classyagit_1_1ImageData_1a9c3b7e355ebbd465b9982f973cbebbf8"></span><a class="reference internal" href="#_CPPv4N5yagit9ImageData10value_typeE" title="yagit::ImageData::value_type"><span class="n"><span class="pre">value_type</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">min</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData3minEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Minimum value of the image. </p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If image starts with NaN, then minimum value will be NaN </p>
+</div>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData3maxEv">
+<span id="_CPPv3NK5yagit9ImageData3maxEv"></span><span id="_CPPv2NK5yagit9ImageData3maxEv"></span><span id="yagit::ImageData::maxC"></span><span class="target" id="classyagit_1_1ImageData_1a770bffeec30fee47f062b908dce48d64"></span><a class="reference internal" href="#_CPPv4N5yagit9ImageData10value_typeE" title="yagit::ImageData::value_type"><span class="n"><span class="pre">value_type</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">max</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData3maxEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Maximum value of the image. </p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If image starts with NaN, then maximum value will be NaN </p>
+</div>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData3sumEv">
+<span id="_CPPv3NK5yagit9ImageData3sumEv"></span><span id="_CPPv2NK5yagit9ImageData3sumEv"></span><span id="yagit::ImageData::sumC"></span><span class="target" id="classyagit_1_1ImageData_1a48c6ccc2e61383375ca4c8d055af2e28"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sum</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData3sumEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Sum of image values. </p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If image contains NaN, then sum will be Nan </p>
+</div>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData4meanEv">
+<span id="_CPPv3NK5yagit9ImageData4meanEv"></span><span id="_CPPv2NK5yagit9ImageData4meanEv"></span><span id="yagit::ImageData::meanC"></span><span class="target" id="classyagit_1_1ImageData_1a09eb113220875779b5c8d3d1453d2c13"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">mean</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData4meanEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Mean of image values. </p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If image contains NaN, then mean will be Nan </p>
+</div>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData3varEv">
+<span id="_CPPv3NK5yagit9ImageData3varEv"></span><span id="_CPPv2NK5yagit9ImageData3varEv"></span><span id="yagit::ImageData::varC"></span><span class="target" id="classyagit_1_1ImageData_1ae0d6b5983947dbddd1777f4f99e9b2b8"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">var</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData3varEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Variance of image values. </p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If image contains NaN, then variance will be Nan </p>
+</div>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData6nanminEv">
+<span id="_CPPv3NK5yagit9ImageData6nanminEv"></span><span id="_CPPv2NK5yagit9ImageData6nanminEv"></span><span id="yagit::ImageData::nanminC"></span><span class="target" id="classyagit_1_1ImageData_1af947689a6f1ecd9b9db06c0745a381d3"></span><a class="reference internal" href="#_CPPv4N5yagit9ImageData10value_typeE" title="yagit::ImageData::value_type"><span class="n"><span class="pre">value_type</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">nanmin</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData6nanminEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Minimum value of the image, ignoring any NaNs. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData6nanmaxEv">
+<span id="_CPPv3NK5yagit9ImageData6nanmaxEv"></span><span id="_CPPv2NK5yagit9ImageData6nanmaxEv"></span><span id="yagit::ImageData::nanmaxC"></span><span class="target" id="classyagit_1_1ImageData_1a3347f7cde5d2900937dbfa427928f0f6"></span><a class="reference internal" href="#_CPPv4N5yagit9ImageData10value_typeE" title="yagit::ImageData::value_type"><span class="n"><span class="pre">value_type</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">nanmax</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData6nanmaxEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Maximum value of the image, ignoring any NaNs. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData6nansumEv">
+<span id="_CPPv3NK5yagit9ImageData6nansumEv"></span><span id="_CPPv2NK5yagit9ImageData6nansumEv"></span><span id="yagit::ImageData::nansumC"></span><span class="target" id="classyagit_1_1ImageData_1abd4b2af36bb63c7bf1a29dec5b66a22c"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">nansum</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData6nansumEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Sum of image values, ignoring any NaNs. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData7nanmeanEv">
+<span id="_CPPv3NK5yagit9ImageData7nanmeanEv"></span><span id="_CPPv2NK5yagit9ImageData7nanmeanEv"></span><span id="yagit::ImageData::nanmeanC"></span><span class="target" id="classyagit_1_1ImageData_1adc4440696bda6ce85744e50501424c07"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">nanmean</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData7nanmeanEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Mean of image values, ignoring any NaNs. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData6nanvarEv">
+<span id="_CPPv3NK5yagit9ImageData6nanvarEv"></span><span id="_CPPv2NK5yagit9ImageData6nanvarEv"></span><span id="yagit::ImageData::nanvarC"></span><span class="target" id="classyagit_1_1ImageData_1aed67aa0b608b75be482fc68ee4ad4b5b"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">nanvar</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData6nanvarEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Variance of image values, ignoring any NaNs. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData7nansizeEv">
+<span id="_CPPv3NK5yagit9ImageData7nansizeEv"></span><span id="_CPPv2NK5yagit9ImageData7nansizeEv"></span><span id="yagit::ImageData::nansizeC"></span><span class="target" id="classyagit_1_1ImageData_1aad720c3e829bf28e5be02529782b11d6"></span><a class="reference internal" href="#_CPPv4N5yagit9ImageData9size_typeE" title="yagit::ImageData::size_type"><span class="n"><span class="pre">size_type</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">nansize</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData7nansizeEv" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Number of elements of image, ignoring any NaNs. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData11containsNanEv">
+<span id="_CPPv3NK5yagit9ImageData11containsNanEv"></span><span id="_CPPv2NK5yagit9ImageData11containsNanEv"></span><span id="yagit::ImageData::containsNanC"></span><span class="target" id="classyagit_1_1ImageData_1a9b03b960339ffa2886a564c42871aad2"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">containsNan</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData11containsNanEv" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5yagit9ImageData11containsInfEv">
+<span id="_CPPv3NK5yagit9ImageData11containsInfEv"></span><span id="_CPPv2NK5yagit9ImageData11containsInfEv"></span><span id="yagit::ImageData::containsInfC"></span><span class="target" id="classyagit_1_1ImageData_1a9e2d95f56218219d39647d64d981759d"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">containsInf</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5yagit9ImageData11containsInfEv" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-attributes">Protected Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData6m_dataE">
+<span id="_CPPv3N5yagit9ImageData6m_dataE"></span><span id="_CPPv2N5yagit9ImageData6m_dataE"></span><span id="yagit::ImageData::m_data__std::vector:value_type:"></span><span class="target" id="classyagit_1_1ImageData_1ad97b5f2a0e0058eb490b9427b273b299"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N5yagit9ImageData10value_typeE" title="yagit::ImageData::value_type"><span class="n"><span class="pre">value_type</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_data</span></span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageData6m_dataE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData6m_sizeE">
+<span id="_CPPv3N5yagit9ImageData6m_sizeE"></span><span id="_CPPv2N5yagit9ImageData6m_sizeE"></span><span id="yagit::ImageData::m_size__DataSize"></span><span class="target" id="classyagit_1_1ImageData_1a175f37074dc1ba0fc177edabdfcfcff0"></span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit8DataSizeE" title="yagit::DataSize"><span class="n"><span class="pre">DataSize</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_size</span></span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageData6m_sizeE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData8m_offsetE">
+<span id="_CPPv3N5yagit9ImageData8m_offsetE"></span><span id="_CPPv2N5yagit9ImageData8m_offsetE"></span><span id="yagit::ImageData::m_offset__DataOffset"></span><span class="target" id="classyagit_1_1ImageData_1a694aad1f8e551af019d920d602ceb598"></span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit10DataOffsetE" title="yagit::DataOffset"><span class="n"><span class="pre">DataOffset</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_offset</span></span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageData8m_offsetE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5yagit9ImageData9m_spacingE">
+<span id="_CPPv3N5yagit9ImageData9m_spacingE"></span><span id="_CPPv2N5yagit9ImageData9m_spacingE"></span><span id="yagit::ImageData::m_spacing__DataSpacing"></span><span class="target" id="classyagit_1_1ImageData_1a99150b059a8f297a68994e8e2960ddcd"></span><a class="reference internal" href="data_structs.html#_CPPv4N5yagit11DataSpacingE" title="yagit::DataSpacing"><span class="n"><span class="pre">DataSpacing</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_spacing</span></span></span><a class="headerlink" href="#_CPPv4N5yagit9ImageData9m_spacingE" title="Permalink to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="image.html" class="btn btn-neutral float-left" title="Image" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="interpolation.html" class="btn btn-neutral float-right" title="Interpolation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-2024, YAGIT Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

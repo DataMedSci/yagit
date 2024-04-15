@@ -1,35 +1,23 @@
-.. default-domain:: cpp
-
-yet Another Gamma Index Tool
-============================
+Yet Another Gamma Index Tool documentation
+==========================================
 
 .. toctree::
    :maxdepth: 1
-   :caption: OVERVIEW
+   :caption: Getting Started
 
    introduction
-   license
-
-.. toctree::
-   :maxdepth: 1
-   :caption: ALGORITHM
-
    gamma_index
-   classic_version
+   algorithms
+   parameters
+   input_and_output_data
+   data_representation
+   performance
+
 
 .. toctree::
    :maxdepth: 1
-   :caption: USER GUIDE
+   :caption: Usage
 
-   instalation
-   gi_gui
-
-.. toctree::
-   :maxdepth: 2
-   :caption: DEVELOPER GUIDE
-
-   gi_core_2d_example_client
-   gi_wrapper_example_client
-   matrix_representation
-   api
-   components
+   installation
+   examples
+   api/api

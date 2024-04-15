@@ -1,43 +1,82 @@
 Introduction
 ============
 
-The purpose of the *yet Another Gamma Index Tool* project was to create an open-source tool for performing the Gamma Index comparison of 1D, 2D, 3D images within a very short time. There could be observed a fair amount of enthusiasm among potential clients, as they can experience a shortage of free, fast and convenient applications offering Gamma Index analysis.
+YAGIT (Yet Another Gamma Index Tool) is an efficient library for calculating the gamma index.
+It can be used for the comparison of two images (a reference image and an evaluated image) containing
+2D or 3D radiation dose distributions. It is written in C++ and works on Linux and Windows.
+The code is free and open-source. It can be found on GitHub: `<https://github.com/DataMedSci/yagit>`_.
 
-Modules
-.......
 
-*yAGIT* application consists of 3 modules:
- 1. **Core module** - performs a comparison of two images passed as linearised arrays of real numbers - the dose values at given points. This module is completely independent and can be used separately. In order to accelerate the calculations, it has been deprived of all the responsibilities that are not necessary for comparison. Module contains implementation of // TODO versions of Gamma Index algorithm:
+Main functionalities
+--------------------
 
-     a. classic version using CPU - it is very slow, and was only attached as some kind of reference to the spiral versions
-    // TODO
+Most important features of YAGIT are:
 
- 2. **Wrapper module** - reads images from DICOM files and stores them into linearised tables so that the core module can make use of them. It is also responsible for saving the resulting Gamma Index matrix into an output DICOM file. It uses an external library *Imebra*
+.. rst-class:: list
 
- 3. **GUI module** - it is a Graphical User Interface created using *wxWidgets* library that allows to select images for comparison, set a wide range of parameters (which can be saved and stored in the form of profiles), perform comparisons and write the output to a DICOM file. It has dependencies to all of the other modules.
+- two methods of gamma index calculation: classic and Wendling,
+- four implementations of the classic method (sequential, multithreaded, SIMD, multithreaded + SIMD),
+- two implementations of the Wendling method (sequential, multithreaded),
+- three versions of the gamma index: 2D, 2.5D, and 3D,
+- reading input files (DICOM and MetaImage),
+- saving data and results to an output file (MetaImage),
+- linear, bilinear, and trilinear interpolation of data.
 
-Advantages of our solution
-..........................
- - **speed** (the most important feature of *yAGIT*) - for all available test data, even for large 3D images (219 x 147 x 351), computation time using the spiral version was less than 1 minute
- - ability to perform different types of analysis (1D, 2D, 3D, 2.5D, 2DFrom3D)
- - no use of interpolation - we decided not to include interpolation in our application for a few reasons:
 
-    - the use of interpolation, makes the program run much slower
-    - users do not need to worry about errors associated with the use of interpolation (there is no phenomenon of over-fitting compared images)
-    - some users do not want the application to use the interpolation; if one would like to have the images interpolated before performing the Gamma Index comparison, they can interpolate the input image themselves and pass only the modified samples to the *yAGIT* application.
+Simple example
+--------------
 
- - portability - application can be used by both Windows and Linux users
- - modularity - the application is divided into modules, users decide how they want to use the application, for example, users can use the API provided by the *core module* or a *wrapper module*, but they can also use the *GUI module*
- - simple and user friendly GUI
- - support for DICOM images
- - support for images represented as linearised floating point C++ arrays
- - support for GPU acceleration
- - supplied test framework // TODO - is it still true?
+Below is a fragment of a program that calculates the 2D gamma index and saves the result to a file.
 
-Limitations
-...........
- - lack of built-in visualization tool
- - support only for files of DICOM type (although user can easily write their own wrapper and integrate it with our application)
- - lack of support for images not specified on a regular grid (images with different pixel spacing along one axis)
- - lack of support for DICOMDIR images
+.. code-block:: c++
 
+    // read a reference image and an evaluated image from DICOM files
+    const auto ref2d = yagit::DataReader::readRTDoseDicom("img_ref2d.dcm");
+    const auto eval2d = yagit::DataReader::readRTDoseDicom("img_eval2d.dcm");
+
+    // set gamma index parameters
+    yagit::GammaParameters params;
+    params.ddThreshold = 3.0;  // [%]
+    params.dtaThreshold = 3.0;  // [mm]
+    params.normalization = yagit::GammaNormalization::Global;
+    params.globalNormDose = ref2d.max();
+    params.doseCutoff = 0;
+    params.maxSearchDistance = 10;  // [mm]
+    params.stepSize = params.dtaThreshold / 10;  // [mm]
+
+    // calculate the 2D gamma index using the Wendling method
+    const auto gamma = yagit::gammaIndex2D(ref2d, eval2d, params);
+
+    // save the gamma index image to a MetaImage file
+    yagit::DataWriter::writeToMetaImage(gamma, "gamma2d.mha");
+
+
+The image below shows a 2D reference image, a 2D evaluated image, and their comparison.
+The gamma index (3%G/3mm) has been calculated using the code above.
+In addition, the difference between the evaluated image and the reference image is also shown.
+
+.. figure:: _static/images/introduction_example.jpg
+   :alt: Reference image, Evaluated image, Dose difference (eval - ref) image, Gamma index (3%G/3mm) image
+   :align: center
+
+
+More examples with complete code are presented on the :doc:`examples <examples>` subpage.
+
+
+Performance
+-----------
+
+Calculating the 3D gamma index for large images can take a long time,
+so an efficient implementation of the algorithm is crucial.
+YAGIT is the fastest free library for calculating the gamma index.
+
+.. figure:: _static/images/yf_16threads.svg
+   :alt: Multi-threaded gamma index using Wendling method
+   :align: center
+
+   A sample comparison of computation times for YAGIT and `FRED`_.
+   The gamma index has been calculated for two 3D images with dimensions of approximately 200x200x200 and GIPR ~ 99%.
+
+.. _FRED: https://www.fred-mc.org/
+
+More information about the performance of YAGIT is presented on the :doc:`performance <performance>` subpage.
