@@ -15,3 +15,10 @@ Instructions on how to install YAGIT are described at <https://datamedsci.github
 ## Examples
 
 Examples of how to use YAGIT are presented at <https://datamedsci.github.io/yagit/examples.html>.
+
+## Citation
+
+To cite this work, please refer to the [Zenodo site](https://zenodo.org/records/10974644).
+It can be cited as:
+
+> Krawczyk, M., & Grzanka, L. (2024). Yet Another Gamma Index Tool [Computer software]. https://doi.org/10.5281/zenodo.10974644
