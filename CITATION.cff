@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Yet Another Gamma Index Tool"
+authors:
+- family-names: "Krawczyk"
+  given-names: "Michał"
+- family-names: "Grzanka"
+  given-names: "Leszek"
+  orcid: "https://orcid.org/0000-0002-3599-854X"
+doi: 10.5281/zenodo.10974644
+repository-code: "https://github.com/DataMedSci/yagit"
+url: "https://datamedsci.github.io/yagit/"
+date-released: 2024-04-15
