@@ -1,5 +1,5 @@
 /********************************************************************************************
- * Copyright (C) 2023 'Yet Another Gamma Index Tool' Developers.
+ * Copyright (C) 2023-2024 'Yet Another Gamma Index Tool' Developers.
  * 
  * This file is part of 'Yet Another Gamma Index Tool'.
  * 
@@ -21,11 +21,11 @@
 namespace yagit{
 
 /**
- *  @brief Enum with types of calculating absolute dose difference criterion
+ *  @brief Enum with types of calculation of absolute dose difference criterion
 */
 enum class GammaNormalization{
-    Global,  ///< Using any value you choose (e.g. max reference value)
-    Local    ///< Using local reference value (value at current voxel)
+    Global,  ///< Using any value you choose (e.g., max value in the reference image)
+    Local    ///< Using local reference value (value at current voxel in the reference image)
 };
 
 /**
@@ -34,18 +34,19 @@ enum class GammaNormalization{
 struct GammaParameters{
     /// Acceptance criterion for dose difference (DD) in percents [%]
     float ddThreshold;
-    /// Acceptance criterion for distance to agreement (DTA) in milimeters [mm]
+    /// Acceptance criterion for distance to agreement (DTA) in millimeters [mm]
     float dtaThreshold;
-    /// Type of calculating absolute dose difference criterion
+    /// Type of calculation of absolute dose difference criterion
     GammaNormalization normalization;
     /// Value used for global normalization
     float globalNormDose;
-    /// Value of dose below which gamma index will not be calculated
+    /// Dose value in the reference image, below which gamma index will not be calculated
     float doseCutoff;
-    /// @brief Maximum search distance in milimeters [mm]. Radius of a circle in which searching will be performed.
+    /// @brief Maximum search distance in millimeters [mm].
+    /// Radius of the circle/sphere in which searching will be performed.
     /// Used only for Wendling method.
     float maxSearchDistance;
-    /// @brief Step size in milimeters [mm] that is used when searching within the circle.
+    /// @brief Step size in millimeters [mm] that is used when searching within the circle/sphere.
     /// Used only for Wendling method.
     float stepSize;
 };

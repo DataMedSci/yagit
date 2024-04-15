@@ -1,5 +1,5 @@
 /********************************************************************************************
- * Copyright (C) 2023 'Yet Another Gamma Index Tool' Developers.
+ * Copyright (C) 2023-2024 'Yet Another Gamma Index Tool' Developers.
  * 
  * This file is part of 'Yet Another Gamma Index Tool'.
  * 
@@ -35,8 +35,8 @@ const yagit::Image2D REF_IMAGE_2D = {
     {0.97, 1.00}
 };
 const yagit::Image2D EVAL_IMAGE_2D = {
-    {0.95, 0.97},
-    {1.00, 1.03}
+    {0.93, 0.96},
+    {0.90, 1.02}
 };
 
 const yagit::Image3D REF_IMAGE_3D = {
@@ -52,8 +52,8 @@ const yagit::Image3D EVAL_IMAGE_3D = {
      {0.8, 0.99, 0.83}}
 };
 
-const yagit::ImageData REF_2D(REF_IMAGE_2D, {0, 0, -1}, {1, 1, 1});
-const yagit::ImageData EVAL_2D(EVAL_IMAGE_2D, {0, -1, 0}, {1, 1, 1});
+const yagit::ImageData REF_2D(REF_IMAGE_2D, {0, 0, -1}, {2, 2, 2});
+const yagit::ImageData EVAL_2D(EVAL_IMAGE_2D, {0, 1, 0}, {2, 2, 2});
 const yagit::ImageData REF_3D(REF_IMAGE_3D, {-0.2, -5.8, 4.4}, {1.5, 2, 2.5});
 const yagit::ImageData EVAL_3D(EVAL_IMAGE_3D, {-0.3, -6.0, 4.5}, {1.5, 2, 2.5});
 
@@ -79,24 +79,24 @@ using GammaParametric3D = std::tuple<yagit::GammaParameters, yagit::Image3D>;
 
 const GammaParametric2D gammaIndex2DClassicTestValues[] = {
     // GAMMA PARAMETERS                                             EXPECTED GAMMA
-    {{3, 3, yagit::GammaNormalization::Global, REF_2D_MAX, 0},      {{0.816496, 0.333333},
-                                                                     {0.942809, 0.333333}}},
+    {{3, 3, yagit::GammaNormalization::Global, REF_2D_MAX, 0},      {{0.471405, 0.577350},
+                                                                     {1.105542, 0.816497}}},
 
-    {{2, 1, yagit::GammaNormalization::Global, REF_2D_MAX, 0},      {{1.732050, 1.000000},
-                                                                     {2.061552, 1.000000}}},
+    {{2, 1, yagit::GammaNormalization::Global, REF_2D_MAX, 0},      {{1.414214, 1.500000},
+                                                                     {2.449490, 1.732051}}},
 
-    {{3, 3, yagit::GammaNormalization::Local, 0, 0},                {{0.857956, 0.333333},
-                                                                     {0.942809, 0.333333}}},
+    {{3, 3, yagit::GammaNormalization::Local, 0, 0},                {{0.471405, 0.587654},
+                                                                     {1.108694, 0.816497}}},
 
-    {{2, 1, yagit::GammaNormalization::Local, 0, 0},                {{1.776570, 1.000000},
-                                                                     {2.095548, 1.000000}}},
+    {{2, 1, yagit::GammaNormalization::Local, 0, 0},                {{1.414214, 1.508976},
+                                                                     {2.500250, 1.732051}}},
 
     // dco > 0
-    {{3, 3, yagit::GammaNormalization::Global, REF_2D_MAX, 0.95},   {{NaN,      0.333333},
-                                                                     {0.942809, 0.333333}}},
+    {{3, 3, yagit::GammaNormalization::Global, REF_2D_MAX, 0.95},   {{NaN,      0.577350},
+                                                                     {1.105542, 0.816497}}},
 
-    {{3, 3, yagit::GammaNormalization::Local, 0, 0.95},             {{NaN,      0.333333},
-                                                                     {0.942809, 0.333333}}}
+    {{3, 3, yagit::GammaNormalization::Local, 0, 0.95},             {{NaN,      0.587654},
+                                                                     {1.108694, 0.816497}}}
 };
 
 class GammaIndex2DClassicTest : public ::testing::TestWithParam<GammaParametric2D> {};
@@ -118,8 +118,8 @@ TEST(GammaTest, gammaIndex2DClassicForImagesWithDifferentSpacings){
     const auto gammaRes = yagit::gammaIndex2DClassic(refImg, evalImg, GAMMA_PARAMS_2D);
 
     const yagit::Image2D expected = {
-        {0.666666, 1.000000},
-        {0.942810, 1.414214}
+        {0.000000, 1.054093},
+        {1.490712, 1.563472}
     };
     const yagit::GammaResult expectedGammaRes(expected, refImg.getOffset(), refImg.getSpacing());
 
@@ -257,31 +257,31 @@ TEST(GammaTest, gammaIndex3DClassicForImagesWithDifferentSpacings){
 
 const GammaParametric2D gammaIndex2DWendlingTestValues[] = {
     // GAMMA PARAMETERS                                                     EXPECTED GAMMA
-    {{3, 3, yagit::GammaNormalization::Global, REF_2D_MAX, 0, 5, 0.3},      {{1.094246, 0.343188},
-                                                                             {0.721880, 0.415746}}},
+    {{3, 3, yagit::GammaNormalization::Global, REF_2D_MAX, 0, 5, 0.3},      {{0.566480, 0.416667},
+                                                                             {0.774175, 0.364283}}},
 
-    {{2, 1, yagit::GammaNormalization::Global, REF_2D_MAX, 0, 5, 0.1},      {{1.732050, 0.934077},
-                                                                             {1.791647, 1.000000}}},
+    {{2, 1, yagit::GammaNormalization::Global, REF_2D_MAX, 0, 5, 0.1},      {{1.414214, 1.020110},
+                                                                             {2.160501, 0.966035}}},
 
-    {{3, 3, yagit::GammaNormalization::Local, 0, 0, 5, 0.3},                {{1.159896, 0.347532},
-                                                                             {0.726698, 0.415746}}},
+    {{3, 3, yagit::GammaNormalization::Local, 0, 0, 5, 0.3},                {{0.566604, 0.418427},
+                                                                             {0.776983, 0.364283}}},
 
-    {{2, 1, yagit::GammaNormalization::Local, 0, 0, 5, 0.1},                {{1.776570, 0.937684},
-                                                                             {1.796024, 1.000000}}},
+    {{2, 1, yagit::GammaNormalization::Local, 0, 0, 5, 0.1},                {{1.414214, 1.021731},
+                                                                             {2.169777, 0.966035}}},
 
     // dco > 0
-    {{3, 3, yagit::GammaNormalization::Global, REF_2D_MAX, 0.95, 5, 0.3},   {{NaN,      0.343188},
-                                                                             {0.721880, 0.415746}}},
+    {{3, 3, yagit::GammaNormalization::Global, REF_2D_MAX, 0.95, 5, 0.3},   {{NaN,      0.416667},
+                                                                             {0.774175, 0.364283}}},
 
-    {{3, 3, yagit::GammaNormalization::Local, 0, 0.95, 5, 0.3},             {{NaN,      0.347532},
-                                                                             {0.726698, 0.415746}}},
+    {{3, 3, yagit::GammaNormalization::Local, 0, 0.95, 5, 0.3},             {{NaN,      0.418427},
+                                                                             {0.776983, 0.364283}}},
 
     // small max search distance
-    {{2, 1, yagit::GammaNormalization::Global, REF_2D_MAX, 0, 1.2, 0.1},    {{2.315166, 0.934077},
-                                                                             {NaN,      1.000000}}},
+    {{2, 1, yagit::GammaNormalization::Global, REF_2D_MAX, 0, 1.2, 0.1},    {{NaN,      1.020110},
+                                                                             {2.578760, 0.966035}}},
 
-    {{2, 1, yagit::GammaNormalization::Local, 0, 0, 1.2, 0.1},              {{2.446386, 0.937684},
-                                                                             {NaN,      1.000000}}}
+    {{2, 1, yagit::GammaNormalization::Local, 0, 0, 1.2, 0.1},              {{NaN,      1.021731},
+                                                                             {2.642400, 0.966035}}}
 };
 
 class GammaIndex2DWendlingTest : public ::testing::TestWithParam<GammaParametric2D> {};
@@ -303,8 +303,8 @@ TEST(GammaTest, gammaIndex2DWendlingForImagesWithDifferentSpacings){
     const auto gammaRes = yagit::gammaIndex2DWendling(refImg, evalImg, GAMMA_PARAMS_2D);
 
     const yagit::Image2D expected = {
-        {0.666666, 0.316228},
-        {0.000000, 0.389267}
+        {0.000000, 0.153659},
+        {1.158348, 0.944144}
     };
     const yagit::GammaResult expectedGammaRes(expected, refImg.getOffset(), refImg.getSpacing());
 
@@ -528,8 +528,8 @@ TEST(GammaTest, gammaIndex3DWendlingForImagesWithDifferentSpacings){
 
 TEST(GammaTest, gammaIndex2DForClassicMethod){
     const yagit::Image2D expectedImage = {
-        {0.816496, 0.333333},
-        {0.942809, 0.333333}
+        {0.471405, 0.577350},
+        {1.105542, 0.816497}
     };
 
     const yagit::GammaResult gammaRes = yagit::gammaIndex2D(REF_2D, EVAL_2D, GAMMA_PARAMS_2D, yagit::GammaMethod::Classic);
@@ -539,8 +539,8 @@ TEST(GammaTest, gammaIndex2DForClassicMethod){
 
 TEST(GammaTest, gammaIndex2DForWendlingMethod){
     const yagit::Image2D expectedImage = {
-        {1.094246, 0.343188},
-        {0.721880, 0.415746}
+        {0.566480, 0.416667},
+        {0.774175, 0.364283}
     };
     const yagit::ImageData expected(expectedImage, REF_2D.getOffset(), REF_2D.getSpacing());
 

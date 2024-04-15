@@ -1,12 +1,23 @@
-Yet Another Gamma Index Tool |release| documentation
-====================================================
+Yet Another Gamma Index Tool documentation
+==========================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
+   :caption: Getting Started
 
    introduction
-   installation
+   gamma_index
    algorithms
-   authors
-   api/api
+   parameters
+   input_and_output_data
+   data_representation
+   performance
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Usage
+
+   installation
    examples
+   api/api

@@ -1,5 +1,5 @@
 /********************************************************************************************
- * Copyright (C) 2023 'Yet Another Gamma Index Tool' Developers.
+ * Copyright (C) 2023-2024 'Yet Another Gamma Index Tool' Developers.
  * 
  * This file is part of 'Yet Another Gamma Index Tool'.
  * 
@@ -32,7 +32,7 @@ namespace{
 const float NaN = std::numeric_limits<float>::quiet_NaN();
 const float INF = std::numeric_limits<float>::infinity();
 
-const std::vector<float>& DATA{1.5, 2.3, 4.4, 0.1, -0.3, 0.0, -2.5, 153.0, -200.4, 12.9, 9.0, 0.0};
+const std::vector<float> DATA{1.5, 2.3, 4.4, 0.1, -0.3, 0.0, -2.5, 153.0, -200.4, 12.9, 9.0, 0.0};
 const yagit::Image2D IMAGE_2D = {
     {DATA[0], DATA[1], DATA[2], DATA[3]},
     {DATA[4], DATA[5], DATA[6], DATA[7]},

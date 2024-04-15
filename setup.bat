@@ -21,6 +21,8 @@ set BUILD_PERFORMANCE_TESTING=OFF
 set REF_IMG=img_reference.dcm
 set EVAL_IMG=img_evaluated.dcm
 
+set BUILD_DOCUMENTATION=OFF
+
 set INSTALL=OFF
 set INSTALL_DIR=./yagit
 
@@ -66,13 +68,12 @@ if %COMPILE_RESULT% NEQ 0 (
 if %BUILD_EXAMPLES% == ON (
     echo:
     echo RUNNING EXAMPLES...
-    build\examples\%BUILD_TYPE%\gamma2DInterp.exe %REF_IMG% %EVAL_IMG%
-    echo:
-    build\examples\%BUILD_TYPE%\gamma25D.exe %REF_IMG% %EVAL_IMG%
-    echo:
+    echo GAMMA SIMPLE
+    build\examples\%BUILD_TYPE%\gammaSimple.exe
+    echo: & echo GAMMA 3D
     build\examples\%BUILD_TYPE%\gamma3D.exe %REF_IMG% %EVAL_IMG%
-    echo:
-    build\examples\%BUILD_TYPE%\gammaImage.exe
+    echo: & echo GAMMA WITH INTERP
+    build\examples\%BUILD_TYPE%\gammaWithInterp.exe %REF_IMG% %EVAL_IMG%
 )
 
 if %BUILD_TESTING% == ON (
@@ -84,9 +85,28 @@ if %BUILD_TESTING% == ON (
 if %BUILD_PERFORMANCE_TESTING% == ON (
     echo:
     echo RUNNING PERFORMANCE TEST...
+    echo GAMMA PERF
     build\tests\performance\%BUILD_TYPE%\gammaPerf.exe %REF_IMG% %EVAL_IMG% gammaTimes.csv
-    echo:
+    echo: & echo INTERP PERF
     build\tests\performance\%BUILD_TYPE%\interpPerf.exe %EVAL_IMG%
+)
+
+
+@REM ============================================================
+set YAGIT_DIR=%cd:\=/%
+
+@REM save git tag to variable
+for /f %%v in ('git describe --tags --dirty --match "v*"') do set VERSION=%%v
+
+if %BUILD_DOCUMENTATION% == ON (
+    echo:
+    echo BUILDING DOCUMENTATION...
+    cd docs
+    (type Doxyfile & echo PROJECT_NUMBER=%VERSION%) | doxygen -
+    set SPHINXOPTS=-Dversion=%VERSION%
+    call make.bat html
+    echo DOCUMENTATION MAIN PAGE: %YAGIT_DIR%/docs/build/html/index.html
+    cd ..
 )
 
 

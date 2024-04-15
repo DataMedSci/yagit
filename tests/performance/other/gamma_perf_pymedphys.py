@@ -17,9 +17,9 @@
 # along with 'Yet Another Gamma Index Tool'.  If not, see <http://www.gnu.org/licenses/>.
 #############################################################################################
 
-import time
-import statistics
 import csv
+import statistics
+import time
 
 import numpy as np
 import pydicom

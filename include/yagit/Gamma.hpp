@@ -1,5 +1,5 @@
 /********************************************************************************************
- * Copyright (C) 2023 'Yet Another Gamma Index Tool' Developers.
+ * Copyright (C) 2023-2024 'Yet Another Gamma Index Tool' Developers.
  * 
  * This file is part of 'Yet Another Gamma Index Tool'.
  * 
@@ -53,6 +53,7 @@ GammaResult gammaIndex2D(const ImageData& refImg2D, const ImageData& evalImg2D,
  * 
  * It calculates gamma index slice by slice going along axial plane.
  * On each slice, it takes into account y and x coordinates of images.
+ * It also takes into account z coordinate in a way that depends on a method.
  * 
  * @param refImg3D 3D reference image
  * @param evalImg3D 3D evaluated image
@@ -66,7 +67,7 @@ GammaResult gammaIndex2_5D(const ImageData& refImg3D, const ImageData& evalImg3D
 /**
  * @brief Calculate 3D gamma index using classic or Wendling method.
  * 
- * It takes into account z, y and x coordinates of images.
+ * It takes into account z, y, and x coordinates of images.
  * 
  * @param refImg3D 3D reference image
  * @param evalImg3D 3D evaluated image
@@ -99,7 +100,8 @@ GammaResult gammaIndex2DClassic(const ImageData& refImg2D, const ImageData& eval
  * 
  * It calculates gamma index slice by slice going along axial plane.
  * On each slice, it takes into account y and x coordinates of images.
- * It uses z coordinates to calculate distance between two corresponding frames of @a refImg3D and @a evalImg3D.
+ * Also, it takes into account z coordinates to calculate distance between
+ * two corresponding frames of @a refImg3D and @a evalImg3D.
  * 
  * Based on https://doi.org/10.1118/1.598248
  * 
@@ -114,7 +116,7 @@ GammaResult gammaIndex2_5DClassic(const ImageData& refImg3D, const ImageData& ev
 /**
  * @brief Calculate 3D gamma index using classic method.
  * 
- * It takes into account z, y and x coordinates of images.
+ * It takes into account z, y, and x coordinates of images.
  * 
  * Based on https://doi.org/10.1118/1.598248
  * 
@@ -166,7 +168,7 @@ GammaResult gammaIndex2_5DWendling(const ImageData& refImg3D, const ImageData& e
 /**
  * @brief Calculate 3D gamma index using Wendling method.
  * 
- * It takes into account z, y and x coordinates of images.
+ * It takes into account z, y, and x coordinates of images.
  * 
  * It is faster than classic method, so using this function is recommended.
  * Based on https://doi.org/10.1118/1.2721657

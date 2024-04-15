@@ -1,5 +1,5 @@
 /********************************************************************************************
- * Copyright (C) 2023 'Yet Another Gamma Index Tool' Developers.
+ * Copyright (C) 2023-2024 'Yet Another Gamma Index Tool' Developers.
  * 
  * This file is part of 'Yet Another Gamma Index Tool'.
  * 
@@ -34,8 +34,6 @@ using Image3D = std::vector<Image2D>;
 
 /**
  * @brief Axis of image (Z, Y, X)
- * 
- * Axes based on DICOM Reference Coordinate System (RCS)
  */
 enum class ImageAxis{
     Z,  ///< Z axis
@@ -46,7 +44,7 @@ enum class ImageAxis{
 /**
  * @brief Plane of image (YX, ZX, ZY).
  * 
- * Planes based on DICOM Reference Coordinate System (RCS)
+ * Planes based on LPS coordinate system
  */
 enum class ImagePlane{
     Axial = 0,          ///< YX plane (Axial, Transverse, Horizontal)

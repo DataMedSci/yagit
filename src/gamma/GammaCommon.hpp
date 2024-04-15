@@ -1,5 +1,5 @@
 /********************************************************************************************
- * Copyright (C) 2023 'Yet Another Gamma Index Tool' Developers.
+ * Copyright (C) 2023-2024 'Yet Another Gamma Index Tool' Developers.
  * 
  * This file is part of 'Yet Another Gamma Index Tool'.
  * 
@@ -49,7 +49,7 @@ void validateGammaParameters(const GammaParameters& gammaParams){
     }
     if(gammaParams.normalization != GammaNormalization::Global &&
        gammaParams.normalization != GammaNormalization::Local){
-        throw std::invalid_argument("global normalization is not global nor local");
+        throw std::invalid_argument("global normalization is neither global nor local");
     }
     if(gammaParams.normalization == GammaNormalization::Global && gammaParams.globalNormDose <= 0){
         throw std::invalid_argument("global normalization dose is not positive (globalNormDose <= 0)");

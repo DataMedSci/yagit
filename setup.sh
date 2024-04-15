@@ -25,6 +25,8 @@ BUILD_PERFORMANCE_TESTING=OFF
 REF_IMG=img_reference.dcm
 EVAL_IMG=img_evaluated.dcm
 
+BUILD_DOCUMENTATION=OFF
+
 INSTALL=OFF
 INSTALL_DIR=./yagit
 
@@ -122,13 +124,12 @@ fi
 if [ $BUILD_EXAMPLES == ON ]; then
     echo ""
     echo "RUNNING EXAMPLES..."
-    ./build/examples/gamma2DInterp "$REF_IMG" "$EVAL_IMG"
-    echo ""
-    ./build/examples/gamma25D "$REF_IMG" "$EVAL_IMG"
-    echo ""
+    echo "GAMMA SIMPLE"
+    ./build/examples/gammaSimple
+    echo ""; echo "GAMMA 3D"
     ./build/examples/gamma3D "$REF_IMG" "$EVAL_IMG"
-    echo ""
-    ./build/examples/gammaImage
+    echo ""; echo "GAMMA WITH INTERP"
+    ./build/examples/gammaWithInterp "$REF_IMG" "$EVAL_IMG"
 fi
 
 if [ $BUILD_TESTING == ON ]; then
@@ -140,9 +141,23 @@ fi
 if [ $BUILD_PERFORMANCE_TESTING == ON ]; then
     echo ""
     echo "RUNNING PERFORMANCE TEST..."
+    echo "GAMMA PERF"
     ./build/tests/performance/gammaPerf "$REF_IMG" "$EVAL_IMG" gammaTimes.csv
-    echo ""
+    echo ""; echo "INTERP PERF"
     ./build/tests/performance/interpPerf "$EVAL_IMG"
+fi
+
+
+# ============================================================
+if [ $BUILD_DOCUMENTATION == ON ]; then
+    echo ""
+    echo "BUILDING DOCUMENTATION..."
+    cd docs
+    VERSION=$(git describe --tags --dirty --match "v*")
+    (cat Doxyfile; echo PROJECT_NUMBER=$VERSION) | doxygen -
+    make html SPHINXOPTS=-Dversion=$VERSION
+    cd ..
+    echo DOCUMENTATION MAIN PAGE: $(pwd)/docs/build/html/index.html
 fi
 
 

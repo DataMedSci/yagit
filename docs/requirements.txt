@@ -1,3 +1,3 @@
-sphinx
-breathe
-renku-sphinx-theme
+Sphinx==7.1.*
+breathe==4.35.0
+renku-sphinx-theme==0.4.0

@@ -1,0 +1,94 @@
+.wy-nav-content {
+    background: white;
+}
+
+.wy-side-nav-search > div.version {
+    color: #d9d9d9;
+}
+
+figure {
+    margin-bottom: 20px !important;
+}
+
+figure img {
+    margin-bottom: 10px;
+}
+
+figure p {
+    margin-bottom: 0;
+}
+
+figure p a.headerlink {
+    display: none !important;
+}
+
+ul.list,
+ol.list {
+    margin-top: -18px;
+}
+
+ol.list ol,
+ul.list ul,
+ol.list ul,
+ul.list ol {
+    margin-bottom: 10px !important;
+    margin-left: 15px;
+}
+
+ol.list li > p,
+ul.list li > p {
+    margin-bottom: 5px !important;
+}
+
+ol.list li > blockquote,
+ul.list li > blockquote {
+    margin: 0 0 5px 0;
+}
+
+.code {
+    margin-top: -18px;
+}
+
+code {
+    color: #9b2f5f !important;
+    font-weight: 700;
+}
+
+table.center-headers th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+table.right-align-vals td:not(:first-child) {
+    text-align: right;
+}
+
+table.wrap-text td {
+    white-space: normal;
+}
+
+table.wrap-text td > p {
+    line-height: 1.2rem !important;
+}
+
+.math.math-left {
+    text-align: left;
+}
+
+.math.math-left mjx-container.MathJax {
+    text-align: left;
+}
+
+.list-code-right code {
+    float: right;
+    margin-right: calc(100% - 520px);
+    padding: 0;
+    color: black !important;
+    font-size: 95%;
+    font-weight: normal;
+}
+
+.list-math-right .math {
+    float: right;
+    margin-right: calc(100% - 150px);
+}

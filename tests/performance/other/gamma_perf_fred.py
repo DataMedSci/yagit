@@ -30,13 +30,13 @@
 #     gammaSearchMax = maxSearchDist / DTA
 #     libFredGI.fredGI_setGammaSearchMax(ctypes.c_float(gammaSearchMax))
 
-import time
-import statistics
 import csv
+import statistics
+import time
 
+import fredtools as ft
 import numpy as np
 import SimpleITK as sitk
-import fredtools as ft
 
 
 def read_dcm_rtdose(filepath):
