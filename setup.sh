@@ -136,6 +136,7 @@ if [ $BUILD_TESTING == ON ]; then
     echo ""
     echo "RUNNING UNIT TESTS..."
     ctest -C $BUILD_TYPE --test-dir build --output-on-failure
+    # ./build/tests/manual/simulatedWendling
 fi
 
 if [ $BUILD_PERFORMANCE_TESTING == ON ]; then
