@@ -80,6 +80,7 @@ if %BUILD_TESTING% == ON (
     echo:
     echo RUNNING UNIT TESTS...
     ctest -C %BUILD_TYPE% --test-dir build --output-on-failure
+    @REM build\tests\manual\%BUILD_TYPE%\simulatedWendling.exe
 )
 
 if %BUILD_PERFORMANCE_TESTING% == ON (
