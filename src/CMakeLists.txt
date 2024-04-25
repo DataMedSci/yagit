@@ -34,6 +34,7 @@ option(ENABLE_FMA "Enable fused multiply-add (FMA) when building yagit library" 
 find_package(GDCM REQUIRED)
 
 set(YAGIT_SOURCE_FILES
+    Image.cpp
     ImageData.cpp
     GammaResult.cpp
     DataReader.cpp

@@ -36,23 +36,8 @@
 
 #include <yagit/yagit.hpp>
 
-void printImage2D(const yagit::Image2D& img){
-    std::ostringstream oss;
-    oss << "[";
-    for(size_t i = 0; i < img.size(); i++){
-        oss << (i == 0 ? "[" : " [");
-        for(size_t j = 0; j < img[i].size() - 1; j++){
-            oss << img[i][j] << ", ";
-        }
-        oss << img[i].back();
-        oss << (i < img.size() - 1 ? "],\n" : "]");
-    }
-    oss << "]\n";
-    std::cout << oss.str();
-}
-
 void printImageData(const yagit::ImageData& imageData){
-    printImage2D(imageData.getImage2D(0));
+    std::cout << yagit::image2DToString(imageData.getImage2D(0), 2) << "\n";
 
     yagit::DataSize size = imageData.getSize();
     yagit::DataOffset offset = imageData.getOffset();
@@ -105,10 +90,10 @@ int main(){
 
     // print the gamma index image
     // expected:
-    // [[0.471405, 0.57735],
-    //  [1.10554, 0.816496]]
+    // [[0.471, 0.577],
+    //  [1.106, 0.816]]
     std::cout << "Gamma index image:\n";
-    printImage2D(gammaRes.getImage2D(0));
+    std::cout << yagit::image2DToString(gammaRes.getImage2D(0), 3) << "\n";
 
     // print gamma index statistics
     std::cout << "GIPR: " << gammaRes.passingRate() * 100 << "%\n"

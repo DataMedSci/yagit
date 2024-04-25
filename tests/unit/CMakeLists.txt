@@ -9,6 +9,7 @@ set(TESTS_SRCS
     GammaTest
     GammaCommonTest
     GammaResultTest
+    ImageTest
     ImageDataTest
     InterpolationTest
 )
