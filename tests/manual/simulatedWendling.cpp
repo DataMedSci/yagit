@@ -76,38 +76,12 @@ const yagit::ImageData EVAL_3D(EVAL_IMAGE_3D, {-0.3, -6.0, 4.5}, {1.5, 2, 2.5});
 
 // ====================================================================================================
 
-const std::streamsize PRECISION = 6;
-
-std::string imageNDimToStr(const std::vector<float>& vector, uint32_t){
-    std::ostringstream oss;
-    oss << std::fixed << std::setprecision(PRECISION);
-    oss << "[";
-    for(size_t i = 0; i < vector.size() - 1; i++){
-        oss << vector[i] << ", ";
-    }
-    oss << vector.back() << "]";
-    return oss.str();
-}
-
-template <typename T>
-std::string imageNDimToStr(const std::vector<T>& vector, uint32_t level){
-    std::string spaces(level + 1, ' ');
-    std::string res = "";
-    res += "[";
-    for(size_t i = 0; i < vector.size() - 1; i++){
-        res += imageNDimToStr(vector[i], level + 1) + ",\n" + spaces;
-    }
-    res += imageNDimToStr(vector.back(), level + 1);
-    res += "]";
-    return res;
-}
-
 void printImage(const yagit::ImageData& gammaRes){
     if(gammaRes.getSize().frames == 1){
-        std::cout << imageNDimToStr(gammaRes.getImage2D(0), 0) << "\n";
+        std::cout << yagit::image2DToString(gammaRes.getImage2D(0), 6) << "\n";
     }
     else{
-        std::cout << imageNDimToStr(gammaRes.getImage3D(), 0) << "\n";
+        std::cout << yagit::image3DToString(gammaRes.getImage3D(), 6) << "\n";
     }
 }
 
@@ -249,12 +223,12 @@ void wendling(std::string dim,
               const yagit::GammaParameters& gammaParams){
     std::cout << dim << " #############################################\n";
 
-    std::cout << "VALUES USING CLASSIC WITH INTERPOLATED EVAL:\n";
+    std::cout << "SIMULATED WENDLING METHOD:\n";
     auto resClassic = classicFunc(refImg, evalImg, gammaParams);
     printImage(resClassic);
 
     std::cout << "==============================\n";
-    std::cout << "VALUES USING WENDLING:\n";
+    std::cout << "REAL WENDLING METHOD:\n";
     auto resWendling = wendlingFunc(refImg, evalImg, gammaParams);
     printImage(resWendling);
 
@@ -286,7 +260,7 @@ void wendling3D(const yagit::ImageData& refImg, const yagit::ImageData& evalImg,
 const float MAX_REF_DOSE = -1;  // set automatically max reference dose
 
 int main(){
-    yagit::GammaParameters gammaParams{3, 3, yagit::GammaNormalization::Global, MAX_REF_DOSE, 0, 2, 0.3};
+    yagit::GammaParameters gammaParams{3, 3, yagit::GammaNormalization::Global, MAX_REF_DOSE, 0, 10, 0.3};
 
     try{
         // 2D

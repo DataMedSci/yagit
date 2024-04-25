@@ -19,6 +19,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
 namespace yagit{
 
@@ -31,6 +32,24 @@ using Image2D = std::vector<std::vector<float>>;
  * @brief Type for storing 3D image
  */
 using Image3D = std::vector<Image2D>;
+
+/**
+ * @brief Convert Image2D to string
+ * @param img Image2D to convert
+ * @param precision Round numbers to @a precision digits after the decimal point.
+ * When set to a negative number, conversion precision has a default behavior.
+ * @return String representation of Image2D
+ */
+std::string image2DToString(const yagit::Image2D& img, std::streamsize precision = -1);
+
+/**
+ * @brief Convert Image3D to string
+ * @param img Image3D to convert
+ * @param precision Round numbers to @a precision digits after the decimal point.
+ * When set to a negative number, conversion precision has a default behavior.
+ * @return String representation of Image3D
+ */
+std::string image3DToString(const yagit::Image3D& img, std::streamsize precision = -1);
 
 /**
  * @brief Axis of image (Z, Y, X)
