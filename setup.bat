@@ -30,10 +30,11 @@ set INSTALL_DIR=./yagit
 @REM ============================================================
 if not exist build\CMakeCache.txt (
     echo CONFIGURING CMAKE FIRST TIME...
-    mkdir build
-    cd build
-    conan install .. --output-folder . --build missing
-    cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
+    mkdir build\deps_conan
+    cd build\deps_conan
+    conan install ../.. --output-folder . --build missing
+    cd ..
+    cmake .. -DCMAKE_TOOLCHAIN_FILE=deps_conan/conan_toolchain.cmake
     cd ..
 )
 

@@ -88,8 +88,12 @@ if [[ $INSTALL_DEPENDENCIES == LOCAL || $INSTALL_DEPENDENCIES == GLOBAL ]]; then
 
     cd ..
 elif [ $INSTALL_DEPENDENCIES == CONAN ]; then
-    conan install .. --output-folder . --build missing
-    TOOLCHAIN_FILE=conan_toolchain.cmake
+    echo "INSTALLING DEPENDENCIES..."
+    mkdir -p deps_conan && cd deps_conan
+
+    conan install ../.. --output-folder . --build missing
+    TOOLCHAIN_FILE=deps_conan/conan_toolchain.cmake
+    cd ..
 fi
 
 
