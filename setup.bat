@@ -4,6 +4,9 @@ setlocal
 set BUILD_TYPE=Release
 set BUILD_SHARED_LIBS=OFF
 
+@REM set INSTALL_DEPENDENCIES=OFF
+set INSTALL_DEPENDENCIES=CONAN
+
 @REM set GAMMA_VERSION=SEQUENTIAL
 set GAMMA_VERSION=THREADS
 @REM set GAMMA_VERSION=SIMD
@@ -28,21 +31,28 @@ set INSTALL_DIR=./yagit
 
 
 @REM ============================================================
-if not exist build\CMakeCache.txt (
-    echo CONFIGURING CMAKE FIRST TIME...
-    mkdir build\deps_conan
-    cd build\deps_conan
-    conan install ../.. --output-folder . --build missing
-    cd ..
-    cmake .. -DCMAKE_TOOLCHAIN_FILE=deps_conan/conan_toolchain.cmake
-    cd ..
+mkdir build
+cd build
+
+@REM ============================================================
+set TOOLCHAIN_FILE=""
+
+if %INSTALL_DEPENDENCIES% == CONAN (
+    echo INSTALLING DEPENDENCIES...
+
+    if not exist deps_conan (
+        mkdir deps_conan
+        cd deps_conan
+        conan install ../.. --output-folder . --build missing
+        cd ..
+    )
+    set TOOLCHAIN_FILE=deps_conan/conan_toolchain.cmake
 )
 
 
 @REM ============================================================
 echo:
 echo CONFIGURING CMAKE...
-cd build
 cmake .. -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ^
          -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS% ^
          -DGAMMA_VERSION=%GAMMA_VERSION% ^
@@ -50,7 +60,8 @@ cmake .. -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ^
          -DENABLE_FMA=%ENABLE_FMA% ^
          -DBUILD_EXAMPLES=%BUILD_EXAMPLES% ^
          -DBUILD_TESTING=%BUILD_TESTING% ^
-         -DBUILD_PERFORMANCE_TESTING=%BUILD_PERFORMANCE_TESTING%
+         -DBUILD_PERFORMANCE_TESTING=%BUILD_PERFORMANCE_TESTING% ^
+         -DCMAKE_TOOLCHAIN_FILE=%TOOLCHAIN_FILE%
 
 
 @REM ============================================================
