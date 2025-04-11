@@ -38,16 +38,17 @@ cd build
 # ============================================================
 
 install () {
-    # $1 - path to library to install
+    # $1 - path to the library that will be installed
+    # $2 - installation mode (LOCAL or GLOBAL)
 
     cd $1
     mkdir -p build && cd build
     cmake .. -DCMAKE_BUILD_TYPE=Release
     cmake --build . --config Release -j
 
-    if [ $INSTALL_DEPENDENCIES == LOCAL ]; then
+    if [ $2 == LOCAL ]; then
         cmake --install . --prefix ./installed
-    elif [ $INSTALL_DEPENDENCIES == GLOBAL ]; then
+    elif [ $2 == GLOBAL ]; then
         sudo cmake --install .
     fi
 
@@ -64,19 +65,19 @@ if [[ $INSTALL_DEPENDENCIES == LOCAL || $INSTALL_DEPENDENCIES == GLOBAL ]]; then
     # GDCM
     if [ ! -d GDCM ]; then
         git clone --depth 1 https://github.com/malaterre/GDCM.git -b v3.0.22 -c advice.detachedHead=false
-        install GDCM
+        install GDCM $INSTALL_DEPENDENCIES
     fi
 
     # xsimd
     if [ ! -d xsimd ]; then
         git clone --depth 1 https://github.com/xtensor-stack/xsimd.git -b 11.1.0 -c advice.detachedHead=false
-        install xsimd
+        install xsimd $INSTALL_DEPENDENCIES
     fi
 
     # GoogleTest
     if [ ! -d googletest ]; then
         git clone --depth 1 https://github.com/google/googletest.git -b v1.13.0 -c advice.detachedHead=false
-        install googletest
+        install googletest $INSTALL_DEPENDENCIES
     fi
 
     if [ $INSTALL_DEPENDENCIES == LOCAL ]; then
