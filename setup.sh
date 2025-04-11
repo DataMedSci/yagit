@@ -5,7 +5,7 @@ BUILD_SHARED_LIBS=OFF
 
 # INSTALL_DEPENDENCIES=OFF
 INSTALL_DEPENDENCIES=LOCAL
-# INSTALL_DEPENDENCIES=GLOBAL  # requires root privileges
+# INSTALL_DEPENDENCIES=GLOBAL   # requires root privileges
 # INSTALL_DEPENDENCIES=CONAN
 
 # GAMMA_VERSION=SEQUENTIAL
@@ -116,7 +116,7 @@ cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
 
 # ============================================================
 echo ""
-echo "COMPILING..."
+echo "BUILDING..."
 cmake --build . --config $BUILD_TYPE -j
 COMPILE_RESULT=$?
 cd ..

@@ -5,7 +5,9 @@ set BUILD_TYPE=Release
 set BUILD_SHARED_LIBS=OFF
 
 @REM set INSTALL_DEPENDENCIES=OFF
-set INSTALL_DEPENDENCIES=CONAN
+set INSTALL_DEPENDENCIES=LOCAL
+@REM set INSTALL_DEPENDENCIES=GLOBAL   %= requires administrator privileges =%
+@REM set INSTALL_DEPENDENCIES=CONAN
 
 @REM set GAMMA_VERSION=SEQUENTIAL
 set GAMMA_VERSION=THREADS
@@ -35,9 +37,46 @@ mkdir build
 cd build
 
 @REM ============================================================
+set DEPENDENCIES_PATHS=""
 set TOOLCHAIN_FILE=""
 
-if %INSTALL_DEPENDENCIES% == CONAN (
+set "GDCM_PATH=%cd:\=/%/deps/GDCM/build/installed"
+set "XSIMD_PATH=%cd:\=/%/deps/xsimd/build/installed"
+set "GTEST_PATH=%cd:\=/%/deps/googletest/build/installed"
+
+@REM workaround for missing 'or' operator in batch
+if %INSTALL_DEPENDENCIES% == LOCAL set INSTALL_LOCAL_GLOBAL=y
+if %INSTALL_DEPENDENCIES% == GLOBAL set INSTALL_LOCAL_GLOBAL=y
+
+if DEFINED INSTALL_LOCAL_GLOBAL (
+    echo INSTALLING DEPENDENCIES...
+    mkdir deps
+    cd deps
+
+    @REM GDCM
+    if not exist GDCM (
+        git clone https://github.com/malaterre/GDCM.git -b v3.0.22
+        call :install GDCM %INSTALL_DEPENDENCIES%
+    )
+
+    @REM xsimd
+    if not exist xsimd (
+        git clone https://github.com/xtensor-stack/xsimd.git -b 11.1.0
+        call :install xsimd %INSTALL_DEPENDENCIES%
+    )
+
+    @REM GoogleTest
+    if not exist googletest (
+        git clone https://github.com/google/googletest.git -b v1.13.0
+        call :install googletest %INSTALL_DEPENDENCIES%
+    )
+
+    if %INSTALL_DEPENDENCIES% == LOCAL (
+        set DEPENDENCIES_PATHS="%GDCM_PATH%;%XSIMD_PATH%;%GTEST_PATH%"
+    )
+
+    cd ..
+) else if %INSTALL_DEPENDENCIES% == CONAN (
     echo INSTALLING DEPENDENCIES...
 
     if not exist deps_conan (
@@ -61,12 +100,13 @@ cmake .. -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ^
          -DBUILD_EXAMPLES=%BUILD_EXAMPLES% ^
          -DBUILD_TESTING=%BUILD_TESTING% ^
          -DBUILD_PERFORMANCE_TESTING=%BUILD_PERFORMANCE_TESTING% ^
+         -DCMAKE_PREFIX_PATH=%DEPENDENCIES_PATHS% ^
          -DCMAKE_TOOLCHAIN_FILE=%TOOLCHAIN_FILE%
 
 
 @REM ============================================================
 echo:
-echo COMPILING...
+echo BUILDING...
 cmake --build . --config %BUILD_TYPE% -j
 set COMPILE_RESULT=%ERRORLEVEL%
 cd ..
@@ -127,7 +167,7 @@ if %BUILD_DOCUMENTATION% == ON (
 if %INSTALL% == ON (
     echo:
     echo INSTALLING...
-    IF "%INSTALL_DIR%" NEQ "" (
+    if "%INSTALL_DIR%" NEQ "" (
         echo INSTALLING IN %INSTALL_DIR%
         cmake --install build --prefix %INSTALL_DIR%
     ) else (
@@ -136,3 +176,25 @@ if %INSTALL% == ON (
         cmake --install build
     )
 )
+
+
+@REM ============================================================
+goto :eof
+
+:install
+@REM %1 - path to the library that will be installed
+@REM %2 - installation mode (LOCAL or GLOBAL)
+
+cd %1
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake --build . --config Release -j
+
+if %2 == LOCAL (
+    cmake --install . --prefix ./installed
+) else if %2 == GLOBAL (
+    cmake --install .
+)
+cd ../..
+goto :eof
