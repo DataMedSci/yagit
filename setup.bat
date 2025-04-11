@@ -55,19 +55,19 @@ if DEFINED INSTALL_LOCAL_GLOBAL (
 
     @REM GDCM
     if not exist GDCM (
-        git clone https://github.com/malaterre/GDCM.git -b v3.0.22
+        git clone --depth 1 https://github.com/malaterre/GDCM.git -b v3.0.22 -c advice.detachedHead=false
         call :install GDCM %INSTALL_DEPENDENCIES%
     )
 
     @REM xsimd
     if not exist xsimd (
-        git clone https://github.com/xtensor-stack/xsimd.git -b 11.1.0
+        git clone --depth 1 https://github.com/xtensor-stack/xsimd.git -b 11.1.0 -c advice.detachedHead=false
         call :install xsimd %INSTALL_DEPENDENCIES%
     )
 
     @REM GoogleTest
     if not exist googletest (
-        git clone https://github.com/google/googletest.git -b v1.13.0
+        git clone --depth 1 https://github.com/google/googletest.git -b v1.13.0 -c advice.detachedHead=false
         call :install googletest %INSTALL_DEPENDENCIES%
     )
 
