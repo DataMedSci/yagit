@@ -36,49 +36,49 @@ mkdir -p build
 cd build
 
 # ============================================================
-
-install () {
-    # $1 - path to the library that will be installed
-    # $2 - installation mode (LOCAL or GLOBAL)
-
-    cd $1
-    mkdir -p build && cd build
-    cmake .. -DCMAKE_BUILD_TYPE=Release
-    cmake --build . --config Release -j
-
-    if [ $2 == LOCAL ]; then
-        cmake --install . --prefix ./installed
-    elif [ $2 == GLOBAL ]; then
-        sudo cmake --install .
-    fi
-
-    cd ../..
-}
-
 DEPENDENCIES_PATHS=""
 TOOLCHAIN_FILE=""
+
+install_lib () {
+    # $1 - url to git repository of the library that will be installed
+    # $2 - tag or branch of the library
+    # $3 - installation mode (LOCAL or GLOBAL)
+
+    # extract repository name from url
+    repo_name_git=${1##*/}
+    repo_name=${repo_name_git%.git}
+
+    if [ ! -d $repo_name ]; then
+        # clone git repo
+        git clone --depth 1 $1 -b $2 -c advice.detachedHead=false
+    fi
+
+    if [ ! -d $repo_name/build ]; then
+        cd $repo_name
+        mkdir -p build && cd build
+
+        # configure and build
+        cmake .. -DCMAKE_BUILD_TYPE=Release
+        cmake --build . --config Release -j
+
+        # install
+        if [ $3 == LOCAL ]; then
+            cmake --install . --prefix ./installed
+        elif [ $3 == GLOBAL ]; then
+            sudo cmake --install .
+        fi
+
+        cd ../..
+    fi
+}
 
 if [[ $INSTALL_DEPENDENCIES == LOCAL || $INSTALL_DEPENDENCIES == GLOBAL ]]; then
     echo "INSTALLING DEPENDENCIES..."
     mkdir -p deps && cd deps
 
-    # GDCM
-    if [ ! -d GDCM ]; then
-        git clone --depth 1 https://github.com/malaterre/GDCM.git -b v3.0.22 -c advice.detachedHead=false
-        install GDCM $INSTALL_DEPENDENCIES
-    fi
-
-    # xsimd
-    if [ ! -d xsimd ]; then
-        git clone --depth 1 https://github.com/xtensor-stack/xsimd.git -b 11.1.0 -c advice.detachedHead=false
-        install xsimd $INSTALL_DEPENDENCIES
-    fi
-
-    # GoogleTest
-    if [ ! -d googletest ]; then
-        git clone --depth 1 https://github.com/google/googletest.git -b v1.13.0 -c advice.detachedHead=false
-        install googletest $INSTALL_DEPENDENCIES
-    fi
+    install_lib https://github.com/malaterre/GDCM.git v3.0.22 $INSTALL_DEPENDENCIES
+    install_lib https://github.com/xtensor-stack/xsimd.git 11.1.0 $INSTALL_DEPENDENCIES
+    install_lib https://github.com/google/googletest.git v1.13.0 $INSTALL_DEPENDENCIES
 
     if [ $INSTALL_DEPENDENCIES == LOCAL ]; then
         GDCM_PATH="$(pwd)/GDCM/build/installed"

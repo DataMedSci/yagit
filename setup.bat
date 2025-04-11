@@ -32,11 +32,11 @@ set INSTALL=OFF
 set INSTALL_DIR=./yagit
 
 
-@REM ============================================================
+:: ============================================================
 mkdir build
 cd build
 
-@REM ============================================================
+:: ============================================================
 set DEPENDENCIES_PATHS=""
 set TOOLCHAIN_FILE=""
 
@@ -44,7 +44,7 @@ set "GDCM_PATH=%cd:\=/%/deps/GDCM/build/installed"
 set "XSIMD_PATH=%cd:\=/%/deps/xsimd/build/installed"
 set "GTEST_PATH=%cd:\=/%/deps/googletest/build/installed"
 
-@REM workaround for missing 'or' operator in batch
+:: workaround for missing 'or' operator in batch
 if %INSTALL_DEPENDENCIES% == LOCAL set INSTALL_LOCAL_GLOBAL=y
 if %INSTALL_DEPENDENCIES% == GLOBAL set INSTALL_LOCAL_GLOBAL=y
 
@@ -53,23 +53,9 @@ if DEFINED INSTALL_LOCAL_GLOBAL (
     mkdir deps
     cd deps
 
-    @REM GDCM
-    if not exist GDCM (
-        git clone --depth 1 https://github.com/malaterre/GDCM.git -b v3.0.22 -c advice.detachedHead=false
-        call :install GDCM %INSTALL_DEPENDENCIES%
-    )
-
-    @REM xsimd
-    if not exist xsimd (
-        git clone --depth 1 https://github.com/xtensor-stack/xsimd.git -b 11.1.0 -c advice.detachedHead=false
-        call :install xsimd %INSTALL_DEPENDENCIES%
-    )
-
-    @REM GoogleTest
-    if not exist googletest (
-        git clone --depth 1 https://github.com/google/googletest.git -b v1.13.0 -c advice.detachedHead=false
-        call :install googletest %INSTALL_DEPENDENCIES%
-    )
+    call :install_lib https://github.com/malaterre/GDCM.git v3.0.22 %INSTALL_DEPENDENCIES%
+    call :install_lib https://github.com/xtensor-stack/xsimd.git 11.1.0 %INSTALL_DEPENDENCIES%
+    call :install_lib https://github.com/google/googletest.git v1.13.0 %INSTALL_DEPENDENCIES%
 
     if %INSTALL_DEPENDENCIES% == LOCAL (
         set DEPENDENCIES_PATHS="%GDCM_PATH%;%XSIMD_PATH%;%GTEST_PATH%"
@@ -89,7 +75,7 @@ if DEFINED INSTALL_LOCAL_GLOBAL (
 )
 
 
-@REM ============================================================
+:: ============================================================
 echo:
 echo CONFIGURING CMAKE...
 cmake .. -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ^
@@ -104,7 +90,7 @@ cmake .. -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ^
          -DCMAKE_TOOLCHAIN_FILE=%TOOLCHAIN_FILE%
 
 
-@REM ============================================================
+:: ============================================================
 echo:
 echo BUILDING...
 cmake --build . --config %BUILD_TYPE% -j
@@ -116,7 +102,7 @@ if %COMPILE_RESULT% NEQ 0 (
 )
 
 
-@REM ============================================================
+:: ============================================================
 if %BUILD_EXAMPLES% == ON (
     echo:
     echo RUNNING EXAMPLES...
@@ -145,10 +131,10 @@ if %BUILD_PERFORMANCE_TESTING% == ON (
 )
 
 
-@REM ============================================================
+:: ============================================================
 set YAGIT_DIR=%cd:\=/%
 
-@REM save git tag to variable
+:: save git tag to variable
 for /f %%v in ('git describe --tags --dirty --match "v*"') do set VERSION=%%v
 
 if %BUILD_DOCUMENTATION% == ON (
@@ -163,7 +149,7 @@ if %BUILD_DOCUMENTATION% == ON (
 )
 
 
-@REM ============================================================
+:: ============================================================
 if %INSTALL% == ON (
     echo:
     echo INSTALLING...
@@ -178,23 +164,38 @@ if %INSTALL% == ON (
 )
 
 
-@REM ============================================================
+:: ============================================================
 goto :eof
 
-:install
-@REM %1 - path to the library that will be installed
-@REM %2 - installation mode (LOCAL or GLOBAL)
+:install_lib
+    :: %1 - url to git repository of the library that will be installed
+    :: %2 - tag or branch of the library
+    :: %3 - installation mode (LOCAL or GLOBAL)
 
-cd %1
-mkdir build
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . --config Release -j
+    :: extract repository name from url
+    for %%A in ("%1") do set repo_name=%%~nA
 
-if %2 == LOCAL (
-    cmake --install . --prefix ./installed
-) else if %2 == GLOBAL (
-    cmake --install .
-)
-cd ../..
-goto :eof
+    if not exist %repo_name% (
+        :: clone git repo
+        git clone --depth 1 %1 -b %2 -c advice.detachedHead=false
+    )
+
+    if not exist %repo_name%/build (
+        cd %repo_name%
+        mkdir build
+        cd build
+
+        :: configure and build
+        cmake .. -DCMAKE_BUILD_TYPE=Release
+        cmake --build . --config Release -j
+
+        :: install
+        if %3 == LOCAL (
+            cmake --install . --prefix ./installed
+        ) else if %3 == GLOBAL (
+            cmake --install .
+        )
+
+        cd ../..
+    )
+    goto :eof
