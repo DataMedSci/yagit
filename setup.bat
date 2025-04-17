@@ -1,6 +1,6 @@
 @echo off
 setlocal
-pushd %~dp0
+pushd "%~dp0"
 
 set BUILD_TYPE=Release
 set BUILD_SHARED_LIBS=OFF
@@ -139,7 +139,7 @@ if %RUN_PERFORMANCE_TESTING% == ON (
 
 
 :: ============================================================
-set YAGIT_DIR=%cd:\=/%
+set "YAGIT_DIR=%cd:\=/%"
 
 :: save git tag to variable
 for /f %%v in ('git describe --tags --dirty --match "v*"') do set VERSION=%%v
@@ -151,7 +151,7 @@ if %BUILD_DOCUMENTATION% == ON (
     (type Doxyfile & echo PROJECT_NUMBER=%VERSION%) | doxygen -
     set SPHINXOPTS=-Dversion=%VERSION%
     call make.bat html
-    echo DOCUMENTATION MAIN PAGE: %YAGIT_DIR%/docs/build/html/index.html
+    echo DOCUMENTATION MAIN PAGE: "%YAGIT_DIR%/docs/build/html/index.html"
     cd ..
 )
 
