@@ -154,7 +154,7 @@ fi
 
 if [ $RUN_PERFORMANCE_TESTING == ON ]; then
     echo ""
-    echo "RUNNING PERFORMANCE TEST..."
+    echo "RUNNING PERFORMANCE TESTS..."
     echo "GAMMA PERF"
     ./build/tests/performance/gammaPerf "$REF_IMG" "$EVAL_IMG" gammaTimes.csv
     echo ""; echo "INTERP PERF"
