@@ -19,6 +19,7 @@
 
 #include "yagit/Image.hpp"
 
+#include <cstdint>
 #include <sstream>
 #include <iomanip>
 
