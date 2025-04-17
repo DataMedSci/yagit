@@ -38,7 +38,7 @@ set INSTALL_DIR=./yagit
 
 
 :: ============================================================
-mkdir build
+if not exist build mkdir build
 cd build
 
 :: ============================================================
@@ -70,7 +70,7 @@ if DEFINED INSTALL_LOCAL_GLOBAL (
 ) else if %INSTALL_DEPENDENCIES% == CONAN (
     echo INSTALLING DEPENDENCIES...
 
-    if not exist deps_conan (
+    if not exist deps_conan/conan_toolchain.cmake (
         mkdir deps_conan
         cd deps_conan
         :: this command works with conan2 and conan1
@@ -162,7 +162,7 @@ if %INSTALL% == ON (
     echo INSTALLING...
     if "%INSTALL_DIR%" NEQ "" (
         echo INSTALLING IN %INSTALL_DIR%
-        cmake --install build --prefix %INSTALL_DIR%
+        cmake --install build --prefix "%INSTALL_DIR%"
     ) else (
         echo INSTALLING IN SYSTEM DIRECTORY
         echo MAKE SURE YOU RUN THIS AS ADMINISTRATOR

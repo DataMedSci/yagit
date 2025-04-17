@@ -96,7 +96,7 @@ if [[ $INSTALL_DEPENDENCIES == LOCAL || $INSTALL_DEPENDENCIES == GLOBAL ]]; then
 elif [ $INSTALL_DEPENDENCIES == CONAN ]; then
     echo "INSTALLING DEPENDENCIES..."
 
-    if [ ! -d deps_conan ]; then
+    if [ ! -f deps_conan/conan_toolchain.cmake ]; then
         mkdir -p deps_conan && cd deps_conan
         # this command works with conan2 and conan1
         conan install ../.. --output-folder . --build missing
