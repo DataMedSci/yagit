@@ -36,6 +36,7 @@ INSTALL_DIR=./yagit
 
 
 # ============================================================
+cd "$(dirname "$0")"
 mkdir -p build
 cd build
 

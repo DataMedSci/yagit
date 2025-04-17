@@ -1,5 +1,6 @@
 @echo off
 setlocal
+pushd %~dp0
 
 set BUILD_TYPE=Release
 set BUILD_SHARED_LIBS=OFF
@@ -103,6 +104,7 @@ set COMPILE_RESULT=%ERRORLEVEL%
 cd ..
 
 if %COMPILE_RESULT% NEQ 0 (
+    popd
     exit /b %COMPILE_RESULT%
 )
 
@@ -170,6 +172,7 @@ if %INSTALL% == ON (
 
 
 :: ============================================================
+popd
 goto :eof
 
 :install_lib
