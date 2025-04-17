@@ -19,9 +19,13 @@ set SIMD_EXTENSION=DEFAULT
 
 set ENABLE_FMA=OFF
 
-set BUILD_EXAMPLES=ON
+set BUILD_EXAMPLES=OFF
 set BUILD_TESTING=OFF
 set BUILD_PERFORMANCE_TESTING=OFF
+
+set RUN_EXAMPLES=%BUILD_EXAMPLES%
+set RUN_TESTING=%BUILD_TESTING%
+set RUN_PERFORMANCE_TESTING=%BUILD_PERFORMANCE_TESTING%
 
 set REF_IMG=img_reference.dcm
 set EVAL_IMG=img_evaluated.dcm
@@ -68,6 +72,7 @@ if DEFINED INSTALL_LOCAL_GLOBAL (
     if not exist deps_conan (
         mkdir deps_conan
         cd deps_conan
+        :: this command works with conan2 and conan1
         conan install ../.. --output-folder . --build missing
         cd ..
     )
@@ -103,7 +108,7 @@ if %COMPILE_RESULT% NEQ 0 (
 
 
 :: ============================================================
-if %BUILD_EXAMPLES% == ON (
+if %RUN_EXAMPLES% == ON (
     echo:
     echo RUNNING EXAMPLES...
     echo GAMMA SIMPLE
@@ -114,14 +119,14 @@ if %BUILD_EXAMPLES% == ON (
     build\examples\%BUILD_TYPE%\gammaWithInterp.exe %REF_IMG% %EVAL_IMG%
 )
 
-if %BUILD_TESTING% == ON (
+if %RUN_TESTING% == ON (
     echo:
     echo RUNNING UNIT TESTS...
     ctest -C %BUILD_TYPE% --test-dir build --output-on-failure
     @REM build\tests\manual\%BUILD_TYPE%\simulatedWendling.exe
 )
 
-if %BUILD_PERFORMANCE_TESTING% == ON (
+if %RUN_PERFORMANCE_TESTING% == ON (
     echo:
     echo RUNNING PERFORMANCE TEST...
     echo GAMMA PERF
@@ -173,15 +178,15 @@ goto :eof
     :: %3 - installation mode (LOCAL or GLOBAL)
 
     :: extract repository name from url
-    for %%A in ("%1") do set repo_name=%%~nA
+    for %%A in ("%1") do set REPO_NAME=%%~nA
 
-    if not exist %repo_name% (
+    if not exist %REPO_NAME% (
         :: clone git repo
-        git clone --depth 1 %1 -b %2 -c advice.detachedHead=false
+        git clone %1 -b %2 --depth 1 -c advice.detachedHead=false
     )
 
-    if not exist %repo_name%/build (
-        cd %repo_name%
+    if not exist %REPO_NAME%/build (
+        cd %REPO_NAME%
         mkdir build
         cd build
 

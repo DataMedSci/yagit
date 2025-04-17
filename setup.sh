@@ -18,9 +18,13 @@ SIMD_EXTENSION=DEFAULT
 
 ENABLE_FMA=OFF
 
-BUILD_EXAMPLES=ON
+BUILD_EXAMPLES=OFF
 BUILD_TESTING=OFF
 BUILD_PERFORMANCE_TESTING=OFF
+
+RUN_EXAMPLES=$BUILD_EXAMPLES
+RUN_TESTING=$BUILD_TESTING
+RUN_PERFORMANCE_TESTING=$BUILD_PERFORMANCE_TESTING
 
 REF_IMG=img_reference.dcm
 EVAL_IMG=img_evaluated.dcm
@@ -50,7 +54,7 @@ install_lib () {
 
     if [ ! -d $repo_name ]; then
         # clone git repo
-        git clone --depth 1 $1 -b $2 -c advice.detachedHead=false
+        git clone $1 -b $2 --depth 1 -c advice.detachedHead=false
     fi
 
     if [ ! -d $repo_name/build ]; then
@@ -93,6 +97,7 @@ elif [ $INSTALL_DEPENDENCIES == CONAN ]; then
 
     if [ ! -d deps_conan ]; then
         mkdir -p deps_conan && cd deps_conan
+        # this command works with conan2 and conan1
         conan install ../.. --output-folder . --build missing
         cd ..
     fi
@@ -128,7 +133,7 @@ fi
 
 
 # ============================================================
-if [ $BUILD_EXAMPLES == ON ]; then
+if [ $RUN_EXAMPLES == ON ]; then
     echo ""
     echo "RUNNING EXAMPLES..."
     echo "GAMMA SIMPLE"
@@ -139,14 +144,14 @@ if [ $BUILD_EXAMPLES == ON ]; then
     ./build/examples/gammaWithInterp "$REF_IMG" "$EVAL_IMG"
 fi
 
-if [ $BUILD_TESTING == ON ]; then
+if [ $RUN_TESTING == ON ]; then
     echo ""
     echo "RUNNING UNIT TESTS..."
     ctest -C $BUILD_TYPE --test-dir build --output-on-failure
     # ./build/tests/manual/simulatedWendling
 fi
 
-if [ $BUILD_PERFORMANCE_TESTING == ON ]; then
+if [ $RUN_PERFORMANCE_TESTING == ON ]; then
     echo ""
     echo "RUNNING PERFORMANCE TEST..."
     echo "GAMMA PERF"
