@@ -5,7 +5,7 @@ BUILD_SHARED_LIBS=OFF
 
 # INSTALL_DEPENDENCIES=OFF
 INSTALL_DEPENDENCIES=LOCAL
-# INSTALL_DEPENDENCIES=GLOBAL  # requires root privileges
+# INSTALL_DEPENDENCIES=GLOBAL   # requires root privileges
 # INSTALL_DEPENDENCIES=CONAN
 
 # GAMMA_VERSION=SEQUENTIAL
@@ -18,9 +18,13 @@ SIMD_EXTENSION=DEFAULT
 
 ENABLE_FMA=OFF
 
-BUILD_EXAMPLES=ON
+BUILD_EXAMPLES=OFF
 BUILD_TESTING=OFF
 BUILD_PERFORMANCE_TESTING=OFF
+
+RUN_EXAMPLES=$BUILD_EXAMPLES
+RUN_TESTING=$BUILD_TESTING
+RUN_PERFORMANCE_TESTING=$BUILD_PERFORMANCE_TESTING
 
 REF_IMG=img_reference.dcm
 EVAL_IMG=img_evaluated.dcm
@@ -32,52 +36,54 @@ INSTALL_DIR=./yagit
 
 
 # ============================================================
+cd "$(dirname "$0")"
 mkdir -p build
 cd build
 
 # ============================================================
-
-install () {
-    # $1 - path to library to install
-
-    cd $1
-    mkdir -p build && cd build
-    cmake .. -DCMAKE_BUILD_TYPE=Release
-    cmake --build . --config Release -j
-
-    if [ $INSTALL_DEPENDENCIES == LOCAL ]; then
-        cmake --install . --prefix ./installed
-    elif [ $INSTALL_DEPENDENCIES == GLOBAL ]; then
-        sudo cmake --install .
-    fi
-
-    cd ../..
-}
-
 DEPENDENCIES_PATHS=""
 TOOLCHAIN_FILE=""
+
+install_lib () {
+    # $1 - url to git repository of the library that will be installed
+    # $2 - tag or branch of the library
+    # $3 - installation mode (LOCAL or GLOBAL)
+
+    # extract repository name from url
+    repo_name_git=${1##*/}
+    repo_name=${repo_name_git%.git}
+
+    if [ ! -d $repo_name ]; then
+        # clone git repo
+        git clone $1 -b $2 --depth 1 -c advice.detachedHead=false
+    fi
+
+    if [ ! -d $repo_name/build ]; then
+        cd $repo_name
+        mkdir -p build && cd build
+
+        # configure and build
+        cmake .. -DCMAKE_BUILD_TYPE=Release
+        cmake --build . --config Release -j
+
+        # install
+        if [ $3 == LOCAL ]; then
+            cmake --install . --prefix ./installed
+        elif [ $3 == GLOBAL ]; then
+            sudo cmake --install .
+        fi
+
+        cd ../..
+    fi
+}
 
 if [[ $INSTALL_DEPENDENCIES == LOCAL || $INSTALL_DEPENDENCIES == GLOBAL ]]; then
     echo "INSTALLING DEPENDENCIES..."
     mkdir -p deps && cd deps
 
-    # GDCM
-    if [ ! -d GDCM ]; then
-        git clone https://github.com/malaterre/GDCM.git -b v3.0.22
-        install GDCM
-    fi
-
-    # xsimd
-    if [ ! -d xsimd ]; then
-        git clone https://github.com/xtensor-stack/xsimd.git -b 11.1.0
-        install xsimd
-    fi
-
-    # GoogleTest
-    if [ ! -d googletest ]; then
-        git clone https://github.com/google/googletest.git -b v1.13.0
-        install googletest
-    fi
+    install_lib https://github.com/malaterre/GDCM.git v3.0.22 $INSTALL_DEPENDENCIES
+    install_lib https://github.com/xtensor-stack/xsimd.git 11.1.0 $INSTALL_DEPENDENCIES
+    install_lib https://github.com/google/googletest.git v1.13.0 $INSTALL_DEPENDENCIES
 
     if [ $INSTALL_DEPENDENCIES == LOCAL ]; then
         GDCM_PATH="$(pwd)/GDCM/build/installed"
@@ -88,8 +94,15 @@ if [[ $INSTALL_DEPENDENCIES == LOCAL || $INSTALL_DEPENDENCIES == GLOBAL ]]; then
 
     cd ..
 elif [ $INSTALL_DEPENDENCIES == CONAN ]; then
-    conan install .. --output-folder . --build missing
-    TOOLCHAIN_FILE=conan_toolchain.cmake
+    echo "INSTALLING DEPENDENCIES..."
+
+    if [ ! -f deps_conan/conan_toolchain.cmake ]; then
+        mkdir -p deps_conan && cd deps_conan
+        # this command works with conan2 and conan1
+        conan install ../.. --output-folder . --build missing
+        cd ..
+    fi
+    TOOLCHAIN_FILE=deps_conan/conan_toolchain.cmake
 fi
 
 
@@ -110,7 +123,7 @@ cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
 
 # ============================================================
 echo ""
-echo "COMPILING..."
+echo "BUILDING..."
 cmake --build . --config $BUILD_TYPE -j
 COMPILE_RESULT=$?
 cd ..
@@ -121,7 +134,7 @@ fi
 
 
 # ============================================================
-if [ $BUILD_EXAMPLES == ON ]; then
+if [ $RUN_EXAMPLES == ON ]; then
     echo ""
     echo "RUNNING EXAMPLES..."
     echo "GAMMA SIMPLE"
@@ -132,16 +145,16 @@ if [ $BUILD_EXAMPLES == ON ]; then
     ./build/examples/gammaWithInterp "$REF_IMG" "$EVAL_IMG"
 fi
 
-if [ $BUILD_TESTING == ON ]; then
+if [ $RUN_TESTING == ON ]; then
     echo ""
     echo "RUNNING UNIT TESTS..."
     ctest -C $BUILD_TYPE --test-dir build --output-on-failure
     # ./build/tests/manual/simulatedWendling
 fi
 
-if [ $BUILD_PERFORMANCE_TESTING == ON ]; then
+if [ $RUN_PERFORMANCE_TESTING == ON ]; then
     echo ""
-    echo "RUNNING PERFORMANCE TEST..."
+    echo "RUNNING PERFORMANCE TESTS..."
     echo "GAMMA PERF"
     ./build/tests/performance/gammaPerf "$REF_IMG" "$EVAL_IMG" gammaTimes.csv
     echo ""; echo "INTERP PERF"

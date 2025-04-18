@@ -49,10 +49,6 @@ On Windows, run:
 Note that these scripts will only build the library and not install it by default.
 To install it, configure the options appropriately in the script file.
 
-For now, the Windows script can install dependencies using only `Conan`_ package manager.
-
-.. _Conan: https://conan.io/
-
 
 Script options
 ~~~~~~~~~~~~~~
@@ -84,9 +80,8 @@ Some of the options are the same as in the `CMake YAGIT options`_ section, as th
    |                               |                        |             | Value ``GLOBAL`` installs dependencies     |
    |                               |                        |             | system-wide. It requires admin privileges. |
    |                               |                        |             | Value ``CONAN`` installs dependencies      |
-   |                               |                        |             | using `Conan`_ package manager.            |
-   |                               |                        |             | It requires installed Conan. This option   |
-   |                               |                        |             | is only available in *setup.sh*.           |
+   |                               |                        |             | using `Conan`_ package manager             |
+   |                               |                        |             | (it requires installed Conan).             |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
    | ``GAMMA_VERSION``             | ``SEQUENTIAL``,        | ``THREADS`` | Equivalent to the CMake YAGIT option.      |
    |                               | ``THREADS``,           |             |                                            |
@@ -102,14 +97,18 @@ Some of the options are the same as in the `CMake YAGIT options`_ section, as th
    +-------------------------------+------------------------+-------------+--------------------------------------------+
    | ``ENABLE_FMA``                | ``ON``, ``OFF``        | ``OFF``     | Equivalent to the CMake YAGIT option.      |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
-   | ``BUILD_EXAMPLES``            | ``ON``, ``OFF``        | ``ON``      | Equivalent to the CMake YAGIT option.      |
-   |                               |                        |             | Additionally, it runs examples.            |
+   | ``BUILD_EXAMPLES``            | ``ON``, ``OFF``        | ``OFF``     | Equivalent to the CMake YAGIT option.      |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
    | ``BUILD_TESTING``             | ``ON``, ``OFF``        | ``OFF``     | Equivalent to the CMake YAGIT option.      |
-   |                               |                        |             | Additionally, it runs unit tests.          |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
    | ``BUILD_PERFORMANCE_TESTING`` | ``ON``, ``OFF``        | ``OFF``     | Equivalent to the CMake YAGIT option.      |
-   |                               |                        |             | Additionally, it runs performance tests.   |
+   +-------------------------------+------------------------+-------------+--------------------------------------------+
+   | ``RUN_EXAMPLES``              | ``ON``, ``OFF``        | ``OFF``     | Run examples. They must be built first.    |
+   +-------------------------------+------------------------+-------------+--------------------------------------------+
+   | ``RUN_TESTING``               | ``ON``, ``OFF``        | ``OFF``     | Run unit tests. They must be built first.  |
+   +-------------------------------+------------------------+-------------+--------------------------------------------+
+   | ``RUN_PERFORMANCE_TESTING``   | ``ON``, ``OFF``        | ``OFF``     | Run performance tests.                     |
+   |                               |                        |             | They must be built first.                  |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
    | ``REF_IMG``                   | ---                    | ---         | Path to a reference image                  |
    |                               |                        |             | used in examples and performance tests.    |
@@ -131,6 +130,7 @@ Some of the options are the same as in the `CMake YAGIT options`_ section, as th
    +-------------------------------+------------------------+-------------+--------------------------------------------+
 
 
+.. _Conan: https://conan.io/
 .. _Doxygen: https://www.doxygen.nl/
 .. _Python: https://www.python.org/
 
@@ -190,13 +190,15 @@ CMake YAGIT options
    | ``SIMD_EXTENSION``            | ``DEFAULT``,           | ``DEFAULT`` | SIMD instruction set extension.            |
    |                               | ``SSE2``, ``SSE3``,    |             | It works only when ``GAMMA_VERSION`` is    |
    |                               | ``SSSE3``, ``SSE4.1``, |             | set to ``SIMD`` or ``THREADS_SIMD``.       |
-   |                               | ``SSE4.2``, ``AVX``,   |             | Value ``DEFAULT`` adds no additional       |
-   |                               | ``AVX2``, ``AVX512``,  |             | compilation flags.                         |
-   |                               | ``NATIVE``             |             | Value ``NATIVE`` adds *-march=native*      |
-   |                               |                        |             | if a compiler supports it.                 |
+   |                               | ``SSE4.2``, ``AVX``,   |             | Value ``DEFAULT`` sets no additional       |
+   |                               | ``AVX2``, ``AVX512``,  |             | compilation options.                       |
+   |                               | ``NATIVE``             |             | Value ``NATIVE`` sets *-march=native*      |
+   |                               |                        |             | option if the compiler supports it.        |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
    | ``ENABLE_FMA``                | ``ON``, ``OFF``        | ``OFF``     | Enable fused multiply-add (FMA)            |
    |                               |                        |             | when building YAGIT library.               |
+   |                               |                        |             | Value ``ON`` sets *-mfma*                  |
+   |                               |                        |             | option if the compiler supports it.        |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
 
 To use these options, pass them to CMake during configuration using ``-D<option>=<value>``

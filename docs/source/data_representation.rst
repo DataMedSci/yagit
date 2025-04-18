@@ -142,7 +142,7 @@ There are 8 basic image orientations:
 - HFDR -- Head First Decubitus Right  ``[ 0  1  0; -1  0  0;  0  0  1]``
 - FFS -- Feet First Supine            ``[-1  0  0;  0  1  0;  0  0 -1]``
 - FFP -- Feet First Prone             ``[ 1  0  0;  0 -1  0;  0  0 -1]``
-- FFDL -- Feet First Decubitus Left   ``[ 0  1, 0;  1  0  0;  0  0 -1]``
+- FFDL -- Feet First Decubitus Left   ``[ 0  1  0;  1  0  0;  0  0 -1]``
 - FFDR -- Feet First Decubitus Right  ``[ 0 -1  0; -1  0  0;  0  0 -1]``
 
 YAGIT supports only the HFS image orientation for now.

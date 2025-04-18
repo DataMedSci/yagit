@@ -117,25 +117,25 @@ Note that some of the gamma function calculations are skipped, and only minimum 
 .. rst-class:: math-left
 .. math::
     \gamma(\vec{r_{r0}}) = \Gamma(\vec{r_{r0}}, \vec{r_{e0}}) =
-    \sqrt{\frac{(0.93 - 0.93)^2}{(0.03*1.00)^2} + \frac{(0 - (-1))^2 + (1 - 0)^2}{3^2}} \approx
+    \sqrt{\frac{(0.93 - 0.93)^2}{(0.03 \cdot 1.00)^2} + \frac{(0 - (-1))^2 + (1 - 0)^2}{3^2}} \approx
     \sqrt{0 + 0.222} \approx 0.471
 
 .. rst-class:: math-left
 .. math::
     \gamma(\vec{r_{r1}}) = \Gamma(\vec{r_{r1}}, \vec{r_{e1}}) =
-    \sqrt{\frac{(0.96 - 0.95)^2}{(0.03*1.00)^2} + \frac{(2 - 1)^2 + (1 - 0)^2}{3^2}} \approx
+    \sqrt{\frac{(0.96 - 0.95)^2}{(0.03 \cdot 1.00)^2} + \frac{(2 - 1)^2 + (1 - 0)^2}{3^2}} \approx
     \sqrt{0.111 + 0.222} \approx 0.577
 
 .. rst-class:: math-left
 .. math::
     \gamma(\vec{r_{r2}}) = \Gamma(\vec{r_{r2}}, \vec{r_{e1}}) =
-    \sqrt{\frac{(0.96 - 0.97)^2}{(0.03*1.00)^2} + \frac{(2 - (-1))^2 + (1 - 2)^2}{3^2}} \approx
+    \sqrt{\frac{(0.96 - 0.97)^2}{(0.03 \cdot 1.00)^2} + \frac{(2 - (-1))^2 + (1 - 2)^2}{3^2}} \approx
     \sqrt{0.111 + 1.111} \approx 1.106
 
 .. rst-class:: math-left
 .. math::
     \gamma(\vec{r_{r3}}) = \Gamma(\vec{r_{r3}}, \vec{r_{e3}}) =
-    \sqrt{\frac{(1.02 - 1.00)^2}{(0.03*1.00)^2} + \frac{(2 - 1)^2 + (3 - 2)^2}{3^2}} \approx
+    \sqrt{\frac{(1.02 - 1.00)^2}{(0.03 \cdot 1.00)^2} + \frac{(2 - 1)^2 + (3 - 2)^2}{3^2}} \approx
     \sqrt{0.444 + 0.222} \approx 0.816
 
 .. rst-class:: math-left

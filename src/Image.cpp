@@ -1,5 +1,5 @@
 /********************************************************************************************
- * Copyright (C) 2024 'Yet Another Gamma Index Tool' Developers.
+ * Copyright (C) 2024-2025 'Yet Another Gamma Index Tool' Developers.
  * 
  * This file is part of 'Yet Another Gamma Index Tool'.
  * 
@@ -19,6 +19,7 @@
 
 #include "yagit/Image.hpp"
 
+#include <cstdint>
 #include <sstream>
 #include <iomanip>
 

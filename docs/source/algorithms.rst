@@ -11,7 +11,7 @@ Classic method
 The classic method was introduced with the paper that introduced the gamma index concept by Low et al. [1]_ in 1998.
 This is a brute-force method, and because of that, it is very slow. It is based on calculating
 the gamma function for each pair of points in the reference image and the evaluated image.
-This results in a time complexity of :math:`O(n^k * n^k) = O(n^{2k})`,
+This results in a time complexity of :math:`O(n^k \cdot n^k) = O(n^{2k})`,
 where :math:`n` is the size of each axis of the input data and :math:`k` is the dimensionality of the data.
 For example, the 3D gamma index has :math:`O(n^6)` time complexity.
 
@@ -31,7 +31,7 @@ The subsequent steps of the algorithm are as follows:
 
 To speed up these calculations for 3D images, a 2.5D version was introduced, which involves calculating the gamma index
 in a 2D version for each slice of the 3D image separately. This results in a time complexity of
-:math:`O(n^3 * n^2) = O(n^5)`. Unfortunately, it returns less accurate results.
+:math:`O(n^3 \cdot n^2) = O(n^5)`. Unfortunately, it returns less accurate results.
 
 A commonly used step in the classic method to obtain more accurate results is the interpolation of the evaluated image
 before initiating gamma index calculations. This results in larger input data, further increasing the computation time.
@@ -118,7 +118,7 @@ The subsequent steps of the algorithm are as follows:
 #. In the end, the gamma index image is obtained.
 
 
-The time complexity of such an algorithm is :math:`O(n^k * m^k)`,
+The time complexity of such an algorithm is :math:`O(n^k \cdot m^k)`,
 where :math:`n` is the number of voxels along each axis,
 :math:`k` is the dimensionality of the data,
 and :math:`m` is the number of points along the radius of the circle/sphere.
