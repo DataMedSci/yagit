@@ -34,7 +34,6 @@ jobs:
 
       - name: Configure setup.sh
         run: |
-          which sed
           set_config() { sed -i "s|^\(\s*$1\)=.*|\1=$2|" setup.sh; }
 
           set_config  BUILD_TYPE                 ${{ env.BUILD_TYPE }}
@@ -50,7 +49,6 @@ jobs:
           set_config  BUILD_DOCUMENTATION        OFF
           set_config  INSTALL                    ON
           set_config  INSTALL_DIR                ./yagit_install
-          cat setup.sh
 
       - name: Build and install yagit
         run: ./setup.sh
@@ -95,9 +93,7 @@ jobs:
 
       - name: Configure setup.bat
         run: |
-          where sed
           echo sed -i "s|^\(\s*set \s*%%1\)=.*|\1=%%~2|" setup.bat > set_config.bat
-          type set_config.bat
 
           call set_config  BUILD_TYPE                 ${{ env.BUILD_TYPE }}
           call set_config  INSTALL_DEPENDENCIES       LOCAL
@@ -112,7 +108,6 @@ jobs:
           call set_config  BUILD_DOCUMENTATION        OFF
           call set_config  INSTALL                    ON
           call set_config  INSTALL_DIR                ./yagit_install
-          type setup.bat
 
       - name: Build and install yagit
         run: call setup.bat
