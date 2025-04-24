@@ -7,15 +7,10 @@ on:
     branches: [ master ]
 
 env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
 
 jobs:
-  build-linux:
-    if: >
-      github.repository == 'DataMedSci/yagit' &&
-      !contains(github.event.head_commit.message, '[ci skip]') &&
-      !contains(github.event.head_commit.message, '[skip ci]')
+  yagit-linux:
     name: Build yagit on Linux
     runs-on: ubuntu-latest
 
@@ -31,90 +26,42 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Check versions
+      - name: Check tools versions
         run: |
           gcc --version
           g++ --version
           cmake --version
 
-      - name: Install dependencies
+      - name: Configure setup.sh
         run: |
-          sudo apt update
-          sudo apt install libgdcm-dev
+          set_config() { sed -i "s|^\(\s*$1\)=.*|\1=$2|" setup.sh; }
 
-      # install from source, because apt has old version
-      - name: Install xsimd
-        if: ${{ endsWith(matrix.gamma-version, 'SIMD') }}
-        run: |
-          git clone https://github.com/xtensor-stack/xsimd.git -b 11.1.0
-          cd xsimd
-          mkdir build && cd build
-          cmake ..
-          make
-          sudo make install
+          set_config  BUILD_TYPE                 ${{ env.BUILD_TYPE }}
+          set_config  INSTALL_DEPENDENCIES       LOCAL
+          set_config  GAMMA_VERSION              ${{ matrix.gamma-version }}
+          set_config  SIMD_EXTENSION             ${{ endsWith(matrix.gamma-version, 'SIMD') && 'AVX2' || 'DEFAULT' }}
+          set_config  BUILD_EXAMPLES             ON
+          set_config  BUILD_TESTING              ON
+          set_config  BUILD_PERFORMANCE_TESTING  ON
+          set_config  RUN_EXAMPLES               OFF
+          set_config  RUN_TESTING                OFF
+          set_config  RUN_PERFORMANCE_TESTING    OFF
+          set_config  BUILD_DOCUMENTATION        OFF
+          set_config  INSTALL                    ON
+          set_config  INSTALL_DIR                ./yagit_install
 
-      # install from source, because apt has old version
-      - name: Install GoogleTest and GoogleMock
-        run: |
-          git clone https://github.com/google/googletest.git -b v1.13.0
-          cd googletest
-          mkdir build && cd build
-          cmake ..
-          make
-          sudo make install
-
-      - name: Configure and build with CMake
-        run: |
-          mkdir build && cd build
-          cmake .. -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
-                   -DGAMMA_VERSION=${{ matrix.gamma-version }} \
-                   -DSIMD_EXTENSION=${{ endsWith(matrix.gamma-version, 'SIMD') && 'AVX2' || 'DEFAULT' }} \
-                   -DBUILD_EXAMPLES=ON \
-                   -DBUILD_TESTING=ON \
-                   -DBUILD_PERFORMANCE_TESTING=ON
-          cmake --build . -j
+      - name: Build and install yagit
+        run: ./setup.sh
 
       - name: Run unit tests
-        run: |
-          ctest --test-dir build --output-on-failure
+        run: ctest -C ${{ env.BUILD_TYPE }} --test-dir build --output-on-failure
 
       - name: Run example
-        run: |
-          ./build/examples/gammaSimple
+        run: ./build/examples/gammaSimple
 
-      - name: Install yagit
-        run: |
-          cmake --install build --prefix ./yagit_install_dir
-
-  run-setup-linux:
-    if: >
-      github.repository == 'DataMedSci/yagit' &&
-      !contains(github.event.head_commit.message, '[ci skip]') &&
-      !contains(github.event.head_commit.message, '[skip ci]')
-    name: Run setup.sh on Linux
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Check versions
-        run: |
-          gcc --version
-          g++ --version
-          cmake --version
-
-      - name: Run setup.sh script
-        run: |
-          ./setup.sh
-
-  build-windows:
-    if: >
-      github.repository == 'DataMedSci/yagit' &&
-      !contains(github.event.head_commit.message, '[ci skip]') &&
-      !contains(github.event.head_commit.message, '[skip ci]')
+  yagit-windows:
     name: Build yagit on Windows
-    runs-on: windows-2019
+    runs-on: windows-2022
 
     defaults:
       run:
@@ -131,41 +78,41 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Check versions
-        run: |
-          cmake --version
-
-      - name: Set up Python
+      - name: Set up Python and Conan
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.10'
+        run: python -m pip install conan
 
-      - name: Install dependencies
+      - name: Check tools versions
         run: |
-          python -m pip install "conan<2"
-          mkdir build && cd build
-          conan install ..
+          cl
+          cmake --version
+          conan --version
 
-      - name: Configure and build with CMake
-        working-directory: ${{ github.workspace }}/build
+      - name: Configure setup.bat
         run: |
-          cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake ^
-                   -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} ^
-                   -DGAMMA_VERSION=${{ matrix.gamma-version }} ^
-                   -DSIMD_EXTENSION=${{ endsWith(matrix.gamma-version, 'SIMD') && 'AVX2' || 'DEFAULT' }} ^
-                   -DBUILD_EXAMPLES=ON ^
-                   -DBUILD_TESTING=ON ^
-                   -DBUILD_PERFORMANCE_TESTING=ON
-          cmake --build . --config ${{ env.BUILD_TYPE }} -j
+          echo sed -i "s|^\(\s*set \s*%1\)=.*|\1=%~2|" setup.bat > set_config.bat
+
+          set_config  BUILD_TYPE                 ${{ env.BUILD_TYPE }}
+          set_config  INSTALL_DEPENDENCIES       CONAN
+          set_config  GAMMA_VERSION              ${{ matrix.gamma-version }}
+          set_config  SIMD_EXTENSION             ${{ endsWith(matrix.gamma-version, 'SIMD') && 'AVX2' || 'DEFAULT' }}
+          set_config  BUILD_EXAMPLES             ON
+          set_config  BUILD_TESTING              ON
+          set_config  BUILD_PERFORMANCE_TESTING  ON
+          set_config  RUN_EXAMPLES               OFF
+          set_config  RUN_TESTING                OFF
+          set_config  RUN_PERFORMANCE_TESTING    OFF
+          set_config  BUILD_DOCUMENTATION        OFF
+          set_config  INSTALL                    ON
+          set_config  INSTALL_DIR                ./yagit_install
+
+      - name: Build and install yagit
+        run: setup.bat
 
       - name: Run unit tests
-        run: |
-          ctest -C ${{ env.BUILD_TYPE }} --test-dir build --output-on-failure
+        run: ctest -C ${{ env.BUILD_TYPE }} --test-dir build --output-on-failure
 
       - name: Run example
-        run: |
-          build\examples\${{ env.BUILD_TYPE }}\gammaSimple.exe
-
-      - name: Install yagit
-        run: |
-          cmake --install build --prefix ./yagit_install_dir
+        run: build\examples\${{ env.BUILD_TYPE }}\gammaSimple.exe
