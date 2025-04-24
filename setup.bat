@@ -58,7 +58,7 @@ if DEFINED INSTALL_LOCAL_GLOBAL (
     mkdir deps
     cd deps
 
-    call :install_lib https://github.com/malaterre/GDCM.git v3.0.22 %INSTALL_DEPENDENCIES%
+    call :install_lib https://github.com/malaterre/GDCM.git v3.0.22 %INSTALL_DEPENDENCIES% "-DGDCM_BUILD_DOCBOOK_MANPAGES=OFF"
     call :install_lib https://github.com/xtensor-stack/xsimd.git 11.1.0 %INSTALL_DEPENDENCIES%
     call :install_lib https://github.com/google/googletest.git v1.13.0 %INSTALL_DEPENDENCIES%
 
@@ -94,19 +94,15 @@ cmake .. -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ^
          -DBUILD_PERFORMANCE_TESTING=%BUILD_PERFORMANCE_TESTING% ^
          -DCMAKE_PREFIX_PATH=%DEPENDENCIES_PATHS% ^
          -DCMAKE_TOOLCHAIN_FILE=%TOOLCHAIN_FILE%
+if %ERRORLEVEL% NEQ 0 (popd & exit /b %ERRORLEVEL%)
 
 
 :: ============================================================
 echo:
 echo BUILDING...
 cmake --build . --config %BUILD_TYPE% -j
-set COMPILE_RESULT=%ERRORLEVEL%
+if %ERRORLEVEL% NEQ 0 (popd & exit /b %ERRORLEVEL%)
 cd ..
-
-if %COMPILE_RESULT% NEQ 0 (
-    popd
-    exit /b %COMPILE_RESULT%
-)
 
 
 :: ============================================================
@@ -179,28 +175,29 @@ goto :eof
     :: %1 - url to git repository of the library that will be installed
     :: %2 - tag or branch of the library
     :: %3 - installation mode (LOCAL or GLOBAL)
+    :: %4 (optional) - additional options for cmake configure
 
     :: extract repository name from url
-    for %%A in ("%1") do set REPO_NAME=%%~nA
+    for %%A in ("%~1") do set REPO_NAME=%%~nA
 
     if not exist %REPO_NAME% (
         :: clone git repo
         git clone %1 -b %2 --depth 1 -c advice.detachedHead=false
     )
 
-    if not exist %REPO_NAME%/build (
+    if exist %REPO_NAME% if not exist %REPO_NAME%/build (
         cd %REPO_NAME%
         mkdir build
         cd build
 
         :: configure and build
-        cmake .. -DCMAKE_BUILD_TYPE=Release
+        cmake .. -DCMAKE_BUILD_TYPE=Release %~4
         cmake --build . --config Release -j
 
         :: install
-        if %3 == LOCAL (
+        if "%~3" == "LOCAL" (
             cmake --install . --prefix ./installed
-        ) else if %3 == GLOBAL (
+        ) else if "%~3" == "GLOBAL" (
             cmake --install .
         )
 
