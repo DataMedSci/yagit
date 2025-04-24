@@ -50,12 +50,13 @@ jobs:
           set_config  BUILD_DOCUMENTATION        OFF
           set_config  INSTALL                    ON
           set_config  INSTALL_DIR                ./yagit_install
+          cat setup.sh
 
       - name: Build and install yagit
         run: ./setup.sh
 
       - name: Run unit tests
-        run: ctest -C ${{ env.BUILD_TYPE }} --test-dir build --output-on-failure
+        run: ctest -C ${{ env.BUILD_TYPE }} --test-dir build --output-on-failure --no-tests=error
 
       - name: Run example
         run: ./build/examples/gammaSimple
@@ -89,37 +90,35 @@ jobs:
 
       - name: Check tools versions
         run: |
-          cl
           cmake --version
           conan --version
 
       - name: Configure setup.bat
         run: |
           where sed
-          echo sed -i "s|^\(\s*set \s*%1\)=.*|\1=%~2|" setup.bat > set_config.bat
-
-          set_config  BUILD_TYPE                 ${{ env.BUILD_TYPE }}
-          set_config  INSTALL_DEPENDENCIES       CONAN
-          set_config  GAMMA_VERSION              ${{ matrix.gamma-version }}
-          set_config  SIMD_EXTENSION             ${{ endsWith(matrix.gamma-version, 'SIMD') && 'AVX2' || 'DEFAULT' }}
-          set_config  BUILD_EXAMPLES             ON
-          set_config  BUILD_TESTING              ON
-          set_config  BUILD_PERFORMANCE_TESTING  ON
-          set_config  RUN_EXAMPLES               OFF
-          set_config  RUN_TESTING                OFF
-          set_config  RUN_PERFORMANCE_TESTING    OFF
-          set_config  BUILD_DOCUMENTATION        OFF
-          set_config  INSTALL                    ON
-          set_config  INSTALL_DIR                ./yagit_install
-
+          echo sed -i "s|^\(\s*set \s*%%1\)=.*|\1=%%~2|" setup.bat > set_config.bat
           type set_config.bat
+
+          call set_config  BUILD_TYPE                 ${{ env.BUILD_TYPE }}
+          call set_config  INSTALL_DEPENDENCIES       LOCAL
+          call set_config  GAMMA_VERSION              ${{ matrix.gamma-version }}
+          call set_config  SIMD_EXTENSION             ${{ endsWith(matrix.gamma-version, 'SIMD') && 'AVX2' || 'DEFAULT' }}
+          call set_config  BUILD_EXAMPLES             ON
+          call set_config  BUILD_TESTING              ON
+          call set_config  BUILD_PERFORMANCE_TESTING  ON
+          call set_config  RUN_EXAMPLES               OFF
+          call set_config  RUN_TESTING                OFF
+          call set_config  RUN_PERFORMANCE_TESTING    OFF
+          call set_config  BUILD_DOCUMENTATION        OFF
+          call set_config  INSTALL                    ON
+          call set_config  INSTALL_DIR                ./yagit_install
           type setup.bat
 
       - name: Build and install yagit
-        run: setup.bat
+        run: call setup.bat
 
       - name: Run unit tests
-        run: ctest -C ${{ env.BUILD_TYPE }} --test-dir build --output-on-failure
+        run: ctest -C ${{ env.BUILD_TYPE }} --test-dir build --output-on-failure --no-tests=error
 
       - name: Run example
         run: build\examples\${{ env.BUILD_TYPE }}\gammaSimple.exe
