@@ -60,7 +60,7 @@ if DEFINED INSTALL_LOCAL_GLOBAL (
 
     call :install_lib https://github.com/malaterre/GDCM.git v3.0.22 %INSTALL_DEPENDENCIES% "-DGDCM_BUILD_DOCBOOK_MANPAGES=OFF"
     call :install_lib https://github.com/xtensor-stack/xsimd.git 11.1.0 %INSTALL_DEPENDENCIES%
-    call :install_lib https://github.com/google/googletest.git v1.13.0 %INSTALL_DEPENDENCIES%
+    call :install_lib https://github.com/google/googletest.git v1.13.0 %INSTALL_DEPENDENCIES% "-Dgtest_force_shared_crt=ON"
 
     if %INSTALL_DEPENDENCIES% == LOCAL (
         set DEPENDENCIES_PATHS="%GDCM_PATH%;%XSIMD_PATH%;%GTEST_PATH%"
