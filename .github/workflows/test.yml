@@ -37,6 +37,8 @@ jobs:
 
       - name: Build dependencies
         if: steps.cache-deps.outputs.cache-hit != 'true'
+        # script will fail after installing the deps while trying to build yagit, but we only need the deps
+        continue-on-error: true
         run: ./setup.sh
 
   yagit-linux:
