@@ -46,8 +46,9 @@ jobs:
 
     strategy:
       matrix:
-        gamma-version: ["SEQUENTIAL", "THREADS", "SIMD", "THREADS_SIMD"]
-        build-type: ["Release"]
+        gamma-version: [SEQUENTIAL, THREADS, SIMD, THREADS_SIMD]
+        include:
+          - build-type: Release
 
     steps:
       - name: Checkout repository
@@ -146,8 +147,9 @@ jobs:
 
     strategy:
       matrix:
-        gamma-version: ["SEQUENTIAL", "THREADS", "SIMD"]
-        build-type: ["Release"]
+        gamma-version: [SEQUENTIAL, THREADS, SIMD]
+        include:
+          - build-type: Release
 
     steps:
       - name: Checkout repository
