@@ -131,8 +131,8 @@ jobs:
       - name: Download dependencies
         if: steps.cache-deps.outputs.cache-hit != 'true'
         run: |
-          mkdir build/deps_conan
-          cd build/deps_conan
+          mkdir build\deps_conan
+          cd build\deps_conan
           conan install ../.. --output-folder . --build missing
 
   yagit-windows:
