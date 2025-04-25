@@ -120,14 +120,14 @@ cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
          -DBUILD_PERFORMANCE_TESTING=$BUILD_PERFORMANCE_TESTING \
          -DCMAKE_PREFIX_PATH="$DEPENDENCIES_PATHS" \
          -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE"
-if [ $? -ne 0 ]; then exit $?; fi
+status=$?; if [ $status -ne 0 ]; then exit $status; fi
 
 
 # ============================================================
 echo ""
 echo "BUILDING..."
 cmake --build . --config $BUILD_TYPE -j
-if [ $? -ne 0 ]; then exit $?; fi
+status=$?; if [ $status -ne 0 ]; then exit $status; fi
 cd ..
 
 
