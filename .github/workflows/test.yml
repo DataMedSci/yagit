@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-deps-linux:
-    name: Build yagit dependencies on Linux
+    name: Build deps on Linux
     runs-on: ubuntu-latest
 
     steps:
@@ -18,7 +18,7 @@ jobs:
           sparse-checkout: setup.sh
           sparse-checkout-cone-mode: false
 
-      - name: Cache yagit dependencies
+      - name: Cache dependencies
         id: cache-deps
         uses: actions/cache@v4
         with:
@@ -40,7 +40,7 @@ jobs:
         run: ./setup.sh
 
   yagit-linux:
-    name: Build yagit on Linux
+    name: yagit on Linux
     runs-on: ubuntu-latest
     needs: build-deps-linux
 
@@ -53,8 +53,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Cache yagit dependencies
-        uses: actions/cache@v4
+      - name: Restore cached dependencies
+        uses: actions/cache/restore@v4
         with:
           path: |
             build/deps/GDCM/build/installed
@@ -91,7 +91,7 @@ jobs:
         run: ./build/examples/gammaSimple
 
   download-deps-windows:
-    name: Download yagit dependencies on Windows
+    name: Download deps on Windows
     runs-on: windows-2022
 
     defaults:
@@ -105,7 +105,7 @@ jobs:
           sparse-checkout: conanfile.txt
           sparse-checkout-cone-mode: false
 
-      - name: Cache yagit dependencies
+      - name: Cache dependencies
         id: cache-deps
         uses: actions/cache@v4
         with:
@@ -136,7 +136,7 @@ jobs:
           conan install ../.. --output-folder . --build missing
 
   yagit-windows:
-    name: Build yagit on Windows
+    name: yagit on Windows
     runs-on: windows-2022
     needs: download-deps-windows
 
@@ -153,9 +153,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Cache yagit dependencies
+      - name: Restore cached dependencies
         id: cache-deps
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: |
             build/deps_conan
