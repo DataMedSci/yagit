@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ master ]
 
-env:
-  BUILD_TYPE: Release
-
 jobs:
   build-deps-linux:
     name: Build yagit dependencies on Linux
@@ -49,11 +46,8 @@ jobs:
 
     strategy:
       matrix:
-        gamma-version:
-          - "SEQUENTIAL"
-          - "THREADS"
-          - "SIMD"
-          - "THREADS_SIMD"
+        gamma-version: ["SEQUENTIAL", "THREADS", "SIMD", "THREADS_SIMD"]
+        build-type: ["Release"]
 
     steps:
       - name: Checkout repository
@@ -67,18 +61,13 @@ jobs:
             build/deps/xsimd/build/installed
             build/deps/googletest/build/installed
           key: deps-local-${{ runner.os }}-${{ hashFiles('setup.sh') }}
-
-      - name: Check tools versions
-        run: |
-          gcc --version
-          g++ --version
-          cmake --version
+          fail-on-cache-miss: true
 
       - name: Configure setup.sh
         run: |
           set_config() { sed -i "s|^\(\s*$1\)=.*|\1=$2|" setup.sh; }
 
-          set_config  BUILD_TYPE                 ${{ env.BUILD_TYPE }}
+          set_config  BUILD_TYPE                 ${{ matrix.build-type }}
           set_config  INSTALL_DEPENDENCIES       LOCAL
           set_config  GAMMA_VERSION              ${{ matrix.gamma-version }}
           set_config  SIMD_EXTENSION             ${{ endsWith(matrix.gamma-version, 'SIMD') && 'AVX2' || 'DEFAULT' }}
@@ -96,29 +85,25 @@ jobs:
         run: ./setup.sh
 
       - name: Run unit tests
-        run: ctest -C ${{ env.BUILD_TYPE }} --test-dir build --output-on-failure --no-tests=error
+        run: ctest -C ${{ matrix.build-type }} --test-dir build --output-on-failure --no-tests=error
 
       - name: Run example
         run: ./build/examples/gammaSimple
 
-  yagit-windows:
-    name: Build yagit on Windows
+  download-deps-windows:
+    name: Download yagit dependencies on Windows
     runs-on: windows-2022
 
     defaults:
       run:
         shell: cmd
 
-    strategy:
-      matrix:
-        gamma-version:
-          - "SEQUENTIAL"
-          - "THREADS"
-          - "SIMD"
-
     steps:
-      - name: Checkout repository
+      - name: Download conanfile
         uses: actions/checkout@v4
+        with:
+          sparse-checkout: conanfile.txt
+          sparse-checkout-cone-mode: false
 
       - name: Cache yagit dependencies
         id: cache-deps
@@ -128,6 +113,7 @@ jobs:
             build/deps_conan
             ~/.conan2/p/**/p
           key: deps-conan-${{ runner.os }}-${{ hashFiles('conanfile.txt') }}
+          lookup-only: true
 
       - name: Set up Python
         if: steps.cache-deps.outputs.cache-hit != 'true'
@@ -142,15 +128,46 @@ jobs:
           conan profile detect
           conan --version
 
-      - name: Check tools versions
+      - name: Download dependencies
+        if: steps.cache-deps.outputs.cache-hit != 'true'
         run: |
-          cmake --version
+          mkdir build/deps_conan
+          cd build/deps_conan
+          conan install ../.. --output-folder . --build missing
+
+  yagit-windows:
+    name: Build yagit on Windows
+    runs-on: windows-2022
+    needs: download-deps-windows
+
+    defaults:
+      run:
+        shell: cmd
+
+    strategy:
+      matrix:
+        gamma-version: ["SEQUENTIAL", "THREADS", "SIMD"]
+        build-type: ["Release"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache yagit dependencies
+        id: cache-deps
+        uses: actions/cache@v4
+        with:
+          path: |
+            build/deps_conan
+            ~/.conan2/p/**/p
+          key: deps-conan-${{ runner.os }}-${{ hashFiles('conanfile.txt') }}
+          fail-on-cache-miss: true
 
       - name: Configure setup.bat
         run: |
           echo sed -i "s|^\(\s*set \s*%%1\)=.*|\1=%%~2|" setup.bat > set_config.bat
 
-          call set_config  BUILD_TYPE                 ${{ env.BUILD_TYPE }}
+          call set_config  BUILD_TYPE                 ${{ matrix.build-type }}
           call set_config  INSTALL_DEPENDENCIES       CONAN
           call set_config  GAMMA_VERSION              ${{ matrix.gamma-version }}
           call set_config  SIMD_EXTENSION             ${{ endsWith(matrix.gamma-version, 'SIMD') && 'AVX2' || 'DEFAULT' }}
@@ -168,7 +185,7 @@ jobs:
         run: call setup.bat
 
       - name: Run unit tests
-        run: ctest -C ${{ env.BUILD_TYPE }} --test-dir build --output-on-failure --no-tests=error
+        run: ctest -C ${{ matrix.build-type }} --test-dir build --output-on-failure --no-tests=error
 
       - name: Run example
-        run: build\examples\${{ env.BUILD_TYPE }}\gammaSimple.exe
+        run: build\examples\${{ matrix.build-type }}\gammaSimple.exe
