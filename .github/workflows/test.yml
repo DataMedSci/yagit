@@ -11,6 +11,9 @@ jobs:
     name: Build deps on Linux
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+
     steps:
       - name: Download script
         uses: actions/checkout@v4
@@ -45,6 +48,9 @@ jobs:
     name: yagit on Linux
     runs-on: ubuntu-latest
     needs: build-deps-linux
+
+    permissions:
+      contents: read
 
     strategy:
       matrix:
@@ -97,6 +103,9 @@ jobs:
     name: Download deps on Windows
     runs-on: windows-2022
 
+    permissions:
+      contents: read
+
     defaults:
       run:
         shell: cmd
@@ -142,6 +151,9 @@ jobs:
     name: yagit on Windows
     runs-on: windows-2022
     needs: download-deps-windows
+
+    permissions:
+      contents: read
 
     defaults:
       run:
