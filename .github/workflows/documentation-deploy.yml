@@ -5,7 +5,7 @@ on:
     types: [ published ]
 
 jobs:
-  documentation:
+  documentation-deploy:
     if: github.repository == 'DataMedSci/yagit'
     runs-on: ubuntu-latest
 
