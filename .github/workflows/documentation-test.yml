@@ -1,12 +1,13 @@
-name: documentation
+name: documentation-test
 
 on:
-  release:
-    types: [ published ]
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   documentation:
-    if: github.repository == 'DataMedSci/yagit'
     runs-on: ubuntu-latest
 
     permissions:
@@ -33,12 +34,14 @@ jobs:
       - name: Run doxygen and sphinx
         working-directory: ./docs
         run: |
-          VERSION=${{ github.event.release.tag_name }}
+          VERSION=$(git describe --tags --dirty --match "v*")
           (cat Doxyfile; echo PROJECT_NUMBER=$VERSION) | doxygen -
           make html SPHINXOPTS=-Dversion=$VERSION
 
-      - name: Deploy documentation
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload documentation artifact
+        uses: actions/upload-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/build/html
+          name: yagit-documentation
+          path: docs/build/html
+          if-no-files-found: error
+          retention-days: 10

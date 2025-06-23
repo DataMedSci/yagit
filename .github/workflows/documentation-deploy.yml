@@ -1,0 +1,44 @@
+name: documentation-deploy
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  documentation:
+    if: github.repository == 'DataMedSci/yagit'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install tools and dependencies
+        working-directory: ./docs
+        run: |
+          sudo apt update
+          sudo apt install doxygen
+          doxygen --version
+          python -m pip install -U pip
+          python -m pip install -r requirements.txt
+
+      - name: Run doxygen and sphinx
+        working-directory: ./docs
+        run: |
+          VERSION=${{ github.event.release.tag_name }}
+          (cat Doxyfile; echo PROJECT_NUMBER=$VERSION) | doxygen -
+          make html SPHINXOPTS=-Dversion=$VERSION
+
+      - name: Deploy documentation
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/build/html
