@@ -34,7 +34,8 @@ jobs:
       - name: Run doxygen and sphinx
         working-directory: ./docs
         run: |
-          VERSION=${{ github.ref_name }}
+          VERSION_LONG=${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          VERSION=$(echo $VERSION_LONG | cut -c1-7)
           (cat Doxyfile; echo PROJECT_NUMBER=$VERSION) | doxygen -
           make html SPHINXOPTS=-Dversion=$VERSION
 
@@ -45,3 +46,4 @@ jobs:
           path: docs/build/html
           if-no-files-found: error
           retention-days: 10
+          include-hidden-files: true
