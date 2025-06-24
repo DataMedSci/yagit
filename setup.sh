@@ -48,22 +48,23 @@ install_lib () {
     # $1 - url to git repository of the library that will be installed
     # $2 - tag or branch of the library
     # $3 - installation mode (LOCAL or GLOBAL)
+    # $4 (optional) - additional options for cmake configure
 
     # extract repository name from url
     repo_name_git=${1##*/}
     repo_name=${repo_name_git%.git}
 
-    if [ ! -d $repo_name ]; then
+    if [ ! -d "$repo_name" ]; then
         # clone git repo
         git clone $1 -b $2 --depth 1 -c advice.detachedHead=false
     fi
 
-    if [ ! -d $repo_name/build ]; then
+    if [[ -d "$repo_name" && ! -d "$repo_name/build" ]]; then
         cd $repo_name
         mkdir -p build && cd build
 
         # configure and build
-        cmake .. -DCMAKE_BUILD_TYPE=Release
+        cmake .. -DCMAKE_BUILD_TYPE=Release $4
         cmake --build . --config Release -j
 
         # install
@@ -81,7 +82,7 @@ if [[ $INSTALL_DEPENDENCIES == LOCAL || $INSTALL_DEPENDENCIES == GLOBAL ]]; then
     echo "INSTALLING DEPENDENCIES..."
     mkdir -p deps && cd deps
 
-    install_lib https://github.com/malaterre/GDCM.git v3.0.22 $INSTALL_DEPENDENCIES
+    install_lib https://github.com/malaterre/GDCM.git v3.0.22 $INSTALL_DEPENDENCIES "-DGDCM_BUILD_DOCBOOK_MANPAGES=OFF"
     install_lib https://github.com/xtensor-stack/xsimd.git 11.1.0 $INSTALL_DEPENDENCIES
     install_lib https://github.com/google/googletest.git v1.13.0 $INSTALL_DEPENDENCIES
 
@@ -119,18 +120,15 @@ cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
          -DBUILD_PERFORMANCE_TESTING=$BUILD_PERFORMANCE_TESTING \
          -DCMAKE_PREFIX_PATH="$DEPENDENCIES_PATHS" \
          -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE"
+status=$?; if [ $status -ne 0 ]; then exit $status; fi
 
 
 # ============================================================
 echo ""
 echo "BUILDING..."
 cmake --build . --config $BUILD_TYPE -j
-COMPILE_RESULT=$?
+status=$?; if [ $status -ne 0 ]; then exit $status; fi
 cd ..
-
-if [ $COMPILE_RESULT -ne 0 ]; then
-    exit $COMPILE_RESULT
-fi
 
 
 # ============================================================

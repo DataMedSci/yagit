@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 project = "Yet Another Gamma Index Tool"
 author = f"YAGIT Developers"
-copyright = f"2023-2024, {author}"
+copyright = f"2023-2025, {author}"
 
 
 # -- General configuration ---------------------------------------------------

@@ -1,0 +1,53 @@
+name: documentation-test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'docs/**'
+      - 'include/yagit/**'
+      - 'examples/**/*.cpp'
+
+jobs:
+  documentation-test:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install tools and dependencies
+        working-directory: ./docs
+        run: |
+          sudo apt update
+          sudo apt install doxygen
+          doxygen --version
+          python -m pip install -U pip
+          python -m pip install -r requirements.txt
+
+      - name: Run doxygen and sphinx
+        working-directory: ./docs
+        run: |
+          VERSION_LONG=${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          VERSION=$(echo $VERSION_LONG | cut -c1-7)
+          (cat Doxyfile; echo PROJECT_NUMBER=$VERSION) | doxygen -
+          make html SPHINXOPTS=-Dversion=$VERSION
+
+      - name: Upload documentation artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: yagit-documentation
+          path: docs/build/html
+          if-no-files-found: error
+          retention-days: 10
+          include-hidden-files: true

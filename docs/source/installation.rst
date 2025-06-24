@@ -45,16 +45,17 @@ On Windows, run:
 
    setup.bat
 
+Running the setup script may result in high CPU and memory usage, as it builds dependencies in parallel.
 
-Note that these scripts will only build the library and not install it by default.
-To install it, configure the options appropriately in the script file.
+Note that by default, these scripts only build the library and do not install it.
+To install the library, configure the installation options in the script.
 
 
 Script options
 ~~~~~~~~~~~~~~
 
-You can freely configure the options that are in the script files.
-Some of the options are the same as in the `CMake YAGIT options`_ section, as they are simply passed to CMake.
+You can freely configure the options in the script files.
+Some options are the same as those in the `CMake YAGIT options`_ section, as they are passed directly to CMake.
 
 .. rst-class:: wrap-text
 .. table::
@@ -201,8 +202,8 @@ CMake YAGIT options
    |                               |                        |             | option if the compiler supports it.        |
    +-------------------------------+------------------------+-------------+--------------------------------------------+
 
-To use these options, pass them to CMake during configuration using ``-D<option>=<value>``
-(e.g., ``cmake .. -DGAMMA_VERSION=THREADS_SIMD -DSIMD_EXTENSION=AVX2``).
+To use these options, pass them to CMake during configuration using ``-D<option>=<value>`` argument
+(for example: ``cmake .. -DGAMMA_VERSION=THREADS_SIMD -DSIMD_EXTENSION=AVX2``).
 
 
 CMake YAGIT integration
