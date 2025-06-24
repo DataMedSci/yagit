@@ -54,12 +54,12 @@ install_lib () {
     repo_name_git=${1##*/}
     repo_name=${repo_name_git%.git}
 
-    if [ ! -d $repo_name ]; then
+    if [ ! -d "$repo_name" ]; then
         # clone git repo
         git clone $1 -b $2 --depth 1 -c advice.detachedHead=false
     fi
 
-    if [[ -d $repo_name && ! -d $repo_name/build ]]; then
+    if [[ -d "$repo_name" && ! -d "$repo_name/build" ]]; then
         cd $repo_name
         mkdir -p build && cd build
 
